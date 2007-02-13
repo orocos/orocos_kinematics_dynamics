@@ -14,7 +14,7 @@ namespace KDL {
  *      - stiffness and damping
  *
  *  for an easier specification of a kinematic chain.
- *
+ * @ingroup KinematicFamily
  */
 class Joint {
     typedef enum { RotX,RotY,RotZ,TransX,TransY,TransZ,Unknown } JointType;

@@ -2,8 +2,6 @@
 #define KDL_SEGMENT_HPP
 
 #include <kdl/frames.hpp>
-#include <vector>
-#include <string>
 
 namespace KDL {
 
@@ -20,7 +18,7 @@ namespace KDL {
  * And supports the following functions:
  *      - twist()
  *      - pose(q)
- *
+ * @ingroup KinematicFamily
  */
 class Segment {
 protected:
@@ -47,6 +45,6 @@ public:
     
     virtual ~Segment();
 };
-
+}//end of namespace KDL
 
 #endif

@@ -1,6 +1,8 @@
 #ifndef KDL_BODY_HPP
 #define KDL_BODY_HPP
 
+#include <kdl/frames.hpp>
+
 namespace KDL {
 
 /**
@@ -11,7 +13,7 @@ namespace KDL {
  *      - a frame describing the connection offset wrt to the previous joint
  *      - a frame describing the link lenght: connection of the next joint
  *      - inertia
- *
+ * @ingroup KinematicFamily
  */
 class Body {
 protected:
