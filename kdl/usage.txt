@@ -1,0 +1,76 @@
+/***************************************************************************
+                        usage.txt
+                       -------------------------
+    begin                : June 2006
+    copyright            : (C) 2006 Erwin Aertbelien
+    email                : firstname.lastname@mech.kuleuven.ac.be
+
+ History (only major changes)( AUTHOR-Description ) :
+ 
+ ***************************************************************************
+ *   This library is free software; you can redistribute it and/or         *
+ *   modify it under the terms of the GNU Lesser General Public            *
+ *   License as published by the Free Software Foundation; either          *
+ *   version 2.1 of the License, or (at your option) any later version.    *
+ *                                                                         *
+ *   This library is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     *
+ *   Lesser General Public License for more details.                       *
+ *                                                                         *
+ *   You should have received a copy of the GNU Lesser General Public      *
+ *   License along with this library; if not, write to the Free Software   *
+ *   Foundation, Inc., 59 Temple Place,                                    *
+ *   Suite 330, Boston, MA  02111-1307  USA                                *
+ *                                                                         *
+ ***************************************************************************/
+
+/**
+ * \mainpage KDL 
+ *
+ * This is the API reference of the Orocos 
+ * <a href="http://www.orocos.org/kdl">Kinematics and Dynamics Library</a> (KDL)
+ *
+ * \section intro Introduction
+ *
+ * A simple use case for a SerialChain kinematic :
+ *
+ * - creation and allocation : create and define a simple 2 dof serial kinematic chain. 
+ * \verbatim
+  		SerialChain* chain = SerialChain("MY_KINEMATICS",0,2);
+  		chain->addJoint( new JointTransX(Frame::Identity()));
+  		chain->addJoint( new JointTransY(Frame::Identity()));
+ 		setLastJointToEE(Frame(Rotation::Identity(),Vector(0,0,0.5)));
+  \endverbatim
+ * 
+ * - The object using the forward position kinematics looks like : 
+ * \verbatim
+     class User {
+		Jnt2CartPos*   jnt2cartpos;
+		std::vector<double> q;
+		Frame F_base_ee;
+	 public:
+		User(KinematicFamily* kin) :
+			jnt2cartpos(kin->createJnt2CartPos()),
+			q(kin->nrOfJoints())
+		{
+			if (jnt2cartpos==0) {
+				// a Jnt2CartPos instance does not exist for this kinematic family.
+			}
+		}
+		~User() {
+			delete jnt2cartpos;
+		}
+		void calculate() {
+			int result = jnt2cartpos->evaluate(q);
+			if (result !=0) {
+				// could not calculate the transformation..
+			}
+			jnt2cartpos->getFrame(0,F_base_ee);
+		}
+     }
+  \endverbatim
+  * Note that the calculate() method can be called real-time. All allocation 
+  * and deallocation is done in the constructor and destructor.
+  * The User object does not make any assumptions on the kinematic family that is used.
+ */

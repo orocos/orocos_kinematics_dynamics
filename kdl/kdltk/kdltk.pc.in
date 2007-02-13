@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: kdltk
+Description: The Kinematics and Dynamics Library Orocos Plugin 
+Requires: kdl orocos-rtt
+Version: @VERSION@
+Libs: -L${libdir} -lkdltk
+Cflags: -I${includedir}
+

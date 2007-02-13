@@ -1,0 +1,10 @@
+KDL library, previously called the LRL library.
+Uses the following tools :
+	- doxygen ( in debian : apt-get install doxygen doxygen-gui )
+	- graphviz ( in debian : apt-get install graphviz ) 
+		provides the dot tool to be used in doxygen.
+
+Type 'make docs'
+
+E. Aertbelien
+
