@@ -1,7 +1,8 @@
 #ifndef KDL_SEGMENT_HPP
 #define KDL_SEGMENT_HPP
 
-#include <kdl/frames.hpp>
+#include "../frames.hpp"
+#include "joint.hpp"
 
 namespace KDL {
 
@@ -11,37 +12,27 @@ namespace KDL {
  * This is an <bold>abstract</bold> class.
  * A simple segment is described by the following properties : 
  *      - joint
- *      - body  
+ *      - mass, stiffnes, damping
  *      - parent segment
  *      - child segment
+ *      - Connection offset to the parent
  *
- * And supports the following functions:
- *      - twist()
- *      - pose(q)
  * @ingroup KinematicFamily
  */
 class Segment {
 protected:
     Joint joint;
-    Body body;
+    Mass mass;
+    Stiffness stiffness;
+    Damping damping;
     Segment* parent;
     Segment* child;
+    Frame f_to_parent;
+    
 public:
-    Segment(Joint joint, Body body, Segment* parent);
+    Segment(Joint joint, Frame f_to_parent);
     Segment(const Segment& in);
     Segment& operator = ( const Segment& arg);
-    
-    /**
-     * \brief returns the twist of the (origin of) {end} w.r.t. {base} 
-     */
-    virtual Twist twist() const =0;
-
-   /**
-    * \brief returns the transformation of {end} w.r.t. {base}
-    */
-    virtual Frame pose(double q) const =0;
-    
-    virtual Segment* clone() const = 0;
     
     virtual ~Segment();
 };

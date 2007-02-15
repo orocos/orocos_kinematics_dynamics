@@ -17,16 +17,16 @@ namespace KDL {
  * @ingroup KinematicFamily
  */
 class Joint {
-    typedef enum { RotX,RotY,RotZ,TransX,TransY,TransZ,Unknown } JointType;
-protected:
+    typedef enum { RotX,RotY,RotZ,TransX,TransY,TransZ,Spherical,PlanarXY,CylindricalZ,ScrewZ } JointType;
+private:
     JointType type;
     double scale;
-    double offset;
     double stiffness;
     double damping;
+    double inertia;
     
 public:
-    Joint(JointType type, double scale=1.0, double offset=0.0,double stiffness=0.0,double damping=0.0);
+    Joint(JointType type, double scale=1.0, double offset=0.0,double stiffness=0.0,double damping=0.0, double inertia=0.0);
     Joint(const Joint& in);
     Joint& operator = ( const Joint& arg);
     
