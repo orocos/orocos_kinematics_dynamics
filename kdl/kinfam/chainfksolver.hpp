@@ -1,6 +1,7 @@
 #ifndef KDL_CHAIN_FKSOLVER_HPP
 #define KDL_CHAIN_FKSOLVER_HPP
 
+#include "chain.hpp"
 
 namespace KDL {
     
