@@ -31,14 +31,18 @@ namespace KDL {
         Damping damping;
         Segment* parent;
         Segment* child;
-        Frame f_to_parent;
+        Frame f_from_parent;
         
     public:
-        Segment(Joint joint, Frame f_to_parent);
+        Segment(Joint joint, Frame f_from_parent);
         Segment(const Segment& in);
         Segment& operator = ( const Segment& arg);
         
         virtual ~Segment();
+
+        Frame pose(double q);
+        Twist twist(double q);
+        Twist jac();
     };
 }//end of namespace KDL
 
