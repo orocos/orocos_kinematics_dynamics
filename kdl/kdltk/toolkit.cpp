@@ -99,9 +99,9 @@ namespace KDL
 
     template<class JointType>
     struct JointTypeInfo
-        : public TemplateTypeInfo<JointType,true>
+        : public TemplateTypeInfo<JointType,false>
     {
-        JointTypeInfo(std::string name) : TemplateTypeInfo<JointType,true>(name) {}
+        JointTypeInfo(std::string name) : TemplateTypeInfo<JointType,false>(name) {}
 
         virtual bool decomposeTypeImpl(const JointType& source, PropertyBag& targetbag ) const {
             decomposeProperty( source, targetbag );

@@ -155,4 +155,20 @@ Joint* readJoint(std::istream& is) {
 	throw Error_IO("Joint expected");
 }
 
+std::istream& operator >> (std::istream& is, JointRotZ& joint) {
+	IOTrace("creating Joint from stream input");
+	char storage[10];
+	EatWord(is,"[]",storage,10);
+	if (strcmp(storage,"ROTZ")==0) {
+		Eat(is,'[');
+		Frame F;
+		is >> F;	
+		joint = JointRotZ(F);
+		Eat(is,']');
+		IOTracePop();
+		return is;
+	}
+	throw Error_IO("Joint expected");
+}
+
 } // end of namespace KDL

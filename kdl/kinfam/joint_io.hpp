@@ -49,8 +49,9 @@ std::ostream& operator << (std::ostream& os,const Joint& r);
  * \return pointer to the newly created Joint.  The user is responsible for 
  *         deleting this created Joint.
  */
-Joint* readJoint(std::istream& is); 
-
+Joint* readJoint(std::istream& is);
+std::istream& operator >> (std::istream& is,Joint& joint);
+    
 } // end of namespace KDL
 
 #endif
