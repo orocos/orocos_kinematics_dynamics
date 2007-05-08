@@ -17,6 +17,8 @@
 
 namespace KDL {
 
+    using namespace std;
+    
 
 Trajectory_Composite::Trajectory_Composite():duration(0.0) {
 }

@@ -42,7 +42,7 @@ namespace KDL {
 		virtual Twist Acc(double time) const {
 			return Twist::Zero();
 		}
-		virtual void Write(ostream& os) const;
+		virtual void Write(std::ostream& os) const;
 		virtual ~Trajectory_Stationary() {}
 	};
 
