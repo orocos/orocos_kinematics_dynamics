@@ -37,7 +37,9 @@
 
 namespace KDL {
 
-
+    /**
+     * \defgroup kinfam Kinematic Families.
+     */
 
 /**
  * \brief Interface to define a kinematic family
@@ -48,6 +50,7 @@ namespace KDL {
  *
  * \todo
  *    Documentation ! 
+ * \ingroup kinfam
  */
 class KinematicFamily {
 protected:

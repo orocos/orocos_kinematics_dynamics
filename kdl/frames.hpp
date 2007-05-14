@@ -26,8 +26,10 @@
  ***************************************************************************/
 
 /**   
- * \file
- * \warning
+ * \defgroup frames Geometric primitives
+ * \brief The 3D primitives are KDL::Frame, KDL::Rotation, KDL::Vector, KDL::Twist, KDL::Wrench, KDL::Jacobian
+ * and the 2D primitives are KDL::Vector2, KDL::Rotation2, KDL::Frame2.
+ * \note
  *       Efficienty can be improved by writing p2 = A*(B*(C*p1))) instead of
  *          p2=A*B*C*p1
  *          
@@ -139,6 +141,7 @@ class Frame2;
 
 /**
  * \brief A concrete implementation of a 3 dimensional vector class
+ * \ingroup frames
  */
 class Vector 
 {
@@ -283,6 +286,7 @@ public:
    Analogue reasonings can be applyd to SetRotY,SetRotZ,SetRot
  \par type
   Concrete implementation
+  \ingroup frames
 */
 class Rotation 
 {
@@ -502,6 +506,7 @@ public:
 
     Frame.M contains columns that represent the axes of frame B wrt frame A
     Frame.p contains the origin of frame B expressed in frame A.
+  \ingroup frames
 */
 class Frame {
 public:
@@ -644,6 +649,7 @@ public:
  *
  * This class represents a twist.  A twist is the combination of translational
  * velocity and rotational velocity applied at one point.
+  \ingroup frames
 */
 class Twist {
 public:
@@ -721,6 +727,7 @@ public:
  * \brief represents the combination of a force and a torque.
  *
  * This class represents a Wrench.  A Wrench is the force and torque applied at a point
+  \ingroup frames
  */
 class Wrench 
 {
@@ -802,7 +809,10 @@ public:
 };
 
 
-//! 2D version of Vector
+/**
+ * 2D version of Vector
+  \ingroup frames
+*/
 class Vector2
 {
     double data[2];
@@ -872,8 +882,11 @@ public:
 };
 
 
-//! A 2D Rotation class, for conventions see Rotation. For further documentation
-//! of the methods see Rotation class.
+/**
+   A 2D Rotation class, for conventions see Rotation. For further documentation
+   of the methods see Rotation class.
+   \ingroup frames
+*/
 class Rotation2
 {
     double s,c;
@@ -916,8 +929,11 @@ public:
      inline friend bool Equal(const Rotation2& a,const Rotation2& b,double eps=epsilon);
 };
 
-//! A 2D frame class, for further documentation see the Frames class
-//! for methods with unchanged semantics.
+/**
+   A 2D frame class, for further documentation see the Frames class
+   for methods with unchanged semantics.
+  \ingroup frames
+*/
 class Frame2
  {
 public:

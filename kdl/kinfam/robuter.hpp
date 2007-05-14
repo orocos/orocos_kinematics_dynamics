@@ -8,6 +8,7 @@ namespace KDL {
 
 /**
  * \brief constructs a SerialChain kinematic object corresponding to our robuter platform with a mounted robot.
+ * \ingroup kinfam
  */
 class Robuter : public SerialChain {
 	public:

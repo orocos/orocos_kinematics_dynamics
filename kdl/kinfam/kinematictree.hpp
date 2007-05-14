@@ -51,6 +51,7 @@ namespace KDL {
     /**
      * \brief Implementation of KinematicFamily for trees
      * 
+     * \ingroup kinfam
      */
     class KinematicTree: public KinematicFamily {
     private:

@@ -49,6 +49,7 @@ class SerialChain;
 
 /**
  * \brief Implementation of KinematicFamily for serial chains.
+ * \ingroup kinfam
  */
 class SerialChain: public KinematicFamily {
 	std::string name;

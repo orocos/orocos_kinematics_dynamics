@@ -18,6 +18,7 @@
 #define TRAJECTORY_COMPOSITE_H
 
 #include "trajectory.h"
+#include "path_composite.h"
 #include <vector>
 
 
@@ -32,12 +33,15 @@ class Trajectory_Composite: public Trajectory
 		typedef std::vector<double>         VectorDouble;
 		VectorTraj vt;      // contains the element Trajectories
 		VectorDouble  vd;      // contains end time for each Trajectory
-		double duration;    // total duration of the composed Trajectory
+		double duration;    // total duration of the composed
+				    // Trajectory
+		Path_Composite* path;
+				
 	public:
 		Trajectory_Composite();
 		// Constructs an empty composite
 
-		virtual double Duration();
+		virtual double Duration() const;
 		virtual Frame Pos(double time) const;
 		virtual Twist Vel(double time) const;
 		virtual Twist Acc(double time) const;
@@ -47,6 +51,10 @@ class Trajectory_Composite: public Trajectory
 
 		virtual void Destroy();
 		virtual void Write(std::ostream& os) const;
+		virtual Trajectory* Clone() const;
+		virtual Path*      GetPath();
+		virtual VelocityProfile* GetProfile();
+
 		virtual ~Trajectory_Composite();
 	};
 

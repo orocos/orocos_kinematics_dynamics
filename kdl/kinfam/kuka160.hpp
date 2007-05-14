@@ -35,6 +35,7 @@ namespace KDL {
 
 /**
  * \brief constructs a ZXXZXZ object with the parameters of a Kuka160 robot.
+ * \ingroup kinfam
  */
   class Kuka160 : public ZXXZXZ {
   public:

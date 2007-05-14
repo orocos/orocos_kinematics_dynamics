@@ -50,6 +50,7 @@ namespace KDL {
     
     /**
      * \brief implements KinematicFamily for a  ZXXZXZ kinematic chain.
+     * \ingroup kinfam
      */
     class ZXXZXZ: public KinematicFamily {
         std::string name;
