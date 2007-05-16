@@ -31,11 +31,13 @@
 #include <assert.h>
 #include <bitset>
 #include <vector>
-
+namespace KDL
+{
+    
 #define MAXNROFDERIV 31
 
-typedef std::bitset<MAXNROFDERIV> JacobianBitset;
-
+    typedef std::bitset<MAXNROFDERIV> JacobianBitset;
+    
 /**
  * \file 
  * This file defines the framework for template expressions.
@@ -447,7 +449,8 @@ public:
     } 
 };
 
-
+ 
+}//namespace
 
 
 
