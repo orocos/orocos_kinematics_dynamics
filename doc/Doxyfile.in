@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDL
-PROJECT_NUMBER         = 0.2.1
+PROJECT_NUMBER         = @VERSION@
 OUTPUT_DIRECTORY       = ./api
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
