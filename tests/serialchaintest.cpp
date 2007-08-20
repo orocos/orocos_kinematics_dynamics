@@ -10,13 +10,6 @@
 using namespace KDL;
 
 
-void displayjv(std::ostream& os,const std::vector<double>& v) {
-	for (int i=0;i<v.size();++i) {
-		os << v[i] << "\t";	
-	}
-	os << std::endl;
-}
-
 
 void CompareFamilies(KinematicFamily* KF1,KinematicFamily* KF2) {
 	Jnt2CartPos* jnt2cartpos1 = KF1->createJnt2CartPos();
@@ -85,56 +78,6 @@ public:
 		testobj.test(q);
 		//std::cout << "number of iterations " << ((SerialChainCartPos2Jnt*)testobj.cartpos2jnt)->iter << std::endl;
 	}
-
-
-	TestForwardAndInverse(KinematicFamily* _family,const JointVector& q_i):
-		family(_family),
-		jnt2cartpos(_family->createJnt2CartPos()),
-		cartpos2jnt(_family->createCartPos2Jnt()),
-		q_solved(   _family->nrOfJoints() ),
-		q_initial(  _family->nrOfJoints() )
-	{
-		assert(jnt2cartpos!=0);
-		assert(cartpos2jnt!=0);
-		copy(q_i.begin(),q_i.end(),q_initial.begin());
-	}
-	
-	void test(JointVector& q) {
-		assert( (int)q.size() == family->nrOfJoints() );
-		int result = jnt2cartpos->evaluate(q);
-		assert(result==0);
-		jnt2cartpos->getFrame(F_base_ee);
-		cartpos2jnt->setFrame(F_base_ee);
-		cartpos2jnt->setConfiguration(q_initial);
-		result = cartpos2jnt->evaluate(q_solved);
-        if(result!=0){
-            std::cout<<"nr of iteration in cartpos2jnt "<<result<<std::endl;
-            assert(result==0);
-        }
-        std::cout << "original jv : " << std::endl;
-		displayjv(std::cout, q);
-		std::cout << "calculated jv : " << std::endl;
-		displayjv(std::cout, q_solved);
-		result=jnt2cartpos->evaluate(q_solved);
-		assert(result==0);
-		jnt2cartpos->getFrame(F_base_ee2);
-        std::cout << "original   F_base_ee = " << F_base_ee << std::endl;
-        std::cout << "calculated F_base_ee2 = " << F_base_ee2 << std::endl;
-		std::cout << "Difference between frames : " << diff(F_base_ee,F_base_ee2)<< std::endl;
-        if (!Equal(F_base_ee,F_base_ee2,1E-6)) {
-            std::cout << "The calculated inverse solution does not result in the same end frame ";
-            std::cout << F_base_ee << std::endl;
-            std::cout << F_base_ee2 << std::endl;
-            exit(-1);
-        }
-	}	
-
-	~TestForwardAndInverse() {
-		delete jnt2cartpos;
-		delete cartpos2jnt;
-	}	
-};
-
 
 
 //

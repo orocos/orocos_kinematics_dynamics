@@ -1,15 +1,29 @@
-PROJECT(KDL)
+#
+# Test CMake version
+#
+CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
+#MARK_AS_ADVANCED( FORCE CMAKE_BACKWARDS_COMPATIBILITY )
 
-SET( VERSION 0.4 CACHE STRING "Version of KinDynLibrary" )
+###################################################
+#                                                 #
+#       Start project customization section       #
+#                                                 #
+###################################################
 
-SET( PROJ_SOURCE_DIR ${KDL_SOURCE_DIR} )
-SET( PROJ_BINARY_DIR ${KDL_BINARY_DIR} )
+PROJECT(Orocos-KDL)
+
+SET( KDL_VERSION 0.99.0 CACHE STRING "Version of Orocos KDL" )
+
+SET( PROJ_SOURCE_DIR ${Orocos-KDL_SOURCE_DIR} )
+SET( PROJ_BINARY_DIR ${Orocos-KDL_BINARY_DIR} )
+
 
 IF(NOT CMAKE_INSTALL_PREFIX)
   SET( CMAKE_INSTALL_PREFIX /usr/local/orocos CACHE PATH "Installation directory" FORCE)
   MESSAGE( STATUS "Setting installation directory to ${CMAKE_INSTALL_PREFIX}" )
 ENDIF(NOT CMAKE_INSTALL_PREFIX)
 
+SET(CMAKE_VERSION "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION}")
 
 IF ( NOT CMAKE_BUILD_TYPE )
   SET( CMAKE_BUILD_TYPE "RTT" CACHE STRING "Build type: None (Use CMAKE_C_FLAGS and CMAKE_CXX_FLAGS), RTT (Recommended), Release, Debug, RelWithDebInfo, MinSizeRel." FORCE )
@@ -31,13 +45,14 @@ IF( OROCOS_PLUGIN )
   IF(NOT OROCOS_INSTALL)
     SET( OROCOS_INSTALL /usr/local/orocos CACHE PATH "The RTT installation directory.")
   ENDIF(NOT OROCOS_INSTALL)
-  INCLUDE (${KDL_SOURCE_DIR}/config/FindOrocosRTT.cmake)
+  INCLUDE (${PROJ_SOURCE_DIR}/config/FindOrocosRTT.cmake)
 ENDIF( OROCOS_PLUGIN )
 
-OPTION( BUILD_TESTS "Turn me off to disable compilation of all tests" ON )
+OPTION( PYTHON_BINDINGS "Build python-bindings?" ON)
+INCLUDE (${PROJ_SOURCE_DIR}/config/FindSIPandPython.cmake)
 
 ADD_SUBDIRECTORY( doc )
-ADD_SUBDIRECTORY( kdl )
+ADD_SUBDIRECTORY( src )
 ADD_SUBDIRECTORY( tests )
 
 CONFIGURE_FILE(
@@ -47,4 +62,3 @@ CONFIGURE_FILE(
 
 ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
-

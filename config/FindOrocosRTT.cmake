@@ -4,7 +4,7 @@
 # OROCOS_RTT_HOME where to find include, lib, bin, etc.
 # OROCOS_RTT_FOUND, is set to true
 
-INCLUDE (${KDL_SOURCE_DIR}/config/FindPkgConfig.cmake)
+INCLUDE (${PROJ_SOURCE_DIR}/config/FindPkgConfig.cmake)
 
 IF ( CMAKE_PKGCONFIG_EXECUTABLE )
 

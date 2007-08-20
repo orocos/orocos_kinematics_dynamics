@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = KDL
-PROJECT_NUMBER         = @VERSION@
+PROJECT_NUMBER         = @KDL_VERSION@
 OUTPUT_DIRECTORY       = ./api
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
@@ -25,8 +25,8 @@ ABBREVIATE_BRIEF       = "The $name class" \
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = YES
 FULL_PATH_NAMES        = YES
-STRIP_FROM_PATH        = @KDL_SOURCE_DIR@
-STRIP_FROM_INC_PATH    = @KDL_SOURCE_DIR@
+STRIP_FROM_PATH        = @PROJ_SOURCE_DIR@
+STRIP_FROM_INC_PATH    = @PROJ_SOURCE_DIR@
 SHORT_NAMES            = NO
 JAVADOC_AUTOBRIEF      = YES
 MULTILINE_CPP_IS_BRIEF = NO
@@ -82,26 +82,16 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @KDL_SOURCE_DIR@
+INPUT                  = @PROJ_SOURCE_DIR@/src \
+			  @PROJ_SOURCE_DIR@/src/bindings/rtt
 FILE_PATTERNS          = *.cpp \
                          *.cxx \
                          *.h \
                          *.hpp \
-                         *.txt
-RECURSIVE              = YES
-EXCLUDE                = @KDL_SOURCE_DIR@/kdl/jacobiandouble.hpp \
-                         @KDL_SOURCE_DIR@/kdl/jacobianexpr.hpp \
-                         @KDL_SOURCE_DIR@/kdl/jacobianframe.hpp \
-                         @KDL_SOURCE_DIR@/kdl/debug_macros.cxx \
-                         @KDL_SOURCE_DIR@/kdl/test_macros.cpp \
-                         @KDL_SOURCE_DIR@/kdl/test_macros.h \
-                         @KDL_SOURCE_DIR@/kdl/utility.cxx \
-                         @KDL_SOURCE_DIR@/kdl/utility.h \
-                         @KDL_SOURCE_DIR@/kdl/utility_io.cxx \
-                         @KDL_SOURCE_DIR@/kdl/utility_io.h \
-                         @KDL_SOURCE_DIR@/kdl/traits.h \
-			 @KDL_SOURCE_DIR@/tests \
-			 @KDL_SOURCE_DIR@/build
+                         *.inl 
+			 
+RECURSIVE              = NO
+EXCLUDE                = 
 	
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = *.svn* CMake*
