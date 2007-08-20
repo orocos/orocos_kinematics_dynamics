@@ -66,7 +66,7 @@ namespace RTT
     bool decomposeTypeImpl(const Segment& segment, PropertyBag& targetbag)
     {
         targetbag.setType("Segment");
-        targetbag.add(new Property<Frame>("frame","The offset frame from the previous segments joint to the next joint: link",segment.getFrameFromParent()));
+        targetbag.add(new Property<Frame>("frame","The offset frame from the previous segments joint to the next joint: link",segment.getFrameToTip()));
         targetbag.add( new Property<Joint>("joint", "The joint at the end of this segment",segment.getJoint()));
         return true;
     }
