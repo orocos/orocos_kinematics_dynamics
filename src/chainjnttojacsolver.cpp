@@ -44,16 +44,17 @@ namespace KDL
             //Calculate new Frame_base_ee
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
                 total = T_tmp*chain.getSegment(i).pose(q_in(j));
+                //changing base of new segment's twist to base frame
+                //t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);
+                t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
             }else{
                 total = T_tmp*chain.getSegment(i).pose(0.0);
+                
             }
             
             //Changing Refpoint of all columns to new ee
             changeRefPoint(jac,total.p-T_tmp.p,jac);
 
-            //changing base of new segment's twist to base frame
-            //t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);
-            t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
             //Only increase jointnr if the segment has a joint
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
                 jac.twists[j] = t_tmp;
