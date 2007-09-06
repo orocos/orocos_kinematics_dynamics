@@ -1,4 +1,4 @@
-FILE( GLOB KDL_SRCS [^.]*.cpp)
+FILE( GLOB KDL_SRCS [^.]*.cpp )
 FILE( GLOB KDL_HPPS [^.]*.hpp [^.]*.inl)
 
 FILE( GLOB UTIL_SRCS utilities/[^.]*.cpp utilities/[^.]*.cxx)

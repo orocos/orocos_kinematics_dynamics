@@ -30,6 +30,7 @@
 #include "chain.hpp"
 #include "jntarray.hpp"
 #include "jacobian.hpp"
+#include "tree.hpp"
 
 namespace KDL
 {
@@ -40,6 +41,11 @@ namespace KDL
     std::ostream& operator << (std::ostream& os, const Chain& chain);
     std::istream& operator >> (std::istream& is, Chain& chain);
 
+    std::ostream& operator << (std::ostream& os, const Tree& tree);
+    std::istream& operator >> (std::istream& is, Tree& tree);
+    
+    std::ostream& operator << (std::ostream& os, Tree::SegmentMap::const_iterator it);
+        
     std::ostream& operator << (std::ostream& os,const JntArray& array);
     std::istream& operator >> (std::istream& is,JntArray& array);
     std::ostream& operator << (std::ostream& os,const Jacobian& jac);

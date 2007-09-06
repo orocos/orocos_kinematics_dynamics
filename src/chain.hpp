@@ -71,7 +71,7 @@ namespace KDL {
         unsigned int getNrOfJoints()const {return nrOfJoints;};
         /** 
          * Request the total number of segments in the chain.
-         * @return 
+         * @return total number of segments
          */
         unsigned int getNrOfSegments()const {return nrOfSegments;};
         
