@@ -1,9 +1,11 @@
 #include "kinfamtest.hpp"
 #include <frames_io.hpp>
+#include <kinfam_io.hpp>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( KinFamTest );
 
 using namespace KDL;
+using namespace std;
 
 void KinFamTest::setUp()
 {
@@ -148,5 +150,52 @@ void KinFamTest::ChainTest()
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfSegments(),chain1.getNrOfSegments()*(uint)2);
 }
 
+void KinFamTest::TreeTest()
+{
+    Tree tree1;
+    Segment segment1(Joint(Joint::None));
+    Segment segment2(Joint(Joint::RotX),Frame(Vector(0.1,0.2,0.3)));
+    Segment segment3(Joint(Joint::TransZ),Frame(Rotation::RotX(1.57)));
+    
+    cout<<tree1<<endl;
+        
+    CPPUNIT_ASSERT(tree1.addSegment(segment1,"Segment1","root"));
+    CPPUNIT_ASSERT(tree1.addSegment(segment2,"Segment2","root"));
+    CPPUNIT_ASSERT(tree1.addSegment(segment3,"Segment3","Segment1"));
+    CPPUNIT_ASSERT(tree1.addSegment(segment2,"Segment4","Segment3"));
+    CPPUNIT_ASSERT(!tree1.addSegment(segment1,"Segment5","Segment6"));
+    CPPUNIT_ASSERT(!tree1.addSegment(segment1,"Segment1","Segment4"));
 
+    cout<<tree1<<endl;
+
+    Tree tree2;
+    CPPUNIT_ASSERT(tree2.addSegment(segment1,"Segment1","root"));
+    CPPUNIT_ASSERT(tree2.addSegment(segment2,"Segment2","root"));
+    CPPUNIT_ASSERT(tree2.addSegment(segment3,"Segment3","Segment1"));
+    
+    cout<<tree2<<endl;
+
+    Chain chain1;
+    chain1.addSegment(Segment(Joint(Joint::RotZ),
+                              Frame(Vector(0.0,0.0,0.0))));
+    chain1.addSegment(Segment(Joint(Joint::RotX),
+                              Frame(Vector(0.0,0.0,0.9))));
+    chain1.addSegment(Segment(Joint(Joint::RotX),
+                              Frame(Vector(0.0,0.0,1.2))));
+    chain1.addSegment(Segment(Joint(Joint::RotZ),
+                              Frame(Vector(0.0,0.0,1.5))));
+    chain1.addSegment(Segment(Joint(Joint::RotX),
+                              Frame(Vector(0.0,0.0,0.0))));
+    chain1.addSegment(Segment(Joint(Joint::RotZ),
+                              Frame(Vector(0.0,0.0,0.4))));
+
+
+    CPPUNIT_ASSERT(tree2.addChain(chain1,"Chain1","Segment2"));
+    cout<<tree2<<endl;    
+    CPPUNIT_ASSERT(tree1.addTree(tree2,"Tree2","Segment2"));
+    cout<<tree1<<endl;
+    
+}
+
+        
 

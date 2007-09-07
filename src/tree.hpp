@@ -42,8 +42,8 @@ namespace KDL
         struct element
         {
             Segment segment;
-            std::map<std::string,element>::iterator parent;
-            std::vector<std::map<std::string,element>::const_iterator> children;
+            std::map<std::string,element>::const_iterator  parent;
+            std::vector<std::map<std::string,element>::const_iterator > children;
         };
     public:
         typedef std::map<std::string,element> SegmentMap;
@@ -53,7 +53,7 @@ namespace KDL
         int nrOfJoints;
         int nrOfSegments;
 
-        bool addTreePart(const SegmentMap::const_iterator& pos,const std::string& tree_name, const std::string& hook_name);
+        bool addTreeRecursive(SegmentMap::const_iterator root, const std::string& tree_name, const std::string& hook_name);
         
     public:
         /**

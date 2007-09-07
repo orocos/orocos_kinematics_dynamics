@@ -6,6 +6,7 @@
 #include <joint.hpp>
 #include <segment.hpp>
 #include <chain.hpp>
+#include <tree.hpp>
 
 using namespace KDL;
 
@@ -15,6 +16,7 @@ class KinFamTest : public CppUnit::TestFixture
     CPPUNIT_TEST( JointTest );
     CPPUNIT_TEST( SegmentTest );
     CPPUNIT_TEST( ChainTest );
+    CPPUNIT_TEST( TreeTest );
     CPPUNIT_TEST_SUITE_END();
     
 public:
@@ -24,7 +26,8 @@ public:
     void JointTest();
     void SegmentTest();
     void ChainTest();
-        
+    void TreeTest();
+    
 };  
     
 #endif

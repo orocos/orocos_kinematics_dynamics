@@ -60,14 +60,17 @@ namespace KDL
     std::ostream& operator << (std::ostream& os, const Tree& tree)
     {
         Tree::SegmentMap::const_iterator root=tree.getSegment("root");
-        os<<root;
+        return os<<root;
     }
     
     std::ostream& operator << (std::ostream& os,Tree::SegmentMap::const_iterator root)
     {
-        os<<root->first<<": "<<root->second.segment<<"\n";
-        for(unsigned int i=0;i<root->second.children.size();i++)
+        //os<<root->first<<": "<<root->second.segment<<"\n";
+        os<<root->first;
+        for(unsigned int i=0;i<root->second.children.size();i++){
             os<<"\t"<<(root->second.children[i]);
+        }
+        return os<<"\n";
     }
     
     std::istream& operator >> (std::istream& is, Tree& tree)

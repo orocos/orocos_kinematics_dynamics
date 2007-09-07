@@ -43,19 +43,28 @@ namespace KDL
     bool Tree::addSegment(const Segment& segment,const std::string& segment_name,const std::string& hook_name)
     {
         SegmentMap::iterator parent = segments.find(hook_name);
+        //check if parent exists
         if(parent==segments.end())
             return false;
+        //create new element for SegmentMap
         element new_element;
+        //store Segment
         new_element.segment=segment;
-        nrOfSegments++;
-        if(segment.getJoint().getType()!=Joint::None)
-            nrOfJoints++;
+        //store iterator pointing to parent
         new_element.parent=parent;
         pair<SegmentMap::iterator,bool> retval;
+        //insert new element
         retval=segments.insert(make_pair(segment_name,new_element));
+        //check if insertion succeeded
         if(!retval.second)
             return false;
+        //add iterator to new element in parents children list
         parent->second.children.push_back(retval.first);
+        //increase number of segments
+        nrOfSegments++;
+        //increase number of joints
+        if(segment.getJoint().getType()!=Joint::None)
+            nrOfJoints++;
         return true;
     }
     
@@ -75,25 +84,27 @@ namespace KDL
     
     bool Tree::addTree(const Tree& tree, const std::string& tree_name,const std::string& hook_name)
     {
-        SegmentMap::const_iterator root=tree.getSegments().find("root");
-        
-        for(unsigned int i=0;i<root->second.children.size();i++){
-            if(!(this->addTreePart(root->second.children[i],tree_name,hook_name)))
-                return false;
-        }
-        return true;
+        return this->addTreeRecursive(tree.getSegment("root"),tree_name,hook_name);
     }
     
-    bool Tree::addTreePart(const SegmentMap::const_iterator& pos,const std::string& tree_name, const std::string& hook_name)
+    bool Tree::addTreeRecursive(SegmentMap::const_iterator root, const std::string& tree_name, const std::string& hook_name)
     {
-        if(this->addSegment(pos->second.segment,tree_name+"."+pos->first,hook_name)){
-            for(unsigned int i=0;i<pos->second.children.size();i++){
-                if(!(this->addTreePart(pos->second.children[i],tree_name,tree_name+"."+pos->first)))
+        //get iterator for root-segment
+        SegmentMap::const_iterator child;
+        //try to add all of root's children
+        for(unsigned int i=0;i<root->second.children.size();i++){
+            child=root->second.children[i];
+            //Try to add the child
+            if(this->addSegment(child->second.segment,tree_name+"."+child->first,hook_name)){
+                //if child is added, add all the child's children
+                if(!(this->addTreeRecursive(child,tree_name,tree_name+"."+child->first)))
+                    //if it didn't work, return false
                     return false;
             }
+            else
+                //If the child could not be added, return false
+                return false;
         }
-        else 
-            return false;
         return true;
     }
 
