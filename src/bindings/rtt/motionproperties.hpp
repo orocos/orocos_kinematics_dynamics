@@ -32,6 +32,10 @@
 #include <rtt/Property.hpp>
 #include <rtt/PropertyBag.hpp>
 #include <rtt/MultiVector.hpp>
+#include <rtt/TemplateTypeInfo.hpp>
+#include <rtt/RealTimeToolkit.hpp>
+
+#include <sstream>
 
 namespace RTT 
 {
@@ -121,6 +125,46 @@ namespace RTT
      * properties being a bag containing a Frame, fill the given non primitive Property<T>.
      */
     bool composeProperty(const PropertyBag& bag, Frame &f);
+    
+    
+    template <typename T>
+    struct vectorTypeInfo : public TemplateTypeInfo<std::vector<T>,true>
+    {
+        vectorTypeInfo<T>():TemplateTypeInfo<std::vector<T>,true>("std::vector")
+        {};
+        virtual bool decomposeTypeImpl(const std::vector<T>& vec, PropertyBag& target)const
+        {
+            target.setType("std::vector");
+            for(unsigned int i=0;i<vec.size();++i){
+                std::ostringstream nr;
+                nr<<i;
+                PropertyBag item;
+                decomposeProperty(vec[i],item);
+                target.add(new Property<PropertyBag>("Element"+nr.str(),"Element "+nr.str(),item));
+            }
+            return true;
+        }
+        
+        virtual bool composeTypeImpl(const PropertyBag& bag, std::vector<T>& vec)const
+        {
+            if( bag.getType() != std::string("std::vector"))
+                return false;
+            for(unsigned int i=0;i<vec.size();++i){
+                std::ostringstream nr;
+                nr<<i;
+                PropertyBase* item = bag.find("Element"+nr.str());
+                if(!item->ready())
+                    return false;
+                Property<T> item_prop(item->getName(),
+                                      item->getDescription());
+                item_prop.getTypeInfo()->composeType(item->getDataSource(),
+                                                     item_prop.getDataSource());
+                vec[i]=item_prop.value();
+            }
+            return true;
+        }
+    };
+    
 }
 
 namespace RTT

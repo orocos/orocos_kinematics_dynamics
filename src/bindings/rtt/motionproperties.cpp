@@ -28,12 +28,15 @@
 #include <rtt/Property.hpp>
 #include <rtt/PropertyIntrospection.hpp>
 #include <rtt/Logger.hpp>
+#include <sstream>
 
 #include "motionproperties.hpp"
 #include "kdltk.hpp"
 
 namespace RTT
 {
+    using namespace std;
+    
 
     template class Property<KDL::Frame>;
     //template class Property<KDL::JntArray>;
@@ -583,4 +586,5 @@ namespace RTT
             }
         return false;
     }
+
 } // MotionControl
