@@ -34,9 +34,10 @@ namespace KDL
         friend class ChainJntToJacSolver;
     private:
         unsigned int size;
+        unsigned int nr_blocks;
     public:
         Twist* twists;
-        Jacobian(unsigned int size);
+        Jacobian(unsigned int size,unsigned int nr=1);
         Jacobian(const Jacobian& arg);
         
         Jacobian& operator=(const Jacobian& arg);

@@ -27,8 +27,7 @@ namespace KDL
     
     Tree::Tree()
     {
-        element root_element;
-        segments.insert(make_pair("root",root_element));
+        segments.insert(make_pair("root",TreeElement::Root()));
     }
 
     Tree::Tree(const Tree& in)
@@ -46,15 +45,10 @@ namespace KDL
         //check if parent exists
         if(parent==segments.end())
             return false;
-        //create new element for SegmentMap
-        element new_element;
-        //store Segment
-        new_element.segment=segment;
-        //store iterator pointing to parent
-        new_element.parent=parent;
         pair<SegmentMap::iterator,bool> retval;
         //insert new element
-        retval=segments.insert(make_pair(segment_name,new_element));
+        retval=segments.insert(make_pair(segment_name,
+                                         TreeElement(segment,parent)));
         //check if insertion succeeded
         if(!retval.second)
             return false;

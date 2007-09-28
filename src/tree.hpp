@@ -30,6 +30,30 @@
 
 namespace KDL 
 {
+    //Forward declaration
+    class TreeElement;
+    typedef std::map<std::string,TreeElement> SegmentMap;
+    
+    class TreeElement
+    {
+    private:
+        TreeElement()
+        {};
+    public:
+        Segment segment;
+        SegmentMap::const_iterator  parent;
+        std::vector<SegmentMap::const_iterator > children;
+        TreeElement(const Segment& segment_in,const SegmentMap::const_iterator& parent_in)
+        {
+            segment=segment_in;
+            parent=parent_in;
+        };
+        static TreeElement Root()
+        {
+            return TreeElement();
+        };
+    };
+    
     /**
      * \brief  This class encapsulates a <strong>tree</strong>
      * kinematic interconnection structure. It is build out of segments.
@@ -38,16 +62,6 @@ namespace KDL
      */
     class Tree
     {
-    private:
-        struct element
-        {
-            Segment segment;
-            std::map<std::string,element>::const_iterator  parent;
-            std::vector<std::map<std::string,element>::const_iterator > children;
-        };
-    public:
-        typedef std::map<std::string,element> SegmentMap;
-
     private:
         SegmentMap segments;
         int nrOfJoints;
