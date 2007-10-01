@@ -1,7 +1,7 @@
 import os, os.path
 import copy, glob, sys
 import sipconfig
-import PyQt4.pyqtconfig
+#import PyQt4.pyqtconfig
 
 src_path = '@PROJ_SOURCE_DIR@/src'
 build_path = '@PROJ_BINARY_DIR@/src'
