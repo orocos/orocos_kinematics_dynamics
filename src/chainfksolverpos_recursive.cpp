@@ -1,3 +1,4 @@
+// Copyright  (C)  2007  Francois Cauwe <francois at cauwe dot org>
 // Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 // Version: 1.0
@@ -29,14 +30,20 @@ namespace KDL {
     {
     }
     
-    int ChainFkSolverPos_recursive::JntToCart(const JntArray& q_in, Frame& p_out)
+    int ChainFkSolverPos_recursive::JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr)
     {
+        if(segmentNr<0)
+             segmentNr=chain.getNrOfSegments();
+
         p_out = Frame::Identity();
+
         if(q_in.rows()!=chain.getNrOfJoints())
+            return -1;
+        else if(segmentNr>chain.getNrOfSegments())
             return -1;
         else{
             int j=0;
-            for(unsigned int i=0;i<chain.getNrOfSegments();i++){
+            for(unsigned int i=0;i<segmentNr;i++){
                 if(chain.getSegment(i).getJoint().getType()!=Joint::None){
                     p_out = p_out*chain.getSegment(i).pose(q_in(j));
                     j++;

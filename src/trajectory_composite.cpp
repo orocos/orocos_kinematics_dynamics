@@ -33,7 +33,7 @@ namespace KDL {
     Frame Trajectory_Composite::Pos(double time) const {
         // not optimal, could be done in log(#elem)
         // or one could buffer the last segment and start looking from there.
-        int i;
+        unsigned int i;
         double previoustime;
         Trajectory* traj;
         if (time < 0) {
@@ -53,7 +53,7 @@ namespace KDL {
     
     Twist Trajectory_Composite::Vel(double time) const {
         // not optimal, could be done in log(#elem)
-		int i;
+        unsigned int i;
         Trajectory* traj;
         double previoustime;
         if (time < 0) {
@@ -72,7 +72,7 @@ namespace KDL {
     
     Twist Trajectory_Composite::Acc(double time) const {
         // not optimal, could be done in log(#elem)
-		int i;
+	unsigned int i;
         Trajectory* traj;
         double previoustime;
         if (time < 0) {
@@ -114,7 +114,7 @@ namespace KDL {
     
     void Trajectory_Composite::Write(ostream& os) const {
         os << "COMPOSITE[ " << vt.size() << endl;
-        int i;
+        unsigned int i;
         for (i=0;i<vt.size();i++) {
             vt[i]->Write(os);
         }

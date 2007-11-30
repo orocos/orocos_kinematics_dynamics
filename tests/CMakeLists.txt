@@ -48,27 +48,30 @@ ADD_TEST(solvertest solvertest)
 #  TARGET_LINK_LIBRARIES(treetest orocos-kdl)
 #  ADD_TEST(treetest treetest)
 
-  IF(OROCOS_PLUGIN)
-    ADD_EXECUTABLE(toolkittest ${DO_EXCLUDE} toolkittest.cpp)
-    LINK_DIRECTORIES(${OROCOS_RTT_LINK_DIRS})
-    TARGET_LINK_LIBRARIES(toolkittest orocos-kdltk orocos-kdl ${OROCOS_RTT_LIBS})
-    ADD_TEST(toolkittest toolkittest)
-  ENDIF(OROCOS_PLUGIN)
+IF(OROCOS_PLUGIN)
+  ADD_EXECUTABLE(toolkittest ${DO_EXCLUDE} toolkittest.cpp)
+  LINK_DIRECTORIES(${OROCOS_RTT_LINK_DIRS})
+  TARGET_LINK_LIBRARIES(toolkittest orocos-kdltk orocos-kdl ${OROCOS_RTT_LIBS})
+  ADD_TEST(toolkittest toolkittest)
+ENDIF(OROCOS_PLUGIN)
 
-  IF(PYTHON_BINDINGS)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/framestest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/framestest.py COPY_ONLY)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/kinfamtest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/kinfamtest.py COPY_ONLY)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/frameveltest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/frameveltest.py COPY_ONLY)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/PyKDLtest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/PyKDLtest.py COPY_ONLY)
-    ADD_TEST(PyKDLtest PyKDLtest.py)
-  ENDIF(PYTHON_BINDINGS)
+IF(PYTHON_BINDINGS)
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/framestest.py
+    ${CMAKE_CURRENT_BINARY_DIR}/framestest.py COPY_ONLY)
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/kinfamtest.py
+    ${CMAKE_CURRENT_BINARY_DIR}/kinfamtest.py COPY_ONLY)
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/frameveltest.py
+    ${CMAKE_CURRENT_BINARY_DIR}/frameveltest.py COPY_ONLY)
+  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/PyKDLtest.py
+    ${CMAKE_CURRENT_BINARY_DIR}/PyKDLtest.py COPY_ONLY)
+  ADD_CUSTOM_COMMAND(OUTPUT PyKDLtest-make-exec
+    COMMAND chmod ARGS +x ${CMAKE_CURRENT_BINARY_DIR}/PyKDLtest.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+  ADD_TEST(PyKDLtest PyKDLtest.py)
+ENDIF(PYTHON_BINDINGS)
     
 
 ADD_CUSTOM_TARGET(check ctest -V 
-  DEPENDS framestest kinfamtest solvertest# rframestest rallnumbertest 
+  DEPENDS framestest kinfamtest solvertest PyKDLtest-make-exec# rframestest rallnumbertest 
   WORKING_DIRECTORY ${PROJ_BINARY_DIR}/tests)
 

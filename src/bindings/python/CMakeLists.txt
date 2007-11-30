@@ -18,6 +18,8 @@ ADD_CUSTOM_TARGET (python DEPENDS ${BINDINGS_LIBS})
 # don't run python before the libs are built
 ADD_DEPENDENCIES (python orocos-kdl)
 
+TARGET_LINK_LIBRARIES(python orocos-kdl)
+
 FILE(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.sip")
 
 # Step 1: during configuration

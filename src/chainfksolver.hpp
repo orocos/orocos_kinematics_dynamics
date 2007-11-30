@@ -50,7 +50,7 @@ namespace KDL {
          * 
          * @return if < 0 something went wrong
          */
-        virtual int JntToCart(const JntArray& q_in, Frame& p_out)=0;
+        virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1)=0;
         virtual ~ChainFkSolverPos(){};
     };
 
@@ -71,7 +71,7 @@ namespace KDL {
          * 
          * @return if < 0 something went wrong
          */
-        virtual int JntToCart(const JntArrayVel& q_in, FrameVel& out)=0;
+        virtual int JntToCart(const JntArrayVel& q_in, FrameVel& out,int segmentNr=-1)=0;
         
         virtual ~ChainFkSolverVel(){};
     };
@@ -96,7 +96,7 @@ namespace KDL {
          * 
          * @return if < 0 something went wrong
          */
-    virtual int JntToCart(const JntArrayAcc& q_in, FrameAcc& out)=0;
+    virtual int JntToCart(const JntArrayAcc& q_in, FrameAcc& out,int segmentNr=-1)=0;
                 
         virtual ~ChainFkSolverAcc()=0;
     };

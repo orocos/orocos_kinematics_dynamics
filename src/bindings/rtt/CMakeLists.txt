@@ -21,7 +21,10 @@ IF( OROCOS_PLUGIN )
   FILE( GLOB HPPS [^.]*.hpp [^.]*.h)
   
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR} ${PROJ_BINARY_DIR}/src/bindings/rtt)
-  ADD_LIBRARY(orocos-kdltk SHARED ${SRCS}) 
+  ADD_LIBRARY(orocos-kdltk SHARED ${SRCS})
+  SET_TARGET_PROPERTIES(orocos-kdltk PROPERTIES
+  SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}" 
+  VERSION "${KDL_VERSION}") 
   INSTALL_TARGETS( /lib orocos-kdltk)
   INSTALL_FILES( /include/kdl/bindings/rtt FILES ${HPPS})
 

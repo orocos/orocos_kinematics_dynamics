@@ -5,6 +5,9 @@ FILE( GLOB UTIL_SRCS utilities/[^.]*.cpp utilities/[^.]*.cxx)
 FILE( GLOB UTIL_HPPS utilities/[^.]*.h utilities/[^.]*.hpp)
 
 ADD_LIBRARY(orocos-kdl SHARED ${KDL_SRCS} ${UTIL_SRCS}) 
+SET_TARGET_PROPERTIES( orocos-kdl PROPERTIES
+  SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
+  VERSION "${KDL_VERSION}")
 #INCLUDE_DIRECTORIES( ${PROJ_SOURCE_DIR}/ )
 INSTALL_TARGETS( /lib orocos-kdl)
 

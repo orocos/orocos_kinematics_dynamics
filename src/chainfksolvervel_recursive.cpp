@@ -1,3 +1,4 @@
+// Copyright  (C)  2007  Francois Cauwe <francois at cauwe dot org>
 // Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 // Version: 1.0
@@ -32,26 +33,33 @@ namespace KDL
     {
     }
     
-    int ChainFkSolverVel_recursive::JntToCart(const JntArrayVel& in,FrameVel& out)
+    int ChainFkSolverVel_recursive::JntToCart(const JntArrayVel& in,FrameVel& out,int segmentNr)
     {
-        assert(in.q.rows()==chain.getNrOfJoints()&&
-               in.qdot.rows()==chain.getNrOfJoints());
+        
+        if(segmentNr<0)
+             segmentNr=chain.getNrOfSegments();
         
         out=FrameVel::Identity();
         
-        int j=0;
-        for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
-            //Calculate new Frame_base_ee
-            if(chain.getSegment(i).getJoint().getType()!=Joint::None){
-                out=out*FrameVel(chain.getSegment(i).pose(in.q(j)),
-                                 chain.getSegment(i).twist(in.q(j),in.qdot(j)));
-                j++;//Only increase jointnr if the segment has a joint
-            }else{
-                out=out*FrameVel(chain.getSegment(i).pose(0.0),
-                                 chain.getSegment(i).twist(0.0,0.0));
+        if(!(in.q.rows()==chain.getNrOfJoints()&&in.qdot.rows()==chain.getNrOfJoints()))
+            return -1;
+        else if(segmentNr>chain.getNrOfSegments())
+            return -1;
+        else{
+            int j=0;
+            for (unsigned int i=0;i<segmentNr;i++) {
+                //Calculate new Frame_base_ee
+                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                    out=out*FrameVel(chain.getSegment(i).pose(in.q(j)),
+                                     chain.getSegment(i).twist(in.q(j),in.qdot(j)));
+                    j++;//Only increase jointnr if the segment has a joint
+                }else{
+                    out=out*FrameVel(chain.getSegment(i).pose(0.0),
+                                     chain.getSegment(i).twist(0.0,0.0));
+                }
             }
+            return 0;
         }
-        return 0;
     }
 }
 

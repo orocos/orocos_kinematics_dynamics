@@ -37,6 +37,7 @@ namespace KDL
     std::ostream& operator << (std::ostream& os, const Segment& segment)
     {
         os<<"["<<segment.getFrameToTip()<<", "<<segment.getJoint()<<"]";
+        return os;
     }
     
     std::istream& operator >> (std::istream& is, Segment& segment)
@@ -50,6 +51,7 @@ namespace KDL
         for(unsigned int i=0;i<chain.getNrOfSegments();i++)
             os<<chain.getSegment(i);
         os<<"]";
+        return os;
     }
     
     std::istream& operator >> (std::istream& is, Chain& chain)
@@ -75,6 +77,7 @@ namespace KDL
     
     std::istream& operator >> (std::istream& is, Tree& tree)
     {
+      return is;
     }
         
     std::ostream& operator << (std::ostream& os, const JntArray& array)
@@ -100,7 +103,7 @@ namespace KDL
             os<<std::endl;
         }
         os<<"]";
-    return os;
+        return os;
     }
     
     std::istream& operator >> (std::istream& is, Jacobian& jac)
