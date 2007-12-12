@@ -73,7 +73,7 @@ class VelocityProfile_Trap : public VelocityProfile
 		double endpos;
 	public:
 	
-		VelocityProfile_Trap(double _maxvel,double _maxacc);
+		VelocityProfile_Trap(double _maxvel=0,double _maxacc=0);
 		// constructs motion profile class with <maxvel> and <maxacc> as parameters of the
 		// trajectory.
 

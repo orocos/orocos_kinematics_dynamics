@@ -87,7 +87,7 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		 * \param starting this value is true when initial velocity is zero
 		 *        and ending velocity is maxvel, is false for the reverse
 		 */
-		VelocityProfile_TrapHalf(double _maxvel,double _maxacc,bool _starting);
+		VelocityProfile_TrapHalf(double _maxvel=0,double _maxacc=0,bool _starting=true);
 
         void SetMax(double _maxvel,double _maxacc, bool _starting );
 

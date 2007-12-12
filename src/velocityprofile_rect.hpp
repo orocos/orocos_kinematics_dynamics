@@ -61,7 +61,7 @@ namespace KDL {
 	public:
 		double maxvel;
 	
-		VelocityProfile_Rectangular(double _maxvel):
+		VelocityProfile_Rectangular(double _maxvel=0):
 		  maxvel(_maxvel) {}
 		// constructs motion profile class with <maxvel> as parameter of the
 		// trajectory.
