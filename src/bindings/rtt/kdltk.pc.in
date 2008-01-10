@@ -4,7 +4,7 @@ includedir=${prefix}/include
 
 Name: orocos-kdltk
 Description: The Orocos Kinematics and Dynamics Library RTT Plugin 
-Requires: orocos-kdl orocos-rtt
+Requires: orocos-kdl
 Version: @KDL_VERSION@
 Libs: -L${libdir} -lorocos-kdltk
 Cflags: -I${includedir}
