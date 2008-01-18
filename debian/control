@@ -1,7 +1,7 @@
 Source: orocos-kdl
 Priority: extra
-Maintainer: Leopold Palomo Avellaneda <lepalom@wol.es>
-Build-Depends: debhelper (>= 5), cmake, libboost-dev, libboost-graph-dev, fop, doxygen, liborocos-rtt-common-dev, liborocos-rtt-gnulinux-dev, python-sip4-dev (>=4.4.5)
+Maintainer: Ruben Smits <ruben.smits@mech.kuleuven.be>
+Build-Depends: debhelper (>= 5), cmake, libboost-dev, libboost-graph-dev, doxygen, liborocos-rtt-common-dev, liborocos-rtt-common-dev, python-sip4-dev (>=4.4.5)
 Standards-Version: 3.7.2
 Section: libs
 
@@ -38,7 +38,7 @@ Description: Kinematics and Dynamics Library rtt-gnulinux binding
 Package: liborocos-kdltk-dev
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, liborocos-rtt-gnulinux-dev, liborocos-kdltk1.0
+Depends: ${shlibs:Depends}, liborocos-rtt-common-dev, liborocos-kdltk1.0
 Description: Libkdl rtt-gnulinux binding development files
  Orocos project to supply RealTime usable kinematics and dynamics code,
  it contains code for rigid body kinematics calculations and

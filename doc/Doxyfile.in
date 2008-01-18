@@ -203,7 +203,7 @@ SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to external references   
 #---------------------------------------------------------------------------
-TAGFILES               = @OROCOS_INSTALL@/doc/rtt.tag=../../../../rtt/v1.0.x/api/html
+TAGFILES               = @OROCOS_INSTALL@/doc/liborocos-rtt/rtt.tag=../../../../rtt/@RTT_VVERSION@/api/html
 GENERATE_TAGFILE       = kdl.tag
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES

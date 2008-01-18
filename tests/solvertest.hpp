@@ -31,16 +31,15 @@ public:
     void FkPosAndIkPosTest();
 
 private:
-    
-    Chain chain;
 
-    ChainFkSolverPos_recursive* fksolverpos;
-    ChainJntToJacSolver* jacsolver;
-    ChainFkSolverVel_recursive* fksolvervel;
-    ChainIkSolverVel_pinv* iksolvervel;
-    ChainIkSolverPos_NR* iksolverpos;
+    Chain chain1;
+    Chain chain2;
     
-    
+    void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
+    void FkVelAndJacLocal(Chain& chain, ChainFksolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);
+    void FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainIkSolverVel& iksolvervel);
+    void FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, ChainIkSolverPos& iksolverpos);
+
 };
 #endif
 
