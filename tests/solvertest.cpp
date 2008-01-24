@@ -28,7 +28,17 @@ void SolverTest::setUp()
     chain1.addSegment(Segment(Joint(Joint::None),
                              Frame(Vector(0.0,0.0,0.0))));
     
-    chain2.addSegment()
+    chain2.addSegment(Segment(Joint(Joint::RotZ),
+                              Frame(Vector(0.0,0.0,0.5))));
+    chain2.addSegment(Segment(Joint(Joint::RotX),
+                              Frame(Vector(0.0,0.0,0.4))));
+    chain2.addSegment(Segment(Joint(Joint::RotX),
+                              Frame(Vector(0.0,0.0,0.3))));
+    chain2.addSegment(Segment(Joint(Joint::RotX),
+                              Frame(Vector(0.0,0.0,0.2))));
+    chain2.addSegment(Segment(Joint(Joint::RotZ),
+                              Frame(Vector(0.0,0.0,0.1))));
+    
 }
 
 void SolverTest::tearDown()
@@ -39,6 +49,51 @@ void SolverTest::tearDown()
 //     delete iksolvervel;
 //     delete iksolverpos;
 }
+
+void SolverTest::FkPosAndJacTest()
+{
+    ChainFkSolverPos_recursive fksolver1(chain1);
+    ChainJntToJacSolver jacsolver1(chain1);
+    FkPosAndJacLocal(chain1,fksolver1,jacsolver1);
+    ChainFkSolverPos_recursive fksolver2(chain2);
+    ChainJntToJacSolver jacsolver2(chain2);
+    FkPosAndJacLocal(chain2,fksolver2,jacsolver2);
+}
+
+void SolverTest::FkVelAndJacTest()
+{
+    ChainFkSolverVel_recursive fksolver1(chain1);
+    ChainJntToJacSolver jacsolver1(chain1);
+    FkVelAndJacLocal(chain1,fksolver1,jacsolver1);
+    ChainFkSolverVel_recursive fksolver2(chain2);
+    ChainJntToJacSolver jacsolver2(chain2);
+    FkVelAndJacLocal(chain2,fksolver2,jacsolver2);
+}
+
+void SolverTest::FkVelAndIkVelTest()
+{
+    ChainFkSolverVel_recursive fksolver1(chain1);
+    ChainIkSolverVel_pinv iksolver1(chain1);
+    FkVelAndIkVelLocal(chain1,fksolver1,iksolver1);
+    ChainFkSolverVel_recursive fksolver2(chain2);
+    ChainIkSolverVel_pinv iksolver2(chain2);
+    FkVelAndIkVelLocal(chain2,fksolver2,iksolver2);
+
+}
+
+void SolverTest::FkPosAndIkPosTest()
+{
+    ChainFkSolverPos_recursive fksolver1(chain1);
+    ChainIkSolverVel_pinv iksolverv1(chain1);
+    ChainIkSolverPos_NR iksolver1(chain1,fksolver1,iksolverv1);
+    FkPosAndIkPosLocal(chain1,fksolver1,iksolver1);
+    ChainFkSolverPos_recursive fksolver2(chain2);
+    ChainIkSolverVel_pinv iksolverv2(chain2);
+    ChainIkSolverPos_NR iksolver2(chain2,fksolver2,iksolverv2);
+    FkPosAndIkPosLocal(chain2,fksolver2,iksolver2);
+}
+
+
 
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
 {
@@ -74,7 +129,7 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
     }
 }
 
-void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFksolverVel& fksolvervel, ChainJntToJacSolver& jacsolver)
+void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver)
 {
     double deltaq = 1E-4;
     double epsJ   = 1E-4;

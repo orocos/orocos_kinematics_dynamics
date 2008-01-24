@@ -28,7 +28,7 @@ namespace KDL
         jnt2jac(chain),
         jac(chain.getNrOfJoints()),
         svd(jac),
-        U(chain.getNrOfJoints(),JntArray(chain.getNrOfJoints())),
+        U(6,6),
         S(chain.getNrOfJoints()),
         V(chain.getNrOfJoints(),JntArray(chain.getNrOfJoints())),
         tmp(chain.getNrOfJoints()),
@@ -60,9 +60,9 @@ namespace KDL
             tmp(i) = sum*(fabs(S(i))<eps?0.0:1.0/S(i));        
         }
         // x = Lx^-1*V*tmp + x
-        for (i=0;i<jac.rows();i++) {
+        for (i=0;i<jac.columns();i++) {
             sum = 0.0;
-            for (j=0;j<jac.rows();j++) {
+            for (j=0;j<jac.columns();j++) {
                 sum+=V[i](j)*tmp(j);
             }
             qdot_out(i)=sum;

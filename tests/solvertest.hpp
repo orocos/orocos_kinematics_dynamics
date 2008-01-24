@@ -36,7 +36,7 @@ private:
     Chain chain2;
     
     void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
-    void FkVelAndJacLocal(Chain& chain, ChainFksolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);
+    void FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);
     void FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainIkSolverVel& iksolvervel);
     void FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, ChainIkSolverPos& iksolverpos);
 
