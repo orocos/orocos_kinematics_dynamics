@@ -6,5 +6,10 @@ module Corba {
                         double y;
                         double z;
                 };
+                struct frame {
+                        double x;
+                        double y;
+                        double z;
+                };
 };
 };

@@ -9,7 +9,7 @@ namespace RTT
         typedef Corba::DoubleSequence CorbaType;
         typedef KDL::Vector StdType;
         static CorbaType* toAny(const KDL::Vector& orig) {
-            //Logger::log() << Logger::Debug << "Converting type 'std::vector<double>' to sequence<CORBA::Double>." <<Logger::endl;
+            log(Debug)<< "Converting type 'KDL::Vector' to sequence<CORBA::Double>." <<endlog();
             CorbaType* ret = new CorbaType();
             ret->length( 3 );
                 (*ret)[0] = orig.x();
@@ -19,6 +19,7 @@ namespace RTT
         }
 
         static StdType get(const CorbaType* t) {
+            log(Debug)<< "Converting type sequence<CORBA::Double> to 'KDL::Vector'" <<endlog();
             StdType ret;
             ret.x((*t)[0]);
             ret.y((*t)[1]);
@@ -27,6 +28,7 @@ namespace RTT
         }
 
         static bool update(const CORBA::Any& any, StdType& _value) {
+            log(Debug)<< "update KDL::Vector" <<endlog();
             CorbaType* result;
             if ( any >>= result ) {
                     _value.x((*result)[0]);
