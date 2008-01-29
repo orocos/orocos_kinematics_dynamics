@@ -437,6 +437,14 @@ namespace RTT {
                 assert( name == ti->getTypeName() );
                 if ( name == "vector" )
                     return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< KDL::Vector >() );
+                if ( name == "rotation" )
+                    return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< KDL::Rotation >() );
+                if ( name == "frame" )
+                    return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< KDL::Frame >() );
+                if ( name == "wrench" )
+                    return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< KDL::Wrench >() );
+                if ( name == "twist" )
+                    return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< KDL::Twist >() );
                 return false;
             }
 

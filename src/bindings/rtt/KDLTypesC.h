@@ -156,6 +156,141 @@ namespace KDL
     // be/be_visitor_typecode/typecode_decl.cpp:44
     
     extern  ::CORBA::TypeCode_ptr const _tc_vector;
+    
+    // TAO_IDL - Generated from
+    // be/be_type.cpp:258
+    
+    struct rotation;
+    
+    typedef
+      TAO_Fixed_Var_T<
+          rotation
+        >
+      rotation_var;
+    
+    typedef
+      rotation &
+      rotation_out;
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_structure/structure_ch.cpp:57
+    
+    struct  rotation
+    {
+      typedef rotation_var _var_type;
+      
+      static void _tao_any_destructor (void *);
+      CORBA::Double Xx;
+      CORBA::Double Xy;
+      CORBA::Double Xz;
+      CORBA::Double Yx;
+      CORBA::Double Yy;
+      CORBA::Double Yz;
+      CORBA::Double Zx;
+      CORBA::Double Zy;
+      CORBA::Double Zz;
+    };
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_typecode/typecode_decl.cpp:44
+    
+    extern  ::CORBA::TypeCode_ptr const _tc_rotation;
+    
+    // TAO_IDL - Generated from
+    // be/be_type.cpp:258
+    
+    struct frame;
+    
+    typedef
+      TAO_Fixed_Var_T<
+          frame
+        >
+      frame_var;
+    
+    typedef
+      frame &
+      frame_out;
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_structure/structure_ch.cpp:57
+    
+    struct  frame
+    {
+      typedef frame_var _var_type;
+      
+      static void _tao_any_destructor (void *);
+      KDL::Corba::vector p;
+      KDL::Corba::rotation M;
+    };
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_typecode/typecode_decl.cpp:44
+    
+    extern  ::CORBA::TypeCode_ptr const _tc_frame;
+    
+    // TAO_IDL - Generated from
+    // be/be_type.cpp:258
+    
+    struct wrench;
+    
+    typedef
+      TAO_Fixed_Var_T<
+          wrench
+        >
+      wrench_var;
+    
+    typedef
+      wrench &
+      wrench_out;
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_structure/structure_ch.cpp:57
+    
+    struct  wrench
+    {
+      typedef wrench_var _var_type;
+      
+      static void _tao_any_destructor (void *);
+      KDL::Corba::vector force;
+      KDL::Corba::rotation torque;
+    };
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_typecode/typecode_decl.cpp:44
+    
+    extern  ::CORBA::TypeCode_ptr const _tc_wrench;
+    
+    // TAO_IDL - Generated from
+    // be/be_type.cpp:258
+    
+    struct twist;
+    
+    typedef
+      TAO_Fixed_Var_T<
+          twist
+        >
+      twist_var;
+    
+    typedef
+      twist &
+      twist_out;
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_structure/structure_ch.cpp:57
+    
+    struct  twist
+    {
+      typedef twist_var _var_type;
+      
+      static void _tao_any_destructor (void *);
+      KDL::Corba::vector vel;
+      KDL::Corba::rotation rot;
+    };
+    
+    // TAO_IDL - Generated from
+    // be/be_visitor_typecode/typecode_decl.cpp:44
+    
+    extern  ::CORBA::TypeCode_ptr const _tc_twist;
   
   // TAO_IDL - Generated from
   // be/be_visitor_module/module_ch.cpp:66
@@ -192,6 +327,38 @@ namespace TAO
  CORBA::Boolean operator>>= (const CORBA::Any &, const KDL::Corba::vector *&);
 
 // TAO_IDL - Generated from
+// be/be_visitor_structure/any_op_ch.cpp:52
+
+ void operator<<= (CORBA::Any &, const KDL::Corba::rotation &); // copying version
+ void operator<<= (CORBA::Any &, KDL::Corba::rotation*); // noncopying version
+ CORBA::Boolean operator>>= (const CORBA::Any &, KDL::Corba::rotation *&); // deprecated
+ CORBA::Boolean operator>>= (const CORBA::Any &, const KDL::Corba::rotation *&);
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/any_op_ch.cpp:52
+
+ void operator<<= (CORBA::Any &, const KDL::Corba::frame &); // copying version
+ void operator<<= (CORBA::Any &, KDL::Corba::frame*); // noncopying version
+ CORBA::Boolean operator>>= (const CORBA::Any &, KDL::Corba::frame *&); // deprecated
+ CORBA::Boolean operator>>= (const CORBA::Any &, const KDL::Corba::frame *&);
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/any_op_ch.cpp:52
+
+ void operator<<= (CORBA::Any &, const KDL::Corba::wrench &); // copying version
+ void operator<<= (CORBA::Any &, KDL::Corba::wrench*); // noncopying version
+ CORBA::Boolean operator>>= (const CORBA::Any &, KDL::Corba::wrench *&); // deprecated
+ CORBA::Boolean operator>>= (const CORBA::Any &, const KDL::Corba::wrench *&);
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/any_op_ch.cpp:52
+
+ void operator<<= (CORBA::Any &, const KDL::Corba::twist &); // copying version
+ void operator<<= (CORBA::Any &, KDL::Corba::twist*); // noncopying version
+ CORBA::Boolean operator>>= (const CORBA::Any &, KDL::Corba::twist *&); // deprecated
+ CORBA::Boolean operator>>= (const CORBA::Any &, const KDL::Corba::twist *&);
+
+// TAO_IDL - Generated from
 // be/be_visitor_sequence/cdr_op_ch.cpp:71
 
 #if !defined _TAO_CDR_OP_KDL_Corba_DoubleSequence_H_
@@ -213,6 +380,30 @@ namespace TAO
 
  CORBA::Boolean operator<< (TAO_OutputCDR &, const KDL::Corba::vector &);
  CORBA::Boolean operator>> (TAO_InputCDR &, KDL::Corba::vector &);
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_ch.cpp:54
+
+ CORBA::Boolean operator<< (TAO_OutputCDR &, const KDL::Corba::rotation &);
+ CORBA::Boolean operator>> (TAO_InputCDR &, KDL::Corba::rotation &);
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_ch.cpp:54
+
+ CORBA::Boolean operator<< (TAO_OutputCDR &, const KDL::Corba::frame &);
+ CORBA::Boolean operator>> (TAO_InputCDR &, KDL::Corba::frame &);
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_ch.cpp:54
+
+ CORBA::Boolean operator<< (TAO_OutputCDR &, const KDL::Corba::wrench &);
+ CORBA::Boolean operator>> (TAO_InputCDR &, KDL::Corba::wrench &);
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_ch.cpp:54
+
+ CORBA::Boolean operator<< (TAO_OutputCDR &, const KDL::Corba::twist &);
+ CORBA::Boolean operator>> (TAO_InputCDR &, KDL::Corba::twist &);
 
 // TAO_IDL - Generated from
 // be/be_codegen.cpp:955

@@ -205,6 +205,189 @@ KDL::Corba::vector::_tao_any_destructor (
   delete _tao_tmp_pointer;
 }
 
+// TAO_IDL - Generated from
+// be/be_visitor_typecode/struct_typecode.cpp:89
+
+static TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const _tao_fields_KDL_Corba_rotation[] =
+  {
+    { "Xx", &CORBA::_tc_double },
+    { "Xy", &CORBA::_tc_double },
+    { "Xz", &CORBA::_tc_double },
+    { "Yx", &CORBA::_tc_double },
+    { "Yy", &CORBA::_tc_double },
+    { "Yz", &CORBA::_tc_double },
+    { "Zx", &CORBA::_tc_double },
+    { "Zy", &CORBA::_tc_double },
+    { "Zz", &CORBA::_tc_double }
+    
+  };
+static TAO::TypeCode::Struct<char const *,
+                      CORBA::TypeCode_ptr const *,
+                      TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const *,
+                      TAO::Null_RefCount_Policy>
+  _tao_tc_KDL_Corba_rotation (
+    CORBA::tk_struct,
+    "IDL:KDL/Corba/rotation:1.0",
+    "rotation",
+    _tao_fields_KDL_Corba_rotation,
+    9);
+  
+namespace KDL
+{
+  namespace Corba
+  {
+    ::CORBA::TypeCode_ptr const _tc_rotation =
+      &_tao_tc_KDL_Corba_rotation;
+  }
+}
+
+
+
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/structure_cs.cpp:66
+
+void 
+KDL::Corba::rotation::_tao_any_destructor (
+    void *_tao_void_pointer
+  )
+{
+  rotation *_tao_tmp_pointer =
+    static_cast<rotation *> (_tao_void_pointer);
+  delete _tao_tmp_pointer;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_typecode/struct_typecode.cpp:89
+
+static TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const _tao_fields_KDL_Corba_frame[] =
+  {
+    { "p", &KDL::Corba::_tc_vector },
+    { "M", &KDL::Corba::_tc_rotation }
+    
+  };
+static TAO::TypeCode::Struct<char const *,
+                      CORBA::TypeCode_ptr const *,
+                      TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const *,
+                      TAO::Null_RefCount_Policy>
+  _tao_tc_KDL_Corba_frame (
+    CORBA::tk_struct,
+    "IDL:KDL/Corba/frame:1.0",
+    "frame",
+    _tao_fields_KDL_Corba_frame,
+    2);
+  
+namespace KDL
+{
+  namespace Corba
+  {
+    ::CORBA::TypeCode_ptr const _tc_frame =
+      &_tao_tc_KDL_Corba_frame;
+  }
+}
+
+
+
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/structure_cs.cpp:66
+
+void 
+KDL::Corba::frame::_tao_any_destructor (
+    void *_tao_void_pointer
+  )
+{
+  frame *_tao_tmp_pointer =
+    static_cast<frame *> (_tao_void_pointer);
+  delete _tao_tmp_pointer;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_typecode/struct_typecode.cpp:89
+
+static TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const _tao_fields_KDL_Corba_wrench[] =
+  {
+    { "force", &KDL::Corba::_tc_vector },
+    { "torque", &KDL::Corba::_tc_rotation }
+    
+  };
+static TAO::TypeCode::Struct<char const *,
+                      CORBA::TypeCode_ptr const *,
+                      TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const *,
+                      TAO::Null_RefCount_Policy>
+  _tao_tc_KDL_Corba_wrench (
+    CORBA::tk_struct,
+    "IDL:KDL/Corba/wrench:1.0",
+    "wrench",
+    _tao_fields_KDL_Corba_wrench,
+    2);
+  
+namespace KDL
+{
+  namespace Corba
+  {
+    ::CORBA::TypeCode_ptr const _tc_wrench =
+      &_tao_tc_KDL_Corba_wrench;
+  }
+}
+
+
+
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/structure_cs.cpp:66
+
+void 
+KDL::Corba::wrench::_tao_any_destructor (
+    void *_tao_void_pointer
+  )
+{
+  wrench *_tao_tmp_pointer =
+    static_cast<wrench *> (_tao_void_pointer);
+  delete _tao_tmp_pointer;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_typecode/struct_typecode.cpp:89
+
+static TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const _tao_fields_KDL_Corba_twist[] =
+  {
+    { "vel", &KDL::Corba::_tc_vector },
+    { "rot", &KDL::Corba::_tc_rotation }
+    
+  };
+static TAO::TypeCode::Struct<char const *,
+                      CORBA::TypeCode_ptr const *,
+                      TAO::TypeCode::Struct_Field<char const *, CORBA::TypeCode_ptr const *> const *,
+                      TAO::Null_RefCount_Policy>
+  _tao_tc_KDL_Corba_twist (
+    CORBA::tk_struct,
+    "IDL:KDL/Corba/twist:1.0",
+    "twist",
+    _tao_fields_KDL_Corba_twist,
+    2);
+  
+namespace KDL
+{
+  namespace Corba
+  {
+    ::CORBA::TypeCode_ptr const _tc_twist =
+      &_tao_tc_KDL_Corba_twist;
+  }
+}
+
+
+
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/structure_cs.cpp:66
+
+void 
+KDL::Corba::twist::_tao_any_destructor (
+    void *_tao_void_pointer
+  )
+{
+  twist *_tao_tmp_pointer =
+    static_cast<twist *> (_tao_void_pointer);
+  delete _tao_tmp_pointer;
+}
+
 // TAO_IDL - Generated from 
 // be/be_visitor_sequence/any_op_cs.cpp:54
 
@@ -322,6 +505,238 @@ CORBA::Boolean operator>>= (
       );
 }
 
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/any_op_cs.cpp:54
+
+// Copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    const KDL::Corba::rotation &_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::rotation>::insert_copy (
+      _tao_any,
+      KDL::Corba::rotation::_tao_any_destructor,
+      KDL::Corba::_tc_rotation,
+      _tao_elem
+    );
+}
+
+// Non-copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    KDL::Corba::rotation *_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::rotation>::insert (
+      _tao_any,
+      KDL::Corba::rotation::_tao_any_destructor,
+      KDL::Corba::_tc_rotation,
+      _tao_elem
+    );
+}
+
+// Extraction to non-const pointer (deprecated).
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    KDL::Corba::rotation *&_tao_elem
+  )
+{
+  return _tao_any >>= const_cast<
+      const KDL::Corba::rotation *&> (
+      _tao_elem
+    );
+}
+
+// Extraction to const pointer.
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    const KDL::Corba::rotation *&_tao_elem
+  )
+{
+  return
+    TAO::Any_Dual_Impl_T<KDL::Corba::rotation>::extract (
+        _tao_any,
+        KDL::Corba::rotation::_tao_any_destructor,
+        KDL::Corba::_tc_rotation,
+        _tao_elem
+      );
+}
+
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/any_op_cs.cpp:54
+
+// Copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    const KDL::Corba::frame &_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::frame>::insert_copy (
+      _tao_any,
+      KDL::Corba::frame::_tao_any_destructor,
+      KDL::Corba::_tc_frame,
+      _tao_elem
+    );
+}
+
+// Non-copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    KDL::Corba::frame *_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::frame>::insert (
+      _tao_any,
+      KDL::Corba::frame::_tao_any_destructor,
+      KDL::Corba::_tc_frame,
+      _tao_elem
+    );
+}
+
+// Extraction to non-const pointer (deprecated).
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    KDL::Corba::frame *&_tao_elem
+  )
+{
+  return _tao_any >>= const_cast<
+      const KDL::Corba::frame *&> (
+      _tao_elem
+    );
+}
+
+// Extraction to const pointer.
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    const KDL::Corba::frame *&_tao_elem
+  )
+{
+  return
+    TAO::Any_Dual_Impl_T<KDL::Corba::frame>::extract (
+        _tao_any,
+        KDL::Corba::frame::_tao_any_destructor,
+        KDL::Corba::_tc_frame,
+        _tao_elem
+      );
+}
+
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/any_op_cs.cpp:54
+
+// Copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    const KDL::Corba::wrench &_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::wrench>::insert_copy (
+      _tao_any,
+      KDL::Corba::wrench::_tao_any_destructor,
+      KDL::Corba::_tc_wrench,
+      _tao_elem
+    );
+}
+
+// Non-copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    KDL::Corba::wrench *_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::wrench>::insert (
+      _tao_any,
+      KDL::Corba::wrench::_tao_any_destructor,
+      KDL::Corba::_tc_wrench,
+      _tao_elem
+    );
+}
+
+// Extraction to non-const pointer (deprecated).
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    KDL::Corba::wrench *&_tao_elem
+  )
+{
+  return _tao_any >>= const_cast<
+      const KDL::Corba::wrench *&> (
+      _tao_elem
+    );
+}
+
+// Extraction to const pointer.
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    const KDL::Corba::wrench *&_tao_elem
+  )
+{
+  return
+    TAO::Any_Dual_Impl_T<KDL::Corba::wrench>::extract (
+        _tao_any,
+        KDL::Corba::wrench::_tao_any_destructor,
+        KDL::Corba::_tc_wrench,
+        _tao_elem
+      );
+}
+
+// TAO_IDL - Generated from 
+// be/be_visitor_structure/any_op_cs.cpp:54
+
+// Copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    const KDL::Corba::twist &_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::twist>::insert_copy (
+      _tao_any,
+      KDL::Corba::twist::_tao_any_destructor,
+      KDL::Corba::_tc_twist,
+      _tao_elem
+    );
+}
+
+// Non-copying insertion.
+void operator<<= (
+    CORBA::Any &_tao_any,
+    KDL::Corba::twist *_tao_elem
+  )
+{
+  TAO::Any_Dual_Impl_T<KDL::Corba::twist>::insert (
+      _tao_any,
+      KDL::Corba::twist::_tao_any_destructor,
+      KDL::Corba::_tc_twist,
+      _tao_elem
+    );
+}
+
+// Extraction to non-const pointer (deprecated).
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    KDL::Corba::twist *&_tao_elem
+  )
+{
+  return _tao_any >>= const_cast<
+      const KDL::Corba::twist *&> (
+      _tao_elem
+    );
+}
+
+// Extraction to const pointer.
+CORBA::Boolean operator>>= (
+    const CORBA::Any &_tao_any,
+    const KDL::Corba::twist *&_tao_elem
+  )
+{
+  return
+    TAO::Any_Dual_Impl_T<KDL::Corba::twist>::extract (
+        _tao_any,
+        KDL::Corba::twist::_tao_any_destructor,
+        KDL::Corba::_tc_twist,
+        _tao_elem
+      );
+}
+
 // TAO_IDL - Generated from
 // be/be_visitor_sequence/cdr_op_cs.cpp:96
 
@@ -403,4 +818,110 @@ CORBA::Boolean operator>> (
     (strm >> _tao_aggregate.x) &&
     (strm >> _tao_aggregate.y) &&
     (strm >> _tao_aggregate.z);
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_cs.cpp:61
+
+CORBA::Boolean operator<< (
+    TAO_OutputCDR &strm,
+    const KDL::Corba::rotation &_tao_aggregate
+  )
+{
+  return
+    (strm << _tao_aggregate.Xx) &&
+    (strm << _tao_aggregate.Xy) &&
+    (strm << _tao_aggregate.Xz) &&
+    (strm << _tao_aggregate.Yx) &&
+    (strm << _tao_aggregate.Yy) &&
+    (strm << _tao_aggregate.Yz) &&
+    (strm << _tao_aggregate.Zx) &&
+    (strm << _tao_aggregate.Zy) &&
+    (strm << _tao_aggregate.Zz);
+}
+
+CORBA::Boolean operator>> (
+    TAO_InputCDR &strm,
+    KDL::Corba::rotation &_tao_aggregate
+  )
+{
+  return
+    (strm >> _tao_aggregate.Xx) &&
+    (strm >> _tao_aggregate.Xy) &&
+    (strm >> _tao_aggregate.Xz) &&
+    (strm >> _tao_aggregate.Yx) &&
+    (strm >> _tao_aggregate.Yy) &&
+    (strm >> _tao_aggregate.Yz) &&
+    (strm >> _tao_aggregate.Zx) &&
+    (strm >> _tao_aggregate.Zy) &&
+    (strm >> _tao_aggregate.Zz);
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_cs.cpp:61
+
+CORBA::Boolean operator<< (
+    TAO_OutputCDR &strm,
+    const KDL::Corba::frame &_tao_aggregate
+  )
+{
+  return
+    (strm << _tao_aggregate.p) &&
+    (strm << _tao_aggregate.M);
+}
+
+CORBA::Boolean operator>> (
+    TAO_InputCDR &strm,
+    KDL::Corba::frame &_tao_aggregate
+  )
+{
+  return
+    (strm >> _tao_aggregate.p) &&
+    (strm >> _tao_aggregate.M);
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_cs.cpp:61
+
+CORBA::Boolean operator<< (
+    TAO_OutputCDR &strm,
+    const KDL::Corba::wrench &_tao_aggregate
+  )
+{
+  return
+    (strm << _tao_aggregate.force) &&
+    (strm << _tao_aggregate.torque);
+}
+
+CORBA::Boolean operator>> (
+    TAO_InputCDR &strm,
+    KDL::Corba::wrench &_tao_aggregate
+  )
+{
+  return
+    (strm >> _tao_aggregate.force) &&
+    (strm >> _tao_aggregate.torque);
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_structure/cdr_op_cs.cpp:61
+
+CORBA::Boolean operator<< (
+    TAO_OutputCDR &strm,
+    const KDL::Corba::twist &_tao_aggregate
+  )
+{
+  return
+    (strm << _tao_aggregate.vel) &&
+    (strm << _tao_aggregate.rot);
+}
+
+CORBA::Boolean operator>> (
+    TAO_InputCDR &strm,
+    KDL::Corba::twist &_tao_aggregate
+  )
+{
+  return
+    (strm >> _tao_aggregate.vel) &&
+    (strm >> _tao_aggregate.rot);
 }
