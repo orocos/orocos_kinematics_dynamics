@@ -1,0 +1,10 @@
+module KDL {
+module Corba {
+        typedef sequence<double> DoubleSequence;
+                struct vector {
+                        double x;
+                        double y;
+                        double z;
+                };
+};
+};

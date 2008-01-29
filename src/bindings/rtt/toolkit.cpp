@@ -36,6 +36,10 @@
 #include "motionproperties.hpp"
 #include "kinfamproperties.hpp"
 
+#include <rtt/corba/CorbaTemplateProtocol.hpp>
+#include <rtt/os/StartStopManager.hpp>
+#include "CorbaKDLConversion.hpp"
+
 namespace KDL 
 {
     using namespace RTT;
@@ -421,3 +425,39 @@ namespace KDL
 
 }
 
+namespace RTT {
+    namespace Corba {
+        using namespace KDL;
+
+        struct CorbaKDLRegistrator
+            : public TransportRegistrator
+        {
+            bool registerTransport(std::string name, TypeInfo* ti)
+            {
+                assert( name == ti->getTypeName() );
+                if ( name == "vector" )
+                    return ti->addProtocol(ORO_CORBA_PROTOCOL_ID, new CorbaTemplateProtocol< KDL::Vector >() );
+                return false;
+            }
+
+            std::string getTransportName() const {
+                return "CORBAKDL";
+            }
+
+        } CorbaKDLRegistrator;
+
+        /**
+         * This struct has the sole purpose of invoking
+         * the Import function.
+         */
+        int loadCorbaKDL()
+        {
+            log(Info) << "Loading CorbaKDL in RTT type system." <<endlog();
+            TypeInfoRepository::Instance()->registerTransport( &CorbaKDLRegistrator );
+            return 0;
+        }
+
+        OS::InitFunction CorbaKDLLoader( &loadCorbaKDL );
+
+    };
+};
