@@ -21,8 +21,9 @@ IF( OROCOS_PLUGIN )
   FILE( GLOB HPPS [^.]*.hpp [^.]*.h)
   
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR} ${PROJ_BINARY_DIR}/src/bindings/rtt
-      ${OROCOS_RTT_INCLUDE_DIRS} ${OROCOS_INSTALL}/include/rtt  /usr/include/orbsvcs)
+      ${OROCOS_RTT_INCLUDE_DIRS} ${OROCOS_INSTALL}/include/rtt /usr/include/orbsvcs)
   ADD_DEFINITIONS(-D_REENTRANT)
+  INCLUDE_DIRECTORIES(/usr/include/orbsvcs /usr/include/rtt)
   ADD_LIBRARY(orocos-kdltk SHARED ${SRCS})
   SET_TARGET_PROPERTIES(orocos-kdltk PROPERTIES
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}" 
@@ -32,5 +33,7 @@ IF( OROCOS_PLUGIN )
 
   CONFIGURE_FILE( kdltk.pc.in src/bindings/rtt/orocos-kdltk.pc @ONLY)
   INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk.pc)
-  
+
+  add_subdirectory(corba)
+
 ENDIF( OROCOS_PLUGIN )
