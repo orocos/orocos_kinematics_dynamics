@@ -23,11 +23,11 @@ module Corba {
                 };
                 struct wrench {
                         vector force;
-                        rotation torque;
+                        vector torque;
                 };
                 struct twist {
                         vector vel;
-                        rotation rot;
+                        vector rot;
                 };
 
 };
