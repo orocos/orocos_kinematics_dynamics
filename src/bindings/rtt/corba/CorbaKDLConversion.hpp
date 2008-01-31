@@ -81,9 +81,9 @@ namespace RTT
                     _value(0,1)=(*result)[1];
                     _value(0,2)=(*result)[2];
                     _value(1,0)=(*result)[3];
-                    _value(1,0)=(*result)[4];
-                    _value(1,1)=(*result)[5];
-                    _value(2,2)=(*result)[6];
+                    _value(1,1)=(*result)[4];
+                    _value(1,2)=(*result)[5];
+                    _value(2,0)=(*result)[6];
                     _value(2,1)=(*result)[7];
                     _value(2,2)=(*result)[8];
                 return true;
