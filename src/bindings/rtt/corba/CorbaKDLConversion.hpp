@@ -148,15 +148,15 @@ namespace RTT
                     _value.p.x((*result)[0]);
                     _value.p.y((*result)[1]);
                     _value.p.z((*result)[2]);
-                    _value.M(0,0)=(*result)[0];
-                    _value.M(0,1)=(*result)[1];
-                    _value.M(0,2)=(*result)[2];
-                    _value.M(1,0)=(*result)[3];
-                    _value.M(1,1)=(*result)[4];
-                    _value.M(1,2)=(*result)[5];
-                    _value.M(2,0)=(*result)[6];
-                    _value.M(2,1)=(*result)[7];
-                    _value.M(2,2)=(*result)[8];
+                    _value.M(0,0)=(*result)[3];
+                    _value.M(0,1)=(*result)[4];
+                    _value.M(0,2)=(*result)[5];
+                    _value.M(1,0)=(*result)[6];
+                    _value.M(1,1)=(*result)[7];
+                    _value.M(1,2)=(*result)[8];
+                    _value.M(2,0)=(*result)[9];
+                    _value.M(2,1)=(*result)[10];
+                    _value.M(2,2)=(*result)[11];
                 return true;
             }
             return false;
