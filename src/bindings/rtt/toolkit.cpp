@@ -30,12 +30,12 @@
 #include <rtt/Operators.hpp>
 #include <rtt/OperatorTypes.hpp>
 #include <rtt/mystd.hpp>
+#include <rtt/os/StartStopManager.hpp>
 
-#include "../..//frames_io.hpp"
+#include "../../frames_io.hpp"
 
 #include "motionproperties.hpp"
 #include "kinfamproperties.hpp"
-
 
 namespace KDL 
 {
@@ -420,4 +420,14 @@ namespace KDL
         return true;
     }
 
+    int loadKDL()
+    {
+        Toolkit::Import( KDLToolkit );
+        return true;
+    }
+    
+    OS::InitFunction KDLLoader(&loadKDL);
+    
 }
+
+

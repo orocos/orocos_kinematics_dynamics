@@ -53,7 +53,7 @@ namespace KDL
             }
 
             std::string getTransportName() const {
-                return "CORBAKDL";
+                return "CORBA";
             }
 
         } CorbaKDLRegistrator;
