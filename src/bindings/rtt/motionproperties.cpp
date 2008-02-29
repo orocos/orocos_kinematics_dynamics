@@ -5,6 +5,7 @@
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Peter Soetens
+                               2007 Ruben Smits
     email                : peter.soetens@mech.kuleuven.ac.be
  
  ***************************************************************************
@@ -85,7 +86,7 @@ namespace RTT
     };
             
     VectorDecomposer::VectorDecomposer( const Vector& v )
-        : resultBag("MotCon::Vector"), // bag_type
+        : resultBag("KDL::Vector"), // bag_type
           X("X","X Value", v[0]),
           Y("Y","Y Value", v[1]),
           Z("Z","Z Value", v[2])
@@ -97,7 +98,7 @@ namespace RTT
 
     bool VectorComposer::getResult( Vector& res)
     {
-        if ( bag.getType() == "MotCon::Vector" )
+        if ( bag.getType() == "KDL::Vector" )
             {
                 Property<double>* px = dynamic_cast<Property<double>*>( bag.find("X") );
                 Property<double>* py = dynamic_cast<Property<double>*>( bag.find("Y") );
@@ -115,7 +116,7 @@ namespace RTT
                     }
             } else {
                 Logger::log() << Logger::Error << "Aborting composition of Property< Vector > "
-                              << ": Expected type 'MotCon::Vector', got type '"<< bag.getType() <<"'."
+                              << ": Expected type 'KDL::Vector', got type '"<< bag.getType() <<"'."
                               <<Logger::endl;
             }
         return false;
@@ -167,7 +168,7 @@ namespace RTT
     };
             
     RotationDecomposer::RotationDecomposer( const Rotation& r)
-        : resultBag("MotCon::Rotation"),
+        : resultBag("KDL::Rotation"),
           X_x("X_x","", r(0,0) ),
           X_y("X_y","", r(1,0) ),
           X_z("X_z","", r(2,0) ),
@@ -191,7 +192,7 @@ namespace RTT
 
     bool RotationComposer::getResult( Rotation& res)
     {
-        if ( bag.getType() == "MotCon::Rotation" )
+        if ( bag.getType() == "KDL::Rotation" )
             {
                 Property<double>* X_x = dynamic_cast<Property<double>*>( bag.find("X_x") );
                 Property<double>* X_y = dynamic_cast<Property<double>*>( bag.find("X_y") );
@@ -252,7 +253,7 @@ namespace RTT
     };
             
     EulerZYXDecomposer::EulerZYXDecomposer( const Rotation& r)
-        : resultBag("MotCon::EulerZYX"),
+        : resultBag("KDL::EulerZYX"),
           _a("alpha","First Rotate around the Z axis with alpha in radians" ),
           _b("beta","Then Rotate around the new Y axis with beta in radians" ),
           _g("gamma","Then Rotation around the new X axis with gamma in radians" )
@@ -265,7 +266,7 @@ namespace RTT
 
     bool EulerZYXComposer::getResult( Rotation& res )
     {
-        if ( bag.getType() == "MotCon::EulerZYX" )
+        if ( bag.getType() == "KDL::EulerZYX" )
             {
                 // ZYX is deprecated, use alpha, beta, gamma. also alpha maps to Z and gamma to X !
                 Property<double>* _a = dynamic_cast<Property<double>*>( bag.find("alpha") );
@@ -326,7 +327,7 @@ namespace RTT
         bool getResult( Rotation& res);
     };
     RPYDecomposer::RPYDecomposer( const Rotation& r)
-        : resultBag("MotCon::RPY" ),
+        : resultBag("KDL::RPY" ),
           _r("R","First rotate around X with R(oll) in radians" ),
           _p("P","Next rotate around old Y with P(itch) in radians" ),
           _y("Y","Next rotate around old Z with Y(aw) in radians" )
@@ -339,7 +340,7 @@ namespace RTT
 
     bool RPYComposer::getResult( Rotation& res)
     {
-        if ( bag.getType() == "MotCon::RPY" )
+        if ( bag.getType() == "KDL::RPY" )
             {
                 Property<double>* _r = dynamic_cast<Property<double>*>( bag.find("R") );
                 Property<double>* _p = dynamic_cast<Property<double>*>( bag.find("P") );
@@ -420,7 +421,7 @@ namespace RTT
             return true;
         else {
             Logger::log() << Logger::Error << "Aborting composition of Property< Rotation > "
-                          << ": Expected type 'MotCon::Rotation','MotCon::EulerZYX' or 'MotCon::RPY', got type '"<< bag.getType() <<"'."
+                          << ": Expected type 'KDL::Rotation','KDL::EulerZYX' or 'KDL::RPY', got type '"<< bag.getType() <<"'."
                           <<Logger::endl;
         }
         return false;
@@ -428,7 +429,7 @@ namespace RTT
 
     void decomposeProperty(const Twist &t, PropertyBag& targetbag)
     {
-        targetbag.setType("MotCon::Twist"); // bag_type
+        targetbag.setType("KDL::Twist"); // bag_type
 
         VectorDecomposer vel( t.vel );
         VectorDecomposer rot( t.rot );
@@ -439,7 +440,7 @@ namespace RTT
 
     bool composeProperty(const PropertyBag& bag, Twist &t)
     {
-        if ( bag.getType() == std::string("MotCon::Twist") )
+        if ( bag.getType() == std::string("KDL::Twist") )
             {
                 // pass the subbag to the vector Composers
                 Property<PropertyBag>* subbag = bag.getProperty<PropertyBag>("Trans_Vel");
@@ -463,7 +464,7 @@ namespace RTT
                 return vas_vel.getResult( t.vel ) && vas_rot.getResult( t.rot );
             } else {
                 Logger::log() << Logger::Error << "Aborting composition of Property< Twist > "
-                              << ": Expected type 'MotCon::Twist', got type '"<< bag.getType() <<"'."
+                              << ": Expected type 'KDL::Twist', got type '"<< bag.getType() <<"'."
                               <<Logger::endl;
             }
         return false;
@@ -472,7 +473,7 @@ namespace RTT
     void decomposeProperty(const Wrench &b, PropertyBag& targetbag)
     {
         // construct a property with same name and description, but containing a typed PropertyBag.
-        targetbag.setType("MotCon::Wrench"); // bag_type
+        targetbag.setType("KDL::Wrench"); // bag_type
 
         VectorDecomposer force( b.force );
         VectorDecomposer torque( b.torque );
@@ -483,7 +484,7 @@ namespace RTT
 
     bool composeProperty(const PropertyBag& bag,Wrench &w)
     {
-        if ( bag.getType() == std::string("MotCon::Wrench") )
+        if ( bag.getType() == std::string("KDL::Wrench") )
             {
                 // pass this bag to the vector Composers
                 Property<PropertyBag>* subbag = bag.getProperty<PropertyBag>("Force");
@@ -507,7 +508,7 @@ namespace RTT
                 return vas_force.getResult( w.force ) && vas_torque.getResult( w.torque );
             } else {
                 Logger::log() << Logger::Error << "Aborting composition of Property< Wrench > "
-                              << ": Expected type 'MotCon::Wrench', got type '"<< bag.getType() <<"'."
+                              << ": Expected type 'KDL::Wrench', got type '"<< bag.getType() <<"'."
                               <<Logger::endl;
                 return false;
             }
@@ -517,7 +518,7 @@ namespace RTT
     void decomposeProperty(const Frame &f, PropertyBag& targetbag )
     {
         // construct a typed PropertyBag.
-        targetbag.setType("MotCon::Frame");
+        targetbag.setType("KDL::Frame");
 
         VectorDecomposer vel( f.p );
 #ifdef ROTATION_PROPERTIES_EULER
@@ -536,7 +537,7 @@ namespace RTT
 
     bool composeProperty(const PropertyBag& f_bag, Frame &f)
     {
-        if ( f_bag.getType() == std::string("MotCon::Frame") )
+        if ( f_bag.getType() == std::string("KDL::Frame") )
             {
                 // pass this bag to the vector Composers
                 Property<PropertyBag>* subbag = f_bag.getProperty<PropertyBag>("Position");
@@ -572,7 +573,7 @@ namespace RTT
                     {
                         Logger::log()
                             << Logger::Error << "Aborting composition of Property< Frame > "
-                            << ": Could not compose 'Rotation' type 'MotCon::Rotation','MotCon::EulerZYX' or 'MotCon::RPY', got type '"
+                            << ": Could not compose 'Rotation' type 'KDL::Rotation','KDL::EulerZYX' or 'KDL::RPY', got type '"
                             << subbag->get().getType() <<"'."<<Logger::endl;
                         return false;
                     }
@@ -580,7 +581,7 @@ namespace RTT
                 return true;
             } else {
                 Logger::log() << Logger::Error << "Aborting composition of Property< Frame > "
-                              << ": Expected type 'MotCon::Frame', got type '"<< f_bag.getType() <<"'."
+                              << ": Expected type 'KDL::Frame', got type '"<< f_bag.getType() <<"'."
                               <<Logger::endl;
                 return false;
             }
