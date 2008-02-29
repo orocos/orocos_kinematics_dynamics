@@ -22,10 +22,6 @@ IF(ENABLE_CORBA )
     INCLUDE_DIRECTORIES( ${ORBSVCS_DIR} )
     SET(CMAKE_C_FLAGS_RTT "${CMAKE_C_FLAGS_RTT} -I${ORBSVCS_DIR}" CACHE INTERNAL "")
   ENDIF( NOT ${ORBSVCS_DIR} STREQUAL /usr/include )
-  # Is used for building  the library
-  LINK_LIBRARIES( TAO TAO_IDL_BE TAO_PortableServer TAO_CosNaming ACE  )
-
-  SET(CMAKE_LINKFLAGS_RTT "-lTAO -lTAO_IDL_BE -lTAO_PortableServer -lTAO_CosNaming -lACE" CACHE INTERNAL "")
 
   FILE( GLOB IDLS [^.]*.idl )
   FILE( GLOB CPPS [^.]*.cpp )
@@ -44,16 +40,16 @@ IF(ENABLE_CORBA )
   #GLOBAL_ADD_SRC( ${CPPS} )
   INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
-  ADD_LIBRARY(orocos-kdltk-corba SHARED ${CPPS})
-  SET_TARGET_PROPERTIES( orocos-kdltk-corba PROPERTIES
+  ADD_LIBRARY(orocos-kdltk-corba-${OROCOS_TARGET} SHARED ${CPPS})
+  SET_TARGET_PROPERTIES( orocos-kdltk-corba-${OROCOS_TARGET} PROPERTIES
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS_RTT} -D_REENTRANT -DOROCOS_TARGET=${OROCOS_TARGET}"
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
   VERSION "${KDL_VERSION}")
+  # Is used for building  the library
+  TARGET_LINK_LIBRARIES(orocos-kdltk-corba-${OROCOS_TARGET} orocos-rtt-corba-${OROCOS_TARGET} orocos-kdltk-${OROCOS_TARGET} )
+  CONFIGURE_FILE( orocos-kdltk-corba.pc.in src/bindings/rtt/corba/orocos-kdltk-corba-${OROCOS_TARGET}.pc @ONLY)
 
-
-CONFIGURE_FILE( orocos-kdltk-corba.pc.in src/bindings/rtt/corba/orocos-kdltk-corba.pc @ONLY)
-
-  INSTALL_TARGETS(/lib orocos-kdltk-corba)
-  INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk-corba.pc)
+  INSTALL_TARGETS(/lib orocos-kdltk-corba-${OROCOS_TARGET})
+  INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk-corba-${OROCOS_TARGET}.pc)
 
 ENDIF(ENABLE_CORBA)

@@ -6,6 +6,6 @@ Name: orocos-kdltk
 Description: The Orocos Kinematics and Dynamics Library RTT Plugin 
 Requires: orocos-kdl
 Version: @KDL_VERSION@
-Libs: -L${libdir} -lorocos-kdltk
-Cflags: -I${includedir}
+Libs: -L${libdir} -lorocos-kdltk-@OROCOS_TARGET@
+Cflags: -I${includedir} -D@OROCOS_TARGET@
 

@@ -7,5 +7,5 @@ Name: orocos-kdltk-corba                                     # human-readable na
 Description: The Orocos Kinematics and Dynamics Library RTT Plugin Corba  # human-readable description
 Requires: orocos-kdltk
 Version: @KDL_VERSION@
-Libs: -L${libdir} @CMAKE_LINKFLAGS_RTT@ -lorocos-kdltk-corba
+Libs: -L${libdir} -lorocos-kdltk-corba-@OROCOS_TARGET@
 Cflags:-I${includedir}

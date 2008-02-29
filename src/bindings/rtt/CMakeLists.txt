@@ -24,15 +24,16 @@ IF( OROCOS_PLUGIN )
       ${OROCOS_RTT_INCLUDE_DIRS} ${OROCOS_INSTALL}/include/rtt /usr/include/orbsvcs)
   ADD_DEFINITIONS(-D_REENTRANT)
   INCLUDE_DIRECTORIES(/usr/include/orbsvcs /usr/include/rtt)
-  ADD_LIBRARY(orocos-kdltk SHARED ${SRCS})
-  SET_TARGET_PROPERTIES(orocos-kdltk PROPERTIES
+  ADD_LIBRARY(orocos-kdltk-${OROCOS_TARGET} SHARED ${SRCS})
+  SET_TARGET_PROPERTIES(orocos-kdltk-${OROCOS_TARGET} PROPERTIES
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}" 
   VERSION "${KDL_VERSION}") 
-  INSTALL_TARGETS( /lib orocos-kdltk)
+  INSTALL_TARGETS( /lib orocos-kdltk-${OROCOS_TARGET})
   INSTALL_FILES( /include/kdl/bindings/rtt FILES ${HPPS})
+  TARGET_LINK_LIBRARIES(orocos-kdltk-${OROCOS_TARGET} orocos-kdl orocos-rtt-${OROCOS_TARGET})
 
-  CONFIGURE_FILE( kdltk.pc.in src/bindings/rtt/orocos-kdltk.pc @ONLY)
-  INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk.pc)
+  CONFIGURE_FILE( kdltk.pc.in src/bindings/rtt/orocos-kdltk-${OROCOS_TARGET}.pc @ONLY)
+  INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk-${OROCOS_TARGET}.pc)
 
   add_subdirectory(corba)
 
