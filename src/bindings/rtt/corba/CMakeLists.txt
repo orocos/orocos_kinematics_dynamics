@@ -44,12 +44,13 @@ IF(ENABLE_CORBA )
   SET_TARGET_PROPERTIES( orocos-kdltk-corba-${OROCOS_TARGET} PROPERTIES
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${CMAKE_C_FLAGS_RTT} -D_REENTRANT -DOROCOS_TARGET=${OROCOS_TARGET}"
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
-  VERSION "${KDL_VERSION}")
+  VERSION "${KDL_VERSION}"
+  INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/rtt/${OROCOS_TARGET}/plugins")
   # Is used for building  the library
   TARGET_LINK_LIBRARIES(orocos-kdltk-corba-${OROCOS_TARGET} orocos-rtt-corba-${OROCOS_TARGET} orocos-kdltk-${OROCOS_TARGET} )
   CONFIGURE_FILE( orocos-kdltk-corba.pc.in src/bindings/rtt/corba/orocos-kdltk-corba-${OROCOS_TARGET}.pc @ONLY)
 
-  INSTALL_TARGETS(/lib orocos-kdltk-corba-${OROCOS_TARGET})
+  INSTALL_TARGETS(/lib/rtt/${OROCOS_TARGET}/plugins orocos-kdltk-corba-${OROCOS_TARGET})
   INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk-corba-${OROCOS_TARGET}.pc)
 
 ENDIF(ENABLE_CORBA)

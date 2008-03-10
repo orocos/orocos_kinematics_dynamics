@@ -58,18 +58,25 @@ namespace KDL
 
         } CorbaKDLRegistrator;
 
-        /**
-         * This struct has the sole purpose of invoking
-         * the Import function.
-         */
-        int loadCorbaKDL()
-        {
-            log(Info) << "Loading CorbaKDL in RTT type system." <<endlog();
-            TypeInfoRepository::Instance()->registerTransport( &CorbaKDLRegistrator );
-            return 0;
-        }
-
-        OS::InitFunction CorbaKDLLoader( &loadCorbaKDL );
-
     };
-};
+}
+
+namespace RTT 
+{
+    class TaskContext;
+}
+using namespace RTT;
+using namespace KDL;
+extern "C" {                      
+bool loadRTTPlugin(RTT::TaskContext* )
+{
+    log(Info) << "Loading CorbaKDL in RTT type system." <<endlog();
+    TypeInfoRepository::Instance()->registerTransport( &KDL::Corba::CorbaKDLRegistrator );
+    return true;
+}
+
+std::string getRTTPluginName()
+{
+    return "CorbaKDL";
+}
+}

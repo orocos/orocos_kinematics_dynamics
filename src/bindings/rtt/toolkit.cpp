@@ -420,14 +420,6 @@ namespace KDL
         return true;
     }
 
-    int loadKDL()
-    {
-        Toolkit::Import( KDLToolkit );
-        return true;
-    }
-    
-    OS::InitFunction KDLLoader(&loadKDL);
-    
 }
-
+ORO_TOOLKIT_PLUGIN(KDL::KDLToolkit)
 

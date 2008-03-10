@@ -78,7 +78,7 @@ namespace RTT
     {
         const PropertyBag& bag;
     public:
-        VectorComposer( const PropertyBag& _bag )
+        VectorComposer(const PropertyBag& _bag )
             : bag(_bag)
         {}
 
@@ -96,9 +96,9 @@ namespace RTT
         resultBag.add(Z.clone());
     }
 
-    bool VectorComposer::getResult( Vector& res)
+    bool VectorComposer::getResult(Vector& res)
     {
-        if ( bag.getType() == "KDL::Vector" )
+        if ( bag.getType() == "MotCon::Vector" || bag.getType() == "KDL::Vector" )
             {
                 Property<double>* px = dynamic_cast<Property<double>*>( bag.find("X") );
                 Property<double>* py = dynamic_cast<Property<double>*>( bag.find("Y") );
@@ -160,7 +160,7 @@ namespace RTT
     {
         const PropertyBag& bag;
     public:
-        RotationComposer( const PropertyBag& _bag )
+        RotationComposer(const PropertyBag& _bag )
             :  bag(_bag)
         {}
 
@@ -190,10 +190,11 @@ namespace RTT
         resultBag.add(Z_z.clone());
     }
 
-    bool RotationComposer::getResult( Rotation& res)
+    bool RotationComposer::getResult(Rotation& res)
     {
-        if ( bag.getType() == "KDL::Rotation" )
+        if ( bag.getType() == "MotCon::Rotation" || bag.getType() == "KDL::Rotation" )
             {
+                
                 Property<double>* X_x = dynamic_cast<Property<double>*>( bag.find("X_x") );
                 Property<double>* X_y = dynamic_cast<Property<double>*>( bag.find("X_y") );
                 Property<double>* X_z = dynamic_cast<Property<double>*>( bag.find("X_z") );
@@ -245,7 +246,7 @@ namespace RTT
     {
         const PropertyBag& bag;
     public:
-        EulerZYXComposer( const PropertyBag& _bag )
+        EulerZYXComposer(const PropertyBag& _bag )
             :  bag(_bag)
         {}
 
@@ -264,10 +265,11 @@ namespace RTT
         resultBag.add(_g.clone());
     }
 
-    bool EulerZYXComposer::getResult( Rotation& res )
+    bool EulerZYXComposer::getResult(Rotation& res )
     {
-        if ( bag.getType() == "KDL::EulerZYX" )
+        if ( bag.getType() == "KDL::EulerZYX" || bag.getType() == "MotCon::EulerZYX" )
             {
+                
                 // ZYX is deprecated, use alpha, beta, gamma. also alpha maps to Z and gamma to X !
                 Property<double>* _a = dynamic_cast<Property<double>*>( bag.find("alpha") );
                 if ( !_a)
@@ -320,7 +322,7 @@ namespace RTT
     {
         const PropertyBag& bag;
     public:
-        RPYComposer( const PropertyBag& _bag )
+        RPYComposer(const PropertyBag& _bag )
             :  bag(_bag)
         {}
 
@@ -338,9 +340,9 @@ namespace RTT
         resultBag.add(_y.clone());
     }
 
-    bool RPYComposer::getResult( Rotation& res)
+    bool RPYComposer::getResult(Rotation& res)
     {
-        if ( bag.getType() == "KDL::RPY" )
+        if ( bag.getType() == "KDL::RPY" || bag.getType() == "MotCon::RPY" )
             {
                 Property<double>* _r = dynamic_cast<Property<double>*>( bag.find("R") );
                 Property<double>* _p = dynamic_cast<Property<double>*>( bag.find("P") );
@@ -440,8 +442,9 @@ namespace RTT
 
     bool composeProperty(const PropertyBag& bag, Twist &t)
     {
-        if ( bag.getType() == std::string("KDL::Twist") )
+        if ( bag.getType() == "KDL::Twist" || bag.getType() == "MotCon::Twist" )
             {
+                
                 // pass the subbag to the vector Composers
                 Property<PropertyBag>* subbag = bag.getProperty<PropertyBag>("Trans_Vel");
                 if (! subbag ) {
@@ -484,8 +487,9 @@ namespace RTT
 
     bool composeProperty(const PropertyBag& bag,Wrench &w)
     {
-        if ( bag.getType() == std::string("KDL::Wrench") )
+        if ( bag.getType() == "KDL::Wrench" ||  bag.getType() == "Motcon::Wrench")
             {
+                
                 // pass this bag to the vector Composers
                 Property<PropertyBag>* subbag = bag.getProperty<PropertyBag>("Force");
                 if (! subbag ) {
@@ -537,7 +541,7 @@ namespace RTT
 
     bool composeProperty(const PropertyBag& f_bag, Frame &f)
     {
-        if ( f_bag.getType() == std::string("KDL::Frame") )
+        if ( f_bag.getType() == "KDL::Frame" ||  f_bag.getType() == "MotCon::Frame" )
             {
                 // pass this bag to the vector Composers
                 Property<PropertyBag>* subbag = f_bag.getProperty<PropertyBag>("Position");
