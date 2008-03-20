@@ -69,8 +69,7 @@ namespace KDL
                 else
                     jac_boost(i,j)=jac(i,j);
         }
-        bool toggle=false;
-        int ret = svd_boost_Macie(jac_boost,U,S,V,B,tempi,tempj,1e-15,toggle);
+        int ret = svd_boost_Macie(jac_boost,U,S,V,B,tempi,1e-15,toggle);
         //std::cout<<"# sweeps: "<<ret<<std::endl;
 
         if(transpose)

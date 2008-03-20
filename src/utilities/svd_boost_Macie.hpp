@@ -34,7 +34,7 @@ namespace ublas = boost::numeric::ublas;
 namespace KDL
 {
     int svd_boost_Macie(ublas::matrix<double>& A,ublas::matrix<double>& U,ublas::vector<double>& S, ublas::matrix<double>& V,
-                        ublas::matrix<double>& B, ublas::vector<double>& tempi, ublas::vector<double>& tempj, 
+                        ublas::matrix<double>& B, ublas::vector<double>& tempi, 
                         double treshold,bool toggle)
     {
         bool rotate = true;
