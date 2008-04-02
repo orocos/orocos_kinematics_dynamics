@@ -112,7 +112,7 @@ namespace KDL
                 }
             }
             // save singular value
-            w(i)=scale*g;
+            S(i)=scale*g;
             g=s=scale=0.0;
             if ((i <rows) && (i+1 != cols)) {
                 // sum of row i, start from columns i+1
@@ -135,7 +135,7 @@ namespace KDL
                 }
             }
             maxarg1=anorm;
-            maxarg2=(fabs(w(i))+fabs(tmp(i)));
+            maxarg2=(fabs(S(i))+fabs(tmp(i)));
             anorm = maxarg1 > maxarg2 ?	maxarg1 : maxarg2;		
         }
         /* Accumulation of right-hand transformations. */
@@ -145,7 +145,7 @@ namespace KDL
                     for (j=ppi;j<cols;j++) V(j,i)=(U(i,j)/U(i,ppi))/g;
                     for (j=ppi;j<cols;j++) {
                         for (s=0.0,k=ppi;k<cols;k++) s += U(i,k)*V(k,j);
-                        for (k=ppi;k<cols;k++) v[k](j) += s*V(k,i);
+                        for (k=ppi;k<cols;k++) V(k,j) += s*V(k,i);
                     }
                 }
                 for (j=ppi;j<cols;j++) V(i,j)=V(j,i)=0.0;
@@ -157,7 +157,7 @@ namespace KDL
         /* Accumulation of left-hand transformations. */
         for (i=cols-1<rows-1 ? cols-1:rows-1;i>=0;i--) {
             ppi=i+1;
-            g=w(i);
+            g=S(i);
             for (j=ppi;j<cols;j++) U(i,j)=0.0;
             if (g) {
                 g=1.0/g;
@@ -183,7 +183,7 @@ namespace KDL
                         flag=false;
                         break;
                     }
-                    if ((fabs(w(nm)+anorm) == anorm)) break;
+                    if ((fabs(S(nm)+anorm) == anorm)) break;
                 }
                 if (flag) {
                     c=0.0;           /* Cancellation of tmp[l], if l>1: */
@@ -192,9 +192,9 @@ namespace KDL
                         f=s*tmp(i);
                         tmp(i)=c*tmp(i);
                         if ((fabs(f)+anorm) == anorm) break;
-                        g=w(i);
+                        g=S(i);
                         h=PYTHAG(f,g);
-                        w(i)=h;
+                        S(i)=h;
                         h=1.0/h;
                         c=g*h;
                         s=(-f*h);
@@ -206,19 +206,19 @@ namespace KDL
                         }
                     }
                 }
-                z=w(k);
+                z=S(k);
                 
                 if (ppi == k) {       /* Convergence. */
                     if (z < 0.0) {   /* Singular value is made nonnegative. */
-                        w(k) = -z;
+                        S(k) = -z;
                         for (j=0;j<cols;j++) V(j,k)=-V(j,k);
                     }
                     break;
                 }
                 
-                x=w(ppi);            /* Shift from bottom 2-by-2 minor: */
+                x=S(ppi);            /* Shift from bottom 2-by-2 minor: */
                 nm=k-1;
-                y=w(nm);
+                y=S(nm);
                 g=tmp(nm);
                 h=tmp(k);
                 f=((y-z)*(y+z)+(g-h)*(g+h))/(2.0*h*y);
@@ -231,7 +231,7 @@ namespace KDL
                 for (j=ppi;j<=nm;j++) {
                     i=j+1;
                     g=tmp(i);
-                    y=w(i);
+                    y=S(i);
                     h=s*g;
                     g=c*g;
                     z=PYTHAG(f,h);
@@ -249,7 +249,7 @@ namespace KDL
                         V(jj,i)=z*c-x*s;
                     }
                     z=PYTHAG(f,h);
-                    w(j)=z;
+                    S(j)=z;
                     if (z) {
                         z=1.0/z;
                         c=f*z;
@@ -266,7 +266,7 @@ namespace KDL
                 }
                 tmp(ppi)=0.0;
                 tmp(k)=f;
-                w(k)=x;
+                S(k)=x;
             }
         }
         if (its == maxiter) 
