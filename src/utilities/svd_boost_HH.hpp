@@ -29,6 +29,7 @@
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
 namespace ublas = boost::numeric::ublas;
 
@@ -81,16 +82,17 @@ namespace KDL
         bool flag,maxarg1,maxarg2;
         double anorm(0),c(0),f(0),h(0),s(0),scale(0),x(0),y(0),z(0),g(0);
         
-        g=s=scale=0.0;
+        g=scale=anorm=0.0;
         
         /* Householder reduction to bidiagonal form. */
         for (i=0;i<cols;i++) {
             ppi=i+1;
             tmp(i)=scale*g;
+            g=s=scale=0.0; 
             if (i<rows) {
                 // compute the sum of the i-th column, starting from the i-th row
                 for (k=i;k<rows;k++) scale += fabs(U(k,i));
-                if (scale) {
+                if (scale!=0) {
                     // multiply the i-th column by 1.0/scale, start from the i-th element
                     // sum of squares of column i, start from the i-th element
                     for (k=i;k<rows;k++) {
@@ -117,7 +119,7 @@ namespace KDL
             if ((i <rows) && (i+1 != cols)) {
                 // sum of row i, start from columns i+1
                 for (k=ppi;k<cols;k++) scale += fabs(U(i,k));
-                if (scale) {
+                if (scale!=0) {
                     for (k=ppi;k<cols;k++) {
                         U(i,k) /= scale;
                         s += U(i,k)*U(i,k);
