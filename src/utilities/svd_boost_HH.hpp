@@ -30,6 +30,7 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <algorithm>
 
 namespace ublas = boost::numeric::ublas;
 
@@ -271,6 +272,32 @@ namespace KDL
                 S(k)=x;
             }
         }
+
+        //Sort eigen values:
+        for (i=0; i<cols; i++){
+            
+            double S_max = S(i);
+            int i_max = i;
+            for (j=i+1; j<cols; j++){
+                double Sj = S(j);
+                if (Sj > S_max){
+                    S_max = Sj;
+                    i_max = j;
+                }
+            }
+            if (i_max != i){
+                /* swap eigenvalues */
+                double tmp = S(i);
+                S(i)=S(i_max);
+                S(i_max)=tmp;
+                
+                /* swap eigenvectors */
+                column(U,i).swap(column(U,i_max));
+                column(V,i).swap(column(V,i_max));
+            }
+        }
+        
+        
         if (its == maxiter) 
             return (-2);
         else 
