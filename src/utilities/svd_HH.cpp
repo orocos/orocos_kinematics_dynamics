@@ -72,9 +72,10 @@ namespace KDL
         for(i=0;i<rows;i++)
             for(j=0;j<cols;j++)
                 U[i](j)=jac(i,j);
-        for(i=rows;i<cols;i++)
-            for(j=0;j<cols;j++)
-                U[i](j)=0;
+        if(rows>cols)
+            for(i=rows;i<cols;i++)
+                for(j=0;j<cols;j++)
+                    U[i](j)=0;
                 
         /* Householder reduction to bidiagonal form. */
         for (i=0;i<cols;i++) {

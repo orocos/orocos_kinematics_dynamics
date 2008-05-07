@@ -54,7 +54,7 @@ namespace KDL {
          * @return 
          */
         ChainIkSolverPos_NR(const Chain& chain,ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
-                            unsigned int maxiter=100,double eps=epsilon);
+                            unsigned int maxiter=100,double eps=1e-6);
         ~ChainIkSolverPos_NR();
         
         virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out);

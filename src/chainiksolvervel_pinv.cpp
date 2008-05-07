@@ -28,7 +28,7 @@ namespace KDL
         jnt2jac(chain),
         jac(chain.getNrOfJoints()),
         svd(jac),
-        U(6,6),
+        U(6,JntArray(chain.getNrOfJoints())),
         S(chain.getNrOfJoints()),
         V(chain.getNrOfJoints(),JntArray(chain.getNrOfJoints())),
         tmp(chain.getNrOfJoints()),
