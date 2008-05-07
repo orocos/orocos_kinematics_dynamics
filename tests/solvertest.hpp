@@ -7,6 +7,7 @@
 #include <chainfksolverpos_recursive.hpp>
 #include <chainfksolvervel_recursive.hpp>
 #include <chainiksolvervel_pinv.hpp>
+#include <chainiksolvervel_pinv_boost_givens.hpp>
 #include <chainiksolverpos_nr.hpp>
 #include <chainjnttojacsolver.hpp>
 
@@ -32,9 +33,8 @@ public:
 
 private:
 
-    Chain chain1;
-    Chain chain2;
-    
+    Chain chain1,chain2,chain3;
+        
     void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
     void FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);
     void FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainIkSolverVel& iksolvervel);
