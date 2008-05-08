@@ -147,7 +147,7 @@ void Divide(const JntArray& src,const double& factor,JntArray& dest);
 void MultiplyJacobian(const Jacobian& jac, const JntArray& src, Twist& dest);
 void SetToZero(JntArray& array);
 bool Equal(const JntArray& src1,const JntArray& src2,double eps=epsilon);
-bool operator==(const JntArray& src1,const JntArray& src2);
+//bool operator==(const JntArray& src1,const JntArray& src2);
 
 class JntArrayVel
 {

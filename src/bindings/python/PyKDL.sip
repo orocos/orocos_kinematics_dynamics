@@ -25,5 +25,5 @@
 %License /Type="LGPL",Licensee="Ruben Smits",Signature="first dot last at mech.kuleuven.be",TimeStamp="2007"/
 
 %Include frames.sip
-%Include framevel.sip
 %Include kinfam.sip
+%Include framevel.sip

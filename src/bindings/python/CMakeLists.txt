@@ -36,7 +36,6 @@ ADD_CUSTOM_COMMAND(OUTPUT ${BINDINGS_MAKEFILE} PRE_BUILD
                    ARGS ${CMAKE_CURRENT_BINARY_DIR}/configure.py
                    DEPENDS ${KDL_LIB} ${CMAKE_CURRENT_BINARY_DIR}/configure.py ${SIP_FILES})
 
-# Step 3: run make in core and gui subdirs
 ADD_CUSTOM_COMMAND(OUTPUT ${BINDINGS_LIBS} PRE_LINK
                    COMMAND ${CMAKE_MAKE_PROGRAM}
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
