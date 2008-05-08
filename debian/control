@@ -85,21 +85,81 @@ Description: Kinematics and Dynamics Library rtt-coba-xenomai binding
  representations for kinematic structures and their inverse and forward
  kinematic solvers.
 
-Package: liborocos-kdltk-dev
+Package: liborocos-kdltk-common-dev
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, liborocos-rtt-common-dev, liborocos-kdltk-gnulinux0.99 | liborocos-kdltk-lxrt0.99 | liborocos-kdltk-xenomai0.99
+Depends: ${shlibs:Depends}, liborocos-rtt-common-dev, liborocos-kdl-dev, liborocos-kdltk-gnulinux0.99 | liborocos-kdltk-lxrt0.99 | liborocos-kdltk-xenomai0.99
 Description: orocos-rtt binding development files
  Orocos project to supply RealTime usable kinematics and dynamics code,
  it contains code for rigid body kinematics calculations and
  representations for kinematic structures and their inverse and forward
  kinematic solvers.
 
-Package: liborocos-kdltk-corba-dev
+Package: liborocos-kdltk-gnulinux-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-kdltk-common-dev, liborocos-kdltk-gnulinux0.99
+Description: orocos-rtt-gnulinux binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-lxrt-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-kdltk-common-dev, liborocos-kdltk-lxrt0.99
+Description: orocos-rtt-lxrt binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-xenomai-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-kdltk-common-dev, liborocos-kdltk-xenomai0.99
+Description: orocos-rtt-xenomai binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-corba-common-dev
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, liborocos-rtt-corba-common-dev, liborocos-kdltk-corba-gnulinux0.99 | liborocos-kdltk-corba-lxrt0.99 | liborocos-kdltk-corba-xenomai0.99
 Description: orocos-rtt binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-corba-gnulinux-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-rtt-corba-common-dev, liborocos-kdltk-corba-gnulinux0.99
+Description: orocos-rtt-corba-gnulinux binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-corba-lxrt-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-rtt-corba-common-dev, liborocos-kdltk-corba-lxrt0.99
+Description: orocos-rtt-corba-lxrt binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-corba-xenomai-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-rtt-corba-common-dev, liborocos-kdltk-corba-xenomai0.99
+Description: orocos-rtt-corba-xenomai binding development files
  Orocos project to supply RealTime usable kinematics and dynamics code,
  it contains code for rigid body kinematics calculations and
  representations for kinematic structures and their inverse and forward

@@ -30,9 +30,9 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-	mkdir -p build.gnulinux; cd build.gnulinux; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=gnulinux -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/usr;
-	mkdir -p build.lxrt; cd build.lxrt; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=lxrt -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;	
-	mkdir -p build.xenomai; cd build.xenomai; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=xenomai -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;
+	mkdir -p build.gnulinux; cd build.gnulinux; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=gnulinux -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/usr;cmake ../ -DENABLE_CORBA=ON;
+	mkdir -p build.lxrt; cd build.lxrt; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=lxrt -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;cmake .. -DENABLE_CORBA=ON;	
+	mkdir -p build.xenomai; cd build.xenomai; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=xenomai -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;cmake ../ -DENABLE_CORBA=ON;
 	touch configure-stamp
 
 
