@@ -30,7 +30,9 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-	mkdir -p build.gnulinux; cd build.gnulinux; cmake ../ -DOROCOS_PLUGIN=ON -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/usr;	
+	mkdir -p build.gnulinux; cd build.gnulinux; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=gnulinux -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/usr;
+	mkdir -p build.lxrt; cd build.lxrt; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=lxrt -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;	
+	mkdir -p build.xenomai; cd build.xenomai; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=xenomai -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;
 	touch configure-stamp
 
 
@@ -39,8 +41,9 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	# Add here commands to compile the package.
-	cd build.gnulinux; $(MAKE) VERBOSE=1; make python;
-
+	cd build.lxrt; $(MAKE) VERBOSE=1;
+	cd build.xenomai; $(MAKE) VERBOSE=1;
+	cd build.gnulinux; $(MAKE) VERBOSE=1;$(MAKE) python VERBOSE=1;
 	touch $@
 
 
@@ -62,6 +65,8 @@ install: build
 
 	# Add here commands to install the package into debian/tmp
 	cd build.gnulinux; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	cd build.lxrt; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	cd build.xenomai; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 
 # Build architecture-independent files here.
 binary-indep: build install

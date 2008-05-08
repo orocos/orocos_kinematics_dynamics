@@ -1,3 +1,2 @@
 usr/include/kdl/bindings/rtt
-usr/lib/liborocos-kdltk*.so
 usr/lib/pkgconfig/orocos-kdltk*

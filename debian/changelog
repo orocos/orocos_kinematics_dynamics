@@ -1,3 +1,10 @@
+orocos-kdl (0.99.0ubuntu1) hardy; urgency=low
+
+  * Non-maintainer upload.
+  * package for hardy
+
+ -- Ruben Smits <ruben.smits@mech.kuleuven.be>  Wed, 07 May 2008 16:33:11 +0200
+
 orocos-kdl (0.99.0) UNRELEASED; urgency=low
 
   * Initial release.
