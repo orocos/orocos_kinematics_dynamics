@@ -142,9 +142,14 @@ namespace KDL
          * 
          */
         friend bool Equal(const JntArray& src1,const JntArray& src2,double eps=epsilon);
-        friend bool operator==(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);};
-        
-    };
+
+        friend bool operator==(const JntArray& src1,const JntArray& src2);
+        //friend bool operator!=(const JntArray& src1,const JntArray& src2);
+        };
+    
+    bool operator==(const JntArray& src1,const JntArray& src2);
+    //bool operator!=(const JntArray& src1,const JntArray& src2);
+    
 }
 
 #endif

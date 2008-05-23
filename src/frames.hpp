@@ -490,7 +490,7 @@ public:
 
      friend class Frame;
 };
-
+    bool operator==(const Rotation& a,const Rotation& b);
 
 
 

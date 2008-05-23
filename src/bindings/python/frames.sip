@@ -83,8 +83,8 @@ Vector operator+(const Vector& lhs,const Vector& rhs)/Factory/;
 Vector operator-(const Vector& lhs,const Vector& rhs)/Factory/;
 Vector operator*(const Vector& lhs,const Vector& rhs)/Factory/;
 double dot(const Vector& lhs,const Vector& rhs);
-//bool operator==(const Vector& a,const Vector& b);
-//bool operator!=(const Vector& a,const Vector& b);
+bool operator==(const Vector& a,const Vector& b);
+bool operator!=(const Vector& a,const Vector& b);
 bool Equal(const Vector& a,const Vector& b,double eps=epsilon);
 
 class Rotation{
@@ -157,8 +157,8 @@ public:
     
 };
 bool Equal(const Rotation& a,const Rotation& b,double eps=epsilon);
-//bool operator==(const Rotation& a,const Rotation& b);
-//bool operator!=(const Rotation& a,const Rotation& b);
+bool operator==(const Rotation& a,const Rotation& b);
+bool operator!=(const Rotation& a,const Rotation& b);
 Rotation operator *(const Rotation& lhs,const Rotation& rhs)/Factory/;
 
 class Frame{
@@ -211,8 +211,8 @@ public:
 Frame operator *(const Frame& lhs,const Frame& rhs)/Factory/;
 
 bool Equal(const Frame& a,const Frame& b,double eps=epsilon);
-//bool operator==(const Frame& a,const Frame& b);
-//bool operator!=(const Frame& a,const Frame& b);
+bool operator==(const Frame& a,const Frame& b);
+bool operator!=(const Frame& a,const Frame& b);
 
 class Twist 
 {
@@ -269,8 +269,8 @@ double dot(const Wrench& rhs,const Twist& lhs);
 void SetToZero(Twist& v);
 
 bool Equal(const Twist& a,const Twist& b,double eps=epsilon);
-//bool operator==(const Twist& a,const Twist& b);
-//bool operator!=(const Twist& a,const Twist& b);
+bool operator==(const Twist& a,const Twist& b);
+bool operator!=(const Twist& a,const Twist& b);
 
 class Wrench
 {
@@ -323,8 +323,8 @@ Wrench operator-(const Wrench& lhs,const Wrench& rhs) /Factory/;
 Wrench operator-(const Wrench& arg) /Factory/;
 void SetToZero(Wrench& v);
 bool Equal(const Wrench& a,const Wrench& b,double eps=epsilon);
-//bool operator==(const Wrench& a,const Wrench& b);
-//bool operator!=(const Wrench& a,const Wrench& b);
+bool operator==(const Wrench& a,const Wrench& b);
+bool operator!=(const Wrench& a,const Wrench& b);
 
 Vector diff(const Vector& a,const Vector& b,double dt=1)/Factory/;
 Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt=1)/Factory/;

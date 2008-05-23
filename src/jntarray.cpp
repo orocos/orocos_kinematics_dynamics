@@ -127,6 +127,8 @@ namespace KDL
         return ret;
     }
     
+    bool operator==(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);};
+    //bool operator!=(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);};
     
 }
 
