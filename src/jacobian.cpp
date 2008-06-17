@@ -30,7 +30,8 @@ namespace KDL
     }
     
     Jacobian::Jacobian(const Jacobian& arg):
-        size(arg.columns())
+                       size(arg.columns()),
+                       nr_blocks(arg.nr_blocks)
     {
         twists = new Twist[size*nr_blocks];
         for(unsigned int i=0;i<size*nr_blocks;i++)
