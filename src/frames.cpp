@@ -47,8 +47,8 @@ void Frame::Make4x4(double * d)
     d[15] = 1;
 }
 
-Frame Frame::DH(double a,double alpha,double d,double theta)
-// returns Denavit-Hartenberg parameters
+Frame Frame::mDH(double a,double alpha,double d,double theta)
+// returns Modified Denavit-Hartenberg parameters (According to Craig)
 {
     double ct,st,ca,sa;
     ct = cos(theta);
@@ -61,6 +61,23 @@ Frame Frame::DH(double a,double alpha,double d,double theta)
                     st*sa,  ct*sa,    ca   ),
                  Vector(
                     a,      -sa*d,  ca*d   )
+            );
+}
+
+Frame Frame::DH(double a,double alpha,double d,double theta)
+// returns Denavit-Hartenberg parameters (Non-Modified DH)
+{
+    double ct,st,ca,sa;
+    ct = cos(theta);
+    st = sin(theta);
+    sa = sin(alpha);
+    ca = cos(alpha);
+    return Frame(Rotation(
+                    ct,    -st*ca,   st*sa,
+                    st,     ct*ca,  -ct*sa,
+                     0,        sa,      ca   ),
+                 Vector(
+                    a*ct,      a*st,  d   )
             );
 }
 

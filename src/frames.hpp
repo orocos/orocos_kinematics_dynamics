@@ -581,8 +581,8 @@ public:
      inline void Integrate(const Twist& t_this,double frequency);
 
      /**
-     // SetDH : constructs a transformationmatrix T_link(i-1)_link(i)
-     //         with the Denevit-Hartenberg convention.
+     // SetmDH : constructs a transformationmatrix T_link(i-1)_link(i)
+     //         with the Modified Denavit-Hartenberg convention.
      // Note that the frame is a redundant way to express the information
      // in the DH-convention.
      // \verbatim
@@ -625,8 +625,9 @@ public:
      //     theta(i)   = angle between X(i-1) to X(i) along X(i)
      // \endverbatim
      */
-     static Frame DH(double a,double alpha,double d,double theta);
+     static Frame mDH(double a,double alpha,double d,double theta);
 
+     static Frame DH(double a,double alpha,double d,double theta);
 
 
      //! do not use operator == because the definition of Equal(.,.) is slightly

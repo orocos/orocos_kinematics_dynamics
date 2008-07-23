@@ -101,7 +101,7 @@ public:
              double Xz,double Yz,double Zz);
     Rotation(const Vector& x,const Vector& y,const Vector& z);
     
-    double __getitem__ (int i,int j);
+    double operator[] (int i,int j);
 %MethodCode
     sipRes=(*sipCpp)(a0,a1);
 %End
@@ -195,6 +195,8 @@ public:
     sipRes=tmp;
 %End
 
+    Frame mDH(double a,double alpha,double d,double theta);
+    Frame DH(double a,double alpha,double d,double theta);
     Frame Inverse()/Factory/;
     Vector Inverse(const Vector& arg) const /Factory/;
     Wrench Inverse(const Wrench& arg) const /Factory/;
