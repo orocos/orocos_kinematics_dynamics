@@ -114,6 +114,8 @@ namespace KDL
         
         ti->addType( new JointTypeInfo() );
         ti->addType( new SegmentTypeInfo());
+        ti->addType( new ChainTypeInfo());
+        
         ti->addType( new vectorTypeInfo<Vector>());
         //ti->addType( new vectorTypeInfo<double>());
         

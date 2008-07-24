@@ -36,7 +36,7 @@ namespace KDL
 
     std::ostream& operator << (std::ostream& os, const Segment& segment)
     {
-        os<<"["<<segment.getFrameToTip()<<", "<<segment.getJoint()<<"]";
+        os<<"["<<segment.getJoint()<<",\n"<<segment.getFrameToTip()<<"]";
         return os;
     }
     
@@ -49,7 +49,7 @@ namespace KDL
     {
         os<<"[";
         for(unsigned int i=0;i<chain.getNrOfSegments();i++)
-            os<<chain.getSegment(i);
+            os<<chain.getSegment(i)<<"\n";
         os<<"]";
         return os;
     }
