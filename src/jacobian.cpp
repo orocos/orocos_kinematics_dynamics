@@ -56,13 +56,13 @@ namespace KDL
     double Jacobian::operator()(int i,int j)const
     {
         assert(i<6*nr_blocks&&j<size);
-        return twists[j+6*(int)(floor(i/6))](i%6);
+        return twists[j+6*(int)(floor((double)i/6))](i%6);
     }
     
     double& Jacobian::operator()(int i,int j)
     {
         assert(i<6*nr_blocks&&j<size);
-        return twists[j+6*(int)(floor(i/6))](i%6);
+        return twists[j+6*(int)(floor((double)i/6))](i%6);
     }
 
     unsigned int Jacobian::rows()const
