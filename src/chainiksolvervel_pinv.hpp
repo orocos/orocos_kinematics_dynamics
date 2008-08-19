@@ -40,27 +40,27 @@ namespace KDL
     class ChainIkSolverVel_pinv : public ChainIkSolverVel
     {
     public:
-        /** 
+        /**
          * Constructor of the solver
-         * 
+         *
          * @param chain the chain to calculate the inverse velocity
          * kinematics for
          * @param eps if a singular value is below this value, its
          * inverse is set to zero, default: 0.00001
          * @param maxiter maximum iterations for the svd calculation,
          * default: 150
-         * 
+         *
          */
         ChainIkSolverVel_pinv(const Chain& chain,double eps=0.00001,int maxiter=150);
         ~ChainIkSolverVel_pinv();
-        
+
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
-        /** 
+        /**
          * not (yet) implemented.
-         * 
+         *
          */
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
-    private:        
+    private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
         Jacobian jac;
@@ -71,8 +71,8 @@ namespace KDL
         JntArray tmp;
         double eps;
         int maxiter;
-        
+
     };
 }
 #endif
-                
+

@@ -27,7 +27,7 @@ namespace KDL {
         m(m),Ixx(_Ixx),Iyy(_Iyy),Izz(_Izz),
         Ixy(_Ixy),Ixz(_Ixz),Iyz(_Iyz)
     {
-        
+
     }
 
     Inertia::~Inertia()

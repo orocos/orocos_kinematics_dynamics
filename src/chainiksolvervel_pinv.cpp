@@ -36,28 +36,28 @@ namespace KDL
         maxiter(_maxiter)
     {
     }
-    
+
     ChainIkSolverVel_pinv::~ChainIkSolverVel_pinv()
     {
     }
-    
-    
+
+
     int ChainIkSolverVel_pinv::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
         jnt2jac.JntToJac(q_in,jac);
-        
+
         int ret = svd.calculate(jac,U,S,V,maxiter);
-        
+
         double sum;
         unsigned int i,j;
-        
-        // tmp = (Si*U'*Ly*y), 
+
+        // tmp = (Si*U'*Ly*y),
         for (i=0;i<jac.columns();i++) {
             sum = 0.0;
             for (j=0;j<jac.rows();j++) {
                 sum+= U[j](i)*v_in(j);
             }
-            tmp(i) = sum*(fabs(S(i))<eps?0.0:1.0/S(i));        
+            tmp(i) = sum*(fabs(S(i))<eps?0.0:1.0/S(i));
         }
         // x = Lx^-1*V*tmp + x
         for (i=0;i<jac.columns();i++) {

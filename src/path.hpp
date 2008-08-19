@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  path.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  path.h
 
                         path.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
  /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -38,11 +38,11 @@
  *
  *	\par Release
  *		$Id: path.h,v 1.1.1.1.2.3 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_MOTION_PATH_H
-#define KDL_MOTION_PATH_H 
+#define KDL_MOTION_PATH_H
 
 #include "frames.hpp"
 
@@ -64,7 +64,7 @@ class Path
 		 * to the parameter s used in Pos, Vel and Acc.  This is used because
 		 * in cases with large rotations the parameter s does NOT correspond to
 		 * the lineair length along the trajectory.
-		 * User should be sure that the lineair distance travelled by this 
+		 * User should be sure that the lineair distance travelled by this
 		 * path object is NOT zero, when using this method !
 		 * (e.g. the case of only rotational change)
 		 * throws Error_MotionPlanning_Not_Applicable if used on composed
@@ -72,7 +72,7 @@ class Path
 		 * @ingroup Motion
 		 */
 		virtual double LengthToS(double length)  = 0;
-		
+
 		/**
 		 * Returns the total path length of the trajectory
 		 * (has dimension LENGTH)
@@ -100,7 +100,7 @@ class Path
 
 		/**
 		 * Writes one of the derived objects to the stream
-		 */ 
+		 */
 		virtual void Write(std::ostream& os)  = 0;
 
 		/**

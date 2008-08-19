@@ -35,7 +35,7 @@ namespace ublas = boost::numeric::ublas;
 namespace KDL
 {
     int svd_boost_Macie(ublas::matrix<double>& A,ublas::matrix<double>& U,ublas::vector<double>& S, ublas::matrix<double>& V,
-                        ublas::matrix<double>& B, ublas::vector<double>& tempi, 
+                        ublas::matrix<double>& B, ublas::vector<double>& tempi,
                         double treshold,bool toggle)
     {
         bool rotate = true;
@@ -52,7 +52,7 @@ namespace KDL
                     for(unsigned int j=i+1;j<B.size2();j++){
                         ublas::matrix_column<ublas::matrix<double> > Bi (B, i);
                         ublas::matrix_column<ublas::matrix<double> > Bj (B, j);
-                        //calculate plane rotation 
+                        //calculate plane rotation
                         double p = ublas::inner_prod(Bi,Bj);
                         double qi = ublas::inner_prod(Bi,Bi);
                         double qj = ublas::inner_prod(Bj,Bj);
@@ -75,7 +75,7 @@ namespace KDL
                                 sin=sqrt((c-q)/(2*c));
                             cos=p/(c*sin);
                         }
-                        
+
                         //Apply plane rotation to columns of B
                         tempi.assign (cos*Bi + sin*Bj);
                         Bj.assign (- sin*Bi + cos*Bj);
@@ -84,12 +84,12 @@ namespace KDL
                         ublas::vector_range<ublas::vector<double> > tempiv(tempi, ublas::range (0, V.size1()));
                         ublas::matrix_column<ublas::matrix<double> > Vi (V, i);
                         ublas::matrix_column<ublas::matrix<double> > Vj (V, j);
-                        
+
                         //Apply plane rotation to columns of V
                         tempiv.assign (cos*Vi + sin*Vj);
                         Vj.assign (- sin*Vi + cos*Vj);
                         Vi.assign (tempiv);
-                        
+
                         rotate=true;
                     }
                 }
@@ -124,14 +124,14 @@ namespace KDL
                     for(unsigned int j=i+1;j<B.size2();j++){
                         ublas::matrix_row<ublas::matrix<double> > Bi (B, i);
                         ublas::matrix_row<ublas::matrix<double> > Bj (B, j);
-                        //calculate plane rotation 
+                        //calculate plane rotation
                         double p = ublas::inner_prod(Bi,Bj);
                         double qi = ublas::inner_prod(Bi,Bi);
                         double qj = ublas::inner_prod(Bj,Bj);
                         //std::cout<<"q"<<i<<": "<<qi<<std::endl;
                         //std::cout<<"q"<<j<<": "<<qj<<std::endl;
                         //std::cout<<"p"<<i<<j<<": "<<p<<std::endl;
-                        
+
                         double q=qi-qj;
                         double alpha = pow(p,2.0)/(qi*qj);
                         //if columns are orthogonal with precision
@@ -152,26 +152,26 @@ namespace KDL
                                 sin=sqrt((c-q)/(2*c));
                             cos=p/(c*sin);
                         }
-                        
+
                         //Apply plane rotation to rows of B
                         ublas::vector_range<ublas::vector<double> > tempib(tempi, ublas::range (0, B.size2()));
                         tempib.assign (cos*Bi + sin*Bj);
                         Bj.assign (- sin*Bi + cos*Bj);
                         Bi.assign (tempib);
-                        
+
                         ublas::vector_range<ublas::vector<double> > tempiu(tempi, ublas::range (0, U.size1()));
                         ublas::matrix_column<ublas::matrix<double> > Ui (U, i);
                         ublas::matrix_column<ublas::matrix<double> > Uj (U, j);
-                        
+
                         //Apply plane rotation to rows of U
                         tempiu.assign (cos*Ui + sin*Uj);
                         Uj.assign (- sin*Ui + cos*Uj);
                         Ui.assign (tempiu);
-                        
+
                         rotate=true;
                     }
                 }
-                
+
                 //Only calculate new U and S if there were any rotations
                 if(rotations!=0){
                     for(unsigned int i=0;i<V.size1();i++) {
@@ -190,7 +190,7 @@ namespace KDL
             return sweeps;
         }
     }
-    
-    
+
+
 }
 #endif

@@ -24,7 +24,7 @@
 namespace KDL
 {
     using namespace std;
-    
+
     Tree::Tree()
     {
         segments.insert(make_pair("root",TreeElement::Root()));
@@ -33,12 +33,12 @@ namespace KDL
     Tree::Tree(const Tree& in)
     {
     }
-    
+
     Tree& Tree::operator=(const Tree& in)
     {
         return *this;
     }
-    
+
     bool Tree::addSegment(const Segment& segment,const std::string& segment_name,const std::string& hook_name)
     {
         SegmentMap::iterator parent = segments.find(hook_name);
@@ -61,7 +61,7 @@ namespace KDL
             nrOfJoints++;
         return true;
     }
-    
+
     bool Tree::addChain(const Chain& chain, const std::string& chain_name, const std::string& hook_name)
     {
         string parent_name=hook_name;
@@ -75,12 +75,12 @@ namespace KDL
         }
         return true;
     }
-    
+
     bool Tree::addTree(const Tree& tree, const std::string& tree_name,const std::string& hook_name)
     {
         return this->addTreeRecursive(tree.getSegment("root"),tree_name,hook_name);
     }
-    
+
     bool Tree::addTreeRecursive(SegmentMap::const_iterator root, const std::string& tree_name, const std::string& hook_name)
     {
         //get iterator for root-segment

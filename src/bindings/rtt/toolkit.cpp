@@ -1,11 +1,11 @@
 /***************************************************************************
-  tag: Peter Soetens  Mon Jun 26 13:25:57 CEST 2006  GeometryToolkit.cxx 
+  tag: Peter Soetens  Mon Jun 26 13:25:57 CEST 2006  GeometryToolkit.cxx
                         GeometryToolkit.cxx -  description
                            -------------------
     begin                : Mon June 26 2006
     copyright            : (C) 2006 Peter Soetens, Ruben Smits
     email                : peter.soetens@fmtc.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -23,7 +23,7 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
+
 #include "toolkit.hpp"
 #include <rtt/Types.hpp>
 #include <rtt/TemplateTypeInfo.hpp>
@@ -37,12 +37,12 @@
 #include "motionproperties.hpp"
 #include "kinfamproperties.hpp"
 
-namespace KDL 
+namespace KDL
 {
     using namespace RTT;
     using namespace RTT::detail;
     using namespace std;
-    
+
     KDLToolkitPlugin KDLToolkit;
 
     std::string KDLToolkitPlugin::getName()
@@ -53,8 +53,8 @@ namespace KDL
     /**
      * Used for joints
      */
-    
-   
+
+
     /**
      * Used for Frame and Rotation.
      */
@@ -81,7 +81,7 @@ namespace KDL
     struct GeomIndexTypeInfo
         : public TemplateIndexTypeInfo<GeomType, int, double, RangeIndexChecker<GeomType,R>, AlwaysAssignChecker<GeomType>, true>
     {
-        GeomIndexTypeInfo(std::string name) 
+        GeomIndexTypeInfo(std::string name)
             : TemplateIndexTypeInfo<GeomType, int, double, RangeIndexChecker<GeomType,R>, AlwaysAssignChecker<GeomType>, true>(name) {}
 
         virtual bool decomposeTypeImpl(const GeomType& source, PropertyBag& targetbag ) const {
@@ -94,7 +94,7 @@ namespace KDL
         }
     };
 
-    bool KDLToolkitPlugin::loadTypes() 
+    bool KDLToolkitPlugin::loadTypes()
     {
         TypeInfoRepository::shared_ptr ti = TypeInfoRepository::Instance();
 
@@ -111,14 +111,14 @@ namespace KDL
 //         ti->addType( new TemplateIndexTypeInfo<Vector,int, double,
 //         RangeIndexChecker<Vector,3>,
 //         AlwaysAssignChecker<Vector>,true >("vector") );
-        
+
         ti->addType( new JointTypeInfo() );
         ti->addType( new SegmentTypeInfo());
         ti->addType( new ChainTypeInfo());
-        
+
         ti->addType( new vectorTypeInfo<Vector>());
         //ti->addType( new vectorTypeInfo<double>());
-        
+
         return true;
     }
 
@@ -336,7 +336,7 @@ namespace KDL
         TypeInfoRepository::shared_ptr ti = TypeInfoRepository::Instance();
 //        ti->type("double6d")->addConstructor( newConstructor(&double6Dd ) );
 //        ti->type("double6d")->addConstructor( newConstructor(&double6D6d ) );
-//        
+//
         ti->type("vector")->addConstructor( newConstructor(&vectorxyz) );
         ti->type("rotation")->addConstructor( newConstructor( ptr_fun( Rotation::RPY )) );
         ti->type("frame")->addConstructor( newConstructor(&framerv) );

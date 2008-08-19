@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  velocityprofile.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  velocityprofile.h
 
                         velocityprofile.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,14 +24,14 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 /*****************************************************************************
- *		 
- *  \author 
+ *
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -39,7 +39,7 @@
  *
  *	\par Release
  *		$Id: velocityprofile.h,v 1.1.1.1.2.5 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_VELOCITYPROFILE_H
@@ -52,14 +52,14 @@
 namespace KDL {
 
 
-    /** 
+    /**
      * A VelocityProfile stores the velocity profile that
      * is used within a trajectory. A velocity profile is the function that
      * expresses position, velocity and acceleration of a point on a curve
      * in function of time. It defines the how a point s moves on a path S.
      * @ingroup Motion
      */
-class VelocityProfile 
+class VelocityProfile
 	{
 	public:
 		// trajectory parameters are set in constructor of
@@ -71,10 +71,10 @@ class VelocityProfile
 		virtual void SetProfileDuration(
 			double pos1,double pos2,double duration) = 0;
 		// Sets a trajectory from pos1 to pos2 in <duration> seconds.
-        // @post new.Duration() will not be shorter than the one obtained 
+        // @post new.Duration() will not be shorter than the one obtained
         //       from SetProfile(pos1,pos2).
 
-		
+
 		virtual double Duration() const = 0;
 		// returns the duration of the motion in [sec]
 

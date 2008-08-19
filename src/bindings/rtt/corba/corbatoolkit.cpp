@@ -32,7 +32,7 @@ namespace KDL
         using namespace RTT;
         using namespace RTT::Corba;
         using namespace RTT::detail;
-        
+
         struct CorbaKDLRegistrator
             : public TransportRegistrator
         {
@@ -61,13 +61,13 @@ namespace KDL
     };
 }
 
-namespace RTT 
+namespace RTT
 {
     class TaskContext;
 }
 using namespace RTT;
 using namespace KDL;
-extern "C" {                      
+extern "C" {
 bool loadRTTPlugin(RTT::TaskContext* )
 {
     log(Info) << "Loading CorbaKDL in RTT type system." <<endlog();

@@ -43,15 +43,15 @@ namespace KDL
 
     std::ostream& operator << (std::ostream& os, const Tree& tree);
     std::istream& operator >> (std::istream& is, Tree& tree);
-    
+
     std::ostream& operator << (std::ostream& os, SegmentMap::const_iterator it);
-        
+
     std::ostream& operator << (std::ostream& os,const JntArray& array);
     std::istream& operator >> (std::istream& is,JntArray& array);
     std::ostream& operator << (std::ostream& os,const Jacobian& jac);
     std::istream& operator >> (std::istream& is,Jacobian& jac);
 
-    
+
     template<typename T>
     std::ostream& operator<<(std::ostream& os,const std::vector<T>& vec)
     {
@@ -61,13 +61,13 @@ namespace KDL
         os<<"]";
         return os;
     };
-    
+
     template<typename T>
     std::istream& operator >> (std::istream& is, std::vector<T>& vec)
     {
         return is;
     };
-    
+
 }
 #endif
-    
+

@@ -18,7 +18,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
 #include "jacobian.hpp"
 
 namespace KDL
@@ -28,7 +28,7 @@ namespace KDL
     {
         twists = new Twist[size*nr_blocks];
     }
-    
+
     Jacobian::Jacobian(const Jacobian& arg):
                        size(arg.columns()),
                        nr_blocks(arg.nr_blocks)
@@ -46,7 +46,7 @@ namespace KDL
             twists[i]=arg.twists[i];
         return *this;
     }
-    
+
 
     Jacobian::~Jacobian()
     {
@@ -58,7 +58,7 @@ namespace KDL
         assert(i<6*nr_blocks&&j<size);
         return twists[j+6*(int)(floor((double)i/6))](i%6);
     }
-    
+
     double& Jacobian::operator()(int i,int j)
     {
         assert(i<6*nr_blocks&&j<size);
@@ -69,18 +69,18 @@ namespace KDL
     {
         return 6*nr_blocks;
     }
-    
+
     unsigned int Jacobian::columns()const
     {
         return size;
     }
-    
+
     void SetToZero(Jacobian& jac)
     {
         for(unsigned int i=0;i<jac.size*jac.nr_blocks;i++)
             SetToZero(jac.twists[i]);
     }
-    
+
     void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest)
     {
         assert(src1.size==dest.size);
@@ -88,7 +88,7 @@ namespace KDL
         for(unsigned int i=0;i<src1.size*src1.nr_blocks;i++)
             dest.twists[i]=src1.twists[i].RefPoint(base_AB);
     }
-    
+
     void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest)
     {
         assert(src1.size==dest.size);
@@ -96,7 +96,7 @@ namespace KDL
         for(unsigned int i=0;i<src1.size*src1.nr_blocks;i++)
             dest.twists[i]=rot*src1.twists[i];
     }
-    
+
     void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest)
     {
         assert(src1.size==dest.size);

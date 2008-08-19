@@ -7,7 +7,7 @@
     email                : firstname.lastname@mech.kuleuven.ac.be
 
  History (only major changes)( AUTHOR-Description ) :
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -40,29 +40,29 @@ namespace KDL {
 
 
 std::ostream& operator << (std::ostream& os,const Vector& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v(0) << "," << std::setw(KDL_FRAME_WIDTH)<<v(1) 
+    os << "[" << std::setw(KDL_FRAME_WIDTH) << v(0) << "," << std::setw(KDL_FRAME_WIDTH)<<v(1)
        << "," << std::setw(KDL_FRAME_WIDTH) << v(2) << "]";
     return os;
 }
 
 std::ostream& operator << (std::ostream& os,const Twist& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v.vel(0) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.vel(1) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.vel(2) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(0) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(1) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(2) 
+    os << "[" << std::setw(KDL_FRAME_WIDTH) << v.vel(0)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.vel(1)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.vel(2)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(0)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(1)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(2)
        << "]";
     return os;
 }
 
 std::ostream& operator << (std::ostream& os,const Wrench& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v.force(0) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.force(1) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.force(2) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(0) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(1) 
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(2) 
+    os << "[" << std::setw(KDL_FRAME_WIDTH) << v.force(0)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.force(1)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.force(2)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(0)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(1)
+       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(2)
        << "]";
     return os;
 }
@@ -92,7 +92,7 @@ std::ostream& operator << (std::ostream& os,const Rotation& R) {
         os << std::setw(KDL_FRAME_WIDTH) << R(i,0) << "," <<
                        std::setw(KDL_FRAME_WIDTH) << R(i,1) << "," <<
                        std::setw(KDL_FRAME_WIDTH) << R(i,2);
-        if (i<2) 
+        if (i<2)
             os << ";"<< std::endl << " ";
         else
             os << "]";
@@ -102,14 +102,14 @@ std::ostream& operator << (std::ostream& os,const Rotation& R) {
     return os;
 }
 
-std::ostream& operator << (std::ostream& os, const Frame& T) 
+std::ostream& operator << (std::ostream& os, const Frame& T)
 {
     os << "[" << T.M << std::endl<< T.p << "]";
     return os;
 }
 
 std::ostream& operator << (std::ostream& os,const Vector2& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v(0) << "," << std::setw(KDL_FRAME_WIDTH)<<v(1) 
+    os << "[" << std::setw(KDL_FRAME_WIDTH) << v(0) << "," << std::setw(KDL_FRAME_WIDTH)<<v(1)
        << "]";
     return os;
 }
@@ -120,22 +120,22 @@ std::ostream& operator << (std::ostream& os,const Rotation2& R) {
     return os;
 }
 
-std::ostream& operator << (std::ostream& os, const Frame2& T) 
+std::ostream& operator << (std::ostream& os, const Frame2& T)
 {
     os << T.M << T.p;
     return os;
 }
 
-std::istream& operator >> (std::istream& is,Vector& v) 
+std::istream& operator >> (std::istream& is,Vector& v)
 {   IOTrace("Stream input Vector (vector or ZERO)");
     char storage[10];
     EatWord(is,"[]",storage,10);
     if (strlen(storage)==0) {
-        Eat(is,'['); 
+        Eat(is,'[');
         is >> v(0);
         Eat(is,',');
         is >> v(1);
-        Eat(is,','); 
+        Eat(is,',');
         is >> v(2);
         EatEnd(is,']');
         IOTracePop();
@@ -149,38 +149,38 @@ std::istream& operator >> (std::istream& is,Vector& v)
     throw Error_Frame_Vector_Unexpected_id();
 }
 
-std::istream& operator >> (std::istream& is,Twist& v) 
+std::istream& operator >> (std::istream& is,Twist& v)
 {   IOTrace("Stream input Twist");
-    Eat(is,'['); 
+    Eat(is,'[');
     is >> v.vel(0);
     Eat(is,',');
     is >> v.vel(1);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.vel(2);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.rot(0);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.rot(1);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.rot(2);
     EatEnd(is,']');
     IOTracePop();
     return is;
 }
 
-std::istream& operator >> (std::istream& is,Wrench& v) 
+std::istream& operator >> (std::istream& is,Wrench& v)
 {   IOTrace("Stream input Wrench");
-    Eat(is,'['); 
+    Eat(is,'[');
     is >> v.force(0);
     Eat(is,',');
     is >> v.force(1);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.force(2);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.torque(0);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.torque(1);
-    Eat(is,','); 
+    Eat(is,',');
     is >> v.torque(2);
     EatEnd(is,']');
     IOTracePop();
@@ -199,7 +199,7 @@ std::istream& operator >> (std::istream& is,Rotation& r)
             is >> r(i,1);
             Eat(is,',');
             is >> r(i,2);
-            if (i<2) 
+            if (i<2)
                 Eat(is,';');
             else
                 EatEnd(is,']');
@@ -232,7 +232,7 @@ std::istream& operator >> (std::istream& is,Rotation& r)
     if (strcmp(storage,"ROT")==0) {
         is >> v;
         double angle;
-        Eat(is,'['); 
+        Eat(is,'[');
         is >> angle;
         EatEnd(is,']');
         r = Rotation::Rot(v,angle*deg2rad);
@@ -279,9 +279,9 @@ std::istream& operator >> (std::istream& is,Frame& T)
     return is;
 }
 
-std::istream& operator >> (std::istream& is,Vector2& v) 
+std::istream& operator >> (std::istream& is,Vector2& v)
 {   IOTrace("Stream input Vector2");
-    Eat(is,'['); 
+    Eat(is,'[');
     is >> v(0);
     Eat(is,',');
     is >> v(1);

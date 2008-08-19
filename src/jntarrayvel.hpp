@@ -28,7 +28,7 @@
 
 namespace KDL
 {
-    
+
     class JntArrayVel
     {
     public:
@@ -38,7 +38,7 @@ namespace KDL
         JntArrayVel(unsigned int size);
         JntArrayVel(const JntArray& q,const JntArray& qdot);
         JntArrayVel(const JntArray& q);
-        
+
         JntArray value()const;
         JntArray deriv()const;
 
@@ -52,7 +52,7 @@ namespace KDL
         friend void Divide(const JntArrayVel& src,const doubleVel& factor,JntArrayVel& dest);
         friend void SetToZero(JntArrayVel& array);
         friend bool Equal(const JntArrayVel& src1,const JntArrayVel& src2,double eps=epsilon);
-        
+
     };
 }
 

@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  path_line.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  path_line.h
 
                         path_line.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,14 +24,14 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 /*****************************************************************************
-*   ALTERNATIVE FOR trajectory_line.h/cpp 
- *  \author 
+*   ALTERNATIVE FOR trajectory_line.h/cpp
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -39,7 +39,7 @@
  *
  *	\par Release
  *		$Id: path_line.h,v 1.1.1.1.2.3 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_MOTION_PATH_LINE_H
@@ -59,7 +59,7 @@ namespace KDL {
 class Path_Line : public Path
 	{
 		// Orientatie gedeelte
-		RotationalInterpolation* orient; 
+		RotationalInterpolation* orient;
 
 		// Lineair gedeelte
 		Vector V_base_start;
@@ -72,36 +72,36 @@ class Path_Line : public Path
 		double pathlength;
 		double scalelin;
 		double scalerot;
-		
+
 		bool aggregate;
 	public:
-		/** 
+		/**
 		 * Constructs a Line Path
 		 * F_base_start and F_base_end give the begin and end frame wrt the base
 		 * orient gives the method of rotation interpolation
 		 * eqradius : equivalent radius :
 		 *		serves to compare rotations and translations.
-		 *		the "amount of motion"(pos,vel,acc) of the rotation is taken 
+		 *		the "amount of motion"(pos,vel,acc) of the rotation is taken
 		 *      to be the amount motion of a point at distance eqradius from the
 		 *      rotation axis.
          *
-         * Eqradius is introduced because it is unavoidable that you have to compare rotations and translations :  
+         * Eqradius is introduced because it is unavoidable that you have to compare rotations and translations :
          * e.g. : You can have motions that only contain rotation, and motions that only contain translations.
          * The motion planning goes as follows :
          *  - translation is planned with the given parameters
          *  - rotation is planned planned with the parameters calculated with eqradius.
-         *  - The longest of the previous two remains unchanged, 
+         *  - The longest of the previous two remains unchanged,
          *    the shortest in duration is scaled to take as long as the longest.
          * This guarantees that the geometric path in 6D space remains independent of the motion profile parameters.
          *
-         * RotationalInterpolation_SingleAxis() has the advantage that it is independent 
+         * RotationalInterpolation_SingleAxis() has the advantage that it is independent
          * of the frame in which you express your path.
-         * Other implementations for RotationalInterpolations COULD be 
+         * Other implementations for RotationalInterpolations COULD be
          *    (not implemented) (yet) :
          *    1) quaternion interpolation : but this is more difficult for the human to interprete
-         *    2) 3-axis interpolation : express the orientation of the frame in e.g. 
-         *       euler zyx angles alfa,beta, gamma  and interpolate these parameters.  
-         *       But this is dependent of the frame you choose as a reference and 
+         *    2) 3-axis interpolation : express the orientation of the frame in e.g.
+         *       euler zyx angles alfa,beta, gamma  and interpolate these parameters.
+         *       But this is dependent of the frame you choose as a reference and
          *       their can occur representation singularities.
 		 */
 		Path_Line(const Frame& F_base_start,

@@ -6,7 +6,7 @@
     email                : firstname.lastname@mech.kuleuven.ac.be
 
  History (only major changes)( AUTHOR-Description ) :
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -26,7 +26,7 @@
  ***************************************************************************/
 
 #include "frames.hpp"
- 
+
 namespace KDL {
 
 #ifndef KDL_INLINE
@@ -42,7 +42,7 @@ void Frame::Make4x4(double * d)
             d[i*4+j]=M(i,j);
         d[i*4+3] = p(i)/1000;
     }
-    for (j=0;j<3;j++) 
+    for (j=0;j<3;j++)
         d[12+j] = 0.;
     d[15] = 1;
 }
@@ -181,25 +181,25 @@ Rotation operator *(const Rotation& lhs,const Rotation& rhs)
 // Complexity : 27M+27A
 {
     return Rotation(
-        lhs.data[0]*rhs.data[0]+lhs.data[1]*rhs.data[3]+lhs.data[2]*rhs.data[6],   
-        lhs.data[0]*rhs.data[1]+lhs.data[1]*rhs.data[4]+lhs.data[2]*rhs.data[7],   
+        lhs.data[0]*rhs.data[0]+lhs.data[1]*rhs.data[3]+lhs.data[2]*rhs.data[6],
+        lhs.data[0]*rhs.data[1]+lhs.data[1]*rhs.data[4]+lhs.data[2]*rhs.data[7],
         lhs.data[0]*rhs.data[2]+lhs.data[1]*rhs.data[5]+lhs.data[2]*rhs.data[8],
-        lhs.data[3]*rhs.data[0]+lhs.data[4]*rhs.data[3]+lhs.data[5]*rhs.data[6],   
-        lhs.data[3]*rhs.data[1]+lhs.data[4]*rhs.data[4]+lhs.data[5]*rhs.data[7],   
+        lhs.data[3]*rhs.data[0]+lhs.data[4]*rhs.data[3]+lhs.data[5]*rhs.data[6],
+        lhs.data[3]*rhs.data[1]+lhs.data[4]*rhs.data[4]+lhs.data[5]*rhs.data[7],
         lhs.data[3]*rhs.data[2]+lhs.data[4]*rhs.data[5]+lhs.data[5]*rhs.data[8],
-        lhs.data[6]*rhs.data[0]+lhs.data[7]*rhs.data[3]+lhs.data[8]*rhs.data[6],   
-        lhs.data[6]*rhs.data[1]+lhs.data[7]*rhs.data[4]+lhs.data[8]*rhs.data[7],   
+        lhs.data[6]*rhs.data[0]+lhs.data[7]*rhs.data[3]+lhs.data[8]*rhs.data[6],
+        lhs.data[6]*rhs.data[1]+lhs.data[7]*rhs.data[4]+lhs.data[8]*rhs.data[7],
         lhs.data[6]*rhs.data[2]+lhs.data[7]*rhs.data[5]+lhs.data[8]*rhs.data[8]
     );
 
 }
 
 
-Rotation Rotation::RPY(double roll,double pitch,double yaw) 
+Rotation Rotation::RPY(double roll,double pitch,double yaw)
     {
         double ca1,cb1,cc1,sa1,sb1,sc1;
-        ca1 = cos(yaw); sa1 = sin(yaw); 
-        cb1 = cos(pitch);sb1 = sin(pitch); 
+        ca1 = cos(yaw); sa1 = sin(yaw);
+        cb1 = cos(pitch);sb1 = sin(pitch);
         cc1 = cos(roll);sc1 = sin(roll);
         return Rotation(ca1*cb1,ca1*sb1*sc1 - sa1*cc1,ca1*sb1*cc1 + sa1*sc1,
                    sa1*cb1,sa1*sb1*sc1 + ca1*cc1,sa1*sb1*cc1 - ca1*sc1,
@@ -229,7 +229,7 @@ Rotation Rotation::EulerZYZ(double Alfa,double Beta,double Gamma) {
                  sa*cb*cg+ca*sg,     -sa*cb*sg+ca*cg,        sa*sb,
                  -sb*cg ,                sb*sg,              cb
                 );
-                 
+
      }
 
 
@@ -242,7 +242,7 @@ void Rotation::GetEulerZYZ(double& alfa,double& beta,double& gamma) const {
             } else {
                 beta = PI;
                 gamma= atan2(data[1],-data[0]);
-            }       
+            }
         } else {
             alfa=atan2(data[5], data[2]);
             beta=atan2(sqrt( sqr(data[6]) +sqr(data[7]) ),data[8]);
@@ -251,7 +251,7 @@ void Rotation::GetEulerZYZ(double& alfa,double& beta,double& gamma) const {
  }
 
 Rotation Rotation::Rot(const Vector& rotaxis,double angle) {
-    // The formula is 
+    // The formula is
     // V.(V.tr) + st*[V x] + ct*(I-V.(V.tr))
     // can be found by multiplying it with an arbitrary vector p
     // and noting that this vector is rotated.
@@ -261,8 +261,8 @@ Rotation Rotation::Rot(const Vector& rotaxis,double angle) {
     Vector rotvec = rotaxis;
 	rotvec.Normalize();
     return Rotation(
-        ct            +  vt*rotvec(0)*rotvec(0), 
-        -rotvec(2)*st +  vt*rotvec(0)*rotvec(1), 
+        ct            +  vt*rotvec(0)*rotvec(0),
+        -rotvec(2)*st +  vt*rotvec(0)*rotvec(1),
         rotvec(1)*st  +  vt*rotvec(0)*rotvec(2),
         rotvec(2)*st  +  vt*rotvec(1)*rotvec(0),
         ct            +  vt*rotvec(1)*rotvec(1),
@@ -275,7 +275,7 @@ Rotation Rotation::Rot(const Vector& rotaxis,double angle) {
 
 Rotation Rotation::Rot2(const Vector& rotvec,double angle) {
     // rotvec should be normalized !
-    // The formula is 
+    // The formula is
     // V.(V.tr) + st*[V x] + ct*(I-V.(V.tr))
     // can be found by multiplying it with an arbitrary vector p
     // and noting that this vector is rotated.
@@ -283,8 +283,8 @@ Rotation Rotation::Rot2(const Vector& rotvec,double angle) {
     double st = sin(angle);
     double vt = 1-ct;
     return Rotation(
-        ct            +  vt*rotvec(0)*rotvec(0), 
-        -rotvec(2)*st +  vt*rotvec(0)*rotvec(1), 
+        ct            +  vt*rotvec(0)*rotvec(0),
+        -rotvec(2)*st +  vt*rotvec(0)*rotvec(1),
         rotvec(1)*st  +  vt*rotvec(0)*rotvec(2),
         rotvec(2)*st  +  vt*rotvec(1)*rotvec(0),
         ct            +  vt*rotvec(1)*rotvec(1),
@@ -297,14 +297,14 @@ Rotation Rotation::Rot2(const Vector& rotvec,double angle) {
 
 
 
-Vector Rotation::GetRot() const 
+Vector Rotation::GetRot() const
          // Returns a vector with the direction of the equiv. axis
          // and its norm is angle
      {
        Vector axis  = Vector((data[7]-data[5]),
 			     (data[2]-data[6]),
 			     (data[3]-data[1]) )/2;
-       
+
        double sa    = axis.Norm();
        double ca    = (data[0]+data[4]+data[8]-1)/2.0;
        double alfa;
@@ -319,13 +319,13 @@ Vector Rotation::GetRot() const
 
 /** Returns the rotation angle around the equiv. axis
  * @param axis the rotation axis is returned in this variable
- * @param eps :  in the case of angle == 0 : rot axis is undefined and choosen 
+ * @param eps :  in the case of angle == 0 : rot axis is undefined and choosen
  *                                         to be +/- Z-axis
  *               in the case of angle == PI : 2 solutions, positive Z-component
  *                                            of the axis is choosen.
  * @result returns the rotation angle (between [0..PI] )
  * /todo :
- *   Check corresponding routines in rframes and rrframes 
+ *   Check corresponding routines in rframes and rrframes
  */
 double Rotation::GetRotAngle(Vector& axis,double eps) const {
 	double ca    = (data[0]+data[4]+data[8]-1)/2.0;
@@ -346,7 +346,7 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
 	double sa    = sin(angle);
 	axis  = Vector((data[7]-data[5])/2/sa,
                        (data[2]-data[6])/2/sa,
-                       (data[3]-data[1])/2/sa  ); 
+                       (data[3]-data[1])/2/sa  );
 	return angle;
 }
 

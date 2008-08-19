@@ -21,11 +21,11 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(FkVelAndIkVelTest );
     CPPUNIT_TEST(FkPosAndIkPosTest );
     CPPUNIT_TEST_SUITE_END();
-    
+
 public:
     void setUp();
     void tearDown();
-    
+
     void FkPosAndJacTest();
     void FkVelAndJacTest();
     void FkVelAndIkVelTest();
@@ -34,7 +34,7 @@ public:
 private:
 
     Chain chain1,chain2,chain3;
-        
+
     void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
     void FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);
     void FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainIkSolverVel& iksolvervel);

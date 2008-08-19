@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  path_cyclic_closed.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  path_cyclic_closed.h
 
                         path_cyclic_closed.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
  /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V2
  *
  *	\par History
@@ -38,7 +38,7 @@
  *
  *	\par Release
  *		$Id: path_cyclic_closed.h,v 1.1.1.1.2.3 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_MOTION_PATH_CYCLIC_CLOSED_H
@@ -64,7 +64,7 @@ namespace KDL {
 		bool aggregate;
 	public:
 		Path_Cyclic_Closed(Path* _geom,int _times, bool _aggregate=true);
-		virtual double LengthToS(double length);		
+		virtual double LengthToS(double length);
 		virtual double PathLength();
 		virtual Frame Pos(double s) const;
 		virtual Twist Vel(double s,double sd) const;

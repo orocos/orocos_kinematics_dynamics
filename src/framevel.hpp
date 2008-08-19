@@ -1,15 +1,15 @@
 /*****************************************************************************
- * \file  
- *      This file contains the definition of classes for a 
+ * \file
+ *      This file contains the definition of classes for a
  *      Rall Algebra of (subset of) the classes defined in frames,
  *      i.e. classes that contain a pair (value,derivative) and define operations on that pair
  *      this classes are usefull for automatic differentiation ( <-> symbolic diff , <-> numeric diff)
  *      Defines VectorVel, RotationVel, FrameVel.  Look at Frames.h for details on how to work
- *      with Frame objects. 
- *  \author 
+ *      with Frame objects.
+ *  \author
  *      Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *      ORO_Geometry V0.2
  *
  *  \par History
@@ -17,9 +17,9 @@
  *
  *  \par Release
  *      $Id: rframes.h,v 1.1.1.1 2002/08/26 14:14:21 rmoreas Exp $
- *      $Name:  $ 
+ *      $Name:  $
  ****************************************************************************/
- 
+
 #ifndef KDL_FRAMEVEL_H
 #define KDL_FRAMEVEL_H
 
@@ -40,7 +40,7 @@ IMETHOD doubleVel diff(const doubleVel& a,const doubleVel& b,double dt=1.0) {
 }
 
 IMETHOD doubleVel addDelta(const doubleVel& a,const doubleVel&da,double dt=1.0) {
-	return doubleVel(a.t+da.t*dt,a.grad+da.grad*dt);	
+	return doubleVel(a.t+da.t*dt,a.grad+da.grad*dt);
 }
 
 IMETHOD void random(doubleVel& F) {
@@ -67,7 +67,7 @@ class VectorVel;
 class FrameVel;
 class RotationVel;
 
-class VectorVel 
+class VectorVel
 // = TITLE
 //     An VectorVel is a Vector and its first derivative
 // = CLASS TYPE
@@ -109,7 +109,7 @@ public:
     IMETHOD friend VectorVel operator / (const VectorVel& r1,double r2);
     IMETHOD friend VectorVel operator / (const VectorVel& r2,const doubleVel& r1);
     IMETHOD friend void SetToZero(VectorVel& v);
-    
+
 
     IMETHOD friend bool Equal(const VectorVel& r1,const VectorVel& r2,double eps=epsilon);
     IMETHOD friend bool Equal(const Vector& r1,const VectorVel& r2,double eps=epsilon);
@@ -122,7 +122,7 @@ public:
 
 
 
-class RotationVel 
+class RotationVel
 // = TITLE
 //     An RotationVel is a Rotation and its first derivative, a rotation vector
 // = CLASS TYPE
@@ -156,7 +156,7 @@ public:
     IMETHOD void DoRotY(const doubleVel& angle);
     IMETHOD void DoRotZ(const doubleVel& angle);
     IMETHOD static RotationVel RotX(const doubleVel& angle);
-    IMETHOD static RotationVel RotY(const doubleVel& angle);    
+    IMETHOD static RotationVel RotY(const doubleVel& angle);
     IMETHOD static RotationVel RotZ(const doubleVel& angle);
     IMETHOD static RotationVel Rot(const Vector& rotvec,const doubleVel& angle);
     // rotvec has arbitrary norm
@@ -180,7 +180,7 @@ public:
 
 
 
-class FrameVel 
+class FrameVel
 // = TITLE
 //     An FrameVel is a Frame and its first derivative, a Twist vector
 // = CLASS TYPE
@@ -236,7 +236,7 @@ public:
 
 
 //very similar to Wrench class.
-class TwistVel 
+class TwistVel
 // = TITLE
 // This class represents a TwistVel. This is a velocity and rotational velocity together
 {
@@ -292,7 +292,7 @@ public:
 
      // = Equality operators
      // do not use operator == because the definition of Equal(.,.) is slightly
-     // different.  It compares whether the 2 arguments are equal in an eps-interval     
+     // different.  It compares whether the 2 arguments are equal in an eps-interval
      IMETHOD friend bool Equal(const TwistVel& a,const TwistVel& b,double eps=epsilon);
      IMETHOD friend bool Equal(const Twist& a,const TwistVel& b,double eps=epsilon);
      IMETHOD friend bool Equal(const TwistVel& a,const Twist& b,double eps=epsilon);
@@ -303,7 +303,7 @@ public:
 // = Friends
     friend class RotationVel;
     friend class FrameVel;
-    
+
 };
 
 IMETHOD VectorVel diff(const VectorVel& a,const VectorVel& b,double dt=1.0) {
@@ -311,10 +311,10 @@ IMETHOD VectorVel diff(const VectorVel& a,const VectorVel& b,double dt=1.0) {
 }
 
 IMETHOD VectorVel addDelta(const VectorVel& a,const VectorVel&da,double dt=1.0) {
-	return VectorVel(addDelta(a.p,da.p,dt),addDelta(a.v,da.v,dt));	
+	return VectorVel(addDelta(a.p,da.p,dt),addDelta(a.v,da.v,dt));
 }
 IMETHOD VectorVel diff(const RotationVel& a,const RotationVel& b,double dt = 1.0) {
-	return VectorVel(diff(a.R,b.R,dt),diff(a.w,b.w,dt)); 
+	return VectorVel(diff(a.R,b.R,dt),diff(a.w,b.w,dt));
 }
 
 IMETHOD RotationVel addDelta(const RotationVel& a,const VectorVel&da,double dt=1.0) {

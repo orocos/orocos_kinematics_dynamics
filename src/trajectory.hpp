@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  trajectory.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  trajectory.h
 
                         trajectory.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -38,7 +38,7 @@
  *
  *	\par Release
  *		$Id: trajectory.h,v 1.1.1.1.2.5 2003/07/23 16:44:25 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  *  \todo
  *     Peter's remark : should seperate I/O from other routines in the
  *     motion/chain directories
@@ -47,7 +47,7 @@
  *     Have no good solution for this, perhaps
  *          * #ifdef's
  *          * declaring dummy ostream/istream and change implementation file .cpp
- *          * declaring some sort of VISITOR object (containing an ostream) , 
+ *          * declaring some sort of VISITOR object (containing an ostream) ,
  *            the classes contain code to pass this object around along its children
  *            a subroutine can then be called with overloading.
  *     PROBLEM : if you declare a friend you have to fully declare it  ==> exposing I/O with ostream/istream decl
@@ -75,7 +75,7 @@ namespace KDL {
 	 * velocity profile.
 	  * @ingroup Motion
 	 */
-	class Trajectory 
+	class Trajectory
 	{
 	public:
         virtual Path*      GetPath() = 0;
@@ -83,7 +83,7 @@ namespace KDL {
 
         virtual VelocityProfile* GetProfile() = 0;
         // The velocity profile
-       
+
 		virtual double Duration() const = 0;
 		// The duration of the trajectory
 

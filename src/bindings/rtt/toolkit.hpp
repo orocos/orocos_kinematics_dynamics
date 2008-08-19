@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Peter Soetens  Mon Jun 26 13:25:57 CEST 2006  GeometryToolkit.hpp 
+  tag: Peter Soetens  Mon Jun 26 13:25:57 CEST 2006  GeometryToolkit.hpp
 
                         GeometryToolkit.hpp -  description
                            -------------------
     begin                : Mon June 26 2006
     copyright            : (C) 2006 Peter Soetens
     email                : peter.soetens@fmtc.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -28,18 +28,18 @@
 /**
  * @defgroup KDLTK KDL-toolkit for Orocos RTT
  * @brief All classes related to the KDL-toolkit for RTT, to
- * use KDL primitives as properties and in script files of the 
+ * use KDL primitives as properties and in script files of the
  * <a href="http://www.orocos.org/">Orocos</a> Real-Time Toolkit framework.
  *
- */ 
- 
+ */
+
 #ifndef ORO_KDL_TOOLKIT_HPP
 #define ORO_KDL_TOOLKIT_HPP
 
 #include <rtt/Toolkit.hpp>
 #include "../../frames.hpp"
 
-namespace KDL 
+namespace KDL
 {
 
     /**

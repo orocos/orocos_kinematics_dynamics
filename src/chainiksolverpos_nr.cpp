@@ -29,11 +29,11 @@ namespace KDL
         maxiter(_maxiter),eps(_eps)
     {
     }
-    
+
     int ChainIkSolverPos_NR::CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)
     {
             q_out = q_init;
-    
+
             unsigned int i;
             for(i=0;i<maxiter;i++){
                 fksolver.JntToCart(q_out,f);
@@ -48,10 +48,10 @@ namespace KDL
             else
                 return -3;
     }
-    
+
     ChainIkSolverPos_NR::~ChainIkSolverPos_NR()
     {
     }
-    
+
 }
 

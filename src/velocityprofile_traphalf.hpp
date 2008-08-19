@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  velocityprofile_traphalf.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  velocityprofile_traphalf.h
 
                         velocityprofile_traphalf.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -38,7 +38,7 @@
  *
  *	\par Release
  *		$Id: velocityprofile_traphalf.h,v 1.1.1.1.2.4 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  *  \par Status
  *      Experimental
  ****************************************************************************/
@@ -60,7 +60,7 @@ namespace KDL {
 	 * or ending.
 	 * @ingroup Motion
 	 */
-class VelocityProfile_TrapHalf : public VelocityProfile 
+class VelocityProfile_TrapHalf : public VelocityProfile
 	{
 		// For "running" a motion profile :
 		double a1,a2,a3; // coef. from ^0 -> ^2 of first part
@@ -71,7 +71,7 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 
 		double startpos;
 		double endpos;
-		
+
 		// Persistent state :
 		double maxvel;
 		double maxacc;
@@ -105,7 +105,7 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		virtual double Vel(double time) const;
 		virtual double Acc(double time) const;
 		virtual void Write(std::ostream& os) const;
-		virtual VelocityProfile* Clone() const;		
+		virtual VelocityProfile* Clone() const;
 
 		virtual ~VelocityProfile_TrapHalf();
 	};

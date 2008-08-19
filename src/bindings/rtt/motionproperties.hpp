@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Peter Soetens  Mon Jan 19 14:11:21 CET 2004  MotionProperties.hpp 
+  tag: Peter Soetens  Mon Jan 19 14:11:21 CET 2004  MotionProperties.hpp
 
                         MotionProperties.hpp -  description
                            -------------------
     begin                : Mon January 19 2004
     copyright            : (C) 2004 Peter Soetens
     email                : peter.soetens@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -23,8 +23,8 @@
  *   Foundation, Inc., 59 Temple Place,                                    *
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
- ***************************************************************************/ 
- 
+ ***************************************************************************/
+
 #ifndef MOTIONPROPERTIES_HPP
 #define MOTIONPROPERTIES_HPP
 
@@ -37,7 +37,7 @@
 
 #include <sstream>
 
-namespace RTT 
+namespace RTT
 {
     using namespace KDL;
 //    /**
@@ -63,7 +63,7 @@ namespace RTT
      */
     bool composeProperty(const PropertyBag& bag, Vector &v);
 
-        
+
     /**
      * Additional functionality for handling a Property<Rotation>
      */
@@ -125,8 +125,8 @@ namespace RTT
      * properties being a bag containing a Frame, fill the given non primitive Property<T>.
      */
     bool composeProperty(const PropertyBag& bag, Frame &f);
-    
-    
+
+
     template <typename T>
     struct vectorTypeInfo : public TemplateTypeInfo<std::vector<T>,true>
     {
@@ -144,7 +144,7 @@ namespace RTT
             }
             return true;
         }
-        
+
         virtual bool composeTypeImpl(const PropertyBag& bag, std::vector<T>& vec)const
         {
             if( bag.getType() != std::string("std::vector"))
@@ -164,7 +164,7 @@ namespace RTT
             return true;
         }
     };
-    
+
 }
 
 namespace RTT

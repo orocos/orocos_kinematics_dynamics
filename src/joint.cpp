@@ -44,15 +44,15 @@ namespace KDL {
         damping=in.damping;
         stiffness=in.stiffness;
     }
-    
+
 
     Joint::~Joint()
     {
     }
-    
+
     Frame Joint::pose(const double& q)const
     {
-    
+
         switch(type){
         case RotX:
             return Frame(Rotation::RotX(scale*q+offset));
@@ -75,7 +75,7 @@ namespace KDL {
         case None:
             return Frame::Identity();
             break;
-        }    
+        }
     }
 
     Twist Joint::twist(const double& qdot)const

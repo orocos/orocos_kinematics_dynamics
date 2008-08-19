@@ -23,14 +23,14 @@
 
 namespace KDL {
     using namespace std;
-    
+
     Chain::Chain():
         segments(0),
         nrOfJoints(0),
         nrOfSegments(0)
     {
     }
-    
+
     Chain::Chain(const Chain& in):nrOfJoints(0),
                                   nrOfSegments(0)
     {
@@ -46,9 +46,9 @@ namespace KDL {
         for(unsigned int i=0;i<arg.nrOfSegments;i++)
             addSegment(arg.getSegment(i));
         return *this;
-        
+
     }
-    
+
     void Chain::addSegment(const Segment& segment)
     {
         segments.push_back(segment);
@@ -56,21 +56,21 @@ namespace KDL {
         if(segment.getJoint().getType()!=Joint::None)
             nrOfJoints++;
     }
-    
+
     void Chain::addChain(const Chain& chain)
     {
         for(unsigned int i=0;i<chain.getNrOfSegments();i++)
             this->addSegment(chain.getSegment(i));
     }
-    
+
     const Segment& Chain::getSegment(unsigned int nr) const
     {
         return segments[nr];
     }
-    
+
     Chain::~Chain()
     {
     }
-    
+
 }
 

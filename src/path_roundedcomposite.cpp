@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_roundedcomposite.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_roundedcomposite.cxx
 
                         path_roundedcomposite.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -25,10 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -36,7 +36,7 @@
  *
  *	\par Release
  *		$Id: path_roundedcomposite.cpp,v 1.1.1.1.2.5 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -62,16 +62,16 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 		F_base_via   = F_base_point;
 	} else {
 		// calculate rounded segment : line + circle,
-		// determine the angle between the line segments :			
+		// determine the angle between the line segments :
 			Vector ab = F_base_via.p - F_base_start.p;
 			Vector bc = F_base_point.p - F_base_via.p;
 			double abdist = ab.Normalize();
 			double alpha  = ::acos(dot(ab,bc));
 			double d      = radius/tan((PI-alpha)/2);
             double bcdist = bc.Normalize();
-			if (d >= abdist) 
+			if (d >= abdist)
 				throw Error_MotionPlanning_Not_Feasible();
-			if (d >= bcdist) 
+			if (d >= bcdist)
 				throw Error_MotionPlanning_Not_Feasible();
 			std::auto_ptr<Path> line1 (
 				new Path_Line(F_base_start,F_base_via,orient->Clone(),eqradius)
@@ -80,7 +80,7 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 				new Path_Line(F_base_via,F_base_point,orient->Clone(),eqradius)
 			);
 			Frame F_base_circlestart     = line1->Pos(line1->LengthToS(abdist-d));
-			Frame F_base_circleend       = line2->Pos(line2->LengthToS(d));  
+			Frame F_base_circleend       = line2->Pos(line2->LengthToS(d));
 				// end of circle segment, beginning of next line
 			Vector V_base_t  = ab*(ab*bc);
 			V_base_t.Normalize();
@@ -132,7 +132,7 @@ Twist Path_RoundedComposite::Acc(double s,double sd,double sdd) const {
 void Path_RoundedComposite::Write(std::ostream& os)  {
 	comp->Write(os);
 }
-		
+
 Path_RoundedComposite::~Path_RoundedComposite() {
     if (aggregate)
         delete orient;

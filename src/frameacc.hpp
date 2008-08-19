@@ -1,21 +1,21 @@
 /*****************************************************************************
- * \file  
- *      This file contains the definition of classes for a 
+ * \file
+ *      This file contains the definition of classes for a
  *      Rall Algebra of (subset of) the classes defined in frames,
- *      i.e. classes that contain a set (value,derivative,2nd derivative) 
+ *      i.e. classes that contain a set (value,derivative,2nd derivative)
  *      and define operations on that set
- *      this classes are usefull for automatic differentiation ( <-> symbolic diff , 
+ *      this classes are usefull for automatic differentiation ( <-> symbolic diff ,
  *      <-> numeric diff).
  *      Defines VectorAcc, RotationAcc, FrameAcc, doubleAcc.
- *      Look at the corresponding classes Vector Rotation Frame Twist and 
+ *      Look at the corresponding classes Vector Rotation Frame Twist and
  *      Wrench for the semantics of the methods.
  *
  *      It also contains the 2nd derivative <-> RFrames.h
- *       
- *  \author 
+ *
+ *  \author
  *      Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *      ORO_Geometry V0.2
  *
  *  \par History
@@ -23,7 +23,7 @@
  *
  *  \par Release
  *      $Id: rrframes.h,v 1.1.1.1 2002/08/26 14:14:21 rmoreas Exp $
- *      $Name:  $ 
+ *      $Name:  $
  ****************************************************************************/
 
 #ifndef RRFRAMES_H
@@ -41,7 +41,7 @@ class TwistAcc;
 typedef Rall2d<double,double,double> doubleAcc;
 
 
-class VectorAcc 
+class VectorAcc
 {
 public:
     Vector p;   //!< position vector
@@ -90,7 +90,7 @@ public:
 
 
 
-class RotationAcc 
+class RotationAcc
 {
 public:
     Rotation R;     //!< rotation matrix
@@ -118,7 +118,7 @@ public:
     // IMETHOD void DoRotY(const doubleAcc& angle);
     // IMETHOD void DoRotZ(const doubleAcc& angle);
     // IMETHOD static RRotation RotX(const doubleAcc& angle);
-    // IMETHOD static RRotation RotY(const doubleAcc& angle);    
+    // IMETHOD static RRotation RotY(const doubleAcc& angle);
     // IMETHOD static RRotation RotZ(const doubleAcc& angle);
 
     // IMETHOD void SetRot(const Vector& rotaxis,const doubleAcc& angle);
@@ -189,7 +189,7 @@ public:
 
 
 //very similar to Wrench class.
-class TwistAcc 
+class TwistAcc
 {
 public:
     VectorAcc vel;       //!< translational velocity and its 1st and 2nd derivative
@@ -226,7 +226,7 @@ public:
      // The RVector v_base_AB is a RVector from the old point to
      // the new point.
      // Complexity : 6M+6A
- 
+
      IMETHOD friend bool Equal(const TwistAcc& a,const TwistAcc& b,double eps=epsilon);
      IMETHOD friend bool Equal(const Twist& a,const TwistAcc& b,double eps=epsilon);
      IMETHOD friend bool Equal(const TwistAcc& a,const Twist& b,double eps=epsilon);
@@ -237,7 +237,7 @@ public:
 
     friend class RotationAcc;
     friend class FrameAcc;
-    
+
 };
 
 

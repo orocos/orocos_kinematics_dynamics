@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  trajectory_segment.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  trajectory_segment.h
 
                         trajectory_segment.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -38,7 +38,7 @@
  *
  *	\par Release
  *		$Id: trajectory_segment.h,v 1.1.1.1.2.5 2003/07/23 16:44:26 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_MOTION_TRAJECTORY_SEGMENT_H
@@ -55,11 +55,11 @@ namespace KDL {
 
 
 	/**
-	 * Trajectory_Segment combines a VelocityProfile and a Path into a 
+	 * Trajectory_Segment combines a VelocityProfile and a Path into a
 	 * trajectory
 	 * @ingroup Motion
 	 */
-	class Trajectory_Segment :  public Trajectory 
+	class Trajectory_Segment :  public Trajectory
 	{
 		VelocityProfile* motprof;
 		Path*      geom;

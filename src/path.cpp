@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path.cxx
 
                         path.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -26,10 +26,10 @@
  ***************************************************************************/
 
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -37,7 +37,7 @@
  *
  *	\par Release
  *		$Id: path.cpp,v 1.1.1.1.2.4 2003/07/18 14:49:50 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -119,13 +119,13 @@ Path* Path::Read(istream& is) {
 		double eqradius;
 		is >> eqradius;
 		auto_ptr<RotationalInterpolation> orient( RotationalInterpolation::Read(is) );
-		auto_ptr<Path_RoundedComposite> tr( 
-			new Path_RoundedComposite(radius,eqradius,orient.release()) 
+		auto_ptr<Path_RoundedComposite> tr(
+			new Path_RoundedComposite(radius,eqradius,orient.release())
 		);
 		int size;
-		is >> size;		
+		is >> size;
 		int i;
-		for (i=0;i<size;i++) {			
+		for (i=0;i<size;i++) {
 			Frame f;
 			is >> f;
 			tr->Add(f);
@@ -141,7 +141,7 @@ Path* Path::Read(istream& is) {
 		auto_ptr<Path_Composite> tr( new Path_Composite() );
 		is >> size;
 		int i;
-		for (i=0;i<size;i++) {			
+		for (i=0;i<size;i++) {
 			tr->Add(Path::Read(is));
 		}
 		EatEnd(is,']');

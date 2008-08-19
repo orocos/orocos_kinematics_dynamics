@@ -28,7 +28,7 @@ namespace KDL
     {
         return os<<joint.getTypeName();
     }
-    
+
     std::istream& operator >> (std::istream& is, Joint& joint)
     {
         return is;
@@ -39,7 +39,7 @@ namespace KDL
         os<<"["<<segment.getJoint()<<",\n"<<segment.getFrameToTip()<<"]";
         return os;
     }
-    
+
     std::istream& operator >> (std::istream& is, Segment& segment)
     {
         return is;
@@ -53,7 +53,7 @@ namespace KDL
         os<<"]";
         return os;
     }
-    
+
     std::istream& operator >> (std::istream& is, Chain& chain)
     {
         return is;
@@ -64,7 +64,7 @@ namespace KDL
         SegmentMap::const_iterator root=tree.getSegment("root");
         return os<<root;
     }
-    
+
     std::ostream& operator << (std::ostream& os,SegmentMap::const_iterator root)
     {
         //os<<root->first<<": "<<root->second.segment<<"\n";
@@ -74,12 +74,12 @@ namespace KDL
         }
         return os<<"\n";
     }
-    
+
     std::istream& operator >> (std::istream& is, Tree& tree)
     {
       return is;
     }
-        
+
     std::ostream& operator << (std::ostream& os, const JntArray& array)
     {
         os<<"[";
@@ -93,7 +93,7 @@ namespace KDL
     {
         return is;
     }
-    
+
     std::ostream& operator << (std::ostream& os, const Jacobian& jac)
     {
         os<<"[";
@@ -105,12 +105,12 @@ namespace KDL
         os<<"]";
         return os;
     }
-    
+
     std::istream& operator >> (std::istream& is, Jacobian& jac)
     {
         return is;
     }
 
-    
+
 }
-    
+

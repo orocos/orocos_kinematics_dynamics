@@ -1,8 +1,8 @@
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		LRL V0.2
  *
  *	\par History
@@ -10,26 +10,26 @@
  *
  *	\par Release
  *		$Id: trajectory_composite.cpp 22 2004-09-21 08:58:54Z eaertbellocal $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #include "trajectory_composite.hpp"
 #include "path_composite.hpp"
 
 namespace KDL {
-    
+
     using namespace std;
-    
-    
+
+
     Trajectory_Composite::Trajectory_Composite():duration(0.0)
     {
         path = new Path_Composite();
     }
-    
+
     double Trajectory_Composite::Duration() const{
         return duration;
     }
-    
+
     Frame Trajectory_Composite::Pos(double time) const {
         // not optimal, could be done in log(#elem)
         // or one could buffer the last segment and start looking from there.
@@ -49,8 +49,8 @@ namespace KDL {
         traj = vt[vt.size()-1];
         return traj->Pos(traj->Duration());
     }
-    
-    
+
+
     Twist Trajectory_Composite::Vel(double time) const {
         // not optimal, could be done in log(#elem)
         unsigned int i;
@@ -69,7 +69,7 @@ namespace KDL {
         traj = vt[vt.size()-1];
         return traj->Vel(traj->Duration());
     }
-    
+
     Twist Trajectory_Composite::Acc(double time) const {
         // not optimal, could be done in log(#elem)
 	unsigned int i;
@@ -88,14 +88,14 @@ namespace KDL {
         traj = vt[vt.size()-1];
         return traj->Acc(traj->Duration());
     }
-    
+
     void Trajectory_Composite::Add(Trajectory* elem) {
         vt.insert(vt.end(),elem);
         duration += elem->Duration();
         vd.insert(vd.end(),duration);
         path->Add(elem->GetPath());
     }
-    
+
     void Trajectory_Composite::Destroy() {
         VectorTraj::iterator it;
         for (it=vt.begin();it!=vt.end();it++) {
@@ -103,15 +103,15 @@ namespace KDL {
         }
         vt.erase(vt.begin(),vt.end());
         vd.erase(vd.begin(),vd.end());
-    
+
         delete path;
     }
-    
+
     Trajectory_Composite::~Trajectory_Composite() {
         Destroy();
     }
 
-    
+
     void Trajectory_Composite::Write(ostream& os) const {
         os << "COMPOSITE[ " << vt.size() << endl;
         unsigned int i;
@@ -120,7 +120,7 @@ namespace KDL {
         }
         os << "]" << endl;
     }
-    
+
     Trajectory* Trajectory_Composite::Clone() const{
         Trajectory_Composite* comp = new Trajectory_Composite();
         for (unsigned int i = 0; i < vt.size(); ++i) {
@@ -128,8 +128,8 @@ namespace KDL {
         }
         return comp;
     }
-    
-    Path* Trajectory_Composite::GetPath() 
+
+    Path* Trajectory_Composite::GetPath()
     {
         return path;
     }
@@ -138,7 +138,7 @@ namespace KDL {
     {
         return 0;
     }
-    
+
 }
 
 

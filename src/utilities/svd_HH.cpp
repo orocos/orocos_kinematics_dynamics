@@ -42,33 +42,33 @@ namespace KDL
             }
         }
     }
-    
-    
+
+
     inline double SIGN(double a,double b) {
         return ((b) >= 0.0 ? fabs(a) : -fabs(a));
     }
-    
+
     SVD_HH::SVD_HH(const Jacobian& jac):
         tmp(jac.columns())
     {
     }
-    
+
     SVD_HH::~SVD_HH()
     {
     }
-    
+
     int SVD_HH::calculate(const Jacobian& jac,std::vector<JntArray>& U,JntArray& w,std::vector<JntArray>& v,int maxiter)
     {
-        
+
         //get the rows/columns of the jacobian
         const int rows = jac.rows();
         const int cols = jac.columns();
-    
+
         int i(-1),its(-1),j(-1),jj(-1),k(-1),nm=0;
         int ppi(0);
         bool flag,maxarg1,maxarg2;
         double anorm(0),c(0),f(0),h(0),s(0),scale(0),x(0),y(0),z(0),g(0);
-        
+
         for(i=0;i<rows;i++)
             for(j=0;j<cols;j++)
                 U[i](j)=jac(i,j);
@@ -76,7 +76,7 @@ namespace KDL
             for(i=rows;i<cols;i++)
                 for(j=0;j<cols;j++)
                     U[i](j)=0;
-                
+
         /* Householder reduction to bidiagonal form. */
         for (i=0;i<cols;i++) {
             ppi=i+1;
@@ -130,7 +130,7 @@ namespace KDL
             }
             maxarg1=anorm;
             maxarg2=(fabs(w(i))+fabs(tmp(i)));
-            anorm = maxarg1 > maxarg2 ?	maxarg1 : maxarg2;		
+            anorm = maxarg1 > maxarg2 ?	maxarg1 : maxarg2;
         }
         /* Accumulation of right-hand transformations. */
         for (i=cols-1;i>=0;i--) {
@@ -166,7 +166,7 @@ namespace KDL
             }
             ++U[i](i);
         }
-        
+
         /* Diagonalization of the bidiagonal form. */
         for (k=cols-1;k>=0;k--) { /* Loop over singular values. */
             for (its=1;its<=maxiter;its++) {  /* Loop over allowed iterations. */
@@ -201,7 +201,7 @@ namespace KDL
                     }
                 }
                 z=w(k);
-                
+
                 if (ppi == k) {       /* Convergence. */
                     if (z < 0.0) {   /* Singular value is made nonnegative. */
                         w(k) = -z;
@@ -215,10 +215,10 @@ namespace KDL
                 g=tmp(nm);
                 h=tmp(k);
                 f=((y-z)*(y+z)+(g-h)*(g+h))/(2.0*h*y);
-                
+
                 g=PYTHAG(f,1.0);
                 f=((x-z)*(x+z)+h*((y/(f+SIGN(g,f)))-h))/x;
-                
+
                 /* Next QR transformation: */
                 c=s=1.0;
                 for (j=ppi;j<=nm;j++) {
@@ -262,12 +262,12 @@ namespace KDL
                 w(k)=x;
             }
         }
-        if (its == maxiter) 
+        if (its == maxiter)
             return (-2);
-        else 
+        else
             return (0);
     }
-    
+
 }
 
 

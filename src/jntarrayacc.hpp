@@ -40,11 +40,11 @@ namespace KDL
         JntArrayAcc(const JntArray& q,const JntArray& qdot,const JntArray& qdotdot);
         JntArrayAcc(const JntArray& q,const JntArray& qdot);
         JntArrayAcc(const JntArray& q);
-        
+
         JntArray value()const;
         JntArray deriv()const;
         JntArray dderiv()const;
-        
+
         friend void Add(const JntArrayAcc& src1,const JntArrayAcc& src2,JntArrayAcc& dest);
         friend void Add(const JntArrayAcc& src1,const JntArrayVel& src2,JntArrayAcc& dest);
         friend void Add(const JntArrayAcc& src1,const JntArray& src2,JntArrayAcc& dest);
@@ -59,7 +59,7 @@ namespace KDL
         friend void Divide(const JntArrayAcc& src,const doubleAcc& factor,JntArrayAcc& dest);
         friend void SetToZero(JntArrayAcc& array);
         friend bool Equal(const JntArrayAcc& src1,const JntArrayAcc& src2,double eps=epsilon);
-        
+
     };
 }
 

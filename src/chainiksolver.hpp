@@ -31,7 +31,7 @@
 #include "jntarrayacc.hpp"
 
 namespace KDL {
-    
+
     /**
 	  * \brief This <strong>abstract</strong> class encapsulates the inverse
 	  * position solver for a KDL::Chain.
@@ -40,54 +40,54 @@ namespace KDL {
      */
     class ChainIkSolverPos {
     public:
-        /** 
+        /**
          * Calculate inverse position kinematics, from cartesian
          *coordinates to joint coordinates.
-         * 
+         *
          * @param q_init initial guess of the joint coordinates
          * @param p_in input cartesian coordinates
          * @param q_out output joint coordinates
-         * 
+         *
          * @return if < 0 something went wrong
          */
         virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)=0;
-                
+
         virtual ~ChainIkSolverPos(){};
     };
 
     /**
 	  * \brief This <strong>abstract</strong> class encapsulates the inverse
 	  * velocity solver for a KDL::Chain.
-     * 
+     *
      * @ingroup KinematicFamily
      */
     class ChainIkSolverVel {
     public:
-        /** 
+        /**
          * Calculate inverse velocity kinematics, from joint positions
          *and cartesian velocity to joint velocities.
-         * 
+         *
          * @param q_in input joint positions
          * @param v_in input cartesian velocity
          * @param qdot_out output joint velocities
-         * 
+         *
          * @return if < 0 something went wrong
          */
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)=0;
-        /** 
+        /**
          * Calculate inverse position and velocity kinematics, from
          *cartesian position and velocity to joint positions and velocities.
-         * 
+         *
          * @param q_init initial joint positions
          * @param v_in input cartesian position and velocity
          * @param q_out output joint position and velocity
-         * 
+         *
          * @return if < 0 something went wrong
          */
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out)=0;
-                
+
         virtual ~ChainIkSolverVel(){};
-        
+
     };
 
     /**
@@ -99,68 +99,68 @@ namespace KDL {
 
     class ChainIkSolverAcc {
     public:
-        /** 
+        /**
          * Calculate inverse acceleration kinematics from joint
          * positions, joint velocities and cartesian acceleration to joint accelerations.
-         * 
+         *
          * @param q_in input joint positions
          * @param qdot_in input joint velocities
          * @param a_in input cartesian acceleration
          * @param qdotdot_out output joint accelerations
-         * 
+         *
          * @return if < 0 something went wrong
          */
         virtual int CartToJnt(const JntArray& q_in, const JntArray& qdot_in, const Twist a_in,
                          JntArray& qdotdot_out)=0;
-        /** 
+        /**
          * Calculate inverse position, velocity and acceration
          *kinematics from cartesian coordinates to joint coordinates
-         * 
+         *
          * @param q_init initial guess for joint positions
          * @param a_in input cartesian position, velocity and acceleration
          * @param q_out output joint position, velocity and acceleration
-         * 
+         *
          * @return if < 0 something went wrong
          */
         virtual int CartTojnt(const JntArray& q_init, const FrameAcc& a_in,
-                         JntArrayAcc& q_out)=0; 
+                         JntArrayAcc& q_out)=0;
 
-        /** 
+        /**
          * Calculate inverse velocity and acceleration kinematics from
          * joint positions and cartesian velocity and acceleration to
          * joint velocities and accelerations.
-         * 
+         *
          * @param q_in input joint positions
          * @param v_in input cartesian velocity
          * @param a_in input cartesian acceleration
          * @param qdot_out output joint velocities
          * @param qdotdot_out output joint accelerations
-         * 
+         *
          * @return if < 0 something went wrong
          */
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, const Twist& a_in,
                          JntArray& qdot_out, JntArray& qdotdot_out)=0;
-        /** 
+        /**
          * Calculate inverse position and acceleration kinematics from
          *joint velocities and cartesian position and acceleration to
          *joint positions and accelerations
-         * 
+         *
          * @param q_init initial guess for joint positions
          * @param p_in input cartesian position
          * @param qdot_in input joint velocities
          * @param a_in input cartesian acceleration
          * @param q_out output joint positions
          * @param qdotdot_out output joint accelerations
-         * 
+         *
          * @return if < 0 something went wrong
          */
         virtual int CartTojnt(const JntArray& q_init, const Frame& p_in, const JntArray& qdot_in, const Twist& a_in,
-                         JntArray& q_out, JntArray& qdotdot_out)=0; 
-                
+                         JntArray& q_out, JntArray& qdotdot_out)=0;
+
         virtual ~ChainIkSolverAcc(){};
     };
 
-    
+
 }//end of namespace KDL
 
 #endif

@@ -20,13 +20,13 @@
 #include "segment.hpp"
 
 namespace KDL {
-    
+
     Segment::Segment(const Joint& _joint, const Frame& _f_tip, const Inertia& _M):
         joint(_joint),M(_M),
         f_tip(_f_tip)
     {
     }
-    
+
     Segment::Segment(const Segment& in):
         joint(in.joint),M(in.M),
         f_tip(in.f_tip)
@@ -40,7 +40,7 @@ namespace KDL {
         f_tip=arg.f_tip;
         return *this;
     }
-            
+
     Segment::~Segment()
     {
     }
@@ -49,11 +49,11 @@ namespace KDL {
     {
         return joint.pose(q)*f_tip;
     }
-    
+
     Twist Segment::twist(const double& q, const double& qdot)const
     {
         return joint.twist(qdot).RefPoint(pose(q).p);
     }
-    
+
 }//end of namespace KDL
 

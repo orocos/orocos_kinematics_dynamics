@@ -18,7 +18,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
 #ifndef JOINTPROPERTIES_HPP
 #define JOINTPROPERTIES_HPP
 
@@ -33,7 +33,7 @@
 
 namespace RTT
 {
-    
+
     using namespace KDL;
     struct JointTypeInfo : public TemplateTypeInfo<Joint,true>
     {
@@ -56,7 +56,7 @@ namespace RTT
         bool decomposeTypeImpl(const Chain& chain, PropertyBag& targetbag);
         bool composeTypeImpl(const PropertyBag& bag, Chain& chain);
     };
-    
+
 }
 #endif
-    
+

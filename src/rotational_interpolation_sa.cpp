@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation_sa.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation_sa.cxx
 
                         rotational_interpolation_sa.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -25,10 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -36,13 +36,13 @@
  *
  *	\par Release
  *		$Id: rotational_interpolation_singleaxis.cpp,v 1.1.1.1.2.2 2003/02/24 13:13:06 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
 #include "rotational_interpolation_sa.hpp"
 #include "trajectory.hpp"
- 
+
 namespace KDL {
 
 
@@ -51,13 +51,13 @@ RotationalInterpolation_SingleAxis::RotationalInterpolation_SingleAxis()
 
 void RotationalInterpolation_SingleAxis::SetStartEnd(Rotation start,Rotation end) {
 	R_base_start = start;
-	R_base_end   = end;	
+	R_base_end   = end;
 	Rotation R_start_end = R_base_start.Inverse()*R_base_end;
 	angle = R_start_end.GetRotAngle(rot_start_end);
 }
 
 Rotation RotationalInterpolation_SingleAxis::Pos(double theta) const {
-	return R_base_start* Rotation::Rot2(rot_start_end,theta);	
+	return R_base_start* Rotation::Rot2(rot_start_end,theta);
 }
 
 Vector RotationalInterpolation_SingleAxis::Vel(double theta,double thetad) const {

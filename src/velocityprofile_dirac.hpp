@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Peter Soetens  Fri Feb 11 15:59:12 CET 2005  velocityprofile_dirac.h 
+  tag: Peter Soetens  Fri Feb 11 15:59:12 CET 2005  velocityprofile_dirac.h
 
                         velocityprofile_dirac.h -  description
                            -------------------
     begin                : Fri February 11 2005
     copyright            : (C) 2005 Peter Soetens
     email                : peter.soetens@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,8 +24,8 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 #ifndef MOTIONPROFILE_DIRAC_H
 #define MOTIONPROFILE_DIRAC_H
 
@@ -45,7 +45,7 @@ namespace KDL {
 	 * Duration() == 0;
 	 * @ingroup Motion
 	 */
-	class VelocityProfile_Dirac : public VelocityProfile 
+	class VelocityProfile_Dirac : public VelocityProfile
 	{
 		double p1,p2,t;
 	public:

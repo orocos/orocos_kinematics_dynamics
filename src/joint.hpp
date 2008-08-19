@@ -26,12 +26,12 @@
 #include <string>
 
 namespace KDL {
-    
+
     /**
 	  * \brief This class encapsulates a simple joint, that is with one
 	  * parameterized degree of freedom and with scalar dynamic properties.
      *
-     * A simple joint is described by the following properties : 
+     * A simple joint is described by the following properties :
      *      - scale: ratio between motion input and motion output
      *      - offset: between the "physical" and the "logical" zero position.
      *      - type: revolute or translational, along one of the basic frame axes
@@ -43,9 +43,9 @@ namespace KDL {
     class Joint {
     public:
         typedef enum { RotX,RotY,RotZ,TransX,TransY,TransZ,None} JointType;
-        /** 
-         * Constructor of a joint. 
-         * 
+        /**
+         * Constructor of a joint.
+         *
          * @param type type of the joint, default: Joint::None
          * @param scale scale between joint input and actual geometric
          * movement, default: 1
@@ -61,39 +61,39 @@ namespace KDL {
         Joint(const Joint& in);
 
         Joint& operator=(const Joint& arg);
-        
-        /** 
+
+        /**
          * Request the 6D-pose between the beginning and the end of
          * the joint at joint position q
-         * 
+         *
          * @param q the 1D joint position
-         * 
+         *
          * @return the resulting 6D-pose
          */
         Frame pose(const double& q)const;
-        /** 
+        /**
          * Request the resulting 6D-velocity with a joint velocity qdot
-         * 
+         *
          * @param qdot the 1D joint velocity
-         * 
+         *
          * @return the resulting 6D-velocity
          */
         Twist twist(const double& qdot)const;
-        
-        /** 
-         * Request the type of the joint. 
-         * 
+
+        /**
+         * Request the type of the joint.
+         *
          * @return const reference to the type
          */
         const JointType& getType() const
         {
             return type;
         };
-        
-        /** 
+
+        /**
          * Request the stringified type of the joint.
-         * 
-         * @return const string 
+         *
+         * @return const string
          */
         const std::string getTypeName() const
         {
@@ -116,9 +116,9 @@ namespace KDL {
                 return "None";
             }
         };
-                
+
         virtual ~Joint();
-        
+
     private:
         Joint::JointType type;
         double scale;
@@ -127,7 +127,7 @@ namespace KDL {
         double damping;
         double stiffness;
     };
-    
+
 } // end of namespace KDL
 
 #endif

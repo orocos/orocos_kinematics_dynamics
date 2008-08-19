@@ -28,19 +28,19 @@ namespace KDL
         chain(_chain)
     {
     }
-    
+
     ChainFkSolverVel_recursive::~ChainFkSolverVel_recursive()
     {
     }
-    
+
     int ChainFkSolverVel_recursive::JntToCart(const JntArrayVel& in,FrameVel& out,int segmentNr)
     {
-        
+
         if(segmentNr<0)
              segmentNr=chain.getNrOfSegments();
-        
+
         out=FrameVel::Identity();
-        
+
         if(!(in.q.rows()==chain.getNrOfJoints()&&in.qdot.rows()==chain.getNrOfJoints()))
             return -1;
         else if(segmentNr>chain.getNrOfSegments())

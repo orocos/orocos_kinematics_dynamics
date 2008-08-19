@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_rect.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_rect.cxx
 
                         velocityprofile_rect.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -25,10 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -36,7 +36,7 @@
  *
  *	\par Release
  *		$Id: velocityprofile_rect.cpp,v 1.1.1.1.2.5 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -49,14 +49,14 @@ namespace KDL {
 void VelocityProfile_Rectangular::SetProfile(
 	double pos1,
 	double pos2
-	) 
+	)
 {
 	double diff;
 	diff = pos2-pos1;          // increment per sec.
     if ( diff != 0 )
         {
             v    = (diff>0)?maxvel:-maxvel;
-            p    = pos1;               // start pos    
+            p    = pos1;               // start pos
             d    = diff/v;
         }
     else
@@ -71,7 +71,7 @@ void VelocityProfile_Rectangular::SetProfile(
     {
         maxvel = vMax;
     }
-    
+
 
 void VelocityProfile_Rectangular::
 	SetProfileDuration(double pos1,double pos2,double duration)
@@ -81,9 +81,9 @@ void VelocityProfile_Rectangular::
     if ( diff != 0 )
         {
             v    = diff/duration;
-            if (v > maxvel || duration==0 ) // safety. 
+            if (v > maxvel || duration==0 ) // safety.
                 v=maxvel;
-            p    = pos1;               // start pos    
+            p    = pos1;               // start pos
             d    = diff/v;
         }
     else

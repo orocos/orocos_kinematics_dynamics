@@ -34,17 +34,17 @@
 //      Spaces, tabs and newlines do not have any importance.
 //      Comments are allowed C-style,C++-style, make/perl/csh -style
 //      Description of the I/O :
-//        Vector  : OUTPUT : e.g. [10,20,30] 
+//        Vector  : OUTPUT : e.g. [10,20,30]
 //                  INPUT  :
 //                         1) [10,20,30]
 //                         2) Zero
-//        Twist   : e.g. [1,2,3,4,5,6] 
+//        Twist   : e.g. [1,2,3,4,5,6]
 //           where [1,2,3] is velocity vector
 //           where [4,5,6] is rotational velocity vector
 //        Wrench  : e.g. [1,2,3,4,5,6]
 //           where [1,2,3] represents a force vector
 //           where [4,5,6] represents a torque vector
-//        Rotation : output : 
+//        Rotation : output :
 //                 [1,2,3;
 //                  4,5,6;
 //                  7,8,9] cfr definition of Rotation object.
@@ -59,7 +59,7 @@
 //                    4) Identity          returns identity rotation matrix.
 //       Frames   : output : [ Rotationmatrix positionvector ]
 //                   e.g. [ [1,0,0;0,1,0;0,0,1] [1,2,3] ]
-//                  Input  : 
+//                  Input  :
 //                     1) [ Rotationmatrix positionvector ]
 //                     2) DH [ 10,10,50,30]  Denavit-Hartenberg representation
 //                     ( is in fact not the representation of a Frame, but more
@@ -67,11 +67,11 @@
 //  \endverbatim
 //
 // \warning
-//   You can use iostream.h or iostream header files for file I/O, 
+//   You can use iostream.h or iostream header files for file I/O,
 //   if one declares the define WANT_STD_IOSTREAM then the standard C++
-//   iostreams headers are included instead of the compiler-dependent version   
+//   iostreams headers are included instead of the compiler-dependent version
 //
- *       
+ *
  ****************************************************************************/
 #ifndef FRAMES_IO_H
 #define FRAMES_IO_H
@@ -86,7 +86,7 @@ namespace KDL {
     //! width to be used when printing variables out with frames_io.h
     //! global variable, can be changed.
 
-    
+
     // I/O to C++ stream.
     std::ostream& operator << (std::ostream& os,const Vector& v);
     std::ostream& operator << (std::ostream& os,const Rotation& R);
@@ -97,8 +97,8 @@ namespace KDL {
     std::ostream& operator << (std::ostream& os,const Rotation2& R);
     std::ostream& operator << (std::ostream& os,const Frame2& T);
 
-    
-    
+
+
     std::istream& operator >> (std::istream& is,Vector& v);
     std::istream& operator >> (std::istream& is,Rotation& R);
     std::istream& operator >> (std::istream& is,Frame& T);
@@ -107,8 +107,8 @@ namespace KDL {
     std::istream& operator >> (std::istream& is,Vector2& v);
     std::istream& operator >> (std::istream& is,Rotation2& R);
     std::istream& operator >> (std::istream& is,Frame2& T);
-    
-    
+
+
 } // namespace Frame
 
 #endif

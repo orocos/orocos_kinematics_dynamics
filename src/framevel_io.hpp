@@ -1,11 +1,11 @@
 /*****************************************************************************
- * \file  
+ * \file
  *      provides I/O operations on FrameVels classes
- *       
- *  \author 
+ *
+ *  \author
  *      Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *      ORO_Geometry V2
  *
  *  \par History
@@ -13,7 +13,7 @@
  *
  *  \par Release
  *      $Id: rframes_io.h,v 1.1.1.1 2002/08/26 14:14:21 rmoreas Exp $
- *      $Name:  $ 
+ *      $Name:  $
  ****************************************************************************/
 #ifndef KDL_FRAMESVEL_IO
 #define KDL_FRAMESVEL_IO

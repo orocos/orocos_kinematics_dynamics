@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Peter Soetens  Mon May 10 19:10:36 CEST 2004  velocityprofile_dirac.cxx 
+  tag: Peter Soetens  Mon May 10 19:10:36 CEST 2004  velocityprofile_dirac.cxx
 
                         velocityprofile_dirac.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Peter Soetens
     email                : peter.soetens@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -34,7 +34,7 @@ namespace KDL {
     void VelocityProfile_Dirac::SetProfile(
                                            double pos1,
                                            double pos2
-                                           ) 
+                                           )
     {
         p1 = pos1;
         p2 = pos2;

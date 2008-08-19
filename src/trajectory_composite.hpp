@@ -1,8 +1,8 @@
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		LRL V0.2
  *
  *	\par History
@@ -10,7 +10,7 @@
  *
  *	\par Release
  *		$Id: trajectory_composite.h 22 2004-09-21 08:58:54Z eaertbellocal $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -24,12 +24,12 @@
 
 
 namespace KDL {
-  /** 
+  /**
    * Trajectory_Composite implements a trajectory that is composed
    * of underlying trajectoria.  Call Add to add a trajectory
    * @ingroup Motion
    */
-class Trajectory_Composite: public Trajectory 
+class Trajectory_Composite: public Trajectory
 	{
 		typedef std::vector<Trajectory*> VectorTraj;
 		typedef std::vector<double>         VectorDouble;
@@ -38,7 +38,7 @@ class Trajectory_Composite: public Trajectory
 		double duration;    // total duration of the composed
 				    // Trajectory
 		Path_Composite* path;
-				
+
 	public:
 		Trajectory_Composite();
 		// Constructs an empty composite
@@ -60,7 +60,7 @@ class Trajectory_Composite: public Trajectory
 		virtual ~Trajectory_Composite();
 	};
 
- 
+
 }
 
 #endif

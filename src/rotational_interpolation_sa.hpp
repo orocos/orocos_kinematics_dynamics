@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  rotational_interpolation_sa.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  rotational_interpolation_sa.h
 
                         rotational_interpolation_sa.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
  /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -38,7 +38,7 @@
  *
  *	\par Release
  *		$Id: rotational_interpolation_singleaxis.h,v 1.1.1.1.2.3 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_ROTATIONALINTERPOLATION_SINGLEAXIS_H
@@ -64,7 +64,7 @@ class RotationalInterpolation_SingleAxis: public RotationalInterpolation
 	{
 		Rotation R_base_start;
 		Rotation R_base_end;
-		Vector rot_start_end; 
+		Vector rot_start_end;
 		double angle;
 	public:
 		RotationalInterpolation_SingleAxis();

@@ -20,11 +20,11 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /**
- * \mainpage KDL 
+ * \mainpage KDL
  *
- * This is the API reference of the 
- * <a href="http://www.orocos.org/kdl">Kinematics and Dynamics Library</a> (KDL), a sub-project of <a href="http://www.orocos.org">Orocos</a>, but that can be used independently of Orocos. KDL offers different kinds of functionality: 
- * 
+ * This is the API reference of the
+ * <a href="http://www.orocos.org/kdl">Kinematics and Dynamics Library</a> (KDL), a sub-project of <a href="http://www.orocos.org">Orocos</a>, but that can be used independently of Orocos. KDL offers different kinds of functionality:
+ *
  * Geometric primitives and their transformations:
  * - KDL::Vector
  * - KDL::Rotation
@@ -32,10 +32,10 @@
  * - KDL::Twist
  * - KDL::Wrench
  *
- * Other modules: 
+ * Other modules:
  * - \ref KinFam : functionality to build kinematic chains and access their kinematic and dynamic properties, such as e.g. Forward and Inverse kinematics and dynamics.
  * - \ref Motion : functionality to specify motion trajectories of frames and kinematic chains, such as e.g. Trapezoidal Velocity profiles.
- * - \ref KDLTK : the interface code to integrate KDL into the Orocos <a href="http://www.orocos.org/rtt/">Real-Time Toolkit</a> (RTT).  
+ * - \ref KDLTK : the interface code to integrate KDL into the Orocos <a href="http://www.orocos.org/rtt/">Real-Time Toolkit</a> (RTT).
  *
  */
 

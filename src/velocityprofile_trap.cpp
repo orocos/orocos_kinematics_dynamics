@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_trap.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_trap.cxx
 
                         velocityprofile_trap.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -25,10 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -36,7 +36,7 @@
  *
  *	\par Release
  *		$Id: velocityprofile_trap.cpp,v 1.1.1.1.2.7 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -53,7 +53,7 @@ VelocityProfile_Trap::VelocityProfile_Trap(double _maxvel,double _maxacc):
           duration(0), t1(0), t2(0),
 		  maxvel(_maxvel),maxacc(_maxacc),
           startpos(0), endpos(0)
-          
+
 {}
 		// constructs motion profile class with <maxvel> as parameter of the
 		// trajectory.

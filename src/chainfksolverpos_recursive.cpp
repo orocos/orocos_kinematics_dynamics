@@ -24,12 +24,12 @@
 #include <iostream>
 
 namespace KDL {
-    
+
     ChainFkSolverPos_recursive::ChainFkSolverPos_recursive(const Chain& _chain):
         chain(_chain)
     {
     }
-    
+
     int ChainFkSolverPos_recursive::JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr)
     {
         if(segmentNr<0)
@@ -54,11 +54,11 @@ namespace KDL {
             return 0;
         }
     }
-    
-    
+
+
     ChainFkSolverPos_recursive::~ChainFkSolverPos_recursive()
     {
     }
-    
-    
+
+
 }

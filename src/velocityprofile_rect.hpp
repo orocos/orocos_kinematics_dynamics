@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  velocityprofile_rect.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  velocityprofile_rect.h
 
                         velocityprofile_rect.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
-/***************************************************************************** 
- *  \author 
+
+
+/*****************************************************************************
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -38,7 +38,7 @@
  *
  *	\par Release
  *		$Id: velocityprofile_rect.h,v 1.1.1.1.2.4 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef MOTIONPROFILE_RECT_H
@@ -53,14 +53,14 @@ namespace KDL {
 	 * for moving from A to B.
 	 * @ingroup Motion
 	 */
-	class VelocityProfile_Rectangular : public VelocityProfile 
+	class VelocityProfile_Rectangular : public VelocityProfile
 		// Defines a rectangular velocityprofile.
 		// (i.e. constant velocity)
 	{
 		double d,p,v;
 	public:
 		double maxvel;
-	
+
 		VelocityProfile_Rectangular(double _maxvel=0):
 		  maxvel(_maxvel) {}
 		// constructs motion profile class with <maxvel> as parameter of the

@@ -41,7 +41,7 @@ namespace KDL
         q(qin),qdot(q.rows()),qdotdot(q.rows())
     {
     }
-    
+
     JntArray JntArrayAcc::value()const
     {
         return q;
@@ -55,7 +55,7 @@ namespace KDL
     {
         return qdotdot;
     }
-    
+
     void Add(const JntArrayAcc& src1,const JntArrayAcc& src2,JntArrayAcc& dest)
     {
         Add(src1.q,src2.q,dest.q);
@@ -74,7 +74,7 @@ namespace KDL
         dest.qdot=src1.qdot;
         dest.qdotdot=src1.qdotdot;
     }
-    
+
     void Substract(const JntArrayAcc& src1,const JntArrayAcc& src2,JntArrayAcc& dest)
     {
         Substract(src1.q,src2.q,dest.q);
@@ -122,15 +122,15 @@ namespace KDL
         Add(dest.qdot,dest.q,dest.qdot);
         Multiply(src.q,factor.t,dest.q);
     }
-    
+
     void Divide(const JntArrayAcc& src,const double& factor,JntArrayAcc& dest)
-    {  
+    {
         Divide(src.q,factor,dest.q);
         Divide(src.qdot,factor,dest.qdot);
         Divide(src.qdotdot,factor,dest.qdotdot);
     }
     void Divide(const JntArrayAcc& src,const doubleVel& factor,JntArrayAcc& dest)
-    {  
+    {
         Multiply(src.q,(2*factor.grad*factor.grad)/(factor.t*factor.t*factor.t),dest.q);
         Multiply(src.qdot,(2*factor.grad)/(factor.t*factor.t),dest.qdot);
         Divide(src.qdotdot,factor.t,dest.qdotdot);
@@ -142,7 +142,7 @@ namespace KDL
         Divide(src.q,factor.t,dest.q);
     }
     void Divide(const JntArrayAcc& src,const doubleAcc& factor,JntArrayAcc& dest)
-    {  
+    {
         Multiply(src.q,(2*factor.d*factor.d)/(factor.t*factor.t*factor.t)-factor.dd/(factor.t*factor.t),dest.q);
         Multiply(src.qdot,(2*factor.d)/(factor.t*factor.t),dest.qdot);
         Divide(src.qdotdot,factor.t,dest.qdotdot);
@@ -153,18 +153,18 @@ namespace KDL
         Substract(dest.qdot,dest.q,dest.qdot);
         Divide(src.q,factor.t,dest.q);
     }
-    
+
     void SetToZero(JntArrayAcc& array)
     {
         SetToZero(array.q);
         SetToZero(array.qdot);
         SetToZero(array.qdotdot);
     }
-    
+
     bool Equal(const JntArrayAcc& src1,const JntArrayAcc& src2,double eps)
     {
         return (Equal(src1.q,src2.q,eps)&&Equal(src1.qdot,src2.qdot,eps)&&Equal(src1.qdotdot,src2.qdotdot,eps));
     }
 }
 
-            
+

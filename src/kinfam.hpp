@@ -44,9 +44,9 @@
  *
  * A KDL::Segment contains a KDL::Joint and an offset frame ("link length",
  * defined by a KDL::Frame), that represents the geometric pose
- * between the KDL::Joint on the previous segment and its own KDL::Joint.  
- * 
+ * between the KDL::Joint on the previous segment and its own KDL::Joint.
+ *
  * A list of all the classes is available on the modules page: \ref KinFam
- * 
+ *
  *
  */

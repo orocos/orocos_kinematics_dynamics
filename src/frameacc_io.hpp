@@ -1,12 +1,12 @@
 /*****************************************************************************
- * \file  
- *      Defines I/O related routines to the FrameAccs classes defined in 
+ * \file
+ *      Defines I/O related routines to the FrameAccs classes defined in
  *      FrameAccs.h
- *       
- *  \author 
+ *
+ *  \author
  *      Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *      ORO_Geometry V0.2
  *
  *  \par History
@@ -14,7 +14,7 @@
  *
  *  \par Release
  *      $Id: rrframes_io.h,v 1.1.1.1 2002/08/26 14:14:21 rmoreas Exp $
- *      $Name:  $ 
+ *      $Name:  $
  ****************************************************************************/
 #ifndef RRFRAMES_IO
 #define RRFRAMES_IO
@@ -35,7 +35,7 @@ inline std::ostream& operator << (std::ostream& os,const VectorAcc& r) {
 }
 
 inline std::ostream& operator << (std::ostream& os,const RotationAcc& r) {
-    os << "{" << std::endl << r.R << "," << std::endl << r.w << 
+    os << "{" << std::endl << r.R << "," << std::endl << r.w <<
           "," << std::endl << r.dw << std::endl << "}" << std::endl;
     return os;
 }

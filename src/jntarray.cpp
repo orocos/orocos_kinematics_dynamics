@@ -18,7 +18,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
 #include "jntarray.hpp"
 
 namespace KDL
@@ -29,7 +29,7 @@ namespace KDL
         data = new double[size];
         SetToZero(*this);
     }
-    
+
 
     JntArray::JntArray(const JntArray& arg):
         size(arg.size)
@@ -52,43 +52,43 @@ namespace KDL
     {
         delete [] data;
     }
-    
+
     double JntArray::operator()(unsigned int i,unsigned int j)const
     {
         assert(i<size&&j==0);
         return data[i];
     }
-    
+
     double& JntArray::operator()(unsigned int i,unsigned int j)
     {
         assert(i<size&&j==0);
         return data[i];
     }
-    
+
     unsigned int JntArray::rows()const
     {
         return size;
     }
-    
+
     unsigned int JntArray::columns()const
     {
         return 0;
     }
-    
+
     void Add(const JntArray& src1,const JntArray& src2,JntArray& dest)
     {
         assert(src1.size==src2.size&src1.size==dest.size);
         for(unsigned int i=0;i<dest.size;i++)
             dest.data[i]=src1.data[i]+src2.data[i];
     }
-    
+
     void Substract(const JntArray& src1,const JntArray& src2,JntArray& dest)
     {
         assert(src1.size==src2.size&src1.size==dest.size);
         for(unsigned int i=0;i<dest.size;i++)
             dest.data[i]=src1.data[i]-src2.data[i];
     }
-    
+
     void Multiply(const JntArray& src,const double& factor,JntArray& dest)
     {
         assert(src.size==dest.size);
@@ -102,7 +102,7 @@ namespace KDL
         for(unsigned int i=0;i<dest.size;i++)
             dest.data[i]=src.data[i]/factor;
     }
-    
+
     void MultiplyJacobian(const Jacobian& jac, const JntArray& src, Twist& dest)
     {
         assert(jac.columns()==src.size);
@@ -111,13 +111,13 @@ namespace KDL
             for(unsigned int j=0;j<src.size;j++)
                 dest(i)+=jac(i,j)*src.data[j];
     }
-    
+
     void SetToZero(JntArray& array)
     {
         for(unsigned int i=0;i<array.size;i++)
             array.data[i]=0;
     }
-    
+
     bool Equal(const JntArray& src1, const JntArray& src2,double eps)
     {
         assert(src1.size==src2.size);
@@ -126,10 +126,10 @@ namespace KDL
             ret = ret && Equal(src1.data[i],src2.data[i],eps);
         return ret;
     }
-    
+
     bool operator==(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);};
     //bool operator!=(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);};
-    
+
 }
 
-    
+

@@ -23,9 +23,9 @@ void CompareFamilies(KinematicFamily* KF1,KinematicFamily* KF2) {
    	q[5] = 50*KDL::deg2rad;
 	Frame F1,F2;
 	jnt2cartpos1->evaluate(q);
-	jnt2cartpos1->getFrame(F1); 
+	jnt2cartpos1->getFrame(F1);
 	jnt2cartpos2->evaluate(q);
-	jnt2cartpos2->getFrame(F2); 
+	jnt2cartpos2->getFrame(F2);
 	if (!Equal(F1,F2,1E-7)) {
 	  std::cout << "the two kinematic families do not give the same result." << std::endl;
 	  std::cout << "Result of first kinematic family " << std::endl;
@@ -46,7 +46,7 @@ class TestForwardAndInverse {
 	Jnt2CartPos*          jnt2cartpos;
 	Frame			      F_base_ee;
 	Frame			      F_base_ee2;
-	JointVector           q_solved; 
+	JointVector           q_solved;
 	JointVector           q_initial;
 public:
 	CartPos2Jnt*          cartpos2jnt;
@@ -93,7 +93,7 @@ class TestForwardPosAndJac {
 	Frame			 F_base_ee2;
 public:
 	static void TestFamily(KinematicFamily* _family) {
-		TestForwardPosAndJac testobj(_family); 
+		TestForwardPosAndJac testobj(_family);
 		JointVector q(6);
    	 	q[0] = 0*KDL::deg2rad;
    	 	q[1] = 10*KDL::deg2rad;
@@ -110,7 +110,7 @@ public:
    	 	q[5] = 110*KDL::deg2rad;
 		testobj.test(q);
 	}
-	
+
     TestForwardPosAndJac(KinematicFamily* _family) :
 		family(_family),
 		jnt2cartpos(_family->createJnt2CartPos()),
@@ -118,7 +118,7 @@ public:
         FJ_base_ee(_family->nrOfJoints())
     {
 		// the transformations should exist :
-		assert( jnt2jac != 0);    
+		assert( jnt2jac != 0);
 		assert( jnt2cartpos != 0);
     }
 
@@ -126,7 +126,7 @@ public:
         double deltaq = 1E-4;
         double epsJ   = 1E-4;
 		if (jnt2jac->evaluate(q)!=0) return 1;
-		jnt2jac->getJacobian(FJ_base_ee);	
+		jnt2jac->getJacobian(FJ_base_ee);
         for (int i=0; i< q.size() ;i++) {
             // test the derivative of J towards qi
             double oldqi = q[i];
@@ -137,7 +137,7 @@ public:
 			if (jnt2cartpos->evaluate(q)!=0) return 1;
 			jnt2cartpos->getFrame(F_base_ee1);
             q[i] = oldqi;
-            // check Jacobian : 
+            // check Jacobian :
             Twist Jcol = diff(F_base_ee1,F_base_ee2,2*deltaq);
             if (!Equal(Jcol,FJ_base_ee.deriv(i),epsJ)) {
                 std::cout << "Difference between symbolic and numeric calculation of Jacobian for column "
@@ -168,7 +168,7 @@ class TestCartVelAndJac {
 	FrameVel		 F_base_ee;
 public:
 	static void TestFamily(KinematicFamily* _family) {
-		TestCartVelAndJac testobj(_family); 
+		TestCartVelAndJac testobj(_family);
 		JointVector qdot(6);
         qdot[0] = 0.1;
         qdot[1] = 0.2;
@@ -193,7 +193,7 @@ public:
    	 	q[5] = 110*KDL::deg2rad;
 		testobj.test(q,qdot);
 	}
-	
+
     TestCartVelAndJac(KinematicFamily* _family) :
 		family(_family),
 		jnt2cartvel(_family->createJnt2CartVel()),
@@ -201,7 +201,7 @@ public:
         FJ_base_ee(_family->nrOfJoints())
     {
 		// the transformations should exist :
-		assert( jnt2jac != 0);    
+		assert( jnt2jac != 0);
 		assert( jnt2cartvel != 0);
     }
 
@@ -213,7 +213,7 @@ public:
 		int result;
         result = jnt2jac->evaluate(q);
         assert(result==0);
-		jnt2jac->getJacobian(FJ_base_ee);	
+		jnt2jac->getJacobian(FJ_base_ee);
         result = jnt2cartvel->evaluate(q,qdot);
         jnt2cartvel->getFrameVel(F_base_ee);
         assert(result==0);
@@ -249,7 +249,7 @@ class TestCartVelAndInverse {
     JointVector      qdot2;
 public:
 	static void TestFamily(KinematicFamily* _family) {
-		TestCartVelAndInverse testobj(_family); 
+		TestCartVelAndInverse testobj(_family);
 		JointVector qdot(6);
         qdot[0] = 0.1;
         qdot[1] = 0.2;
@@ -273,7 +273,7 @@ public:
    	 	q[5] = 110*KDL::deg2rad;
 		testobj.test(q,qdot);
 	}
-	
+
     TestCartVelAndInverse(KinematicFamily* _family) :
 		family(_family),
 		jnt2cartvel(_family->createJnt2CartVel()),
@@ -281,7 +281,7 @@ public:
         qdot2(_family->nrOfJoints())
     {
 		// the transformations should exist :
-		assert( cartvel2jnt != 0);    
+		assert( cartvel2jnt != 0);
 		assert( jnt2cartvel != 0);
     }
 
@@ -300,8 +300,8 @@ public:
 
         for (int i=0;i<qdot.size();++i) {
            if (fabs(qdot[i]-qdot2[i])>epsJ)  {
-               std::cout << " original joint velocities and calculated joint velocities do not match" << std::endl;          
-               //std::cerr << " original joint velocities and calculated joint velocities do not match" << std::endl;          
+               std::cout << " original joint velocities and calculated joint velocities do not match" << std::endl;
+               //std::cerr << " original joint velocities and calculated joint velocities do not match" << std::endl;
                for (int j=0;j<qdot.size();j++) {
                     std::cout << "qdot["<<j<<"]="<<qdot[j]<<"  and qdot2["<<j<<"]="<<qdot2[j] << std::endl;
                 }
@@ -330,13 +330,13 @@ public:
  */
 class CRS450_exp: public SerialChain {
 	public:
-	explicit CRS450_exp(int jointoffset=0) :	
+	explicit CRS450_exp(int jointoffset=0) :
 		SerialChain("CRS450", 6, jointoffset,new LinearTransmission(6) )
 	{
 		double L1 = 0.33;
 		double L2 = 0.305;
 		double L3 = 0.33;
-		double L4 = 0.176; 
+		double L4 = 0.176;
 		LinearTransmission* tr = (LinearTransmission*)transmission;
 		tr->setTransmission(2,2.0,1.0);
 		tr->setTransmission(3,3.0,2.0);
@@ -354,20 +354,20 @@ class CRS450_exp: public SerialChain {
 int main(int argc,char* argv[]) {
 	KinematicFamily* family1,*family2,*family3,*family4;
 	std::cout << std::endl << "Tests on CRS450 " << std::endl;
-	family1 = new CRS450(); 
-	TestForwardAndInverse::TestFamily(family1); 
+	family1 = new CRS450();
+	TestForwardAndInverse::TestFamily(family1);
 	TestForwardPosAndJac::TestFamily(family1);
     TestCartVelAndJac::TestFamily(family1);
     TestCartVelAndInverse::TestFamily(family1);//
 	std::cout <<std::endl <<  "Tests on CRS450_exp " << std::endl;
-	family2 = new CRS450_exp(); 
-	TestForwardAndInverse::TestFamily(family2); 
+	family2 = new CRS450_exp();
+	TestForwardAndInverse::TestFamily(family2);
 	TestForwardPosAndJac::TestFamily(family2);
     TestCartVelAndJac::TestFamily(family2);
     TestCartVelAndInverse::TestFamily(family2);//
 	std::cout << std::endl << "Tests on CRS450Feath " << std::endl;
 	family3 = new CRS450Feath();
-	TestForwardAndInverse::TestFamily(family3); 
+	TestForwardAndInverse::TestFamily(family3);
 	TestForwardPosAndJac::TestFamily(family3);
     TestCartVelAndJac::TestFamily(family3);
     TestCartVelAndInverse::TestFamily(family3);//
@@ -375,7 +375,7 @@ int main(int argc,char* argv[]) {
 	CompareFamilies(family1,family3);
 	std::cout << std::endl << "Tests on CRS450Feath->createSerialChain " << std::endl;
     family4 = ((ZXXZXZ*)family3)->createSerialChain();
-	TestForwardAndInverse::TestFamily(family4); 
+	TestForwardAndInverse::TestFamily(family4);
 	TestForwardPosAndJac::TestFamily(family4);
     TestCartVelAndJac::TestFamily(family4);
     TestCartVelAndInverse::TestFamily(family4);//
@@ -393,12 +393,12 @@ int main(int argc,char* argv[]) {
 	delete family3;
 	delete family2;
 	delete family1;
-    
+
     delete family4b;
 	delete family3b;
 	delete family2b;
 	delete family1b;
- 	
+
 	return 0;
 }
-	
+

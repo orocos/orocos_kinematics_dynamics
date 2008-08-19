@@ -16,7 +16,7 @@ using namespace std;
 int ORO_main(int argc, char** argv)
 {
     RTT::Toolkit::Import(KDLToolkit);
-    
+
     TaskContext writer("writer");
     int retval = 0;
 
@@ -39,10 +39,10 @@ int ORO_main(int argc, char** argv)
     Property<LinearTransmission> ltrans_prop("transmission","some transmission",ltrans);
     UnitTransmission utrans = UnitTransmission(6);
     Property<UnitTransmission> utrans_prop("transmission2","some other transmission",utrans);
-    
+
     Property<SerialChain> kuka_prop("testchain","some chain",*(robot));
     Property<ZXXZXZ> kuka_prop2("testchain2","some other chain",kuka);
-    
+
     writer.properties()->addProperty(&tx_prop);
     writer.properties()->addProperty(&ty_prop);
     writer.properties()->addProperty(&tz_prop);
@@ -53,7 +53,7 @@ int ORO_main(int argc, char** argv)
     writer.properties()->addProperty(&utrans_prop);
     writer.properties()->addProperty(&kuka_prop);
     writer.properties()->addProperty(&kuka_prop2);
-    
+
     writer.marshalling()->writeProperties("test.cpf");
 
     writer.marshalling()->readProperties("test.cpf");
@@ -63,31 +63,31 @@ int ORO_main(int argc, char** argv)
         log(Debug)<<"Property "<<tx_prop.value()<<" ,actual type: "<<tx<<endlog();
         retval=-1;
     }
-    
+
     if(ty_prop.value().getType()!=ty.getType()||!Equal(ty_prop.value().frame_before_joint(),ty.frame_before_joint(),1e-5)){
         log(Error)<<"Property is not the same after writing and rereading"<<endlog();
         log(Debug)<<"Property "<<ty_prop.value()<<" ,actual type: "<<ty<<endlog();
         retval=-1;
     }
-    
+
     if(tz_prop.value().getType()!=tz.getType()||!Equal(tz_prop.value().frame_before_joint(),tz.frame_before_joint(),1e-5)){
         log(Error)<<"Property is not the same after writing and rereading"<<endlog();
         log(Debug)<<"Property "<<tz_prop.value()<<" ,actual type: "<<tz<<endlog();
         retval=-1;
     }
-    
+
     if(rx_prop.value().getType()!=rx.getType()||!Equal(rx_prop.value().frame_before_joint(),rx.frame_before_joint(),1e-5)){
         log(Error)<<"Property is not the same after writing and rereading"<<endlog();
         log(Debug)<<"Property "<<rx_prop.value()<<" ,actual type: "<<rx<<endlog();
         retval=-1;
     }
-    
+
     if(ry_prop.value().getType()!=ry.getType()||!Equal(ry_prop.value().frame_before_joint(),ry.frame_before_joint(),1e-5)){
         log(Error)<<"Property is not the same after writing and rereading"<<endlog();
         log(Debug)<<"Property "<<ry_prop.value()<<" ,actual type: "<<ry<<endlog();
         retval=-1;
     }
-    
+
     if(rz_prop.value().getType()!=rz.getType()||!Equal(rz_prop.value().frame_before_joint(),rz.frame_before_joint(),1e-5)){
         log(Error)<<"Property is not the same after writing and rereading"<<endlog();
         log(Debug)<<"Property "<<rz_prop.value()<<" ,actual type: "<<rz<<endlog();
@@ -97,7 +97,7 @@ int ORO_main(int argc, char** argv)
 
     delete robot;
     return retval;
-    
+
 }
 
 

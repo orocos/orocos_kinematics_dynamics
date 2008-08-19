@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_line.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_line.cxx
 
                         path_line.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -25,10 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -36,7 +36,7 @@
  *
  *	\par Release
  *		$Id: path_line.cpp,v 1.1.1.1.2.3 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -54,16 +54,16 @@ Path_Line::Path_Line(const Frame& startpos,
 			   V_base_end(endpos.p),
 			   eqradius(_eqradius),
                aggregate(_aggregate)
-   {	
+   {
 	   	V_start_end = V_base_end - V_base_start;
 	   	double dist = V_start_end.Normalize();
 		orient->SetStartEnd(startpos.M,endpos.M);
 		double alpha = orient->Angle();
 
-		// See what has the slowest eq. motion, and adapt 
+		// See what has the slowest eq. motion, and adapt
 		// the other to this slower motion
 		// use eqradius to transform between rot and transl.
-       
+
         // Only modify if non zero (prevent division by zero)
 		if ( alpha != 0 && alpha*eqradius > dist) {
 			// rotational_interpolation is the limitation
@@ -93,7 +93,7 @@ Path_Line::Path_Line(const Frame& startpos,
 			   V_base_end(startpos.p + starttwist.vel),
 			   eqradius(_eqradius),
                aggregate(_aggregate)
-   {	
+   {
        // startframe and starttwist are expressed in Wo.
        // after 1 time unit, startframe has translated over starttwist.vel
        // and rotated over starttwist.rot.Norm() (both vectors can be zero)
@@ -104,7 +104,7 @@ Path_Line::Path_Line(const Frame& startpos,
 		orient->SetStartEnd(startpos.M, (startpos*Frame( Rotation::Rot(starttwist.rot, starttwist.rot.Norm() ), starttwist.vel )).M);
 		double alpha = orient->Angle();        // rotation during 1 time unit
 
-		// See what has the slowest eq. motion, and adapt 
+		// See what has the slowest eq. motion, and adapt
 		// the other to this slower motion
 		// use eqradius to transform between rot and transl.
         // Only modify if non zero (prevent division by zero)
@@ -156,7 +156,7 @@ Path* Path_Line::Clone() {
                              Frame(orient->Pos(0),V_base_start),
                              Frame(orient->Pos(pathlength*scalerot),V_base_end),
                              orient->Clone(),
-                             eqradius, 
+                             eqradius,
                              true
                              );
     // else :
@@ -164,10 +164,10 @@ Path* Path_Line::Clone() {
                          Frame(orient->Pos(0),V_base_start),
                          Frame(orient->Pos(pathlength*scalerot),V_base_end),
                          orient,
-                         eqradius, 
+                         eqradius,
                          false
                          );
-    
+
 }
 
 void Path_Line::Write(std::ostream& os)  {

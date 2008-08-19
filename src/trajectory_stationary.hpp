@@ -1,8 +1,8 @@
-/***************************************************************************** 
- *  \author 
+/*****************************************************************************
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		LRL V0.2
  *
  *	\par History
@@ -10,7 +10,7 @@
  *
  *	\par Release
  *		$Id: trajectory_stationary.h 22 2004-09-21 08:58:54Z eaertbellocal $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef TRAJECTORY_STATIONARY_H
@@ -20,12 +20,12 @@
 
 
 namespace KDL {
-  /** 
+  /**
    * Implements a "trajectory" of a stationary position
    * for an amount of time.
    * @ingroup Motion
    */
-	class Trajectory_Stationary : public Trajectory 
+	class Trajectory_Stationary : public Trajectory
 	  {
 		double duration;
 		Frame pos;

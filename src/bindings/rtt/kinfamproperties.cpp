@@ -31,7 +31,7 @@ namespace RTT
         targetbag.add( new Property<std::string>("Type", "Type of Joint",joint.getTypeName()));
         return true;
     }
-    
+
     bool JointTypeInfo::composeTypeImpl(const PropertyBag& bag, Joint& joint)
     {
         if ( bag.getType() == "KDL::Joint" ){ // check the type
@@ -70,7 +70,7 @@ namespace RTT
         targetbag.add(new Property<Frame>("frame","The offset frame from the joint at the base to the end of the link",segment.getFrameToTip()));
         return true;
     }
-    
+
     bool composeTypeImpl(const PropertyBag& bag, Segment& segment)
     {
         if ( bag.getType() == "KDL::Segment" ){ // check the type
@@ -90,7 +90,7 @@ namespace RTT
         else
             return false;
     }
-    
+
     bool decomposeTypeImpl(const Chain& chain, PropertyBag& targetbag)
     {
         targetbag.setType("KDL::Chain");
@@ -98,7 +98,7 @@ namespace RTT
             targetbag.add(new Property<Segment>("Segment","Segment of the chain",chain.getSegment(i)));
         return true;
     }
-    
+
     bool composeTypeImpl(const PropertyBag& bag, Chain& chain)
     {
         Chain chain_new;

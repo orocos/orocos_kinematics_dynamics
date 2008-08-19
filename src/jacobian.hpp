@@ -18,7 +18,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
 #ifndef KDL_JACOBIAN_HPP
 #define KDL_JACOBIAN_HPP
 
@@ -28,7 +28,7 @@ namespace KDL
 {
     //Forward declaration
     class ChainJntToJacSolver;
-    
+
     class Jacobian
     {
         friend class ChainJntToJacSolver;
@@ -39,18 +39,18 @@ namespace KDL
         Twist* twists;
         Jacobian(unsigned int size,unsigned int nr=1);
         Jacobian(const Jacobian& arg);
-        
+
         Jacobian& operator=(const Jacobian& arg);
-                
+
         ~Jacobian();
-        
+
         double operator()(int i,int j)const;
         double& operator()(int i,int j);
         unsigned int rows()const;
         unsigned int columns()const;
 
         friend void SetToZero(Jacobian& jac);
-        
+
         friend void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
         friend void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
         friend void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);

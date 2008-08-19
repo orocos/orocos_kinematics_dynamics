@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  path_circle.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  path_circle.h
 
                         path_circle.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,14 +24,14 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 /*****************************************************************************
-*   ALTERNATIVE FOR trajectory_circle.h/cpp 
- *  \author 
+*   ALTERNATIVE FOR trajectory_circle.h/cpp
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -39,7 +39,7 @@
  *
  *	\par Release
  *		$Id: path_circle.h,v 1.1.1.1.2.3 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_MOTION_PATHCIRCLE_H
@@ -57,18 +57,18 @@ namespace KDL {
 	 * have been a better name though.
 	 * @ingroup Motion
 	 */
-class Path_Circle : public Path 
+class Path_Circle : public Path
 	{
 
 		// Orientatie gedeelte
-		RotationalInterpolation* orient; 
+		RotationalInterpolation* orient;
 
 		// Circular gedeelte
 		double radius;
 		Frame  F_base_center;
 
 		// equivalent radius
-		double eqradius;  
+		double eqradius;
 
 		// verdeling baanlengte over pos/rot
 		double pathlength;
@@ -81,7 +81,7 @@ class Path_Circle : public Path
 
 		/**
 		 *
-		 * CAN THROW Error_MotionPlanning_Circle_ToSmall 
+		 * CAN THROW Error_MotionPlanning_Circle_ToSmall
 		 * CAN THROW Error_MotionPlanning_Circle_No_Plane
 		 */
 		Path_Circle(const Frame& F_base_start,const Vector& V_base_center,
@@ -91,7 +91,7 @@ class Path_Circle : public Path
 			RotationalInterpolation* otraj,
 			double eqradius,
 			bool _aggregate=true);
-		
+
 		double LengthToS(double length);
 
 		virtual double PathLength();

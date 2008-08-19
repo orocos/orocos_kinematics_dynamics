@@ -1,5 +1,5 @@
 /***************************************************************************
-  tag: Peter Soetens  Mon May 10 19:10:36 CEST 2004  MotionProperties.cxx 
+  tag: Peter Soetens  Mon May 10 19:10:36 CEST 2004  MotionProperties.cxx
 
                         MotionProperties.cxx -  description
                            -------------------
@@ -7,7 +7,7 @@
     copyright            : (C) 2004 Peter Soetens
                                2007 Ruben Smits
     email                : peter.soetens@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -37,7 +37,7 @@
 namespace RTT
 {
     using namespace std;
-    
+
 
     template class Property<KDL::Frame>;
     //template class Property<KDL::JntArray>;
@@ -62,14 +62,14 @@ namespace RTT
         Property<double> X;
         Property<double> Y;
         Property<double> Z;
-        
-    public: 
-        
+
+    public:
+
         VectorDecomposer( const Vector& v);
-        
+
         PropertyBag& result() { return resultBag; }
     };
-        
+
     /**
      * An Composer for constructing a Vector or Property<Vector>
      * from a typed PropertyBag.
@@ -84,7 +84,7 @@ namespace RTT
 
         bool getResult( Vector& res);
     };
-            
+
     VectorDecomposer::VectorDecomposer( const Vector& v )
         : resultBag("KDL::Vector"), // bag_type
           X("X","X Value", v[0]),
@@ -145,13 +145,13 @@ namespace RTT
         Property<double> Z_x;
         Property<double> Z_y;
         Property<double> Z_z;
-    public: 
-        
+    public:
+
         RotationDecomposer( const Rotation& r );
-        
+
         PropertyBag& result() { return resultBag; }
     };
-    
+
     /**
      * An Composer for constructing a Rotation or Property<Rotation>
      * from a typed PropertyBag.
@@ -166,7 +166,7 @@ namespace RTT
 
         bool getResult( Rotation& res );
     };
-            
+
     RotationDecomposer::RotationDecomposer( const Rotation& r)
         : resultBag("KDL::Rotation"),
           X_x("X_x","", r(0,0) ),
@@ -194,7 +194,7 @@ namespace RTT
     {
         if ( bag.getType() == "MotCon::Rotation" || bag.getType() == "KDL::Rotation" )
             {
-                
+
                 Property<double>* X_x = dynamic_cast<Property<double>*>( bag.find("X_x") );
                 Property<double>* X_y = dynamic_cast<Property<double>*>( bag.find("X_y") );
                 Property<double>* X_z = dynamic_cast<Property<double>*>( bag.find("X_z") );
@@ -209,10 +209,10 @@ namespace RTT
                       Y_x != 0 && Y_y != 0  && Y_z != 0 &&
                       Z_x != 0 && Z_y != 0  && Z_z != 0 )
                     {
-                        res = Rotation( 
+                        res = Rotation(
                                                      X_x->get(), Y_x->get(),Z_x->get(),
                                                      X_y->get(),Y_y->get(),Z_y->get(),
-                                                     X_z->get(),Y_z->get(),Z_z->get() 
+                                                     X_z->get(),Y_z->get(),Z_z->get()
                                                      );
                         return true;
                     }
@@ -231,13 +231,13 @@ namespace RTT
         Property<double> _b;
         Property<double> _g;
 
-    public: 
-        
+    public:
+
         EulerZYXDecomposer( const Rotation& r);
-        
+
         PropertyBag& result() { return resultBag; }
     };
-    
+
     /**
      * An Composer for constructing an EulerZYX Rotation or Property<Rotation>
      * from a typed PropertyBag.
@@ -252,7 +252,7 @@ namespace RTT
 
         bool getResult( Rotation& res );
     };
-            
+
     EulerZYXDecomposer::EulerZYXDecomposer( const Rotation& r)
         : resultBag("KDL::EulerZYX"),
           _a("alpha","First Rotate around the Z axis with alpha in radians" ),
@@ -269,7 +269,7 @@ namespace RTT
     {
         if ( bag.getType() == "KDL::EulerZYX" || bag.getType() == "MotCon::EulerZYX" )
             {
-                
+
                 // ZYX is deprecated, use alpha, beta, gamma. also alpha maps to Z and gamma to X !
                 Property<double>* _a = dynamic_cast<Property<double>*>( bag.find("alpha") );
                 if ( !_a)
@@ -307,13 +307,13 @@ namespace RTT
         Property<double> _p;
         Property<double> _y;
 
-    public: 
-        
+    public:
+
         RPYDecomposer( const Rotation& r);
-        
+
         PropertyBag& result() { return resultBag; }
     };
-    
+
     /**
      * An Composer for constructing an RPY Rotation or Property<Rotation>
      * from a typed PropertyBag.
@@ -367,9 +367,9 @@ namespace RTT
     //{
     //    targetbag.setType("JntArray");
     //    int dimension = v.rows();
-    //    
+    //
     //    assert(targetbag.empty());
-    //    
+    //
     //    for( int i=0;i<dimension;i++)
     //        targetbag.add(new Property<double>("","",v(i)));
     //}
@@ -379,7 +379,7 @@ namespace RTT
     //    if (bag.getType()==PropertyBag& bag, JntArray& result){
     //        Property<double>* comp;
     //        int dimension = bag.size();
-    //        
+    //
     //    JntArrayComposer vas( bag );
     //    return vas.getResult(v);
     //}
@@ -444,7 +444,7 @@ namespace RTT
     {
         if ( bag.getType() == "KDL::Twist" || bag.getType() == "MotCon::Twist" )
             {
-                
+
                 // pass the subbag to the vector Composers
                 Property<PropertyBag>* subbag = bag.getProperty<PropertyBag>("Trans_Vel");
                 if (! subbag ) {
@@ -489,7 +489,7 @@ namespace RTT
     {
         if ( bag.getType() == "KDL::Wrench" ||  bag.getType() == "Motcon::Wrench")
             {
-                
+
                 // pass this bag to the vector Composers
                 Property<PropertyBag>* subbag = bag.getProperty<PropertyBag>("Force");
                 if (! subbag ) {

@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_composite.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_composite.cxx
 
                         path_composite.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -25,10 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -36,7 +36,7 @@
  *
  *	\par Release
  *		$Id: path_composite.cpp,v 1.1.1.1.2.7 2003/07/24 13:49:16 rwaarsin Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -52,7 +52,7 @@ namespace KDL {
 // returns the relative path length within the segment
 // you propably want to use the cached_index variable
 double Path_Composite::Lookup(double s) const
-{	
+{
 
 	if ( (cached_starts <=s) && ( s <= cached_ends) ) {
 		return s - cached_starts;
@@ -67,7 +67,7 @@ double Path_Composite::Lookup(double s) const
 		}
 		previous_s = dv[i];
 	}
-	return 0; 
+	return 0;
 }
 
 Path_Composite::Path_Composite() {
@@ -80,7 +80,7 @@ Path_Composite::Path_Composite() {
 void Path_Composite::Add(Path* geom, bool aggregate ) {
 	pathlength += geom->PathLength();
 	dv.insert(dv.end(),pathlength);
-	gv.insert( gv.end(),std::make_pair(geom,aggregate) );	
+	gv.insert( gv.end(),std::make_pair(geom,aggregate) );
 }
 
 double Path_Composite::LengthToS(double length) {
@@ -123,7 +123,7 @@ void Path_Composite::Write(std::ostream& os)  {
 	}
 	os << "]" << std::endl;
 }
-		
+
 Path_Composite::~Path_Composite() {
 	PathVector::iterator it;
 	for (it=gv.begin();it!=gv.end();++it) {

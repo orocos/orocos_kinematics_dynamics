@@ -27,11 +27,11 @@ namespace KDL
         chain(_chain)
     {
     }
-    
+
     ChainJntToJacSolver::~ChainJntToJacSolver()
     {
     }
-        
+
     int ChainJntToJacSolver::JntToJac(const JntArray& q_in,Jacobian& jac)
     {
         assert(q_in.rows()==chain.getNrOfJoints()&&
@@ -49,9 +49,9 @@ namespace KDL
                 t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
             }else{
                 total = T_tmp*chain.getSegment(i).pose(0.0);
-                
+
             }
-            
+
             //Changing Refpoint of all columns to new ee
             changeRefPoint(jac,total.p-T_tmp.p,jac);
 
@@ -66,4 +66,4 @@ namespace KDL
         return 0;
     }
 }
-    
+

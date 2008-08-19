@@ -34,7 +34,7 @@ public:
     static inline Inertia Zero(){
         return Inertia(0,0,0,0,0,0,0);
     };
-    
+
     ~Inertia();
 private:
     double m,Ixx, Iyy, Izz, Ixy, Ixz, Iyz;

@@ -29,13 +29,13 @@
 #include <vector>
 
 namespace KDL {
-    
+
     /**
 	  * \brief This class encapsulates a simple segment, that is a "rigid
 	  * body" (i.e., a frame and an inertia) with a joint and with
 	  * "handles", root and tip to connect to other segments.
      *
-     * A simple segment is described by the following properties : 
+     * A simple segment is described by the following properties :
      *      - Joint
      *      - inertia: of the rigid body part of the Segment
      *      - Offset from the end of the joint to the tip of the segment:
@@ -49,11 +49,11 @@ namespace KDL {
         Joint joint;
         Inertia M;
         Frame f_tip;
-        
+
     public:
-        /** 
+        /**
          * Constructor of the segment
-         * 
+         *
          * @param joint joint of the segment, default:
          * Joint(Joint::None)
          * @param f_tip frame from the end of the joint to the tip of
@@ -63,62 +63,62 @@ namespace KDL {
         Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const Inertia& M = Inertia::Zero());
         Segment(const Segment& in);
         Segment& operator=(const Segment& arg);
-        
+
         virtual ~Segment();
 
-        /** 
+        /**
          * Request the pose of the segment, given the joint position q.
-         * 
+         *
          * @param q 1D position of the joint
-         * 
+         *
          * @return pose from the root to the tip of the segment
          */
         Frame pose(const double& q)const;
-        /** 
+        /**
          * Request the 6D-velocity of the tip of the segment, given
          * the joint position q and the joint velocity qdot.
-         * 
-         * @param q 1D position of the joint 
+         *
+         * @param q 1D position of the joint
          * @param qdot 1D velocity of the joint
-         * 
+         *
          * @return 6D-velocity of the tip of the segment, expressed
          *in the base-frame of the segment(root) and with the tip of
          *the segment as reference point.
          */
         Twist twist(const double& q,const double& qdot)const;
-        
-        /** 
+
+        /**
          * Request the joint of the segment
-         * 
-         * 
+         *
+         *
          * @return const reference to the joint of the segment
          */
         const Joint& getJoint()const
         {
             return joint;
         }
-        /** 
+        /**
          * Request the inertia of the segment
-         * 
-         * 
+         *
+         *
          * @return const reference to the inertia of the segment
-         */        
+         */
         const Inertia& getInertia()const
         {
             return M;
         }
-        
-        /** 
+
+        /**
          * Request the pose from the joint end to the tip of the
          *segment.
-         * 
+         *
          * @return const reference to the joint end - segment tip pose.
          */
         const Frame& getFrameToTip()const
         {
             return f_tip;
         }
-        
+
     };
 }//end of namespace KDL
 

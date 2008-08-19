@@ -38,13 +38,13 @@ namespace KDL {
     public:
         ChainFkSolverPos_recursive(const Chain& chain);
         ~ChainFkSolverPos_recursive();
-        
+
         virtual int JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr=-1);
 
     private:
         const Chain chain;
     };
-    
+
 }
 
 #endif

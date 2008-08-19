@@ -61,7 +61,7 @@ void KinFamTest::JointTest()
     CPPUNIT_ASSERT_EQUAL(j.pose(q),Frame(Vector(0,0,q)));
     random(q);
     CPPUNIT_ASSERT_EQUAL(j.twist(q),Twist(Vector(0,0,q),Vector::Zero()));
-    
+
 }
 
 void KinFamTest::SegmentTest()
@@ -123,7 +123,7 @@ void KinFamTest::SegmentTest()
 void KinFamTest::ChainTest()
 {
     Chain chain1;
-    
+
     chain1.addSegment(Segment(Joint(Joint::RotZ),
                               Frame(Vector(0.0,0.0,0.0))));
     chain1.addSegment(Segment(Joint(Joint::RotX),
@@ -156,9 +156,9 @@ void KinFamTest::TreeTest()
     Segment segment1(Joint(Joint::None));
     Segment segment2(Joint(Joint::RotX),Frame(Vector(0.1,0.2,0.3)));
     Segment segment3(Joint(Joint::TransZ),Frame(Rotation::RotX(1.57)));
-    
+
     cout<<tree1<<endl;
-        
+
     CPPUNIT_ASSERT(tree1.addSegment(segment1,"Segment1","root"));
     CPPUNIT_ASSERT(tree1.addSegment(segment2,"Segment2","root"));
     CPPUNIT_ASSERT(tree1.addSegment(segment3,"Segment3","Segment1"));
@@ -172,7 +172,7 @@ void KinFamTest::TreeTest()
     CPPUNIT_ASSERT(tree2.addSegment(segment1,"Segment1","root"));
     CPPUNIT_ASSERT(tree2.addSegment(segment2,"Segment2","root"));
     CPPUNIT_ASSERT(tree2.addSegment(segment3,"Segment3","Segment1"));
-    
+
     cout<<tree2<<endl;
 
     Chain chain1;
@@ -191,11 +191,11 @@ void KinFamTest::TreeTest()
 
 
     CPPUNIT_ASSERT(tree2.addChain(chain1,"Chain1","Segment2"));
-    cout<<tree2<<endl;    
+    cout<<tree2<<endl;
     CPPUNIT_ASSERT(tree1.addTree(tree2,"Tree2","Segment2"));
     cout<<tree1<<endl;
-    
+
 }
 
-        
+
 

@@ -18,7 +18,7 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  
+
 
 #include "jntarrayacc.hpp"
 
@@ -37,7 +37,7 @@ namespace KDL
         q(qin),qdot(q.rows())
     {
     }
-    
+
     JntArray JntArrayVel::value()const
     {
         return q;
@@ -47,7 +47,7 @@ namespace KDL
     {
         return qdot;
     }
-    
+
     void Add(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest)
     {
         Add(src1.q,src2.q,dest.q);
@@ -58,7 +58,7 @@ namespace KDL
         Add(src1.q,src2,dest.q);
         dest.qdot=src1.qdot;
     }
-    
+
     void Substract(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest)
     {
         Substract(src1.q,src2.q,dest.q);
@@ -82,30 +82,30 @@ namespace KDL
         Add(dest.qdot,dest.q,dest.qdot);
         Multiply(src.q,factor.t,dest.q);
     }
-    
+
     void Divide(const JntArrayVel& src,const double& factor,JntArrayVel& dest)
-    {  
+    {
         Divide(src.q,factor,dest.q);
         Divide(src.qdot,factor,dest.qdot);
     }
     void Divide(const JntArrayVel& src,const doubleVel& factor,JntArrayVel& dest)
-    {  
+    {
         Multiply(src.q,(factor.grad/factor.t/factor.t),dest.q);
         Divide(src.qdot,factor.t,dest.qdot);
         Substract(dest.qdot,dest.q,dest.qdot);
         Divide(src.q,factor.t,dest.q);
     }
-    
+
     void SetToZero(JntArrayVel& array)
     {
         SetToZero(array.q);
         SetToZero(array.qdot);
     }
-    
+
     bool Equal(const JntArrayVel& src1,const JntArrayVel& src2,double eps)
     {
         return Equal(src1.q,src2.q,eps)&&Equal(src1.qdot,src2.qdot,eps);
     }
 }
 
-            
+

@@ -47,18 +47,18 @@ namespace KDL
         v_in_boost(6)
     {
     }
-    
+
     ChainIkSolverVel_pinv_boost_givens::~ChainIkSolverVel_pinv_boost_givens()
     {
     }
-    
-    
+
+
     int ChainIkSolverVel_pinv_boost_givens::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
         toggle!=toggle;
-        
+
         jnt2jac.JntToJac(q_in,jac);
-        
+
         for(unsigned int i=0;i<6;i++)
             v_in_boost(i)=v_in(i);
 
@@ -76,11 +76,11 @@ namespace KDL
             UY.assign(prod(trans(V),v_in_boost));
         else
             UY.assign(prod(trans(U),v_in_boost));
-        
+
         for (unsigned int i = 0; i < n; i++){
             double wi = UY(i);
             double alpha = S(i);
-            
+
             if (alpha != 0)
                 alpha = 1.0 / alpha;
             else
@@ -94,9 +94,9 @@ namespace KDL
 
         for (unsigned int j=0;j<chain.getNrOfJoints();j++)
             qdot_out(j)=qdot_boost(j);
-        
+
         return ret;
-        
+
     }
 
 }

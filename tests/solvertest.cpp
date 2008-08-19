@@ -29,7 +29,7 @@ void SolverTest::setUp()
                              Frame(Vector(0.0,0.0,0.4))));
     chain1.addSegment(Segment(Joint(Joint::None),
                              Frame(Vector(0.0,0.0,0.0))));
-    
+
     chain2.addSegment(Segment(Joint(Joint::RotZ),
                               Frame(Vector(0.0,0.0,0.5))));
     chain2.addSegment(Segment(Joint(Joint::RotX),
@@ -41,7 +41,7 @@ void SolverTest::setUp()
     chain2.addSegment(Segment(Joint(Joint::RotZ),
                               Frame(Vector(0.0,0.0,0.1))));
 
-    
+
     chain3.addSegment(Segment(Joint(Joint::RotZ),
                              Frame(Vector(0.0,0.0,0.0))));
     chain3.addSegment(Segment(Joint(Joint::RotX),
@@ -60,7 +60,7 @@ void SolverTest::setUp()
                              Frame(Vector(0.0,0.0,0.4))));
     chain3.addSegment(Segment(Joint(Joint::RotY),
                              Frame(Vector(0.0,0.0,0.0))));
-    
+
 }
 
 void SolverTest::tearDown()
@@ -109,7 +109,7 @@ void SolverTest::FkVelAndIkVelTest()
     FkVelAndIkVelLocal(chain1,fksolver1,iksolver1);
     //std::cout<<"KDL-Boost-SVD-Givens"<<std::endl;
     FkVelAndIkVelLocal(chain1,fksolver1,iksolver_pinv_boost_givens1);
-    
+
     //Chain2
     //std::cout<<"underdetermined problem"<<std::endl;
     ChainFkSolverVel_recursive fksolver2(chain2);
@@ -119,7 +119,7 @@ void SolverTest::FkVelAndIkVelTest()
     FkVelAndIkVelLocal(chain2,fksolver2,iksolver2);
     //std::cout<<"KDL-Boost-SVD-Givens"<<std::endl;
     FkVelAndIkVelLocal(chain2,fksolver2,iksolver_pinv_boost_givens2);
-    
+
     //Chain3
     //std::cout<<"overdetermined problem"<<std::endl;
     ChainFkSolverVel_recursive fksolver3(chain3);
@@ -128,7 +128,7 @@ void SolverTest::FkVelAndIkVelTest()
     FkVelAndIkVelLocal(chain3,fksolver3,iksolver3);
     //std::cout<<"KDL-Boost-SVD-Givens"<<std::endl;
     FkVelAndIkVelLocal(chain3,fksolver3,iksolver_pinv_boost_givens3);
-        
+
 }
 
 void SolverTest::FkPosAndIkPosTest()
@@ -138,29 +138,29 @@ void SolverTest::FkPosAndIkPosTest()
     ChainIkSolverVel_pinv_boost_givens iksolverv_pinv_boost_givens1(chain1);
     ChainIkSolverPos_NR iksolver1(chain1,fksolver1,iksolver1v);
     ChainIkSolverPos_NR iksolver1_givens(chain1,fksolver1,iksolverv_pinv_boost_givens1);
-    
+
     FkPosAndIkPosLocal(chain1,fksolver1,iksolver1);
     FkPosAndIkPosLocal(chain1,fksolver1,iksolver1_givens);
-    
+
     ChainFkSolverPos_recursive fksolver2(chain2);
     ChainIkSolverVel_pinv iksolverv2(chain2);
     ChainIkSolverVel_pinv_boost_givens iksolverv_pinv_boost_givens2(chain2);
     ChainIkSolverPos_NR iksolver2(chain2,fksolver2,iksolverv2);
     ChainIkSolverPos_NR iksolver2_givens(chain2,fksolver2,iksolverv_pinv_boost_givens2);
-    
+
     FkPosAndIkPosLocal(chain2,fksolver2,iksolver2);
     FkPosAndIkPosLocal(chain2,fksolver2,iksolver2_givens);
-    
-    
+
+
     ChainFkSolverPos_recursive fksolver3(chain3);
     ChainIkSolverVel_pinv iksolverv3(chain3);
     ChainIkSolverVel_pinv_boost_givens iksolverv_pinv_boost_givens3(chain3);
     ChainIkSolverPos_NR iksolver3(chain3,fksolver3,iksolverv3);
     ChainIkSolverPos_NR iksolver3_givens(chain3,fksolver3,iksolverv_pinv_boost_givens3);
-    
+
     FkPosAndIkPosLocal(chain3,fksolver3,iksolver3);
     FkPosAndIkPosLocal(chain3,fksolver3,iksolver3_givens);
-    
+
 }
 
 
@@ -169,18 +169,18 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
 {
     double deltaq = 1E-4;
     double epsJ   = 1E-4;
-    
+
     Frame F1,F2;
-    
+
     JntArray q(chain.getNrOfJoints());
     Jacobian jac(chain.getNrOfJoints());
-    
+
     for(unsigned int i=0;i<chain.getNrOfJoints();i++){
         random(q(i));
     }
-    
+
     jacsolver.JntToJac(q,jac);
-    
+
     for (int i=0; i< q.rows() ;i++) {
         // test the derivative of J towards qi
         double oldqi = q(i);
@@ -189,11 +189,11 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
         q(i) = oldqi-deltaq;
         CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F1));
         q(i) = oldqi;
-        // check Jacobian : 
+        // check Jacobian :
         Twist Jcol1 = diff(F1,F2,2*deltaq);
         Twist Jcol2(Vector(jac(0,i),jac(1,i),jac(2,i)),
                     Vector(jac(3,i),jac(4,i),jac(5,i)));
-        
+
         //CPPUNIT_ASSERT_EQUAL(true,Equal(Jcol1,Jcol2,epsJ));
         CPPUNIT_ASSERT_EQUAL(Jcol1,Jcol2);
     }
@@ -203,7 +203,7 @@ void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, C
 {
     double deltaq = 1E-4;
     double epsJ   = 1E-4;
-    
+
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
 
@@ -221,12 +221,12 @@ void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, C
     CPPUNIT_ASSERT(fksolvervel.JntToCart(qvel,cart)==0);
     MultiplyJacobian(jac,qvel.qdot,t);
     CPPUNIT_ASSERT_EQUAL(cart.deriv(),t);
-}    
+}
 
 void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainIkSolverVel& iksolvervel)
 {
     double epsJ   = 1E-7;
-    
+
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
     for(unsigned int i=0;i<chain.getNrOfJoints();i++){
@@ -235,17 +235,17 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
     }
     JntArrayVel qvel(q,qdot);
     JntArray qdot_solved(chain.getNrOfJoints());
-        
+
     FrameVel cart;
-        
+
     CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart));
     for(unsigned int i=0;i<1;i++){
         int ret = iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved);
         CPPUNIT_ASSERT(0<=ret);
     }
-    
+
     qvel.deriv()=qdot_solved;
-    
+
     if(chain.getNrOfJoints()<=6)
         CPPUNIT_ASSERT(Equal(qvel.qdot,qdot_solved,1e-7));
     else{
@@ -253,7 +253,7 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
         CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
         CPPUNIT_ASSERT(Equal(cart.deriv(),cart_solved.deriv(),1e-5));
     }
-    
+
 }
 
 
@@ -273,12 +273,12 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
     JntArray q_solved(q);
 
     Frame F1,F2;
-    
+
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F1));
     int ret = iksolverpos.CartToJnt(q_init,F1,q_solved);
     CPPUNIT_ASSERT(0<=ret);
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q_solved,F2));
-    
+
     CPPUNIT_ASSERT_EQUAL(F1,F2);
     //CPPUNIT_ASSERT_EQUAL(q,q_solved);
 

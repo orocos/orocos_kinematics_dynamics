@@ -18,16 +18,16 @@ class KinFamTest : public CppUnit::TestFixture
     CPPUNIT_TEST( ChainTest );
     CPPUNIT_TEST( TreeTest );
     CPPUNIT_TEST_SUITE_END();
-    
+
 public:
     void setUp();
     void tearDown();
-    
+
     void JointTest();
     void SegmentTest();
     void ChainTest();
     void TreeTest();
-    
-};  
-    
+
+};
+
 #endif

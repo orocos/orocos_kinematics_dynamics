@@ -33,8 +33,8 @@ namespace KDL
      * @brief  Class to calculate the jacobian of a general
      * KDL::Chain, it is used by other solvers. It should not be used
      * outside of KDL.
-     * 
-     * 
+     *
+     *
      */
 
     class ChainJntToJacSolver
@@ -42,19 +42,19 @@ namespace KDL
     public:
         ChainJntToJacSolver(const Chain& chain);
         ~ChainJntToJacSolver();
-        /** 
+        /**
          * Calculate the jacobian expressed in the base frame of the
          * chain, with reference point at the end effector of the
          * *chain. The alghoritm is similar to the one used in
          * KDL::ChainFkSolverVel_recursive
-         * 
+         *
          * @param q_in input joint positions
          * @param jac output jacobian
-         * 
+         *
          * @return always returns 0
          */
         int JntToJac(const JntArray& q_in,Jacobian& jac);
-        
+
     private:
         const Chain chain;
         Twist t_tmp;

@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  path_point.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:39 CET 2005  path_point.h
 
                         path_point.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,14 +24,14 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
 /*****************************************************************************
-*   ALTERNATIVE FOR trajectory_stationary.h/cpp 
- *  \author 
+*   ALTERNATIVE FOR trajectory_stationary.h/cpp
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
 
  *		ORO_Geometry V0.2
  *
@@ -40,7 +40,7 @@
  *
  *	\par Release
  *		$Id: path_point.h,v 1.1.2.3 2003/07/24 13:40:49 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_MOTION_PATH_POINT_H
@@ -62,7 +62,7 @@ class Path_Point : public Path
 	{
 		Frame F_base_start;
 	public:
-		/** 
+		/**
 		 * Constructs a Point Path
 		 */
 		Path_Point(const Frame& F_base_start);

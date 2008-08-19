@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_traphalf.cxx 
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_traphalf.cxx
 
                         velocityprofile_traphalf.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -25,10 +25,10 @@
  *                                                                         *
  ***************************************************************************/
 /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -36,7 +36,7 @@
  *
  *	\par Release
  *		$Id: velocityprofile_traphalf.cpp,v 1.1.1.1.2.5 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 
@@ -95,7 +95,7 @@ void VelocityProfile_TrapHalf::SetProfile(double pos1,double pos2) {
 }
 
 void VelocityProfile_TrapHalf::SetProfileDuration(
-	double pos1,double pos2,double newduration) 
+	double pos1,double pos2,double newduration)
 {
     SetProfile(pos1,pos2);
     double factor = duration/newduration;

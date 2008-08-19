@@ -1,12 +1,12 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  path_roundedcomposite.h 
+  tag: Erwin Aertbelien  Mon Jan 10 16:38:38 CET 2005  path_roundedcomposite.h
 
                         path_roundedcomposite.h -  description
                            -------------------
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
- 
+
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
  *   modify it under the terms of the GNU Lesser General Public            *
@@ -24,13 +24,13 @@
  *   Suite 330, Boston, MA  02111-1307  USA                                *
  *                                                                         *
  ***************************************************************************/
- 
- 
+
+
  /*****************************************************************************
- *  \author 
+ *  \author
  *  	Erwin Aertbelien, Div. PMA, Dep. of Mech. Eng., K.U.Leuven
  *
- *  \version 
+ *  \version
  *		ORO_Geometry V0.2
  *
  *	\par History
@@ -38,7 +38,7 @@
  *
  *	\par Release
  *		$Id: path_roundedcomposite.h,v 1.1.1.1.2.3 2003/07/24 13:26:15 psoetens Exp $
- *		$Name:  $ 
+ *		$Name:  $
  ****************************************************************************/
 
 #ifndef KDL_MOTION_ROUNDEDCOMPOSITE_H
@@ -91,7 +91,7 @@ class Path_RoundedComposite : public Path
 		void Add(const Frame& F_base_point);
 
 		/**
-		 * to be called after the last line is added to finish up 
+		 * to be called after the last line is added to finish up
 		 * the work
 		 */
 		void Finish();
@@ -133,9 +133,9 @@ class Path_RoundedComposite : public Path
 
 		/**
 		 * Writes one of the derived objects to the stream
-		 */ 
+		 */
 		virtual void Write(std::ostream& os);
-		
+
 		virtual ~Path_RoundedComposite();
 	};
 

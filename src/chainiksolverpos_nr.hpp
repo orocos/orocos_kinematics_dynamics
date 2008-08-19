@@ -38,11 +38,11 @@ namespace KDL {
     class ChainIkSolverPos_NR : public ChainIkSolverPos
     {
     public:
-        /** 
+        /**
          * Constructor of the solver, it needs the chain, a forward
          * position kinematics solver and an inverse velocity
          * kinematics solver for that chain.
-         * 
+         *
          * @param chain the chain to calculate the inverse position for
          * @param fksolver a forward position kinematics solver
          * @param iksolver an inverse velocity kinematics solver
@@ -50,13 +50,13 @@ namespace KDL {
          * default: 100
          * @param eps the precision for the position, used to end the
          * iterations, default: epsilon (defined in kdl.hpp)
-         * 
-         * @return 
+         *
+         * @return
          */
         ChainIkSolverPos_NR(const Chain& chain,ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
                             unsigned int maxiter=100,double eps=1e-6);
         ~ChainIkSolverPos_NR();
-        
+
         virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out);
 
     private:
@@ -66,11 +66,11 @@ namespace KDL {
         JntArray delta_q;
         Frame f;
         Twist delta_twist;
-        
+
         unsigned int maxiter;
         double eps;
     };
-    
+
 }
 
 #endif
