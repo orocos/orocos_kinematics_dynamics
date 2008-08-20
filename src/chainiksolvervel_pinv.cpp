@@ -66,7 +66,7 @@ namespace KDL
             for (j=0;j<jac.rows();j++) {
                 sum+= U[j](i)*v_in(j);
             }
-            //If the singular value is to small (<eps), don't invert it but
+            //If the singular value is too small (<eps), don't invert it but
             //set the inverted singular value to zero (truncated svd)
             tmp(i) = sum*(fabs(S(i))<eps?0.0:1.0/S(i));
         }
