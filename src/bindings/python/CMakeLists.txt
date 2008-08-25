@@ -13,7 +13,7 @@ ENDIF (WIN32)
 SET (BINDINGS_MAKEFILE ${CMAKE_CURRENT_BINARY_DIR}/Makefile)
 
 # 'python' target will force to build bindings libs for core and gui
-ADD_CUSTOM_TARGET (python DEPENDS ${BINDINGS_LIBS})
+ADD_CUSTOM_TARGET (python ALL DEPENDS ${BINDINGS_LIBS})
 
 # don't run python before the libs are built
 ADD_DEPENDENCIES (python orocos-kdl)
@@ -45,7 +45,6 @@ ADD_CUSTOM_COMMAND(TARGET python POST_BUILD
                    COMMAND ln ARGS -sf ${CMAKE_CURRENT_BINARY_DIR}/PyKDL.so ${CMAKE_BINARY_DIR}/tests/
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-
 #IF (BINDINGS_GLOBAL_INSTALL)
 
 # python's site-packages dir: bindings will be installed here
@@ -53,7 +52,7 @@ IF (UNIX)
   SET (CMD "
 import sys
 v = sys.version_info
-print sys.exec_prefix + '/lib/python' + str(v[0]) + '.' + str(v[1]) + '/site-packages'
+print '${CMAKE_INSTALL_PREFIX}' + '/lib/python' + str(v[0]) + '.' + str(v[1]) + '/site-packages'
 ")
 ELSE (UNIX)
   SET (CMD "

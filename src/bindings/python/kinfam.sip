@@ -191,14 +191,18 @@ public:
     unsigned int rows()const;
     unsigned int columns()const;
 
-    double __getitem__ (int i,int j);
+    double __getitem__ (SIP_PYTUPLE);
 %MethodCode
-    sipRes=(*sipCpp)(a0,a1);
+    int i,j;
+    PyArg_ParseTuple(a0,"ii",&i,&j);
+    sipRes=(*sipCpp)(i,j);
 %End
     
-    void __setitem__(int i,int j, double value);
+    void __setitem__(SIP_PYTUPLE,double value);
 %MethodCode
-    (*sipCpp)(a0,a1)=a2;
+    int i,j;
+    PyArg_ParseTuple(a0,"ii",&i,&j);
+    (*sipCpp)(i,j)=a1;
 %End
 
     char* __repr__();
