@@ -47,6 +47,7 @@
 #include "trajectory_segment.hpp"
 
 #include <memory>
+#include <cstring>
 
 
 namespace KDL {
