@@ -11,8 +11,11 @@ MACRO(ORO_ADD_CORBA_SERVERS _sources _headers)
       SET(_server  ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S.cpp)
       SET(_serverh ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S.h ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S.inl)
 
-      SET(_tserver )
-      SET(_tserverh ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S_T.h ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S_T.inl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S_T.cpp)
+      # From TAO 1.5 onwards, the _T files are no longer generated
+      IF( NOT TAO_15 )
+          SET(_tserver )
+          SET(_tserverh ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S_T.h ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S_T.inl ${CMAKE_CURRENT_BINARY_DIR}/${_basename}S_T.cpp)
+      ENDIF( NOT TAO_15 )
 
       SET(_client  ${CMAKE_CURRENT_BINARY_DIR}/${_basename}C.cpp)
       SET(_clienth ${CMAKE_CURRENT_BINARY_DIR}/${_basename}C.h ${CMAKE_CURRENT_BINARY_DIR}/${_basename}C.inl)

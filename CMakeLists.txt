@@ -4,6 +4,11 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.2)
 #MARK_AS_ADVANCED( FORCE CMAKE_BACKWARDS_COMPATIBILITY )
 
+# for CMake 2.6 corrected behaviour (see "cmake --help-policy CMP0003")
+IF(COMMAND cmake_policy AND ${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 4)
+  CMAKE_POLICY(SET CMP0003 NEW)
+ENDIF(COMMAND cmake_policy AND ${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 4)
+
 ###################################################
 #                                                 #
 #       Start project customization section       #

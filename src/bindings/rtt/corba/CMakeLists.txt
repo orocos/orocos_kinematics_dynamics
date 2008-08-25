@@ -6,13 +6,15 @@ INCLUDE(${PROJ_SOURCE_DIR}/config/FindCorbaDeps.cmake)
 IF(ENABLE_CORBA )
   MESSAGE( "CORBA Support enabled.")
   # Finally:
+
+  INCLUDE (${PROJ_SOURCE_DIR}/config/UseCorba.cmake)
     
   # Add includes / lib paths if necessary
   IF( NOT ${ACE_DIR} STREQUAL /usr/include )
     INCLUDE_DIRECTORIES( ${ACE_DIR} )
-    LINK_DIRECTORIES( ${ACE_DIR}/lib )
+    LINK_DIRECTORIES( ${ACE_DIR}/../lib )
     SET(CMAKE_C_FLAGS_RTT "${CMAKE_C_FLAGS_RTT} -I${ACE_DIR}" CACHE INTERNAL "")
-    SET(CMAKE_LINKFLAGS_RTT "${CMAKE_LINKFLAGS_RTT} -L${ACE_DIR}/lib" CACHE INTERNAL "")
+    SET(CMAKE_LINKFLAGS_RTT "${CMAKE_LINKFLAGS_RTT} -L${ACE_DIR}/../lib" CACHE INTERNAL "")
   ENDIF( NOT ${ACE_DIR} STREQUAL /usr/include )
   IF( NOT ${TAO_DIR} STREQUAL /usr/include )
     INCLUDE_DIRECTORIES( ${TAO_DIR} )
@@ -47,7 +49,7 @@ IF(ENABLE_CORBA )
   VERSION "${KDL_VERSION}"
   INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/rtt/${OROCOS_TARGET}/plugins")
   # Is used for building  the library
-  TARGET_LINK_LIBRARIES(orocos-kdltk-corba-${OROCOS_TARGET} orocos-rtt-corba-${OROCOS_TARGET} orocos-kdltk-${OROCOS_TARGET} )
+  TARGET_LINK_LIBRARIES(orocos-kdltk-corba-${OROCOS_TARGET} orocos-rtt-corba-${OROCOS_TARGET} orocos-kdltk-${OROCOS_TARGET} ${ORO_ACETAO_LIBRARIES})
   CONFIGURE_FILE( orocos-kdltk-corba.pc.in src/bindings/rtt/corba/orocos-kdltk-corba-${OROCOS_TARGET}.pc @ONLY)
 
   INSTALL_TARGETS(/lib/rtt/${OROCOS_TARGET}/plugins orocos-kdltk-corba-${OROCOS_TARGET})
