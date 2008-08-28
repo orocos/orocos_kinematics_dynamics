@@ -37,11 +37,13 @@ namespace KDL
         maxiter(_maxiter),
         tmp(ublas::vector<double>(chain.getNrOfJoints())),
         tmp_jac(ublas::matrix<double>(6,chain.getNrOfJoints())),
-        tmp_ts(ublas::matrix<double>(6,6)),
+	tmp_jac_weight1(ublas::matrix<double>(6,chain.getNrOfJoints())),
+        tmp_jac_weight2(ublas::matrix<double>(6,chain.getNrOfJoints())),
+	tmp_ts(ublas::matrix<double>(6,6)),
         tmp_js(ublas::matrix<double>(chain.getNrOfJoints(),chain.getNrOfJoints())),
         weight_ts(ublas::identity_matrix<double>(6)),
         weight_js(ublas::identity_matrix<double>(chain.getNrOfJoints())),
-        lambda(0.0)
+	lambda(0.0)
     {
     }
     
@@ -68,14 +70,19 @@ namespace KDL
         
         double sum;
         unsigned int i,j;
-        
-        for (i=0;i<jac.rows();i++) {
-            for (j=0;j<jac.columns();j++)
-                tmp_jac(i,j) = jac(i,j);
+
+	for (i=0;i<jac.rows();i++) {
+          for (j=0;j<jac.columns();j++)
+	    tmp_jac(i,j) = jac(i,j);
         }
         
-        int ret = svd_boost_HH(tmp_jac,U,S,V,tmp,maxiter);
-        
+	// Create the Weighted jacobian
+	noalias(tmp_jac_weight1) = prod(tmp_jac,weight_js);
+	noalias(tmp_jac_weight2) = prod(weight_ts,tmp_jac_weight1);
+   
+	// Compute the SVD of the weighted jacobian
+        int ret = svd_boost_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
+                
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
         noalias(tmp_ts) = prod(weight_ts,project(U,range(0,6),range(0,6)));
         noalias(tmp_js) = prod(weight_js,V); 
