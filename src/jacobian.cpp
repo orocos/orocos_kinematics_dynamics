@@ -104,4 +104,26 @@ namespace KDL
         for(unsigned int i=0;i<src1.size*src1.nr_blocks;i++)
             dest.twists[i]=frame*src1.twists[i];
     }
+
+    bool Jacobian::operator ==(const Jacobian& arg)
+    {
+        return Equal((*this),arg);
+    }
+    
+    bool Jacobian::operator!=(const Jacobian& arg)
+    {
+        return !Equal((*this),arg);
+    }
+    
+    bool Equal(const Jacobian& a,const Jacobian& b,double eps)
+    {
+        if(a.rows()==b.rows()&&a.columns()==b.columns()){
+            bool rc=true;
+            for(unsigned int i=0;i<a.columns();i++)
+                rc&=Equal(a.twists[i],b.twists[i],eps);
+            return rc;
+        }else
+            return false;
+    }
+    
 }
