@@ -13,7 +13,7 @@ ENDIF (WIN32)
 SET (BINDINGS_MAKEFILE ${CMAKE_CURRENT_BINARY_DIR}/Makefile)
 
 # 'python' target will force to build bindings libs for core and gui
-ADD_CUSTOM_TARGET (python ALL DEPENDS ${BINDINGS_LIBS})
+ADD_CUSTOM_TARGET(python ALL DEPENDS ${BINDINGS_LIBS})
 
 # don't run python before the libs are built
 ADD_DEPENDENCIES (python orocos-kdl)
