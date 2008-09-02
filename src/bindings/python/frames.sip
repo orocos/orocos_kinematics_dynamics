@@ -24,6 +24,8 @@ class Vector{
 
 %TypeHeaderCode
 #include <frames.hpp>
+#include <frames_io.hpp>
+#include <sstream>
 using namespace KDL;
 %End
 
@@ -40,7 +42,7 @@ public:
     double y() const;
     double z() const;
 
-    double __getitem__ (int index);
+    double __getitem__ (int index) const;
 %MethodCode
     sipRes=(*sipCpp)(a0);
 %End
@@ -50,11 +52,11 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    char* __repr__();
+    const char* __repr__() const;
 %MethodCode
-    char tmp[100];
-    sprintf(tmp,"[%f,%f,%f]",sipCpp->x(),sipCpp->y(),sipCpp->z());
-    sipRes=tmp;
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    sipRes=oss.str().c_str();
 %End
 
     void ReverseSign();
@@ -91,6 +93,8 @@ class Rotation{
 
 %TypeHeaderCode
 #include <frames.hpp>
+#include <frames_io.hpp>
+#include <sstream>
 using namespace KDL;
 %End
 
@@ -101,28 +105,18 @@ public:
              double Xz,double Yz,double Zz);
     Rotation(const Vector& x,const Vector& y,const Vector& z);
     
-    double __getitem__(SIP_PYTUPLE);
+    double __getitem__(SIP_PYTUPLE) const;
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0, "ii", &i, &j);
-    sipRes=(*sipCpp)(i,j);
+    sipRes=((const Rotation)(*sipCpp))(i,j);
 %End
 
-    void __setitem__(SIP_PYTUPLE,double value);
+    const char* __repr__() const;
 %MethodCode
-    int i,j;
-    PyArg_ParseTuple(a0, "ii", &i, &j);
-    (*sipCpp)(i,j)=a1;
-%End
-
-    char* __repr__();
-%MethodCode
-    char tmp[100];
-    sprintf(tmp,"[%f,%f,%f;%f,%f,%f;%f,%f,%f;]",
-            sipCpp->data[0],sipCpp->data[1],sipCpp->data[2],
-            sipCpp->data[3],sipCpp->data[4],sipCpp->data[5],
-            sipCpp->data[6],sipCpp->data[7],sipCpp->data[8]);
-    sipRes=tmp;
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    sipRes=oss.str().c_str();
 %End
     
     void SetInverse();
@@ -169,6 +163,8 @@ class Frame{
 
 %TypeHeaderCode
 #include <frames.hpp>
+#include <frames_io.hpp>
+#include <sstream>
 using namespace KDL;
 %End
 
@@ -181,24 +177,18 @@ public:
     Vector p;
     Rotation M;
     
-    double __getitem__ (SIP_PYTUPLE);
+    double __getitem__ (SIP_PYTUPLE) const;
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
     sipRes=(*sipCpp)(i,j);
 %End
 
-    char* __repr__();
+    const char* __repr__() const;
 %MethodCode
-    char tmp[200];
-    sprintf(tmp,"[[%f,%f,%f;%f,%f,%f;%f,%f,%f],[%f,%f,%f]]",
-            sipCpp->M(0,0),sipCpp->M(0,1),sipCpp->M(0,2),
-            sipCpp->M(1,0),sipCpp->M(1,1),sipCpp->M(1,2),
-            sipCpp->M(2,0),sipCpp->M(2,1),sipCpp->M(2,2),
-            sipCpp->p(0),sipCpp->p(1),sipCpp->p(2));
-
-            
-    sipRes=tmp;
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    sipRes=oss.str().c_str();
 %End
 
     Frame mDH(double a,double alpha,double d,double theta);
@@ -227,6 +217,8 @@ class Twist
 
 %TypeHeaderCode
 #include <frames.hpp>
+#include <frames_io.hpp>
+#include <sstream>
 using namespace KDL;
 %End
 public:
@@ -239,7 +231,7 @@ public:
     Twist& operator-=(const Twist& arg);
     Twist& operator+=(const Twist& arg);
 
-    double __getitem__ (int i);
+    double __getitem__ (int i) const;
 %MethodCode
     sipRes=(*sipCpp)(a0);
 %End
@@ -249,13 +241,11 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    char* __repr__();
+    const char* __repr__() const;
 %MethodCode
-    char tmp[100];
-    sprintf(tmp,"[%f,%f,%f,%f,%f,%f]",
-            sipCpp->vel(0),sipCpp->vel(1),sipCpp->vel(2),
-            sipCpp->rot(0),sipCpp->rot(1),sipCpp->rot(2));
-    sipRes=tmp;
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    sipRes=oss.str().c_str();
 %End
 
     static Twist Zero() /Factory/;
@@ -285,6 +275,8 @@ class Wrench
     
 %TypeHeaderCode
 #include <frames.hpp>
+#include <frames_io.hpp>
+#include <sstream>
 using namespace KDL;
 %End
 
@@ -299,7 +291,7 @@ public:
     Wrench& operator+=(const Wrench& arg);
 
 
-    double __getitem__ (int i);
+    double __getitem__ (int i) const;
 %MethodCode
     sipRes=(*sipCpp)(a0);
 %End
@@ -309,13 +301,11 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    char* __repr__();
+    const char* __repr__() const;
 %MethodCode
-    char tmp[100];
-    sprintf(tmp,"[%f,%f,%f,%f,%f,%f]",
-            sipCpp->force(0),sipCpp->force(1),sipCpp->force(2),
-            sipCpp->torque(0),sipCpp->torque(1),sipCpp->torque(2));
-    sipRes=tmp;
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    sipRes=oss.str().c_str();
 %End
 
     static Wrench Zero() /Factory/;
