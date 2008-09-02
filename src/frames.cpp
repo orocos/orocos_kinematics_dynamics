@@ -103,15 +103,6 @@ double Vector2::Normalize(double eps) {
 	}
 }
 
-// OBSOLETE : TODO : REMOVE THIS METHOD
-Vector2 Vector2::Normalize2()
-{
-    double N;
-    N = Norm();
-    return Vector2(data[0]/N,data[1]/N);
-}
-
-
 
 // do some effort not to lose precision
 double Vector::Norm() const
@@ -153,13 +144,6 @@ double Vector::Normalize(double eps) {
 		*this = (*this)/v;
 		return v;
 	}
-}
-
-Vector Vector::Normalize2() const
-{
-    double N;
-    N = Norm();
-    return Vector(data[0]/N,data[1]/N,data[2]/N);
 }
 
 
@@ -309,9 +293,9 @@ Vector Rotation::GetRot() const
        double ca    = (data[0]+data[4]+data[8]-1)/2.0;
        double alfa;
        if (sa > epsilon)
-	 alfa = ::atan2(sa,ca)/sa;
+           alfa = ::atan2(sa,ca)/sa;
        else
-	 alfa = 1;
+           alfa = 1;
        return axis * alfa;
      }
 

@@ -1094,24 +1094,6 @@ IMETHOD Rotation Rot(const Vector& axis_a_b) {
         ct            +  vt*rotvec(2)*rotvec(2)
         );
     }
-/**
- * returns axis_a_b
- */
-IMETHOD Vector getRot(const Rotation& R_a_b) {
-	Vector axis  = Vector((R_a_b.data[7]-R_a_b.data[5]),
-                   (R_a_b.data[2]-R_a_b.data[6]),
-                   (R_a_b.data[3]-R_a_b.data[1]) )/2; 
-	double sa    = axis.Norm();
-	double ca    = (R_a_b.data[0]+R_a_b.data[4]+R_a_b.data[8]-1)/2.0;
-	double alfa;
-	if (sa > 1E-7) 
-		alfa = ::atan2(sa,ca)/sa;
-	else
-		alfa = 1;
-
-	return axis * alfa;
-}
-
 
 IMETHOD Vector diff(const Vector& a,const Vector& b,double dt) {
 	return (b-a)/dt;
@@ -1151,7 +1133,7 @@ IMETHOD Twist diff_displ(const Twist& a,const Twist& b,double dt) {
 
 IMETHOD Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt) {
 	Rotation R_b1_b2(R_a_b1.Inverse()*R_a_b2);
-	return R_a_b1 * getRot(R_b1_b2) / dt;
+	return R_a_b1 * R_b1_b2.GetRot() / dt;
 }
 IMETHOD Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt) {
 	return Twist(

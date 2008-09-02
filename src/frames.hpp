@@ -219,9 +219,6 @@ public:
 	*/
      double Normalize(double eps=epsilon);
 
-     //! OBSOLETE
-     Vector Normalize2() const; // OBSOLETE: TODO : remove this method
-
      //!    @return the norm of the vector
      double Norm() const;
 
@@ -845,8 +842,6 @@ public:
 	*/
      double Normalize(double eps=epsilon);
 
-	 //! OBSOLETE : TODO : REMOVE THIS METHOD
-	 Vector2 Normalize2();
      //!  @return the norm of the vector
      inline double Norm() const;
 
