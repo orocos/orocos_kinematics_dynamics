@@ -1,7 +1,7 @@
 Source: orocos-kdl
 Priority: extra
 Maintainer: Ruben Smits <ruben.smits@mech.kuleuven.be>
-Build-Depends: debhelper (>= 5), cmake, pkg-config, libboost-dev, doxygen, liborocos-rtt-common-dev, liborocos-rtt-corba-common-dev , liborocos-rtt-gnulinux-dev, python-sip4-dev (>=4.4.5), sip4
+Build-Depends: debhelper (>= 5), cmake, pkg-config,libboost-dev,doxygen, liborocos-rtt-common-dev,liborocos-rtt-gnulinux-dev,liborocos-rtt-lxrt-dev,liborocos-rtt-xenomai-dev,liborocos-rtt-corba-common-dev, liborocos-rtt-corba-gnulinux-dev ,liborocos-rtt-corba-lxrt-dev,liborocos-rtt-corba-xenomai-dev ,python-sip4-dev (>=4.4.5),python-sip4,python-support,sip4, tao-idl
 Standards-Version: 3.7.2
 Section: libs
 
