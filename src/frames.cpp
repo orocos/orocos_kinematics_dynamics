@@ -47,7 +47,7 @@ void Frame::Make4x4(double * d)
     d[15] = 1;
 }
 
-Frame Frame::mDH(double a,double alpha,double d,double theta)
+Frame Frame::DH_Craig1989(double a,double alpha,double d,double theta)
 // returns Modified Denavit-Hartenberg parameters (According to Craig)
 {
     double ct,st,ca,sa;

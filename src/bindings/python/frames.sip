@@ -191,7 +191,7 @@ public:
     sipRes=oss.str().c_str();
 %End
 
-    Frame mDH(double a,double alpha,double d,double theta);
+    Frame DH_Craig1989(double a,double alpha,double d,double theta);
     Frame DH(double a,double alpha,double d,double theta);
     Frame Inverse()/Factory/;
     Vector Inverse(const Vector& arg) const /Factory/;
