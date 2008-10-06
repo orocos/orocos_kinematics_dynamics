@@ -238,7 +238,7 @@ class ChainFkSolverPos
 #include <chainfksolver.hpp>
 using namespace KDL;
 %End
-    virtual int JntToCart(const JntArray& q_in, Frame& p_out)=0;
+    virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1)=0;
 };
 
 class ChainFkSolverVel
@@ -247,7 +247,8 @@ class ChainFkSolverVel
 #include <chainfksolver.hpp>
 using namespace KDL;
 %End
-    virtual int JntToCart(const JntArrayVel& q_in, FrameVel& p_out)=0;
+    virtual int JntToCart(const JntArrayVel& q_in, FrameVel& p_out,int
+    segmentNr=-1)=0;
 };
 
 class ChainFkSolverPos_recursive : ChainFkSolverPos
@@ -259,7 +260,7 @@ using namespace KDL;
 
 public:
     ChainFkSolverPos_recursive(const Chain& chain);
-    virtual int JntToCart(const JntArray& q_in, Frame& p_out);
+    virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1);
 };
 
 class ChainFkSolverVel_recursive : ChainFkSolverVel
@@ -270,7 +271,8 @@ using namespace KDL;
 %End
 public:
     ChainFkSolverVel_recursive(const Chain& chain);
-    virtual int JntToCart(const JntArrayVel& q_in ,FrameVel& out );
+    virtual int JntToCart(const JntArrayVel& q_in ,FrameVel& out,int
+    segmentNr=-1 );
 };
 
 class ChainIkSolverPos {
@@ -315,6 +317,55 @@ public:
     ChainIkSolverVel_pinv(const Chain& chain,double eps=0.00001,int maxiter=150);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+};
+
+class ChainIkSolverVel_wdls : ChainIkSolverVel
+{
+%TypeHeaderCode
+#include <chainiksolvervel_wdls.hpp>
+using namespace KDL;
+%End
+public:
+    ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
+        
+    virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+    void setWeightTS(SIP_PYTUPLE);
+%MethodCode
+    //void setWeightTS(const ublas::symmetric_matrix<double> Mx);
+    //Mx has to be a 6x6 Matrix
+    double arr[6];
+    PyArg_ParseTuple(a0, "dddddd", &arr[0], &arr[1], &arr[2], &arr[3], &arr[4], &arr[5]);
+    ublas::symmetric_matrix<double> Wts(ublas::identity_matrix<double>(6));
+    Wts(0,0) = arr[0];
+    Wts(1,1) = arr[1];
+    Wts(2,2) = arr[2];
+    Wts(3,3) = arr[3];
+    Wts(4,5) = arr[4];
+    Wts(5,5) = arr[5];
+
+    sipCpp->setWeightTS(Wts);
+
+%End
+
+    void setWeightJS(SIP_PYTUPLE);
+%MethodCode
+    //void setWeightJS(const ublas::symmetric_matrix<double> Mx);
+    //Mx has to be a 6x6 Matrix
+    double arr[6];
+    PyArg_ParseTuple(a0, "dddddd", &arr[0], &arr[1], &arr[2], &arr[3], &arr[4], &arr[5]);
+    ublas::symmetric_matrix<double> Wts(ublas::identity_matrix<double>(6));
+    Wts(0,0) = arr[0];
+    Wts(1,1) = arr[1];
+    Wts(2,2) = arr[2];
+    Wts(3,3) = arr[3];
+    Wts(4,5) = arr[4];
+    Wts(5,5) = arr[5];
+
+    sipCpp->setWeightJS(Wts);
+%End
+
+    void setLambda(const double& lambda);
+
 };
 
 class ChainJntToJacSolver
