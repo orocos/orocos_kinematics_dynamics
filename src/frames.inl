@@ -641,14 +641,13 @@ void Rotation::SetInverse()
 
 
 
-
 double Frame::operator()(int i,int j) {
     FRAMES_CHECKI((0<=i)&&(i<=3)&&(0<=j)&&(j<=3));
     if (i==3) {
         if (j==3)
-            return 1;
+            return 1.0;
         else
-            return 0;
+            return 0.0;
     } else {
         if (j==3) 
             return p(i);

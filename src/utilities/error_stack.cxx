@@ -18,6 +18,7 @@
 #include <stack>
 #include <vector>
 #include <string>
+#include <cstring>
 
 namespace KDL {
 
