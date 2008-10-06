@@ -112,6 +112,13 @@ public:
     sipRes=((const Rotation)(*sipCpp))(i,j);
 %End
 
+    void __setitem__(SIP_PYTUPLE,double value);
+%MethodCode
+    int i,j;
+    PyArg_ParseTuple(a0,"ii",&i,&j);
+    (*sipCpp)(i,j)=a1;
+%End
+
     const char* __repr__() const;
 %MethodCode
     std::ostringstream oss;
@@ -182,6 +189,16 @@ public:
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
     sipRes=(*sipCpp)(i,j);
+%End
+
+    void __setitem__(SIP_PYTUPLE,double value);
+%MethodCode
+    int i,j;
+    PyArg_ParseTuple(a0,"ii",&i,&j);
+    if(j==3)
+        (*sipCpp).p(i)=a1;
+    else
+        (*sipCpp).M(i,j)=a1;
 %End
 
     const char* __repr__() const;
