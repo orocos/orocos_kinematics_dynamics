@@ -141,7 +141,7 @@ public:
 };
 
 void Add(const JntArray& src1,const JntArray& src2,JntArray& dest);
-void Substract(const JntArray& src1,const JntArray& src2,JntArray& dest);
+void Subtract(const JntArray& src1,const JntArray& src2,JntArray& dest);
 void Multiply(const JntArray& src,const double& factor,JntArray& dest);
 void Divide(const JntArray& src,const double& factor,JntArray& dest);
 void MultiplyJacobian(const Jacobian& jac, const JntArray& src, Twist& dest);
@@ -170,8 +170,8 @@ public:
 
 void Add(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest);
 void Add(const JntArrayVel& src1,const JntArray& src2,JntArrayVel& dest);
-void Substract(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest);
-void Substract(const JntArrayVel& src1,const JntArray& src2,JntArrayVel& dest);
+void Subtract(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest);
+void Subtract(const JntArrayVel& src1,const JntArray& src2,JntArrayVel& dest);
 void Multiply(const JntArrayVel& src,const double& factor,JntArrayVel& dest);
 void Multiply(const JntArrayVel& src,const doubleVel& factor,JntArrayVel& dest);
 void Divide(const JntArrayVel& src,const double& factor,JntArrayVel& dest);
