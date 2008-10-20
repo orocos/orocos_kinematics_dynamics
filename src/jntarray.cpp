@@ -82,7 +82,7 @@ namespace KDL
             dest.data[i]=src1.data[i]+src2.data[i];
     }
 
-    void Substract(const JntArray& src1,const JntArray& src2,JntArray& dest)
+    void Subtract(const JntArray& src1,const JntArray& src2,JntArray& dest)
     {
         assert(src1.size==src2.size&src1.size==dest.size);
         for(unsigned int i=0;i<dest.size;i++)

@@ -4,6 +4,10 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( KinFamTest );
 
+#ifdef  __APPLE__
+typedef unsigned int uint;
+#endif
+
 using namespace KDL;
 using namespace std;
 

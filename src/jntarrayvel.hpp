@@ -44,8 +44,8 @@ namespace KDL
 
         friend void Add(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest);
         friend void Add(const JntArrayVel& src1,const JntArray& src2,JntArrayVel& dest);
-        friend void Substract(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest);
-        friend void Substract(const JntArrayVel& src1,const JntArray& src2,JntArrayVel& dest);
+        friend void Subtract(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest);
+        friend void Subtract(const JntArrayVel& src1,const JntArray& src2,JntArrayVel& dest);
         friend void Multiply(const JntArrayVel& src,const double& factor,JntArrayVel& dest);
         friend void Multiply(const JntArrayVel& src,const doubleVel& factor,JntArrayVel& dest);
         friend void Divide(const JntArrayVel& src,const double& factor,JntArrayVel& dest);

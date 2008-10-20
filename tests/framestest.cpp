@@ -210,7 +210,7 @@ void FramesTest::TestJntArray()
     random(a2(2));
     random(a2(3));
     Add(a1,a2,a3);
-    Substract(a3,a2,a3);
+    Subtract(a3,a2,a3);
     CPPUNIT_ASSERT(Equal(a1,a3));
     
     Multiply(a1,2,a3);

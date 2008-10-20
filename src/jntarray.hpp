@@ -85,7 +85,7 @@ namespace KDL
          */
         friend void Add(const JntArray& src1,const JntArray& src2,JntArray& dest);
         /**
-         * Function to substract two joint arrays, all the arguments must
+         * Function to subtract two joint arrays, all the arguments must
          * have the same size: A - B = C. This function is
          * aliasing-safe, A or B can be the same array as C.
          *
@@ -93,7 +93,7 @@ namespace KDL
          * @param src2 B
          * @param dest C
          */
-        friend void Substract(const JntArray& src1,const JntArray& src2,JntArray& dest);
+        friend void Subtract(const JntArray& src1,const JntArray& src2,JntArray& dest);
         /**
          * Function to multiply all the array values with a scalar
          * factor: A*b=C. This function is aliasing-safe, A can be the

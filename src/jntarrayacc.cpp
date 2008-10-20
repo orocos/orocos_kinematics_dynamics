@@ -75,21 +75,21 @@ namespace KDL
         dest.qdotdot=src1.qdotdot;
     }
 
-    void Substract(const JntArrayAcc& src1,const JntArrayAcc& src2,JntArrayAcc& dest)
+    void Subtract(const JntArrayAcc& src1,const JntArrayAcc& src2,JntArrayAcc& dest)
     {
-        Substract(src1.q,src2.q,dest.q);
-        Substract(src1.qdot,src2.qdot,dest.qdot);
-        Substract(src1.qdotdot,src2.qdotdot,dest.qdotdot);
+        Subtract(src1.q,src2.q,dest.q);
+        Subtract(src1.qdot,src2.qdot,dest.qdot);
+        Subtract(src1.qdotdot,src2.qdotdot,dest.qdotdot);
     }
-    void Substract(const JntArrayAcc& src1,const JntArrayVel& src2,JntArrayAcc& dest)
+    void Subtract(const JntArrayAcc& src1,const JntArrayVel& src2,JntArrayAcc& dest)
     {
-        Substract(src1.q,src2.q,dest.q);
-        Substract(src1.qdot,src2.qdot,dest.qdot);
+        Subtract(src1.q,src2.q,dest.q);
+        Subtract(src1.qdot,src2.qdot,dest.qdot);
         dest.qdotdot=src1.qdotdot;
     }
-    void Substract(const JntArrayAcc& src1,const JntArray& src2,JntArrayAcc& dest)
+    void Subtract(const JntArrayAcc& src1,const JntArray& src2,JntArrayAcc& dest)
     {
-        Substract(src1.q,src2,dest.q);
+        Subtract(src1.q,src2,dest.q);
         dest.qdot=src1.qdot;
         dest.qdotdot=src1.qdotdot;
     }
@@ -134,11 +134,11 @@ namespace KDL
         Multiply(src.q,(2*factor.grad*factor.grad)/(factor.t*factor.t*factor.t),dest.q);
         Multiply(src.qdot,(2*factor.grad)/(factor.t*factor.t),dest.qdot);
         Divide(src.qdotdot,factor.t,dest.qdotdot);
-        Substract(dest.qdotdot,dest.qdot,dest.qdotdot);
+        Subtract(dest.qdotdot,dest.qdot,dest.qdotdot);
         Add(dest.qdotdot,dest.q,dest.qdotdot);
         Multiply(src.q,factor.grad/(factor.t*factor.t),dest.q);
         Divide(src.qdot,factor.t,dest.qdot);
-        Substract(dest.qdot,dest.q,dest.qdot);
+        Subtract(dest.qdot,dest.q,dest.qdot);
         Divide(src.q,factor.t,dest.q);
     }
     void Divide(const JntArrayAcc& src,const doubleAcc& factor,JntArrayAcc& dest)
@@ -146,11 +146,11 @@ namespace KDL
         Multiply(src.q,(2*factor.d*factor.d)/(factor.t*factor.t*factor.t)-factor.dd/(factor.t*factor.t),dest.q);
         Multiply(src.qdot,(2*factor.d)/(factor.t*factor.t),dest.qdot);
         Divide(src.qdotdot,factor.t,dest.qdotdot);
-        Substract(dest.qdotdot,dest.qdot,dest.qdotdot);
+        Subtract(dest.qdotdot,dest.qdot,dest.qdotdot);
         Add(dest.qdotdot,dest.q,dest.qdotdot);
         Multiply(src.q,factor.d/(factor.t*factor.t),dest.q);
         Divide(src.qdot,factor.t,dest.qdot);
-        Substract(dest.qdot,dest.q,dest.qdot);
+        Subtract(dest.qdot,dest.q,dest.qdot);
         Divide(src.q,factor.t,dest.q);
     }
 
