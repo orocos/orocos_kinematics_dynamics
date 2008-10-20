@@ -51,6 +51,7 @@
 #include "path_roundedcomposite.hpp"
 #include "path_cyclic_closed.hpp"
 #include <memory>
+#include <string.h>
 
 namespace KDL {
 
