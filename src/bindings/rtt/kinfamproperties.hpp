@@ -39,22 +39,22 @@ namespace RTT
     {
         JointTypeInfo():TemplateTypeInfo<Joint,true>("Joint")
         {};
-        bool decomposeTypeImpl(const Joint& joint, PropertyBag& targetbag);
-        bool composeTypeImpl(const PropertyBag& bag, Joint& joint);
+        virtual bool decomposeTypeImpl(const Joint& joint, PropertyBag& targetbag)const;
+        virtual bool composeTypeImpl(const PropertyBag& bag, Joint& joint)const;
     };
     struct SegmentTypeInfo : public TemplateTypeInfo<Segment,true>
     {
         SegmentTypeInfo():TemplateTypeInfo<Segment,true>("Segment")
         {};
-        bool decomposeTypeImpl(const Segment& segment, PropertyBag& targetbag);
-        bool composeTypeImpl(const PropertyBag& bag, Segment& segment);
+        virtual bool decomposeTypeImpl(const Segment& segment, PropertyBag& targetbag)const;
+        virtual bool composeTypeImpl(const PropertyBag& bag, Segment& segment)const;
     };
     struct ChainTypeInfo : public TemplateTypeInfo<Chain,true>
     {
         ChainTypeInfo():TemplateTypeInfo<Chain,true>("Chain")
         {};
-        bool decomposeTypeImpl(const Chain& chain, PropertyBag& targetbag);
-        bool composeTypeImpl(const PropertyBag& bag, Chain& chain);
+        virtual bool decomposeTypeImpl(const Chain& chain, PropertyBag& targetbag)const;
+        virtual bool composeTypeImpl(const PropertyBag& bag, Chain& chain)const;
     };
 
 }

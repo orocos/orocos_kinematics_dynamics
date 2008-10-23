@@ -25,14 +25,14 @@
 
 namespace RTT
 {
-    bool JointTypeInfo::decomposeTypeImpl(const Joint& joint, PropertyBag& targetbag)
+    bool JointTypeInfo::decomposeTypeImpl(const Joint& joint, PropertyBag& targetbag)const
     {
         targetbag.setType("KDL::Joint");
         targetbag.add( new Property<std::string>("Type", "Type of Joint",joint.getTypeName()));
         return true;
     }
 
-    bool JointTypeInfo::composeTypeImpl(const PropertyBag& bag, Joint& joint)
+    bool JointTypeInfo::composeTypeImpl(const PropertyBag& bag, Joint& joint)const
     {
         if ( bag.getType() == "KDL::Joint" ){ // check the type
             Property<std::string> type_name = bag.getProperty<std::string>("Type");
@@ -63,7 +63,7 @@ namespace RTT
         return false;
     }
 
-    bool decomposeTypeImpl(const Segment& segment, PropertyBag& targetbag)
+    bool SegmentTypeInfo::decomposeTypeImpl(const Segment& segment, PropertyBag& targetbag)const
     {
         targetbag.setType("KDL::Segment");
         targetbag.add( new Property<Joint>("joint", "The joint at the base of this segment",segment.getJoint()));
@@ -71,7 +71,7 @@ namespace RTT
         return true;
     }
 
-    bool composeTypeImpl(const PropertyBag& bag, Segment& segment)
+    bool SegmentTypeInfo::composeTypeImpl(const PropertyBag& bag, Segment& segment)const
     {
         if ( bag.getType() == "KDL::Segment" ){ // check the type
             Property<PropertyBag> joint_bag = bag.getProperty<PropertyBag>("joint");
@@ -91,7 +91,7 @@ namespace RTT
             return false;
     }
 
-    bool decomposeTypeImpl(const Chain& chain, PropertyBag& targetbag)
+    bool ChainTypeInfo::decomposeTypeImpl(const Chain& chain, PropertyBag& targetbag)const
     {
         targetbag.setType("KDL::Chain");
         for(unsigned int i=0;i<chain.getNrOfSegments();i++)
@@ -99,7 +99,7 @@ namespace RTT
         return true;
     }
 
-    bool composeTypeImpl(const PropertyBag& bag, Chain& chain)
+    bool ChainTypeInfo::composeTypeImpl(const PropertyBag& bag, Chain& chain)const
     {
         Chain chain_new;
         if( bag.getType() =="KDL::Chain"){
@@ -110,7 +110,7 @@ namespace RTT
                 Property<Segment> segment_prop(segment_bag->getName(),
                                                segment_bag->getDescription());
                 segment_prop.getTypeInfo()->composeType(segment_bag->getDataSource(),
-                                                       segment_prop.getDataSource());
+                                                        segment_prop.getDataSource());
                 chain_new.addSegment(segment_prop.value());
             }
             chain = chain_new;
