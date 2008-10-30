@@ -25,7 +25,8 @@ namespace KDL
 {
     using namespace std;
 
-    Tree::Tree()
+    Tree::Tree():
+        nrOfSegments(0)
     {
         segments.insert(make_pair("root",TreeElement::Root()));
     }
