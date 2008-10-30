@@ -23,9 +23,16 @@
 
 namespace KDL
 {
+    JntArray::JntArray():
+            size(0),
+            data(NULL)
+    {
+    }
+
     JntArray::JntArray(unsigned int _size):
         size(_size)
     {
+        assert(0 < size);
         data = new double[size];
         SetToZero(*this);
     }
@@ -34,7 +41,7 @@ namespace KDL
     JntArray::JntArray(const JntArray& arg):
         size(arg.size)
     {
-        data = new double[size];
+        data = ((0 < size) ? new double[size] : NULL);
         for(unsigned int i=0;i<size;i++)
             data[i]=arg.data[i];
     }
@@ -53,15 +60,25 @@ namespace KDL
         delete [] data;
     }
 
+    void JntArray::resize(unsigned int newSize)
+    {
+        delete [] data;
+        size = newSize;
+        data = new double[size];
+        SetToZero(*this);
+    }
+
     double JntArray::operator()(unsigned int i,unsigned int j)const
     {
         assert(i<size&&j==0);
+        assert(0 != size);  // found JntArray containing no data
         return data[i];
     }
 
     double& JntArray::operator()(unsigned int i,unsigned int j)
     {
         assert(i<size&&j==0);
+        assert(0 != size);  // found JntArray containing no data
         return data[i];
     }
 

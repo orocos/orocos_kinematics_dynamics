@@ -74,6 +74,18 @@ INCLUDE (${PROJ_SOURCE_DIR}/config/FindSIPandPython.cmake)
 DEPENDENT_OPTION( ENABLE_CORBA "Enable CORBA (using TAO)" ON "ACE_CONFIG AND TAO_ORB AND TAO_ORBSVCS AND CORBA_ENABLED" OFF)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
+IF( ENABLE_TESTS )
+  # If not in standard paths, set CMAKE_xxx_PATH's in environment, eg.
+  # export CMAKE_INCLUDE_PATH=/opt/local/include
+  # export CMAKE_LIBRARY_PATH=/opt/local/lib
+  FIND_LIBRARY(CPPUNIT cppunit)
+  FIND_PATH(CPPUNIT_HEADERS cppunit/TestRunner.h)
+  IF ( CPPUNIT AND CPPUNIT_HEADERS)
+    MESSAGE("-- Looking for Cppunit - found")
+  ELSE ( CPPUNIT AND CPPUNIT_HEADERS )
+    MESSAGE( FATAL_ERROR "-- Looking for Cppunit - not found")
+  ENDIF ( CPPUNIT AND CPPUNIT_HEADERS )
+ENDIF(ENABLE_TESTS )
 
 ADD_SUBDIRECTORY( doc )
 ADD_SUBDIRECTORY( src )

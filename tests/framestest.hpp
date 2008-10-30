@@ -29,6 +29,7 @@ public:
     void TestRotation();
     void TestFrame();
     void TestJntArray();
+    void TestJntArrayWhenEmpty();
 
 private:
     void TestVector2(Vector& v);

@@ -224,3 +224,59 @@ void FramesTest::TestJntArray()
     CPPUNIT_ASSERT(Equal(a2,a1));
 }
 
+ 
+void FramesTest::TestJntArrayWhenEmpty()
+{
+    JntArray a1;
+    JntArray a2;
+    JntArray a3(a2);
+    
+ 	// won't assert()
+    CPPUNIT_ASSERT_EQUAL((unsigned int)0,a1.rows());
+    CPPUNIT_ASSERT(Equal(a2,a1));
+    
+ 	a2 = a1;
+    CPPUNIT_ASSERT(Equal(a2,a1));
+    
+ 	SetToZero(a2);
+    CPPUNIT_ASSERT(Equal(a2,a1));
+    
+    Add(a1,a2,a3);
+    CPPUNIT_ASSERT(Equal(a1,a3));
+    
+    Subtract(a1,a2,a3);
+    CPPUNIT_ASSERT(Equal(a1,a3));
+ 	
+    Multiply(a1,3.1,a3);
+    CPPUNIT_ASSERT(Equal(a1,a3));
+ 	
+    Divide(a1,3.1,a3);
+    CPPUNIT_ASSERT(Equal(a1,a3));
+ 	
+ 	// MultiplyJacobian() - not tested here
+    
+    
+ 	/* will assert() - not tested here
+       double j1 = a1(0);
+ 	*/	
+    
+ 	// and now resize, and do just a few tests
+    a1.resize(3);
+    a2.resize(3);
+    CPPUNIT_ASSERT_EQUAL((unsigned int)3,a1.rows());
+    CPPUNIT_ASSERT(Equal(a2,a1));
+    
+    random(a1(0));
+    random(a1(1));
+    random(a1(2));
+    a1 = a2;
+    CPPUNIT_ASSERT(Equal(a1,a2));
+    CPPUNIT_ASSERT_EQUAL(a1(1),a2(1));
+    
+    a3.resize(3);
+    Subtract(a1,a2,a3);	// a3 = a2 - a1 = {0}
+    SetToZero(a1);
+    CPPUNIT_ASSERT(Equal(a1,a3));
+}
+
+

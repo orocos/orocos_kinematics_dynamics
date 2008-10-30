@@ -4,15 +4,15 @@ IF(ENABLE_TESTS)
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src)
   
   ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(framestest orocos-kdl cppunit)
+  TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
   ADD_TEST(framestest framestest)
   
   ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl cppunit)
+  TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
   ADD_TEST(kinfamtest kinfamtest)
 
   ADD_EXECUTABLE(solvertest solvertest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(solvertest orocos-kdl cppunit)
+  TARGET_LINK_LIBRARIES(solvertest orocos-kdl ${CPPUNIT})
   ADD_TEST(solvertest solvertest)
 
   #ADD_EXECUTABLE(rframestest  rframestest.cpp)
