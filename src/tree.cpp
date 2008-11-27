@@ -26,17 +26,31 @@ namespace KDL
     using namespace std;
 
     Tree::Tree():
-        nrOfSegments(0)
+        nrOfSegments(0),
+        nrOfJoints(0)
     {
         segments.insert(make_pair("root",TreeElement::Root()));
     }
 
     Tree::Tree(const Tree& in)
     {
+    	segments.clear();
+    	nrOfSegments=0;
+    	nrOfJoints=0;
+
+    	segments.insert(make_pair("root",TreeElement::Root()));
+    	this->addTree(in,"","root");
+
     }
 
     Tree& Tree::operator=(const Tree& in)
     {
+    	segments.clear();
+    	nrOfSegments=0;
+    	nrOfJoints=0;
+
+    	segments.insert(make_pair("root",TreeElement::Root()));
+    	this->addTree(in,"","root");
         return *this;
     }
 
@@ -49,7 +63,7 @@ namespace KDL
         pair<SegmentMap::iterator,bool> retval;
         //insert new element
         retval=segments.insert(make_pair(segment_name,
-                                         TreeElement(segment,parent)));
+                                         TreeElement(segment,parent,nrOfJoints)));
         //check if insertion succeeded
         if(!retval.second)
             return false;
