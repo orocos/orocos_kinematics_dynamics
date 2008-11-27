@@ -38,11 +38,11 @@ public:
     static inline Inertia Zero(){
         return Inertia(0,0,0,0,0,0,0);
     };
-    
+
     ~Inertia();
 private:
     boost::numeric::ublas::symmetric_matrix<double,lower,row_major,bounded_array<double,6*6> > data;
-    
+
 };
 
 }
