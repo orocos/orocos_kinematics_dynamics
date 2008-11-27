@@ -37,13 +37,13 @@ namespace KDL
         maxiter(_maxiter),
         tmp(ublas::vector<double>(chain.getNrOfJoints())),
         tmp_jac(ublas::matrix<double>(6,chain.getNrOfJoints())),
-	tmp_jac_weight1(ublas::matrix<double>(6,chain.getNrOfJoints())),
+        tmp_jac_weight1(ublas::matrix<double>(6,chain.getNrOfJoints())),
         tmp_jac_weight2(ublas::matrix<double>(6,chain.getNrOfJoints())),
-	tmp_ts(ublas::matrix<double>(6,6)),
+        tmp_ts(ublas::matrix<double>(6,6)),
         tmp_js(ublas::matrix<double>(chain.getNrOfJoints(),chain.getNrOfJoints())),
         weight_ts(ublas::identity_matrix<double>(6)),
         weight_js(ublas::identity_matrix<double>(chain.getNrOfJoints())),
-	lambda(0.0)
+        lambda(0.0)
     {
     }
     

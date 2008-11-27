@@ -22,7 +22,11 @@
 #ifndef KDLINERTIA_HPP
 #define KDLINERTIA_HPP
 
+#include <boost/numeric/ublas/symmetric.hpp>
+
 namespace KDL {
+
+using namespace boost::numeric::ublas;
 
 /**
 This class offers the inertia-structure of a body
@@ -34,10 +38,11 @@ public:
     static inline Inertia Zero(){
         return Inertia(0,0,0,0,0,0,0);
     };
-
+    
     ~Inertia();
 private:
-    double m,Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
+    boost::numeric::ublas::symmetric_matrix<double,lower,row_major,bounded_array<double,6*6> > data;
+    
 };
 
 }

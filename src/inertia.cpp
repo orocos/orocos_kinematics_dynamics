@@ -21,16 +21,26 @@
 
 #include "inertia.hpp"
 
+#include <boost/numeric/ublas/matrix_proxy.hpp>
+
 namespace KDL {
+using namespace boost::numeric::ublas;
 
-    Inertia::Inertia(double _m,double _Ixx,double _Iyy,double _Izz,double _Ixy,double _Ixz,double _Iyz):
-        m(m),Ixx(_Ixx),Iyy(_Iyy),Izz(_Izz),
-        Ixy(_Ixy),Ixz(_Ixz),Iyz(_Iyz)
-    {
+Inertia::Inertia(double m,double Ixx,double Iyy,double Izz,double Ixy,double Ixz,double Iyz):
+    data(zero_matrix<double>(6,6))
+{
+    data(0,0)=Ixx;
+    data(1,1)=Iyy;
+    data(2,2)=Izz;
+    data(1,2)=Ixy;
+    data(1,3)=Ixz;
+    data(2,3)=Iyz;
+    
+    project(data,range(3,6),range(3,6))=m*identity_matrix<double>(3);
+}
 
-    }
+Inertia::~Inertia()
+{
+}
 
-    Inertia::~Inertia()
-    {
-    }
 }

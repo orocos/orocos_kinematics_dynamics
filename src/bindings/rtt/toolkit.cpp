@@ -424,4 +424,3 @@ namespace KDL
 
 }
 ORO_TOOLKIT_PLUGIN(KDL::KDLToolkit)
-
