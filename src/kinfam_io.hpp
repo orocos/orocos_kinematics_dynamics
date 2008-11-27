@@ -32,42 +32,39 @@
 #include "jacobian.hpp"
 #include "tree.hpp"
 
-namespace KDL
-{
-    std::ostream& operator << (std::ostream& os, const Joint& joint);
-    std::istream& operator >> (std::istream& is, Joint& joint);
-    std::ostream& operator << (std::ostream& os, const Segment& segment);
-    std::istream& operator >> (std::istream& is, Segment& segment);
-    std::ostream& operator << (std::ostream& os, const Chain& chain);
-    std::istream& operator >> (std::istream& is, Chain& chain);
+namespace KDL {
+std::ostream& operator <<(std::ostream& os, const Joint& joint);
+std::istream& operator >>(std::istream& is, Joint& joint);
+std::ostream& operator <<(std::ostream& os, const Segment& segment);
+std::istream& operator >>(std::istream& is, Segment& segment);
+std::ostream& operator <<(std::ostream& os, const Chain& chain);
+std::istream& operator >>(std::istream& is, Chain& chain);
 
-    std::ostream& operator << (std::ostream& os, const Tree& tree);
-    std::istream& operator >> (std::istream& is, Tree& tree);
+std::ostream& operator <<(std::ostream& os, const Tree& tree);
+std::istream& operator >>(std::istream& is, Tree& tree);
 
-    std::ostream& operator << (std::ostream& os, SegmentMap::const_iterator it);
+std::ostream& operator <<(std::ostream& os, SegmentMap::const_iterator it);
 
-    std::ostream& operator << (std::ostream& os,const JntArray& array);
-    std::istream& operator >> (std::istream& is,JntArray& array);
-    std::ostream& operator << (std::ostream& os,const Jacobian& jac);
-    std::istream& operator >> (std::istream& is,Jacobian& jac);
+std::ostream& operator <<(std::ostream& os, const JntArray& array);
+std::istream& operator >>(std::istream& is, JntArray& array);
+std::ostream& operator <<(std::ostream& os, const Jacobian& jac);
+std::istream& operator >>(std::istream& is, Jacobian& jac);
 
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
+	os << "[";
+	for (unsigned int i = 0; i < vec.size(); i++)
+		os << vec[i] << " ";
+	os << "]";
+	return os;
+}
+;
 
-    template<typename T>
-    std::ostream& operator<<(std::ostream& os,const std::vector<T>& vec)
-    {
-        os<<"[";
-        for(unsigned int i=0;i<vec.size();i++)
-            os<<vec[i]<<" ";
-        os<<"]";
-        return os;
-    };
-
-    template<typename T>
-    std::istream& operator >> (std::istream& is, std::vector<T>& vec)
-    {
-        return is;
-    };
-
+template<typename T>
+std::istream& operator >>(std::istream& is, std::vector<T>& vec) {
+	return is;
+}
+;
 }
 #endif
 
