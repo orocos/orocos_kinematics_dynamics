@@ -606,7 +606,7 @@ public:
     //  (i+1) along axis i
     //
     //   First and last joints : a(0)= a(n) = 0
-    //   alpha(0) = alpha(n) = 0 
+    //   alpha(0) = alpha(n) = 0
     //
     //   PRISMATIC : theta(1) = 0 d(1) arbitrarily
     //
@@ -630,7 +630,7 @@ public:
     // publictation: Denavit, J. and Hartenberg, R. S., A kinematic
     // notation for lower-pair mechanisms based on matrices, ASME
     // Journal of Applied Mechanics, 23:215-221, 1955.
-    
+
      static Frame DH(double a,double alpha,double d,double theta);
 
 
@@ -721,7 +721,85 @@ public:
 
 };
 
+/**
+ * 	\brief represents both translational and rotational acceleration.
+ *
+ * 	This class represents an acceleration twist.  A acceleration twist is
+ * 	the combination of translational
+ *	acceleration and rotational acceleration applied at one point.
+*/
+/*
+class AccelerationTwist {
+public:
+    Vector trans; //!< The translational acceleration of that point
+    Vector rot; //!< The rotational acceleration of that point.
+public:
 
+    //! The default constructor initialises to Zero via the constructor of Vector.
+    AccelerationTwist():trans(),rot() {};
+
+    AccelerationTwist(const Vector& _trans,const Vector& _rot):trans(_trans),rot(_rot) {};
+
+    inline AccelerationTwist& operator-=(const AccelerationTwist& arg);
+    inline AccelerationTwist& operator+=(const AccelerationTwist& arg);
+    //! index-based access to components, first vel(0..2), then rot(3..5)
+    inline double& operator()(int i);
+
+    //! index-based access to components, first vel(0..2), then rot(3..5)
+    //! For use with a const AccelerationTwist
+    inline double operator()(int i) const;
+
+    double operator[] ( int index ) const
+    {
+    	return this->operator() ( index );
+	}
+
+     double& operator[] ( int index )
+     {
+    	 return this->operator() ( index );
+     }
+
+     inline friend AccelerationTwist operator*(const AccelerationTwist& lhs,double rhs);
+     inline friend AccelerationTwist operator*(double lhs,const AccelerationTwist& rhs);
+     inline friend AccelerationTwist operator/(const AccelerationTwist& lhs,double rhs);
+     inline friend AccelerationTwist operator+(const AccelerationTwist& lhs,const AccelerationTwist& rhs);
+     inline friend AccelerationTwist operator-(const AccelerationTwist& lhs,const AccelerationTwist& rhs);
+     inline friend AccelerationTwist operator-(const AccelerationTwist& arg);
+     //inline friend double dot(const AccelerationTwist& lhs,const Wrench& rhs);
+     //inline friend double dot(const Wrench& rhs,const AccelerationTwist& lhs);
+     inline friend void SetToZero(AccelerationTwist& v);
+
+
+     //! @return a zero AccelerationTwist : AccelerationTwist(Vector::Zero(),Vector::Zero())
+     static inline AccelerationTwist Zero();
+
+     //! Reverses the sign of the AccelerationTwist
+     inline void ReverseSign();
+
+     //! Changes the reference point of the AccelerationTwist.
+     //! The vector v_base_AB is expressed in the same base as the AccelerationTwist
+     //! The vector v_base_AB is a vector from the old point to
+     //! the new point.
+     //!
+     //! Complexity : 6M+6A
+     inline AccelerationTwist RefPoint(const Vector& v_base_AB) const;
+
+
+     //! do not use operator == because the definition of Equal(.,.) is slightly
+     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     inline friend bool Equal(const AccelerationTwist& a,const AccelerationTwist& b,double eps=epsilon);
+
+	 //! The literal equality operator==(), also identical.
+     inline friend bool operator==(const AccelerationTwist& a,const AccelerationTwist& b);
+	 //! The literal inequality operator!=().
+     inline friend bool operator!=(const AccelerationTwist& a,const AccelerationTwist& b);
+
+// = Friends
+    friend class Rotation;
+    friend class Frame;
+
+};
+*/
 /**
  * \brief represents the combination of a force and a torque.
  *

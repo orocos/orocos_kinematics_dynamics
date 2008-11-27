@@ -43,6 +43,7 @@ namespace KDL
         for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
             //Calculate new Frame_base_ee
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+            	//pose of the new end-point expressed in the base
                 total = T_tmp*chain.getSegment(i).pose(q_in(j));
                 //changing base of new segment's twist to base frame
                 //t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);

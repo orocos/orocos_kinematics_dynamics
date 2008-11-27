@@ -35,12 +35,14 @@ Inertia::Inertia(double m,double Ixx,double Iyy,double Izz,double Ixy,double Ixz
     data(1,2)=Ixy;
     data(1,3)=Ixz;
     data(2,3)=Iyz;
-    
+
     project(data,range(3,6),range(3,6))=m*identity_matrix<double>(3);
 }
 
 Inertia::~Inertia()
 {
 }
+
+
 
 }

@@ -23,27 +23,47 @@
 #define KDLINERTIA_HPP
 
 #include <boost/numeric/ublas/symmetric.hpp>
+#include "frames.hpp"
 
 namespace KDL {
 
 using namespace boost::numeric::ublas;
 
 /**
-This class offers the inertia-structure of a body
-*/
+ *	This class offers the inertia-structure of a body
+ *	An inertia is defined in a certain reference point and a certain reference base.
+ *	The reference point does not have to coincide with the origin of the reference frame.
+ */
 class Inertia{
 public:
-    Inertia(double m=0,double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
+
+	/**
+	 * 	This constructor creates a cartesian space inertia matrix,
+	 * 	the arguments are the mass and the inertia moments in the cog.
+	 */
+	Inertia(double m=0,double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
 
     static inline Inertia Zero(){
         return Inertia(0,0,0,0,0,0,0);
     };
+
+    friend class Rotation;
+    friend class Frame;
+
+    /**
+     * F = m*a
+     */
+   // Wrench operator* (const AccelerationTwist& acc);
+
 
     ~Inertia();
 private:
     boost::numeric::ublas::symmetric_matrix<double,lower,row_major,bounded_array<double,6*6> > data;
 
 };
+
+
+
 
 }
 
