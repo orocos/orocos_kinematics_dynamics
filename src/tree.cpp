@@ -82,7 +82,7 @@ namespace KDL
         string parent_name=hook_name;
         for(unsigned int i=0;i<chain.getNrOfSegments();i++){
             ostringstream segment_name;
-            segment_name<<chain_name<<".Segment"<<i;
+            segment_name<<chain_name<<"Segment"<<i;
             if(this->addSegment(chain.getSegment(i),segment_name.str(),parent_name))
                 parent_name=segment_name.str();
             else
@@ -104,9 +104,9 @@ namespace KDL
         for(unsigned int i=0;i<root->second.children.size();i++){
             child=root->second.children[i];
             //Try to add the child
-            if(this->addSegment(child->second.segment,tree_name+"."+child->first,hook_name)){
+            if(this->addSegment(child->second.segment,tree_name+child->first,hook_name)){
                 //if child is added, add all the child's children
-                if(!(this->addTreeRecursive(child,tree_name,tree_name+"."+child->first)))
+                if(!(this->addTreeRecursive(child,tree_name,tree_name+child->first)))
                     //if it didn't work, return false
                     return false;
             }
