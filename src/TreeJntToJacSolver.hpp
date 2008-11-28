@@ -12,24 +12,24 @@
 #include "jacobian.hpp"
 #include "jntarray.hpp"
 
-namespace KDL
-{
+namespace KDL {
 
 class TreeJntToJacSolver {
 public:
-	TreeJntToJacSolver(const Tree& tree);
+    TreeJntToJacSolver(const Tree& tree);
 
-	virtual ~TreeJntToJacSolver();
+    virtual ~TreeJntToJacSolver();
 
-	/*
-	 * Calculate the jacobian for a part of the tree: from a certain segment, given by segmentname to the root.
-	 * The resulting jacobian is expressed in the baseframe of the tree ("root"), the reference point is in the end-segment
-	 */
+    /*
+     * Calculate the jacobian for a part of the tree: from a certain segment, given by segmentname to the root.
+     * The resulting jacobian is expressed in the baseframe of the tree ("root"), the reference point is in the end-segment
+     */
 
-	int JntToJac(const JntArray& q_in,Jacobian& jac,const std::string& segmentname);
+    int JntToJac(const JntArray& q_in, Jacobian& jac,
+            const std::string& segmentname);
 
 private:
-	KDL::Tree tree;
+    KDL::Tree tree;
 
 };
 
