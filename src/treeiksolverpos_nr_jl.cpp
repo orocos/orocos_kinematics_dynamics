@@ -25,21 +25,22 @@
 
 namespace KDL {
 
-using namespace std;
 
-TreeIkSolverPos_NR_JL::TreeIkSolverPos_NR_JL(const Tree& _tree, const vector<string>& endpoints,
-        const JntArray& _q_min, const JntArray& _q_max,
-        TreeFkSolverPos& _fksolver, TreeIkSolverVel& _iksolver,
-        unsigned int _maxiter, double _eps) :
+TreeIkSolverPos_NR_JL::TreeIkSolverPos_NR_JL(const Tree& _tree,
+        const std::vector<std::string>& _endpoints, const JntArray& _q_min,
+        const JntArray& _q_max, TreeFkSolverPos& _fksolver,
+        TreeIkSolverVel& _iksolver, unsigned int _maxiter, double _eps) :
     tree(_tree), q_min(tree.getNrOfJoints()), q_max(tree.getNrOfJoints()),
             fksolver(_fksolver), iksolver(_iksolver), delta_q(
-                    _chain.getNrOfJoints()), maxiter(_maxiter), eps(_eps) {
+                    tree.getNrOfJoints()), endpoints(_endpoints), maxiter(
+                    _maxiter), eps(_eps) {
+
     q_min = _q_min;
     q_max = _q_max;
 
     for (size_t i = 0; i < endpoints.size(); i++) {
         frames.insert(Frames::value_type(endpoints[i], Frame::Identity()));
-        delta_twists(Twists::value_type(endpoints[i], Twist::Zero()));
+        delta_twists.insert(Twists::value_type(endpoints[i], Twist::Zero()));
     }
 }
 
@@ -47,13 +48,27 @@ int TreeIkSolverPos_NR_JL::CartToJnt(const JntArray& q_init,
         const Frames& p_in, JntArray& q_out) {
     q_out = q_init;
 
-    unsigned int i;
-    for (i = 0; i < maxiter; i++) {
-        for (Frames::iterator f_it = frames.begin(); f_it != frames.end(); ++f_it)
-            fksolver.JntToCart(q_out, f_it->second, f_it->first);
-        delta_twist[(f_it->first)] = diff(f_it, p_in[(f_it->first)]);
+    //First check if all elements in p_in are available:
+    for(Frames::const_iterator f_des_it=p_in.begin();f_des_it!=p_in.end();++f_des_it)
+        if(frames.find(f_des_it->first)==frames.end())
+            return -2;
 
-        if (Equal(delta_twist[(f_it->first)], Twist::Zero(), eps))
+    unsigned int k;
+    unsigned int finished;
+    while(k++<maxiter) {
+        finished=0;
+        for (Frames::const_iterator f_des_it=p_in.begin();f_des_it!=p_in.end();++f_des_it){
+            //Get all iterators for this endpoint
+            Frames::iterator f_it = frames.find(f_des_it->first);
+            Twists::iterator delta_twist = delta_twists.find(f_des_it->first);
+
+            fksolver.JntToCart(q_out, f_it->second, f_it->first);
+            delta_twist->second = diff(f_it->second, f_des_it->second);
+
+            if (Equal(delta_twist->second, Twist::Zero(), eps))
+                finished++;
+        }
+        if (finished == p_in.size())
             break;
 
         iksolver.CartToJnt(q_out, delta_twists, delta_q);
@@ -64,19 +79,20 @@ int TreeIkSolverPos_NR_JL::CartToJnt(const JntArray& q_init,
                 q_out( j) = q_min(j);
         }
 
-        for (unsigned int j = 0; j < q_max.rows(); j++) {
+        for(unsigned int j = 0; j < q_max.rows(); j++) {
             if (q_out(j) > q_max(j))
                 q_out( j) = q_max(j);
         }
     }
-
-    if (i != maxiter)
+    if (k != maxiter)
         return 0;
     else
         return -3;
 }
 
+
 TreeIkSolverPos_NR_JL::~TreeIkSolverPos_NR_JL() {
+
 }
 
 }

@@ -73,7 +73,8 @@ private:
     TreeFkSolverPos& fksolver;
     JntArray delta_q;
     Frames frames;
-    Twists delta_twist;
+    Twists delta_twists;
+    std::vector<std::string> endpoints;
 
     unsigned int maxiter;
     double eps;
