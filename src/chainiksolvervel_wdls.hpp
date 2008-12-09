@@ -36,9 +36,9 @@ namespace KDL
      * transformation from Cartesian to joint space of a general
      * KDL::Chain. It uses a svd-calculation based on householders
      * rotations.
-     * 
+     *
      * J# = M_q*Vb*pinv_dls(Db)*Ub'*M_x
-     * 
+     *
      * where B = Mx*J*Mq
      *
      * and B = Ub*Db*Vb' is the SVD decomposition of B
@@ -50,39 +50,39 @@ namespace KDL
      *
      * 2) [Doty 93] K. L. Doty, C. Melchiorri & C. Boniveto.
      * A theory of generalized inverses applied to Robotics.
-     * The International Journal of Robotics Research, 
+     * The International Journal of Robotics Research,
      * vol. 12, no. 1, pages 1-19, february 1993.
      *
-     * 
+     *
      * @ingroup KinematicFamily
      */
     class ChainIkSolverVel_wdls : public ChainIkSolverVel
     {
     public:
-        /** 
+        /**
          * Constructor of the solver
-         * 
+         *
          * @param chain the chain to calculate the inverse velocity
          * kinematics for
          * @param eps if a singular value is below this value, its
          * inverse is set to zero, default: 0.00001
          * @param maxiter maximum iterations for the svd calculation,
          * default: 150
-         * 
+         *
          */
-        
+
         ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
         //=ublas::identity_matrix<double>
         ~ChainIkSolverVel_wdls();
-        
+
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
-        /** 
+        /**
          * not (yet) implemented.
-         * 
+         *
          */
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
-        
-        /* 
+
+        /**
          * Set the joint space weighting matrix
          *
          * @param weight_js joint space weighting symetric matrix,
@@ -105,8 +105,8 @@ namespace KDL
          * more detailed explanation : vincent.padois@upmc.fr
          */
         void setWeightJS(const ublas::symmetric_matrix<double> Mq);
-        
-        /* 
+
+        /**
          * Set the task space weighting matrix
          *
          * @param weight_ts task space weighting symetric matrix,
@@ -128,12 +128,12 @@ namespace KDL
          * will be reduced). The obtained solution will minimize the
          * weighted norm sqrt(|x_dot-Jq_dot|'*(M_x^2)*|x_dot-Jq_dot|).
          * For more detailed explanation : vincent.padois@upmc.fr
-         */  
+         */
         void setWeightTS(const ublas::symmetric_matrix<double> Mx);
-        
+
         void setLambda(const double& lambda);
-        
-    private:        
+
+    private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
         Jacobian jac;
