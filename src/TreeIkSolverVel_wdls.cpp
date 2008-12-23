@@ -6,7 +6,7 @@
  */
 
 #include "TreeIkSolverVel_wdls.hpp"
-#include <kdl/utilities/svd_boost_HH.hpp>
+#include "utilities/svd_boost_HH.hpp"
 
 namespace KDL {
 using namespace std;

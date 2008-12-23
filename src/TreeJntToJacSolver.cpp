@@ -7,7 +7,7 @@
 
 #include "TreeJntToJacSolver.hpp"
 #include <iostream>
-#include <kdl/kinfam_io.hpp>
+#include "kinfam_io.hpp"
 
 namespace KDL {
 
