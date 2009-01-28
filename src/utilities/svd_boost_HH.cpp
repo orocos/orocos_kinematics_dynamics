@@ -29,7 +29,7 @@ namespace KDL{
         const int rows = A.size1();
         const int cols = A.size2();
         
-        U.assign(A);
+	ublas::project(U,ublas::range(0,A.size1()),ublas::range(0,A.size2())).assign(A);
         
         int i(-1),its(-1),j(-1),jj(-1),k(-1),nm=0;
         int ppi(0);
