@@ -178,6 +178,14 @@ Rotation operator *(const Rotation& lhs,const Rotation& rhs)
 
 }
 
+Rotation Rotation::Quaternion(double x,double y,double z, double w)
+{
+  double x2, y2, z2, w2;
+  x2 = x*x;  y2 = y*y; z2 = z*z;  w2 = w*w;
+  return Rotation(w2+x2-y2-z2, 2*x*y-2*w*z, 2*x*z+2*w*y,
+		  2*x*y+2*w*z, w2-x2+y2-z2, 2*y*z-2*w*x,
+		  2*x*z-2*w*y, 2*y*z+2*w*x, w2-x2-y2+z2);
+}
 
 Rotation Rotation::RPY(double roll,double pitch,double yaw)
     {
