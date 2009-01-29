@@ -38,6 +38,12 @@ namespace KDL
     {
     }
 
+    void JntArrayVel::resize(unsigned int newSize)
+    {
+      q.resize(newSize);
+      qdot.resize(newSize);
+    }
+
     JntArray JntArrayVel::value()const
     {
         return q;

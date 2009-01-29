@@ -42,6 +42,13 @@ namespace KDL
     {
     }
 
+    void JntArrayAcc::resize(unsigned int newSize)
+    {
+      q.resize(newSize);
+      qdot.resize(newSize);
+      qdotdot.resize(newSize);
+    }
+
     JntArray JntArrayAcc::value()const
     {
         return q;

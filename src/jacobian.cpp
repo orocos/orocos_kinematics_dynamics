@@ -53,6 +53,14 @@ namespace KDL
         delete [] twists;
     }
 
+    void Jacobian::resize(unsigned int newSize, unsigned int newNr)
+    {
+      delete [] twists;
+      twists = new Twist[newSize*newNr];
+      size = newSize;
+      nr_blocks = newNr;
+    }
+
     double Jacobian::operator()(int i,int j)const
     {
         assert(i<6*nr_blocks&&j<size);
