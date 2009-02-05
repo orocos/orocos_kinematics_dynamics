@@ -247,23 +247,10 @@ Rotation Rotation::Rot(const Vector& rotaxis,double angle) {
     // V.(V.tr) + st*[V x] + ct*(I-V.(V.tr))
     // can be found by multiplying it with an arbitrary vector p
     // and noting that this vector is rotated.
-    double ct = cos(angle);
-    double st = sin(angle);
-    double vt = 1-ct;
     Vector rotvec = rotaxis;
 	rotvec.Normalize();
-    return Rotation(
-        ct            +  vt*rotvec(0)*rotvec(0),
-        -rotvec(2)*st +  vt*rotvec(0)*rotvec(1),
-        rotvec(1)*st  +  vt*rotvec(0)*rotvec(2),
-        rotvec(2)*st  +  vt*rotvec(1)*rotvec(0),
-        ct            +  vt*rotvec(1)*rotvec(1),
-        -rotvec(0)*st +  vt*rotvec(1)*rotvec(2),
-        -rotvec(1)*st +  vt*rotvec(2)*rotvec(0),
-        rotvec(0)*st  +  vt*rotvec(2)*rotvec(1),
-        ct            +  vt*rotvec(2)*rotvec(2)
-        );
-    }
+	return Rotation::Rot2(rotvec,angle);
+}
 
 Rotation Rotation::Rot2(const Vector& rotvec,double angle) {
     // rotvec should be normalized !
@@ -274,16 +261,25 @@ Rotation Rotation::Rot2(const Vector& rotvec,double angle) {
     double ct = cos(angle);
     double st = sin(angle);
     double vt = 1-ct;
+    double m_vt_0=vt*rotvec(0);
+    double m_vt_1=vt*rotvec(1);
+    double m_vt_2=vt*rotvec(2);
+    double m_st_0=rotvec(0)*st;
+    double m_st_1=rotvec(1)*st;
+    double m_st_2=rotvec(2)*st;
+    double m_vt_0_1=m_vt_0*rotvec(1);
+    double m_vt_0_2=m_vt_0*rotvec(2);
+    double m_vt_1_2=m_vt_1*rotvec(2);
     return Rotation(
-        ct            +  vt*rotvec(0)*rotvec(0),
-        -rotvec(2)*st +  vt*rotvec(0)*rotvec(1),
-        rotvec(1)*st  +  vt*rotvec(0)*rotvec(2),
-        rotvec(2)*st  +  vt*rotvec(1)*rotvec(0),
-        ct            +  vt*rotvec(1)*rotvec(1),
-        -rotvec(0)*st +  vt*rotvec(1)*rotvec(2),
-        -rotvec(1)*st +  vt*rotvec(2)*rotvec(0),
-        rotvec(0)*st  +  vt*rotvec(2)*rotvec(1),
-        ct            +  vt*rotvec(2)*rotvec(2)
+        ct      +  m_vt_0*rotvec(0),
+        -m_st_2 +  m_vt_0_1,
+        m_st_1  +  m_vt_0_2,
+        m_st_2  +  m_vt_0_1,
+        ct      +  m_vt_1*rotvec(1),
+        -m_st_0 +  m_vt_1_2,
+        -m_st_1 +  m_vt_0_2,
+        m_st_0  +  m_vt_1_2,
+        ct      +  m_vt_2*rotvec(2)
         );
 }
 
