@@ -31,6 +31,7 @@
 #include <rtt/OperatorTypes.hpp>
 #include <rtt/mystd.hpp>
 #include <rtt/os/StartStopManager.hpp>
+#include <rtt/Toolkit.hpp>
 
 #include "../../frames_io.hpp"
 

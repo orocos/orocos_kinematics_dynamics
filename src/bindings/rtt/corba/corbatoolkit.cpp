@@ -19,24 +19,24 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+#include "corbatoolkit.hpp"
 #include "../toolkit.hpp"
 #include <rtt/Types.hpp>
+#include <rtt/Toolkit.hpp>
 #include <rtt/corba/CorbaTemplateProtocol.hpp>
-#include <rtt/os/StartStopManager.hpp>
 #include "CorbaKDLConversion.hpp"
+
+using namespace RTT;
+using namespace RTT::detail;
 
 namespace KDL
 {
     namespace Corba
     {
-        using namespace RTT;
-        using namespace RTT::Corba;
-        using namespace RTT::detail;
 
-        struct CorbaKDLRegistrator
-            : public TransportRegistrator
-        {
-            bool registerTransport(std::string name, TypeInfo* ti)
+        CorbaKDLPlugin  corbaKDLPlugin;
+    
+            bool CorbaKDLPlugin::registerTransport(std::string name, TypeInfo* ti)
             {
                 assert( name == ti->getTypeName() );
                 if ( name == "vector" )
@@ -52,31 +52,16 @@ namespace KDL
                 return false;
             }
 
-            std::string getTransportName() const {
+            std::string CorbaKDLPlugin::getTransportName() const {
                 return "CORBA";
             }
 
-        } CorbaKDLRegistrator;
+            std::string CorbaKDLPlugin::getName() const {
+                return "CorbaKDL";
+            }
+
 
     };
 }
 
-namespace RTT
-{
-    class TaskContext;
-}
-using namespace RTT;
-using namespace KDL;
-extern "C" {
-bool loadRTTPlugin(RTT::TaskContext* )
-{
-    log(Info) << "Loading CorbaKDL in RTT type system." <<endlog();
-    TypeInfoRepository::Instance()->registerTransport( &KDL::Corba::CorbaKDLRegistrator );
-    return true;
-}
-
-std::string getRTTPluginName()
-{
-    return "CorbaKDL";
-}
-}
+ORO_TOOLKIT_PLUGIN(KDL::Corba::corbaKDLPlugin);

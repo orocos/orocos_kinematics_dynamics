@@ -36,7 +36,7 @@
 #ifndef ORO_KDL_TOOLKIT_HPP
 #define ORO_KDL_TOOLKIT_HPP
 
-#include <rtt/Toolkit.hpp>
+#include <rtt/ToolkitPlugin.hpp>
 #include "../../frames.hpp"
 
 namespace KDL
