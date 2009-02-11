@@ -7,9 +7,11 @@
 
 #include "TreeIkSolverVel_wdls.hpp"
 #include "utilities/svd_boost_HH.hpp"
+#include <boost/numeric/ublas/symmetric.hpp>
 
 namespace KDL {
 using namespace std;
+using namespace boost::numeric::ublas;
 
 TreeIkSolverVel_wdls::TreeIkSolverVel_wdls(const Tree& tree_in, std::vector<
         std::string> endpoints) :
