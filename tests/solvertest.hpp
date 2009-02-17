@@ -33,7 +33,7 @@ public:
 
 private:
 
-    Chain chain1,chain2,chain3;
+  Chain chain1,chain2,chain3,chain4;
 
     void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
     void FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);

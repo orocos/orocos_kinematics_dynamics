@@ -23,7 +23,7 @@ namespace KDL {
 
     Segment::Segment(const Joint& _joint, const Frame& _f_tip, const Inertia& _M):
         joint(_joint),M(_M),
-        f_tip(_f_tip)
+        f_tip(_joint.pose(0).Inverse() * _f_tip)
     {
     }
 
@@ -52,7 +52,7 @@ namespace KDL {
 
     Twist Segment::twist(const double& q, const double& qdot)const
     {
-        return joint.twist(qdot).RefPoint(pose(q).p);
+        return joint.twist(qdot).RefPoint(joint.pose(q).M * f_tip.p);
     }
 
 }//end of namespace KDL

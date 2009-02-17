@@ -24,6 +24,8 @@
 
 #include "frames.hpp"
 #include <string>
+#include <exception>
+
 
 namespace KDL {
 
@@ -42,7 +44,7 @@ namespace KDL {
      */
     class Joint {
     public:
-        typedef enum { RotX,RotY,RotZ,TransX,TransY,TransZ,None} JointType;
+        typedef enum { RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None} JointType;
         /**
          * Constructor of a joint.
          *
@@ -58,9 +60,22 @@ namespace KDL {
          */
         Joint(const JointType& type=None,const double& scale=1,const double& offset=0,
               const double& inertia=0,const double& damping=0,const double& stiffness=0);
-        Joint(const Joint& in);
-
-        Joint& operator=(const Joint& arg);
+        /**
+         * Constructor of a joint.
+         *
+         * @param origin the origin of the joint
+         * @param axis the axis of the joint
+         * @param scale scale between joint input and actual geometric
+         * movement, default: 1
+         * @param offset offset between joint input and actual
+         * geometric input, default: 0
+         * @param inertia 1D inertia along the joint axis, default: 0
+         * @param damping 1D damping along the joint axis, default: 0
+         * @param stiffness 1D stiffness along the joint axis,
+         * default: 0
+         */
+        Joint(const Vector& _origin, const Vector& _axis, const JointType& type, const double& _scale=1, const double& _offset=0,
+	      const double& _inertia=0, const double& _damping=0, const double& _stiffness=0);
 
         /**
          * Request the 6D-pose between the beginning and the end of
@@ -80,6 +95,13 @@ namespace KDL {
          */
         Twist twist(const double& qdot)const;
 
+        /**                                                                     
+         * Request the Vector corresponding to the axis of a revolute joint.    
+         *                                                                      
+         * @return Vector. e.g (1,0,0) for RotX etc.                            
+         */
+        Vector JointAxis() const;
+
         /**
          * Request the type of the joint.
          *
@@ -89,8 +111,8 @@ namespace KDL {
         {
             return type;
         };
-
-        /**
+      
+        /** 
          * Request the stringified type of the joint.
          *
          * @return const string
@@ -98,7 +120,11 @@ namespace KDL {
         const std::string getTypeName() const
         {
             switch (type) {
-            case RotX:
+	    case RotAxis:
+	        return "RotAxis";
+            case TransAxis:
+	        return "TransAxis";
+	    case RotX:
                 return "RotX";
             case RotY:
                 return "RotY";
@@ -126,6 +152,19 @@ namespace KDL {
         double inertia;
         double damping;
         double stiffness;
+
+        // varibles for RotAxis joint
+        Vector axis, origin;
+        mutable Frame  joint_pose;
+        mutable double q_previous;
+
+
+      
+      class joint_type_exception: public std::exception{
+	virtual const char* what() const throw(){
+	  return "Joint Type excption";}
+      } joint_type_ex;
+
     };
 
 } // end of namespace KDL

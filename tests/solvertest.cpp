@@ -11,6 +11,8 @@ using namespace KDL;
 
 void SolverTest::setUp()
 {
+    srand( (unsigned)time( NULL ));
+
     chain1.addSegment(Segment(Joint(Joint::RotZ),
                              Frame(Vector(0.0,0.0,0.0))));
     chain1.addSegment(Segment(Joint(Joint::RotX),
@@ -61,6 +63,18 @@ void SolverTest::setUp()
     chain3.addSegment(Segment(Joint(Joint::RotY),
                              Frame(Vector(0.0,0.0,0.0))));
 
+
+    chain4.addSegment(Segment(Joint(Vector(10,0,0), Vector(1,0,1),Joint::RotAxis),
+			       Frame(Vector(0.0,0.0,0.5))));
+    chain4.addSegment(Segment(Joint(Vector(0,5,0), Vector(1,0,0),Joint::RotAxis),
+			       Frame(Vector(0.0,0.0,0.4))));
+    chain4.addSegment(Segment(Joint(Vector(0,0,5), Vector(1,0,4),Joint::RotAxis),
+                              Frame(Vector(0.0,0.0,0.3))));
+    chain4.addSegment(Segment(Joint(Vector(0,0,0), Vector(1,0,0),Joint::RotAxis),
+                              Frame(Vector(0.0,0.0,0.2))));
+    chain4.addSegment(Segment(Joint(Vector(0,0,0), Vector(0,0,1),Joint::RotAxis),
+                              Frame(Vector(0.0,0.0,0.1))));
+
 }
 
 void SolverTest::tearDown()
@@ -83,6 +97,9 @@ void SolverTest::FkPosAndJacTest()
     ChainFkSolverPos_recursive fksolver3(chain3);
     ChainJntToJacSolver jacsolver3(chain3);
     FkPosAndJacLocal(chain3,fksolver3,jacsolver3);
+    ChainFkSolverPos_recursive fksolver4(chain4);
+    ChainJntToJacSolver jacsolver4(chain4);
+    FkPosAndJacLocal(chain4,fksolver4,jacsolver4);
 }
 
 void SolverTest::FkVelAndJacTest()
@@ -96,6 +113,9 @@ void SolverTest::FkVelAndJacTest()
     ChainFkSolverVel_recursive fksolver3(chain3);
     ChainJntToJacSolver jacsolver3(chain3);
     FkVelAndJacLocal(chain3,fksolver3,jacsolver3);
+    ChainFkSolverVel_recursive fksolver4(chain4);
+    ChainJntToJacSolver jacsolver4(chain4);
+    FkVelAndJacLocal(chain4,fksolver4,jacsolver4);
 }
 
 void SolverTest::FkVelAndIkVelTest()
@@ -129,6 +149,14 @@ void SolverTest::FkVelAndIkVelTest()
     //std::cout<<"KDL-Boost-SVD-Givens"<<std::endl;
     FkVelAndIkVelLocal(chain3,fksolver3,iksolver_pinv_boost_givens3);
 
+    //Chain4
+    //std::cout<<"overdetermined problem"<<std::endl;
+    ChainFkSolverVel_recursive fksolver4(chain4);
+    ChainIkSolverVel_pinv iksolver4(chain4);
+    ChainIkSolverVel_pinv_boost_givens iksolver_pinv_boost_givens4(chain4);
+    FkVelAndIkVelLocal(chain4,fksolver4,iksolver4);
+    //std::cout<<"KDL-Boost-SVD-Givens"<<std::endl;
+    FkVelAndIkVelLocal(chain4,fksolver4,iksolver_pinv_boost_givens4);
 }
 
 void SolverTest::FkPosAndIkPosTest()
@@ -161,6 +189,14 @@ void SolverTest::FkPosAndIkPosTest()
     FkPosAndIkPosLocal(chain3,fksolver3,iksolver3);
     FkPosAndIkPosLocal(chain3,fksolver3,iksolver3_givens);
 
+    ChainFkSolverPos_recursive fksolver4(chain4);
+    ChainIkSolverVel_pinv iksolverv4(chain4);
+    ChainIkSolverVel_pinv_boost_givens iksolverv_pinv_boost_givens4(chain4);
+    ChainIkSolverPos_NR iksolver4(chain4,fksolver4,iksolverv4);
+    ChainIkSolverPos_NR iksolver4_givens(chain4,fksolver4,iksolverv_pinv_boost_givens4);
+
+    FkPosAndIkPosLocal(chain4,fksolver4,iksolver4);
+    FkPosAndIkPosLocal(chain4,fksolver4,iksolver4_givens);
 }
 
 
