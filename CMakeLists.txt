@@ -73,7 +73,7 @@ INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
 OPTION( PYTHON_BINDINGS "Build python-bindings?" OFF)
 
 INCLUDE (${PROJ_SOURCE_DIR}/config/FindSIPandPython.cmake)
-DEPENDENT_OPTION( ENABLE_CORBA "Enable CORBA (using TAO)" ON "ACE_CONFIG AND TAO_ORB AND TAO_ORBSVCS AND CORBA_ENABLED" OFF)
+INCLUDE (${PROJ_SOURCE_DIR}/config/FindCorbaDeps.cmake)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
 IF( ENABLE_TESTS )

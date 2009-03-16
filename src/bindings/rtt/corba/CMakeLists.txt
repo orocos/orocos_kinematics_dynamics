@@ -1,6 +1,6 @@
-INCLUDE (${PROJ_SOURCE_DIR}/config/TaoIDL.cmake)
+#INCLUDE (${PROJ_SOURCE_DIR}/config/TaoIDL.cmake)
 INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
-INCLUDE(${PROJ_SOURCE_DIR}/config/FindCorbaDeps.cmake)
+#INCLUDE(${PROJ_SOURCE_DIR}/config/FindCorbaDeps.cmake)
 
 #this option was set in global_rules.cmake
 IF(ENABLE_CORBA )
@@ -11,17 +11,13 @@ IF(ENABLE_CORBA )
     
   # Add includes / lib paths if necessary
   IF( NOT ${ACE_DIR} STREQUAL /usr/include )
-    INCLUDE_DIRECTORIES( ${ACE_DIR} )
-    LINK_DIRECTORIES( ${ACE_DIR}/../lib )
     SET(CMAKE_C_FLAGS_RTT "${CMAKE_C_FLAGS_RTT} -I${ACE_DIR}" CACHE INTERNAL "")
     SET(CMAKE_LINKFLAGS_RTT "${CMAKE_LINKFLAGS_RTT} -L${ACE_DIR}/../lib" CACHE INTERNAL "")
   ENDIF( NOT ${ACE_DIR} STREQUAL /usr/include )
   IF( NOT ${TAO_DIR} STREQUAL /usr/include )
-    INCLUDE_DIRECTORIES( ${TAO_DIR} )
     SET(CMAKE_C_FLAGS_RTT "${CMAKE_C_FLAGS_RTT} -I${TAO_DIR}" CACHE INTERNAL "")
   ENDIF( NOT ${TAO_DIR} STREQUAL /usr/include )
   IF( NOT ${ORBSVCS_DIR} STREQUAL /usr/include )
-    INCLUDE_DIRECTORIES( ${ORBSVCS_DIR} )
     SET(CMAKE_C_FLAGS_RTT "${CMAKE_C_FLAGS_RTT} -I${ORBSVCS_DIR}" CACHE INTERNAL "")
   ENDIF( NOT ${ORBSVCS_DIR} STREQUAL /usr/include )
 
@@ -49,7 +45,7 @@ IF(ENABLE_CORBA )
   VERSION "${KDL_VERSION}"
   INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/rtt/${OROCOS_TARGET}/plugins")
   # Is used for building  the library
-  TARGET_LINK_LIBRARIES(orocos-kdltk-corba-${OROCOS_TARGET} orocos-rtt-corba-${OROCOS_TARGET} orocos-kdltk-${OROCOS_TARGET} ${ORO_ACETAO_LIBRARIES})
+  TARGET_LINK_LIBRARIES(orocos-kdltk-corba-${OROCOS_TARGET} orocos-rtt-corba-${OROCOS_TARGET} orocos-kdltk-${OROCOS_TARGET} ${CORBA_LIBRARIES})
   CONFIGURE_FILE( orocos-kdltk-corba.pc.in src/bindings/rtt/corba/orocos-kdltk-corba-${OROCOS_TARGET}.pc @ONLY)
 
   INSTALL_TARGETS(/lib/rtt/${OROCOS_TARGET}/plugins orocos-kdltk-corba-${OROCOS_TARGET})
