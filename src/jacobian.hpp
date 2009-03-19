@@ -65,6 +65,11 @@ namespace KDL
 
 
     };
+
+    void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
+    void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
+    void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
+
 }
 
 #endif
