@@ -5,14 +5,20 @@ IF(ENABLE_TESTS)
   
   ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
   TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
+  SET_TARGET_PROPERTIES( framestest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
   ADD_TEST(framestest framestest)
   
   ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
   TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
+  SET_TARGET_PROPERTIES( kinfamtest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
   ADD_TEST(kinfamtest kinfamtest)
 
   ADD_EXECUTABLE(solvertest solvertest.cpp test-runner.cpp)
   TARGET_LINK_LIBRARIES(solvertest orocos-kdl ${CPPUNIT})
+  SET_TARGET_PROPERTIES( solvertest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
   ADD_TEST(solvertest solvertest)
 
   #ADD_EXECUTABLE(rframestest  rframestest.cpp)

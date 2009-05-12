@@ -6,7 +6,7 @@ import sipconfig
 src_path = '@PROJ_SOURCE_DIR@/src'
 build_path = '@PROJ_BINARY_DIR@/src'
 python_path = src_path + '/bindings/python'
-
+kdl_cflags ='@KDL_CFLAGS@'
 # create paths for temporary files if don't exist
 if not os.path.isdir("./sip"):
     os.mkdir("./sip")
@@ -61,7 +61,7 @@ makefile = sipconfig.ModuleMakefile(
 makefile.extra_libs = ["orocos-kdl"]
 makefile.extra_lib_dirs = [build_path]
 makefile.extra_include_dirs = [src_path,build_path]
-    
+makefile.extra_cxxflags=[kdl_cflags]
 # Generate the Makefile itself.
 makefile.generate()
 
