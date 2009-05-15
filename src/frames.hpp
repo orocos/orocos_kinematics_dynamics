@@ -390,6 +390,10 @@ public:
     //! Sets the value of this object to a rotation specified with Quaternion convention
     //! the norm of (x,y,z,w) should be equal to 1
     static Rotation Quaternion(double x,double y,double z, double w);
+    
+    //! Get the quaternion of this matrix
+    //! \post the norm of (x,y,z,w) is 1
+    void GetQuaternion(double& x,double& y,double& z, double& w);
 
     //! Sets the value of this object to a rotation specified with RPY convention:
     //! first rotate around X with roll, then around the

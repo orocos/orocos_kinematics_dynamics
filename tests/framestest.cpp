@@ -151,6 +151,48 @@ void FramesTest::TestRotation() {
 	TestRotation2(Vector(3,4,5),10*deg2rad,20*deg2rad,30*deg2rad);
 }
 
+void FramesTest::TestQuaternion() {
+    Rotation    R;
+    Rotation    R2;
+    double      x,y,z,w;
+    double      x2,y2,z2,w2;
+
+    // identity R -> quat -> R2
+    R.GetQuaternion(x,y,z,w);
+    R2.Quaternion(x,y,z,w);
+	CPPUNIT_ASSERT_EQUAL(R,R2);
+
+    // 45 deg rotation in X
+    R = Rotation::EulerZYX(0,0,45*deg2rad);
+    R.GetQuaternion(x,y,z,w);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, sin((45*deg2rad)/2), epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(y, 0, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(z, 0, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(w, cos((45*deg2rad)/2), epsilon);
+    R2 = Rotation::Quaternion(x,y,z,w);
+	CPPUNIT_ASSERT_EQUAL(R,R2);    
+
+    // direct 45 deg rotation in X
+    R2 = Rotation::Quaternion(sin((45*deg2rad)/2), 0, 0, cos((45*deg2rad)/2));
+	CPPUNIT_ASSERT_EQUAL(R,R2);
+    R2.GetQuaternion(x2,y2,z2,w2);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, x2, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(y, y2, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(z, z2, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(w, w2, epsilon);
+    
+    // 45 deg rotation in X and in Z
+    R = Rotation::EulerZYX(45*deg2rad,0,45*deg2rad);
+    R.GetQuaternion(x,y,z,w);
+    R2 = Rotation::Quaternion(x,y,z,w);
+	CPPUNIT_ASSERT_EQUAL(R,R2);    
+    R2.GetQuaternion(x2,y2,z2,w2);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, x2, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(y, y2, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(z, z2, epsilon);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(w, w2, epsilon);
+}
+
 
 void FramesTest::TestFrame() {
 	Vector   v(3,4,5); 

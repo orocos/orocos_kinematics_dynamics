@@ -14,6 +14,7 @@ class FramesTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestTwist);
     CPPUNIT_TEST(TestWrench);
     CPPUNIT_TEST(TestRotation);
+    CPPUNIT_TEST(TestQuaternion);
     CPPUNIT_TEST(TestFrame);
     CPPUNIT_TEST(TestJntArray);
 
@@ -27,6 +28,7 @@ public:
     void TestTwist();
     void TestWrench();
     void TestRotation();
+    void TestQuaternion();
     void TestFrame();
     void TestJntArray();
     void TestJntArrayWhenEmpty();
