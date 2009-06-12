@@ -105,6 +105,14 @@
  *              old reference point to the new reference point.
  * \endverbatim
  *
+ *\par Spatial cross products
+ * Let m be a 6D motion vector (Twist) and f be a 6D force vector (Wrench) 
+ * attached to a rigid body moving with a certain velocity v (Twist). Then
+ *\verbatim
+ *     1) m_dot = v cross m or Twist=Twist*Twist
+ *     2) f_dot = v cross f or Wrench=Twist*Wrench
+ *\endverbatim
+ *
  * \par Complexity
  *  Sometimes the amount of work is given in the documentation
  *  e.g. 6M+3A means 6 multiplications and 3 additions.
@@ -696,7 +704,10 @@ public:
      inline friend double dot(const Twist& lhs,const Wrench& rhs);
      inline friend double dot(const Wrench& rhs,const Twist& lhs);
      inline friend void SetToZero(Twist& v);
-
+    /// Spatial cross product for 6d motion vectors, beware all of them have to be expressed in the same reference frame/point
+    inline friend Twist operator*(const Twist& lhs,const Twist& rhs);
+    /// Spatial cross product for 6d force vectors, beware all of them have to be expressed in the same reference frame/point
+    inline friend Wrench operator*(const Twist& lhs,const Wrench& rhs);
 
      //! @return a zero Twist : Twist(Vector::Zero(),Vector::Zero())
      static inline Twist Zero();

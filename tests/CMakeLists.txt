@@ -2,7 +2,7 @@ IF(ENABLE_TESTS)
   ENABLE_TESTING()
 
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src)
-  
+
   ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
   TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
   SET_TARGET_PROPERTIES( framestest PROPERTIES
@@ -20,6 +20,12 @@ IF(ENABLE_TESTS)
   SET_TARGET_PROPERTIES( solvertest PROPERTIES
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
   ADD_TEST(solvertest solvertest)
+
+  ADD_EXECUTABLE(inertiatest inertiatest.cpp test-runner.cpp)
+  TARGET_LINK_LIBRARIES(inertiatest orocos-kdl ${CPPUNIT})
+  SET_TARGET_PROPERTIES( inertiatest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
+  ADD_TEST(inertiatest inertiatest)
 
   #ADD_EXECUTABLE(rframestest  rframestest.cpp)
   #TARGET_LINK_LIBRARIES(rframestest orocos-kdl)

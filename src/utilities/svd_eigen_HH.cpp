@@ -19,17 +19,17 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#include "svd_boost_HH.hpp"
+#include "svd_eigen_HH.hpp"
 
 namespace KDL{
     
-    int svd_boost_HH(const ublas::matrix<double>& A,ublas::matrix<double>& U,ublas::vector<double>& S,ublas::matrix<double>& V,ublas::vector<double>& tmp,int maxiter)
+    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter)
     {
         //get the rows/columns of the matrix
-        const int rows = A.size1();
-        const int cols = A.size2();
+        const int rows = A.rows();
+        const int cols = A.cols();
         
-	ublas::project(U,ublas::range(0,A.size1()),ublas::range(0,A.size2())).assign(A);
+        U.corner(Eigen::TopLeft,rows,cols)=A;
         
         int i(-1),its(-1),j(-1),jj(-1),k(-1),nm=0;
         int ppi(0);
@@ -245,8 +245,8 @@ namespace KDL{
                 S(i_max)=tmp;
                 
                 /* swap eigenvectors */
-                column(U,i).swap(column(U,i_max));
-                column(V,i).swap(column(V,i_max));
+                U.col(i).swap(U.col(i_max));
+                V.col(i).swap(V.col(i_max));
             }
         }
         

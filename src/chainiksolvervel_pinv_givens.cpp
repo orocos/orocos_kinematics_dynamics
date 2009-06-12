@@ -19,68 +19,65 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#include "chainiksolvervel_pinv_boost_givens.hpp"
-#include <boost/numeric/ublas/io.hpp>
-#include <boost/numeric/ublas/vector_proxy.hpp>
-#include <boost/numeric/ublas/operation.hpp>
-#include "utilities/svd_boost_Macie.hpp"
+#include "chainiksolvervel_pinv_givens.hpp"
+#include "utilities/svd_eigen_Macie.hpp"
 
 namespace KDL
 {
-    ChainIkSolverVel_pinv_boost_givens::ChainIkSolverVel_pinv_boost_givens(const Chain& _chain):
+    ChainIkSolverVel_pinv_givens::ChainIkSolverVel_pinv_givens(const Chain& _chain):
         chain(_chain),
         jnt2jac(chain),
         jac(chain.getNrOfJoints()),
         transpose(chain.getNrOfJoints()>6),
         m((int)max(6,chain.getNrOfJoints())),
         n((int)min(6,chain.getNrOfJoints())),
-        jac_boost(m,n),
-        U(ublas::identity_matrix<double>(m)),
-        V(ublas::identity_matrix<double>(n)),
+        jac_eigen(m,n),
+        U(MatrixXd::Identity(m,m)),
+        V(MatrixXd::Identity(n,n)),
         S(n),
         B(m,n),
         tempi(m),
         tempj(m),
-        UY(ublas::zero_vector<double>(6)),
-        SUY(ublas::zero_vector<double>(chain.getNrOfJoints())),
-        qdot_boost(chain.getNrOfJoints()),
-        v_in_boost(6)
+        UY(VectorXd::Zero(6)),
+        SUY(VectorXd::Zero(chain.getNrOfJoints())),
+        qdot_eigen(chain.getNrOfJoints()),
+        v_in_eigen(6)
     {
     }
 
-    ChainIkSolverVel_pinv_boost_givens::~ChainIkSolverVel_pinv_boost_givens()
+    ChainIkSolverVel_pinv_givens::~ChainIkSolverVel_pinv_givens()
     {
     }
 
 
-    int ChainIkSolverVel_pinv_boost_givens::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
+    int ChainIkSolverVel_pinv_givens::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
         toggle!=toggle;
 
         jnt2jac.JntToJac(q_in,jac);
 
         for(unsigned int i=0;i<6;i++)
-            v_in_boost(i)=v_in(i);
+            v_in_eigen(i)=v_in(i);
 
         for(unsigned int i=0;i<m;i++){
             for(unsigned int j=0;j<n;j++)
                 if(transpose)
-                    jac_boost(i,j)=jac(j,i);
+                    jac_eigen(i,j)=jac(j,i);
                 else
-                    jac_boost(i,j)=jac(i,j);
+                    jac_eigen(i,j)=jac(i,j);
         }
-        int ret = svd_boost_Macie(jac_boost,U,S,V,B,tempi,1e-15,toggle);
+        int ret = svd_eigen_Macie(jac_eigen,U,S,V,B,tempi,1e-15,toggle);
         //std::cout<<"# sweeps: "<<ret<<std::endl;
 
         if(transpose)
-            UY.assign(prod(trans(V),v_in_boost));
+            UY = (V.transpose() * v_in_eigen).lazy();
         else
-            UY.assign(prod(trans(U),v_in_boost));
+            UY = (U.transpose() * v_in_eigen).lazy();
 
         for (unsigned int i = 0; i < n; i++){
             double wi = UY(i);
             double alpha = S(i);
-
+            
             if (alpha != 0)
                 alpha = 1.0 / alpha;
             else
@@ -88,12 +85,12 @@ namespace KDL
             SUY(i)= alpha * wi;
         }
         if(transpose)
-            qdot_boost.assign(prod(U,SUY));
+            qdot_eigen = (U * SUY).lazy();
         else
-            qdot_boost.assign(prod(V,SUY));
+            qdot_eigen = (V * SUY).lazy();
 
         for (unsigned int j=0;j<chain.getNrOfJoints();j++)
-            qdot_out(j)=qdot_boost(j);
+            qdot_out(j)=qdot_eigen(j);
 
         return ret;
 

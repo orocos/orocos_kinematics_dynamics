@@ -5,7 +5,7 @@
  *      Author: rubensmits
  */
 
-#include "TreeJntToJacSolver.hpp"
+#include "treejnttojacsolver.hpp"
 #include <iostream>
 #include "kinfam_io.hpp"
 

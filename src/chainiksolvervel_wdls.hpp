@@ -24,9 +24,7 @@
 
 #include "chainiksolver.hpp"
 #include "chainjnttojacsolver.hpp"
-#include <boost/numeric/ublas/symmetric.hpp>
-
-namespace ublas = boost::numeric::ublas;
+#include <Eigen/Core>
 
 namespace KDL
 {
@@ -104,7 +102,7 @@ namespace KDL
          * it gets an infinite weight in the norm computation.  For
          * more detailed explanation : vincent.padois@upmc.fr
          */
-        void setWeightJS(const ublas::symmetric_matrix<double> Mq);
+        void setWeightJS(const Eigen::MatrixXd& Mq);
 
         /**
          * Set the task space weighting matrix
@@ -129,7 +127,7 @@ namespace KDL
          * weighted norm sqrt(|x_dot-Jq_dot|'*(M_x^2)*|x_dot-Jq_dot|).
          * For more detailed explanation : vincent.padois@upmc.fr
          */
-        void setWeightTS(const ublas::symmetric_matrix<double> Mx);
+        void setWeightTS(const Eigen::MatrixXd& Mx);
 
         void setLambda(const double& lambda);
 
@@ -137,19 +135,19 @@ namespace KDL
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
         Jacobian jac;
-        ublas::matrix<double> U;
-        ublas::vector<double> S;
-        ublas::matrix<double> V;
+        Eigen::MatrixXd U;
+        Eigen::VectorXd S;
+        Eigen::MatrixXd V;
         double eps;
         int maxiter;
-        ublas::vector<double> tmp;
-        ublas::matrix<double> tmp_jac;
-        ublas::matrix<double> tmp_jac_weight1;
-        ublas::matrix<double> tmp_jac_weight2;
-        ublas::matrix<double> tmp_ts;
-        ublas::matrix<double> tmp_js;
-        ublas::symmetric_matrix<double> weight_ts;
-        ublas::symmetric_matrix<double> weight_js;
+        Eigen::VectorXd tmp;
+        Eigen::MatrixXd tmp_jac;
+        Eigen::MatrixXd tmp_jac_weight1;
+        Eigen::MatrixXd tmp_jac_weight2;
+        Eigen::MatrixXd tmp_ts;
+        Eigen::MatrixXd tmp_js;
+        Eigen::MatrixXd weight_ts;
+        Eigen::MatrixXd weight_js;
         double lambda;
     };
 }

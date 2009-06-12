@@ -25,17 +25,13 @@
 #ifndef SVD_BOOST_MACIE
 #define SVD_BOOST_MACIE
 
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/vector_proxy.hpp>
-
-namespace ublas = boost::numeric::ublas;
+#include <Eigen/Core>
+USING_PART_OF_NAMESPACE_EIGEN
 
 namespace KDL
 {
-    int svd_boost_Macie(ublas::matrix<double>& A,ublas::matrix<double>& U,ublas::vector<double>& S, ublas::matrix<double>& V,
-                        ublas::matrix<double>& B, ublas::vector<double>& tempi,
+    int svd_eigen_Macie(MatrixXd& A,MatrixXd& U,VectorXd& S, MatrixXd& V,
+                        MatrixXd& B, VectorXd& tempi,
                         double treshold,bool toggle)
     {
         bool rotate = true;
@@ -43,19 +39,17 @@ namespace KDL
         unsigned int rotations=0;
         if(toggle){
             //Calculate B from new A and previous V
-            noalias(B)=prod(A,V);
+            B=(A*V).lazy();
             while(rotate){
                 rotate=false;
                 rotations=0;
                 //Perform rotations between columns of B
-                for(unsigned int i=0;i<B.size2();i++){
-                    for(unsigned int j=i+1;j<B.size2();j++){
-                        ublas::matrix_column<ublas::matrix<double> > Bi (B, i);
-                        ublas::matrix_column<ublas::matrix<double> > Bj (B, j);
+                for(unsigned int i=0;i<B.cols();i++){
+                    for(unsigned int j=i+1;j<B.cols();j++){
                         //calculate plane rotation
-                        double p = ublas::inner_prod(Bi,Bj);
-                        double qi = ublas::inner_prod(Bi,Bi);
-                        double qj = ublas::inner_prod(Bj,Bj);
+                        double p = B.col(i).dot(B.col(j));
+                        double qi =B.col(i).dot(B.col(i));
+                        double qj = B.col(j).dot(B.col(j));
                         double q=qi-qj;
                         double alpha = pow(p,2.0)/(qi*qj);
                         //if columns are orthogonal with precision
@@ -77,37 +71,31 @@ namespace KDL
                         }
 
                         //Apply plane rotation to columns of B
-                        tempi.assign (cos*Bi + sin*Bj);
-                        Bj.assign (- sin*Bi + cos*Bj);
-                        Bi.assign (tempi);
-
-                        ublas::vector_range<ublas::vector<double> > tempiv(tempi, ublas::range (0, V.size1()));
-                        ublas::matrix_column<ublas::matrix<double> > Vi (V, i);
-                        ublas::matrix_column<ublas::matrix<double> > Vj (V, j);
-
+                        tempi = cos*B.col(i) + sin*B.col(j);
+                        B.col(j) = - sin*B.col(i) + cos*B.col(j);
+                        B.col(i) = tempi;
+                        
                         //Apply plane rotation to columns of V
-                        tempiv.assign (cos*Vi + sin*Vj);
-                        Vj.assign (- sin*Vi + cos*Vj);
-                        Vi.assign (tempiv);
+                        tempi.start(V.rows()) = cos*V.col(i) + sin*V.col(j);
+                        V.col(j) = - sin*V.col(i) + cos*V.col(j);
+                        V.col(i) = tempi.start(V.rows());
 
                         rotate=true;
                     }
                 }
                 //Only calculate new U and S if there were any rotations
                 if(rotations!=0){
-                    for(unsigned int i=0;i<U.size1();i++) {
-                        ublas::matrix_column<ublas::matrix<double> > Ui (U, i);
-                        if(i<B.size2()){
-                            ublas::matrix_column<ublas::matrix<double> > Bi (B, i);
-                            double si=sqrt(inner_prod(Bi,Bi));
+                    for(unsigned int i=0;i<U.rows();i++) {
+                        if(i<B.cols()){
+                            double si=sqrt(B.col(i).dot(B.col(i)));
                             if(si==0)
-                                Ui.assign(Bi);
+                                U.col(i) = B.col(i);
                             else
-                                Ui.assign(Bi/si);
+                                U.col(i) = B.col(i)/si;
                             S(i)=si;
                         }
                         else
-                            Ui.assign(0*tempi);
+                            U.col(i) = 0*tempi;
                     }
                     sweeps++;
                 }
@@ -115,22 +103,17 @@ namespace KDL
             return sweeps;
         }else{
             //Calculate B from new A and previous U'
-            noalias(B)=prod(trans(U),A);
+            B =(U.transpose() * A).lazy();
             while(rotate){
                 rotate=false;
                 rotations=0;
                 //Perform rotations between rows of B
-                for(unsigned int i=0;i<B.size2();i++){
-                    for(unsigned int j=i+1;j<B.size2();j++){
-                        ublas::matrix_row<ublas::matrix<double> > Bi (B, i);
-                        ublas::matrix_row<ublas::matrix<double> > Bj (B, j);
+                for(unsigned int i=0;i<B.cols();i++){
+                    for(unsigned int j=i+1;j<B.cols();j++){
                         //calculate plane rotation
-                        double p = ublas::inner_prod(Bi,Bj);
-                        double qi = ublas::inner_prod(Bi,Bi);
-                        double qj = ublas::inner_prod(Bj,Bj);
-                        //std::cout<<"q"<<i<<": "<<qi<<std::endl;
-                        //std::cout<<"q"<<j<<": "<<qj<<std::endl;
-                        //std::cout<<"p"<<i<<j<<": "<<p<<std::endl;
+                        double p = B.row(i).dot(B.row(j));
+                        double qi = B.row(i).dot(B.row(i));
+                        double qj = B.row(j).dot(B.row(j));
 
                         double q=qi-qj;
                         double alpha = pow(p,2.0)/(qi*qj);
@@ -154,19 +137,15 @@ namespace KDL
                         }
 
                         //Apply plane rotation to rows of B
-                        ublas::vector_range<ublas::vector<double> > tempib(tempi, ublas::range (0, B.size2()));
-                        tempib.assign (cos*Bi + sin*Bj);
-                        Bj.assign (- sin*Bi + cos*Bj);
-                        Bi.assign (tempib);
+                        tempi.start(B.rows()) =  cos*B.row(i) + sin*B.row(j);
+                        B.row(j) =  - sin*B.row(i) + cos*B.row(j);
+                        B.row(i) =  tempi.start(B.rows());
 
-                        ublas::vector_range<ublas::vector<double> > tempiu(tempi, ublas::range (0, U.size1()));
-                        ublas::matrix_column<ublas::matrix<double> > Ui (U, i);
-                        ublas::matrix_column<ublas::matrix<double> > Uj (U, j);
 
                         //Apply plane rotation to rows of U
-                        tempiu.assign (cos*Ui + sin*Uj);
-                        Uj.assign (- sin*Ui + cos*Uj);
-                        Ui.assign (tempiu);
+                        tempi.start(U.rows()) = cos*U.col(i) + sin*U.col(j);
+                        U.col(j) = - sin*U.col(i) + cos*U.col(j);
+                        U.col(i) = tempi.start(U.rows());
 
                         rotate=true;
                     }
@@ -174,14 +153,12 @@ namespace KDL
 
                 //Only calculate new U and S if there were any rotations
                 if(rotations!=0){
-                    for(unsigned int i=0;i<V.size1();i++) {
-                        ublas::matrix_row<ublas::matrix<double> > Bi (B, i);
-                        ublas::matrix_column<ublas::matrix<double> > Vi (V, i);
-                        double si=sqrt(inner_prod(Bi,Bi));
+                    for(unsigned int i=0;i<V.rows();i++) {
+                        double si=sqrt(B.row(i).dot(B.row(i)));
                         if(si==0)
-                            Vi.assign(Bi);
+                            V.col(i) = B.row(i);
                         else
-                            Vi.assign(Bi/si);
+                            V.col(i) = B.row(i)/si;
                         S(i)=si;
                     }
                     sweeps++;

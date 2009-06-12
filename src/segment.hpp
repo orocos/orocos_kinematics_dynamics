@@ -24,7 +24,7 @@
 #define KDL_SEGMENT_HPP
 
 #include "frames.hpp"
-#include "inertia.hpp"
+#include "rigidbodyinertia.hpp"
 #include "joint.hpp"
 #include <vector>
 
@@ -32,12 +32,12 @@ namespace KDL {
 
     /**
 	  * \brief This class encapsulates a simple segment, that is a "rigid
-	  * body" (i.e., a frame and an inertia) with a joint and with
+	  * body" (i.e., a frame and a rigid body inertia) with a joint and with
 	  * "handles", root and tip to connect to other segments.
      *
      * A simple segment is described by the following properties :
      *      - Joint
-     *      - inertia: of the rigid body part of the Segment
+     *      - Rigid Body Inertia: of the rigid body part of the Segment
      *      - Offset from the end of the joint to the tip of the segment:
      *        the joint is located at the root of the segment.
      *
@@ -47,7 +47,7 @@ namespace KDL {
         friend class Chain;
     private:
         Joint joint;
-        Inertia M;
+        RigidBodyInertia I;
         Frame f_tip;
 
     public:
@@ -60,7 +60,7 @@ namespace KDL {
          * the segment, default: Frame::Identity()
          * @param M rigid body inertia of the segment, default: Inertia::Zero()
          */
-        Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const Inertia& M = Inertia::Zero());
+        Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
         Segment(const Segment& in);
         Segment& operator=(const Segment& arg);
 
@@ -103,9 +103,19 @@ namespace KDL {
          *
          * @return const reference to the inertia of the segment
          */
-        const Inertia& getInertia()const
+        const RigidBodyInertia& getInertia()const
         {
-            return M;
+            return I;
+        }
+        /**
+         * Request the inertia of the segment
+         *
+         *
+         * @return const reference to the inertia of the segment
+         */
+        void setInertia(const RigidBodyInertia& Iin)
+        {
+            this->I=Iin;
         }
 
         /**

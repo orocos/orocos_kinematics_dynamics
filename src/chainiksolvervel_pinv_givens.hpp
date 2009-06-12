@@ -1,16 +1,14 @@
 // Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
-#ifndef KDL_CHAIN_IKSOLVERVEL_PINV_BOOST_GIVENS_HPP
-#define KDL_CHAIN_IKSOLVERVEL_PINV_BOOST_GIVENS_HPP
+#ifndef KDL_CHAIN_IKSOLVERVEL_PINV_GIVENS_HPP
+#define KDL_CHAIN_IKSOLVERVEL_PINV_GIVENS_HPP
 
 #include "chainiksolver.hpp"
 #include "chainjnttojacsolver.hpp"
 
-#include <iostream>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/vector.hpp>
+#include <Eigen/Core>
 
-namespace ublas = boost::numeric::ublas;
+USING_PART_OF_NAMESPACE_EIGEN;
 
 namespace KDL
 {
@@ -23,7 +21,7 @@ namespace KDL
      *
      * @ingroup KinematicFamily
      */
-    class ChainIkSolverVel_pinv_boost_givens : public ChainIkSolverVel
+    class ChainIkSolverVel_pinv_givens : public ChainIkSolverVel
     {
     public:
         /**
@@ -37,8 +35,8 @@ namespace KDL
          * default: 150
          *
          */
-        ChainIkSolverVel_pinv_boost_givens(const Chain& chain);
-        ~ChainIkSolverVel_pinv_boost_givens();
+        ChainIkSolverVel_pinv_givens(const Chain& chain);
+        ~ChainIkSolverVel_pinv_givens();
 
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
         /**
@@ -52,18 +50,8 @@ namespace KDL
         Jacobian jac;
         bool transpose,toggle;
         int m,n;
-        ublas::matrix<double> jac_boost;
-        ublas::matrix<double> U;
-        ublas::matrix<double> V;
-        ublas::vector<double> S;
-        ublas::matrix<double> B;
-        ublas::vector<double> tempi;
-        ublas::vector<double> tempj;
-        ublas::vector<double> UY;
-        ublas::vector<double> SUY;
-        ublas::vector<double> qdot_boost;
-        ublas::vector<double> v_in_boost;
-
+        MatrixXd jac_eigen,U,V,B;
+        VectorXd S,tempi,tempj,UY,SUY,qdot_eigen,v_in_eigen;
     };
 }
 #endif

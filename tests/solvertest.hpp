@@ -7,7 +7,7 @@
 #include <chainfksolverpos_recursive.hpp>
 #include <chainfksolvervel_recursive.hpp>
 #include <chainiksolvervel_pinv.hpp>
-#include <chainiksolvervel_pinv_boost_givens.hpp>
+#include <chainiksolvervel_pinv_givens.hpp>
 #include <chainiksolverpos_nr.hpp>
 #include <chainjnttojacsolver.hpp>
 

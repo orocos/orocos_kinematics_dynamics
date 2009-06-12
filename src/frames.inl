@@ -367,6 +367,17 @@ Twist operator-(const Twist& arg)
     return Twist(-arg.vel,-arg.rot);
 }
 
+
+//Spatial products for twists
+Twist operator*(const Twist& lhs,const Twist& rhs)
+{
+    return Twist(lhs.rot*rhs.vel+lhs.vel*rhs.rot,lhs.rot*rhs.rot);
+}
+Wrench operator*(const Twist& lhs,const Wrench& rhs)
+{
+    return Wrench(lhs.rot*rhs.force,lhs.rot*rhs.torque+lhs.vel*rhs.force);
+}
+
 Frame::Frame(const Rotation & R)
 {
     M=R;

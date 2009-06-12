@@ -34,10 +34,10 @@ namespace KDL {
      */
     class Chain {
     private:
-        std::vector<Segment> segments;
         int nrOfJoints;
         int nrOfSegments;
     public:
+        std::vector<Segment> segments;
         /**
          * The constructor of a chain, a new chain is always empty.
          *

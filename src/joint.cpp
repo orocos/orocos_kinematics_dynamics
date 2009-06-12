@@ -31,7 +31,7 @@ namespace KDL {
       if (type == RotAxis || type == TransAxis) throw joint_type_ex;
     }
 
-    // constructgor for joint along arbitrary axis, at arbitrary origin
+    // constructor for joint along arbitrary axis, at arbitrary origin
     Joint::Joint(const Vector& _origin, const Vector& _axis, const JointType& _type, const double& _scale, const double& _offset,
 	         const double& _inertia, const double& _damping, const double& _stiffness):
       origin(_origin), axis(_axis / _axis.Norm()), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
@@ -52,14 +52,14 @@ namespace KDL {
     {
 
         switch(type){
-	case RotAxis:{
-	  // calculate the rotation matrix around the vector "axis"
-	  if (q != q_previous){
-	    q_previous = q;
-	    joint_pose.M = Rotation::Rot2(axis, scale*q+offset);
-	  }
-	  return joint_pose;
-	  break;}
+        case RotAxis:{
+            // calculate the rotation matrix around the vector "axis"
+            if (q != q_previous){
+                q_previous = q;
+                joint_pose.M = Rotation::Rot2(axis, scale*q+offset);
+            }
+            return joint_pose;
+            break;}
         case RotX:
             return Frame(Rotation::RotX(scale*q+offset));
             break;
@@ -69,9 +69,9 @@ namespace KDL {
         case RotZ:
             return  Frame(Rotation::RotZ(scale*q+offset));
             break;
-	case TransAxis:
-	    return Frame(origin + (axis * (scale*q+offset)));
-	    break;
+        case TransAxis:
+            return Frame(origin + (axis * (scale*q+offset)));
+            break;
         case TransX:
             return  Frame(Vector(scale*q+offset,0.0,0.0));
             break;
@@ -90,9 +90,9 @@ namespace KDL {
     Twist Joint::twist(const double& qdot)const
     {
         switch(type){
-	case RotAxis:
-	  return Twist(Vector(0,0,0), axis * ( scale * qdot));
-	  break;
+        case RotAxis:
+            return Twist(Vector(0,0,0), axis * ( scale * qdot));
+            break;
         case RotX:
             return Twist(Vector(0.0,0.0,0.0),Vector(scale*qdot,0.0,0.0));
             break;

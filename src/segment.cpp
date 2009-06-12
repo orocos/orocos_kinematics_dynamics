@@ -21,14 +21,14 @@
 
 namespace KDL {
 
-    Segment::Segment(const Joint& _joint, const Frame& _f_tip, const Inertia& _M):
-        joint(_joint),M(_M),
+    Segment::Segment(const Joint& _joint, const Frame& _f_tip, const RigidBodyInertia& _I):
+        joint(_joint),I(_I),
         f_tip(_joint.pose(0).Inverse() * _f_tip)
     {
     }
 
     Segment::Segment(const Segment& in):
-        joint(in.joint),M(in.M),
+        joint(in.joint),I(in.I),
         f_tip(in.f_tip)
     {
     }
@@ -36,7 +36,7 @@ namespace KDL {
     Segment& Segment::operator=(const Segment& arg)
     {
         joint=arg.joint;
-        M=arg.M;
+        I=arg.I;
         f_tip=arg.f_tip;
         return *this;
     }

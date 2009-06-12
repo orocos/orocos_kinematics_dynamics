@@ -1,4 +1,4 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2009  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 // Version: 1.0
 // Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
@@ -19,30 +19,10 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#include "inertia.hpp"
+namespace KDL{
 
-#include <boost/numeric/ublas/matrix_proxy.hpp>
+class Chain;
 
-namespace KDL {
-using namespace boost::numeric::ublas;
-
-Inertia::Inertia(double m,double Ixx,double Iyy,double Izz,double Ixy,double Ixz,double Iyz):
-    data(zero_matrix<double>(6,6))
-{
-    data(0,0)=Ixx;
-    data(1,1)=Iyy;
-    data(2,2)=Izz;
-    data(1,2)=Ixy;
-    data(1,3)=Ixz;
-    data(2,3)=Iyz;
-
-    project(data,range(3,6),range(3,6))=m*identity_matrix<double>(3);
-}
-
-Inertia::~Inertia()
-{
-}
-
-
+Chain Puma560();
 
 }

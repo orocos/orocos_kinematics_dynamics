@@ -20,29 +20,28 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "chainiksolvervel_wdls.hpp"
-#include "utilities/svd_boost_HH.hpp"
+#include "utilities/svd_eigen_HH.hpp"
 
 namespace KDL
 {
-    using namespace ublas;
     
     ChainIkSolverVel_wdls::ChainIkSolverVel_wdls(const Chain& _chain,double _eps,int _maxiter):
         chain(_chain),
         jnt2jac(chain),
         jac(chain.getNrOfJoints()),
-        U(ublas::matrix<double>(6,chain.getNrOfJoints())),
-        S(ublas::vector<double>(chain.getNrOfJoints())),
-        V(ublas::matrix<double>(chain.getNrOfJoints(),chain.getNrOfJoints())),
+        U(MatrixXd::Zero(6,chain.getNrOfJoints())),
+        S(VectorXd::Zero(chain.getNrOfJoints())),
+        V(MatrixXd::Zero(chain.getNrOfJoints(),chain.getNrOfJoints())),
         eps(_eps),
         maxiter(_maxiter),
-        tmp(ublas::vector<double>(chain.getNrOfJoints())),
-        tmp_jac(ublas::matrix<double>(6,chain.getNrOfJoints())),
-        tmp_jac_weight1(ublas::matrix<double>(6,chain.getNrOfJoints())),
-        tmp_jac_weight2(ublas::matrix<double>(6,chain.getNrOfJoints())),
-        tmp_ts(ublas::matrix<double>(6,6)),
-        tmp_js(ublas::matrix<double>(chain.getNrOfJoints(),chain.getNrOfJoints())),
-        weight_ts(ublas::identity_matrix<double>(6)),
-        weight_js(ublas::identity_matrix<double>(chain.getNrOfJoints())),
+        tmp(VectorXd::Zero(chain.getNrOfJoints())),
+        tmp_jac(MatrixXd::Zero(6,chain.getNrOfJoints())),
+        tmp_jac_weight1(MatrixXd::Zero(6,chain.getNrOfJoints())),
+        tmp_jac_weight2(MatrixXd::Zero(6,chain.getNrOfJoints())),
+        tmp_ts(MatrixXd::Zero(6,6)),
+        tmp_js(MatrixXd::Zero(chain.getNrOfJoints(),chain.getNrOfJoints())),
+        weight_ts(MatrixXd::Identity(6,6)),
+        weight_js(MatrixXd::Identity(chain.getNrOfJoints(),chain.getNrOfJoints())),
         lambda(0.0)
     {
     }
@@ -51,11 +50,11 @@ namespace KDL
     {
     }
     
-    void ChainIkSolverVel_wdls::setWeightJS(const ublas::symmetric_matrix<double> Mq){
+    void ChainIkSolverVel_wdls::setWeightJS(const MatrixXd& Mq){
         weight_js = Mq;
     }
     
-    void ChainIkSolverVel_wdls::setWeightTS(const ublas::symmetric_matrix<double> Mx){
+    void ChainIkSolverVel_wdls::setWeightTS(const MatrixXd& Mx){
         weight_ts = Mx;
     }
 
@@ -71,21 +70,21 @@ namespace KDL
         double sum;
         unsigned int i,j;
 
-	for (i=0;i<jac.rows();i++) {
-          for (j=0;j<jac.columns();j++)
-	    tmp_jac(i,j) = jac(i,j);
+        for (i=0;i<jac.rows();i++) {
+            for (j=0;j<jac.columns();j++)
+                tmp_jac(i,j) = jac(i,j);
         }
         
-	// Create the Weighted jacobian
-	noalias(tmp_jac_weight1) = prod(tmp_jac,weight_js);
-	noalias(tmp_jac_weight2) = prod(weight_ts,tmp_jac_weight1);
+        // Create the Weighted jacobian
+        tmp_jac_weight1 = (tmp_jac*weight_js).lazy();
+        tmp_jac_weight2 = (weight_ts,tmp_jac_weight1).lazy();
    
 	// Compute the SVD of the weighted jacobian
-        int ret = svd_boost_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
+        int ret = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
                 
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
-        noalias(tmp_ts) = prod(weight_ts,project(U,range(0,6),range(0,6)));
-        noalias(tmp_js) = prod(weight_js,V); 
+        tmp_ts = (weight_ts*U.corner(Eigen::TopLeft,6,6)).lazy();
+        tmp_js = (weight_js*V).lazy(); 
         
         // tmp = (Si*U'*Ly*y), 
         for (i=0;i<jac.columns();i++) {
@@ -96,7 +95,10 @@ namespace KDL
                 else
                     sum+=0.0;
             }
-            tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda*lambda)));   
+            if(S(i)==0||S(i)<eps)
+                tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda*lambda)));   
+            else
+                tmp(i) = sum/S(i);
         }
         // x = Lx^-1*V*tmp + x
         for (i=0;i<jac.columns();i++) {

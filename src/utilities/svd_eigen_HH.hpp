@@ -21,18 +21,14 @@
 
 
 //Based on the svd of the KDL-0.2 library by Erwin Aertbelien
-#ifndef SVD_BOOST_HH_HPP
-#define SVD_BOOST_HH_HPP
+#ifndef SVD_EIGEN_HH_HPP
+#define SVD_EIGEN_HH_HPP
 
 
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/vector_proxy.hpp>
-#include <boost/numeric/ublas/io.hpp>
+#include <Eigen/Core>
 #include <algorithm>
 
-namespace ublas = boost::numeric::ublas;
+USING_PART_OF_NAMESPACE_EIGEN;
 
 namespace KDL
 {
@@ -70,6 +66,6 @@ namespace KDL
      *
      * @return -2 if maxiter exceeded, 0 otherwise
      */
-    int svd_boost_HH(const ublas::matrix<double>& A,ublas::matrix<double>& U,ublas::vector<double>& S,ublas::matrix<double>& V,ublas::vector<double>& tmp,int maxiter=150);
+    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter=150);
 }
 #endif

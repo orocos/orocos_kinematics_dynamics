@@ -63,7 +63,7 @@ namespace KDL {
             this->addSegment(chain.getSegment(i));
     }
 
-    const Segment& Chain::getSegment(unsigned int nr) const
+    const Segment& Chain::getSegment(unsigned int nr)const
     {
         return segments[nr];
     }
