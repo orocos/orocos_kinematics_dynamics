@@ -34,8 +34,8 @@ namespace KDL
 
     int ChainJntToJacSolver::JntToJac(const JntArray& q_in,Jacobian& jac)
     {
-        assert(q_in.rows()==chain.getNrOfJoints()&&
-               q_in.rows()==jac.columns());
+        if(q_in.rows()!=chain.getNrOfJoints()||q_in.rows()!=jac.columns())
+            return -1;
         T_tmp = Frame::Identity();
         SetToZero(t_tmp);
         int j=0;

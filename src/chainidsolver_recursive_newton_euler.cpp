@@ -34,11 +34,8 @@ namespace KDL{
     int ChainIdSolver_RNE::CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const Wrenches& f_ext,JntArray &torques)
     {
         //Check sizes when in debug mode
-        assert(q.rows()==nj);
-        assert(q_dot.rows()==nj);
-        assert(q_dotdot.rows()==nj);
-        assert(torques.rows()==nj);
-        assert(f_ext.size()==ns);
+        if(q.rows()!=nj || q_dot.rows()!=nj || q_dotdot.rows()!=nj || torques.rows()!=nj || f_ext.size()!=ns)
+            return -1;
         unsigned int j=0;
 
         //Sweep from root to leaf
