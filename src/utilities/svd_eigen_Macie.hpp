@@ -137,9 +137,9 @@ namespace KDL
                         }
 
                         //Apply plane rotation to rows of B
-                        tempi.start(B.rows()) =  cos*B.row(i) + sin*B.row(j);
+                        tempi.start(B.cols()) =  cos*B.row(i) + sin*B.row(j);
                         B.row(j) =  - sin*B.row(i) + cos*B.row(j);
-                        B.row(i) =  tempi.start(B.rows());
+                        B.row(i) =  tempi.start(B.cols());
 
 
                         //Apply plane rotation to rows of U
