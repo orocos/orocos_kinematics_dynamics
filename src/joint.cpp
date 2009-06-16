@@ -154,5 +154,10 @@ namespace KDL {
       }
   }
 
+  Vector Joint::JointOrigin() const
+  {
+    return origin;
+  }
+
 } // end of namespace KDL
 

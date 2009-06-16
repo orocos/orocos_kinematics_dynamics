@@ -102,6 +102,13 @@ namespace KDL {
          */
         Vector JointAxis() const;
 
+        /**                                                                     
+         * Request the Vector corresponding to the origin of a revolute joint.    
+         *                                                                      
+         * @return Vector
+         */
+        Vector JointOrigin() const;
+
         /**
          * Request the type of the joint.
          *
