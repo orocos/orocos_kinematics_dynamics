@@ -312,7 +312,7 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
 
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F1));
     int ret = iksolverpos.CartToJnt(q_init,F1,q_solved);
-    CPPUNIT_ASSERT(0<=ret);
+    CPPUNIT_ASSERT(0<ret);
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q_solved,F2));
 
     CPPUNIT_ASSERT_EQUAL(F1,F2);

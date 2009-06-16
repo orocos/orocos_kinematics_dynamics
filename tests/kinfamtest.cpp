@@ -1,6 +1,7 @@
 #include "kinfamtest.hpp"
 #include <frames_io.hpp>
 #include <kinfam_io.hpp>
+#include <chainfksolverpos_recursive.hpp>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( KinFamTest );
 
@@ -199,6 +200,24 @@ void KinFamTest::TreeTest()
     CPPUNIT_ASSERT(tree1.addTree(tree2,"Tree2","Segment2"));
     cout<<tree1<<endl;
 
+    Chain extract_chain1 = tree1.getChain("Segment2", "Segment4");
+    Chain extract_chain2 = tree1.getChain("Segment4", "Segment2");
+    CPPUNIT_ASSERT(extract_chain1.getNrOfJoints()==extract_chain2.getNrOfJoints());
+    CPPUNIT_ASSERT(extract_chain1.getNrOfSegments()==extract_chain2.getNrOfSegments());
+    ChainFkSolverPos_recursive solver1(extract_chain1);
+    ChainFkSolverPos_recursive solver2(extract_chain2);
+
+
+    Frame f1, f2;
+    JntArray jnt1(extract_chain2.getNrOfJoints());
+    JntArray jnt2(extract_chain2.getNrOfJoints());
+    for (int i=0; i<(int)extract_chain2.getNrOfJoints(); i++){
+      jnt1(i) = (i+1)*2;
+      jnt2((int)extract_chain2.getNrOfJoints()-i-1) = -jnt1(i);
+    }
+    solver1.JntToCart(jnt1, f1);
+    solver2.JntToCart(jnt2, f2);
+    CPPUNIT_ASSERT(f1 == f2.Inverse());
 }
 
 

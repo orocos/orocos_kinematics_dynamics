@@ -149,6 +149,15 @@ namespace KDL
             return segments.find(segment_name);
         };
 
+        /**
+         * Request the chain of the tree between chain_root and chain_tip. The chain_root must be an ancester from chain_tip
+         *
+         * @param chain_root the name of the root segment of the chain
+         * @param chain_tip the name of the tip segment of the chain
+         *
+         * @return the chain form chain_root to chain_tip, copied from the tree
+         */
+        Chain getChain(const std::string& chain_root, const std::string& chain_tip)const;
 
 
         const SegmentMap& getSegments()const
