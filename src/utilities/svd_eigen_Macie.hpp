@@ -30,7 +30,7 @@ USING_PART_OF_NAMESPACE_EIGEN
 
 namespace KDL
 {
-    int svd_eigen_Macie(MatrixXd& A,MatrixXd& U,VectorXd& S, MatrixXd& V,
+    int svd_eigen_Macie(const MatrixXd& A,MatrixXd& U,VectorXd& S, MatrixXd& V,
                         MatrixXd& B, VectorXd& tempi,
                         double treshold,bool toggle)
     {
