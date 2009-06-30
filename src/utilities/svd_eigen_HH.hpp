@@ -55,7 +55,7 @@ namespace KDL
     }
 
     /**
-     * svd calculation of boost ublas matrices
+     * svd calculation of eigen matrices
      *
      * @param A matrix<double>(mxn)
      * @param U matrix<double>(mxn)
