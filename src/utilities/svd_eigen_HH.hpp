@@ -66,6 +66,6 @@ namespace KDL
      *
      * @return -2 if maxiter exceeded, 0 otherwise
      */
-    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter=150);
+    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter=150,double epsilon=1e-300);
 }
 #endif

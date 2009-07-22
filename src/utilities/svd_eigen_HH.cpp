@@ -23,21 +23,20 @@
 
 namespace KDL{
     
-    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter)
+    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter,double epsilon)
     {
         //get the rows/columns of the matrix
         const int rows = A.rows();
         const int cols = A.cols();
-        
+    
+        U.setZero();
         U.corner(Eigen::TopLeft,rows,cols)=A;
-        
+
         int i(-1),its(-1),j(-1),jj(-1),k(-1),nm=0;
         int ppi(0);
         bool flag,maxarg1,maxarg2;
         double anorm(0),c(0),f(0),h(0),s(0),scale(0),x(0),y(0),z(0),g(0);
-        
-        g=scale=anorm=0.0;
-        
+
         /* Householder reduction to bidiagonal form. */
         for (i=0;i<cols;i++) {
             ppi=i+1;
@@ -46,7 +45,7 @@ namespace KDL{
             if (i<rows) {
                 // compute the sum of the i-th column, starting from the i-th row
                 for (k=i;k<rows;k++) scale += fabs(U(k,i));
-                if (scale!=0) {
+                if (fabs(scale)>epsilon) {
                     // multiply the i-th column by 1.0/scale, start from the i-th element
                     // sum of squares of column i, start from the i-th element
                     for (k=i;k<rows;k++) {
@@ -54,12 +53,14 @@ namespace KDL{
                         s += U(k,i)*U(k,i);
                     }
                     f=U(i,i);  // f is the diag elem
+                    assert(s>=0);
                     g = -SIGN(sqrt(s),f);
                     h=f*g-s;
                     U(i,i)=f-g;
                     for (j=ppi;j<cols;j++) {
                         // dot product of columns i and j, starting from the i-th row
                         for (s=0.0,k=i;k<rows;k++) s += U(k,i)*U(k,j);
+                        assert(h!=0);
                         f=s/h;
                         // copy the scaled i-th column into the j-th column
                         for (k=i;k<rows;k++) U(k,j) += f*U(k,i);
@@ -73,15 +74,17 @@ namespace KDL{
             if ((i <rows) && (i+1 != cols)) {
                 // sum of row i, start from columns i+1
                 for (k=ppi;k<cols;k++) scale += fabs(U(i,k));
-                if (scale!=0) {
+                if (fabs(scale)>epsilon) {
                     for (k=ppi;k<cols;k++) {
                         U(i,k) /= scale;
                         s += U(i,k)*U(i,k);
                     }
                     f=U(i,ppi);
+                    assert(s>=0);
                     g = -SIGN(sqrt(s),f);
                     h=f*g-s;
                     U(i,ppi)=f-g;
+                    assert(h!=0);
                     for (k=ppi;k<cols;k++) tmp(k)=U(i,k)/h;
                     for (j=ppi;j<rows;j++) {
                         for (s=0.0,k=ppi;k<cols;k++) s += U(j,k)*U(i,k);
@@ -97,7 +100,8 @@ namespace KDL{
         /* Accumulation of right-hand transformations. */
         for (i=cols-1;i>=0;i--) {
             if (i<cols-1) {
-                if (g) {
+                if (fabs(g)>epsilon) {
+                    assert(U(i,ppi)!=0);
                     for (j=ppi;j<cols;j++) V(j,i)=(U(i,j)/U(i,ppi))/g;
                     for (j=ppi;j<cols;j++) {
                         for (s=0.0,k=ppi;k<cols;k++) s += U(i,k)*V(k,j);
@@ -115,10 +119,11 @@ namespace KDL{
             ppi=i+1;
             g=S(i);
             for (j=ppi;j<cols;j++) U(i,j)=0.0;
-            if (g) {
+            if (fabs(g)>epsilon) {
                 g=1.0/g;
                 for (j=ppi;j<cols;j++) {
                     for (s=0.0,k=ppi;k<rows;k++) s += U(k,i)*U(k,j);
+                    assert(U(i,i)!=0);
                     f=(s/U(i,i))*g;
                     for (k=i;k<rows;k++) U(k,j) += f*U(k,i);
                 }
@@ -151,6 +156,7 @@ namespace KDL{
                         g=S(i);
                         h=PYTHAG(f,g);
                         S(i)=h;
+                        assert(h!=0);
                         h=1.0/h;
                         c=g*h;
                         s=(-f*h);
@@ -177,9 +183,12 @@ namespace KDL{
                 y=S(nm);
                 g=tmp(nm);
                 h=tmp(k);
+                assert(h!=0&&y!=0);
                 f=((y-z)*(y+z)+(g-h)*(g+h))/(2.0*h*y);
                 
                 g=PYTHAG(f,1.0);
+                assert(x!=0);
+                assert((f+SIGN(g,f))!=0);
                 f=((x-z)*(x+z)+h*((y/(f+SIGN(g,f)))-h))/x;
                 
                 /* Next QR transformation: */
@@ -192,6 +201,7 @@ namespace KDL{
                     g=c*g;
                     z=PYTHAG(f,h);
                     tmp(j)=z;
+                    assert(z!=0);
                     c=f/z;
                     s=h/z;
                     f=x*c+g*s;
@@ -206,7 +216,8 @@ namespace KDL{
                     }
                     z=PYTHAG(f,h);
                     S(j)=z;
-                    if (z) {
+                    assert(z!=0);
+                    if (fabs(z)>epsilon) {
                         z=1.0/z;
                         c=f*z;
                         s=h*z;
@@ -249,7 +260,6 @@ namespace KDL{
                 V.col(i).swap(V.col(i_max));
             }
         }
-        
         
         if (its == maxiter) 
             return (-2);
