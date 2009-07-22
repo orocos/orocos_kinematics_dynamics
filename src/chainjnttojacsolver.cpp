@@ -58,7 +58,7 @@ namespace KDL
 
             //Only increase jointnr if the segment has a joint
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
-                jac.twists[j] = t_tmp;
+                jac.setColumn(j,t_tmp);
                 j++;
             }
 

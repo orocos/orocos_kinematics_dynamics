@@ -35,6 +35,9 @@
 
 #include "../../frames_io.hpp"
 
+#include <jntarray.hpp>
+#include <jacobian.hpp>
+
 #include "motionproperties.hpp"
 #include "kinfamproperties.hpp"
 
@@ -54,7 +57,19 @@ namespace KDL
     /**
      * Used for joints
      */
-
+    struct JntArrayTypeInfo : public TemplateTypeInfo<JntArray,true>
+    {
+        JntArrayTypeInfo():TemplateTypeInfo<JntArray, true >("JntArray")
+        {
+        };
+    };
+    
+    struct JacobianTypeInfo : public TemplateTypeInfo<Jacobian,true>
+    {
+        JacobianTypeInfo():TemplateTypeInfo<Jacobian,true >("Jacobian")
+        {
+        };
+    };
 
     /**
      * Used for Frame and Rotation.
@@ -116,9 +131,12 @@ namespace KDL
         ti->addType( new JointTypeInfo() );
         ti->addType( new SegmentTypeInfo());
         ti->addType( new ChainTypeInfo());
-
+        
         ti->addType( new vectorTypeInfo<Vector>());
         //ti->addType( new vectorTypeInfo<double>());
+
+        ti->addType( new JntArrayTypeInfo());
+        ti->addType( new JacobianTypeInfo());
 
         return true;
     }

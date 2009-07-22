@@ -69,17 +69,19 @@ namespace KDL
         
         double sum;
         unsigned int i,j;
-
+        
+        /*
         for (i=0;i<jac.rows();i++) {
             for (j=0;j<jac.columns();j++)
                 tmp_jac(i,j) = jac(i,j);
         }
+        */
         
         // Create the Weighted jacobian
-        tmp_jac_weight1 = (tmp_jac*weight_js).lazy();
+        tmp_jac_weight1 = (jac.data*weight_js).lazy();
         tmp_jac_weight2 = (weight_ts,tmp_jac_weight1).lazy();
    
-	// Compute the SVD of the weighted jacobian
+        // Compute the SVD of the weighted jacobian
         int ret = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
                 
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
@@ -100,6 +102,7 @@ namespace KDL
             else
                 tmp(i) = sum/S(i);
         }
+        /*
         // x = Lx^-1*V*tmp + x
         for (i=0;i<jac.columns();i++) {
             sum = 0.0;
@@ -108,6 +111,8 @@ namespace KDL
             }
             qdot_out(i)=sum;
         }
+        */
+        qdot_out.data=(tmp_js*tmp).lazy();
         return ret;
     }
     

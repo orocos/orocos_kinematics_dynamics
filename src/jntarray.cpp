@@ -23,125 +23,98 @@
 
 namespace KDL
 {
-    JntArray::JntArray():
-            size(0),
-            data(NULL)
+    USING_PART_OF_NAMESPACE_EIGEN
+
+    JntArray::JntArray()
     {
     }
 
     JntArray::JntArray(unsigned int _size):
-        size(_size)
+        data(_size)
     {
-        assert(0 < size);
-        data = new double[size];
-        SetToZero(*this);
+        data.setZero();
     }
 
 
     JntArray::JntArray(const JntArray& arg):
-        size(arg.size)
+        data(arg.data)
     {
-        data = ((0 < size) ? new double[size] : NULL);
-        for(unsigned int i=0;i<size;i++)
-            data[i]=arg.data[i];
     }
 
     JntArray& JntArray::operator = (const JntArray& arg)
     {
-        assert(size==arg.size);
-        for(unsigned int i=0;i<size;i++)
-            data[i]=arg.data[i];
+        data=arg.data;
         return *this;
     }
 
 
     JntArray::~JntArray()
     {
-        delete [] data;
     }
 
     void JntArray::resize(unsigned int newSize)
     {
-        delete [] data;
-        size = newSize;
-        data = new double[size];
-        SetToZero(*this);
+        data.resize(newSize);
     }
 
     double JntArray::operator()(unsigned int i,unsigned int j)const
     {
-        assert(i<size&&j==0);
-        assert(0 != size);  // found JntArray containing no data
-        return data[i];
+        assert(j==0);
+        return data(i);
     }
 
     double& JntArray::operator()(unsigned int i,unsigned int j)
     {
-        assert(i<size&&j==0);
-        assert(0 != size);  // found JntArray containing no data
-        return data[i];
+        assert(j==0);
+        return data(i);
     }
 
     unsigned int JntArray::rows()const
     {
-        return size;
+        return data.rows();
     }
 
     unsigned int JntArray::columns()const
     {
-        return 0;
+        return data.cols();
     }
 
     void Add(const JntArray& src1,const JntArray& src2,JntArray& dest)
     {
-        assert(src1.size==src2.size&src1.size==dest.size);
-        for(unsigned int i=0;i<dest.size;i++)
-            dest.data[i]=src1.data[i]+src2.data[i];
+        dest.data=src1.data+src2.data;
     }
 
     void Subtract(const JntArray& src1,const JntArray& src2,JntArray& dest)
     {
-        assert(src1.size==src2.size&src1.size==dest.size);
-        for(unsigned int i=0;i<dest.size;i++)
-            dest.data[i]=src1.data[i]-src2.data[i];
+        dest.data=src1.data-src2.data;
     }
 
     void Multiply(const JntArray& src,const double& factor,JntArray& dest)
     {
-        assert(src.size==dest.size);
-        for(unsigned int i=0;i<dest.size;i++)
-            dest.data[i]=factor*src.data[i];
+        dest.data=factor*src.data;
     }
 
     void Divide(const JntArray& src,const double& factor,JntArray& dest)
     {
-        assert(src.rows()==dest.size);
-        for(unsigned int i=0;i<dest.size;i++)
-            dest.data[i]=src.data[i]/factor;
+        dest.data=src.data/factor;
     }
 
     void MultiplyJacobian(const Jacobian& jac, const JntArray& src, Twist& dest)
     {
-        assert(jac.columns()==src.size);
-        SetToZero(dest);
-        for(unsigned int i=0;i<6;i++)
-            for(unsigned int j=0;j<src.size;j++)
-                dest(i)+=jac(i,j)*src.data[j];
+        Eigen::Matrix<double,6,1> t=(jac.data*src.data).lazy();
+        dest=Twist(Vector(t(0),t(1),t(2)),Vector(t(3),t(4),t(5)));
     }
-
+    
     void SetToZero(JntArray& array)
     {
-        for(unsigned int i=0;i<array.size;i++)
-            array.data[i]=0;
+        array.data.setZero();
     }
 
     bool Equal(const JntArray& src1, const JntArray& src2,double eps)
     {
-        assert(src1.size==src2.size);
-        bool ret = true;
-        for(unsigned int i=0;i<src1.size;i++)
-            ret = ret && Equal(src1.data[i],src2.data[i],eps);
-        return ret;
+        if(src1.rows()!=src2.rows())
+            return false;
+        return src1.data.isApprox(src2.data,eps);
     }
 
     bool operator==(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);};

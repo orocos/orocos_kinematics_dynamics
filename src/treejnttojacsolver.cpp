@@ -56,7 +56,7 @@ int TreeJntToJacSolver::JntToJac(const JntArray& q_in, Jacobian& jac,
             //transform the base of the twist to the endpoint
             t_local = T_total.M.Inverse(t_local);
             //store the twist in the jacobian:
-            jac.twists[q_nr] = t_local;
+            jac.setColumn(q_nr,t_local);
             //goto the parent
             it = it->second.parent;
         }//endif

@@ -40,7 +40,6 @@ namespace RTT
 
 
     template class Property<KDL::Frame>;
-    //template class Property<KDL::JntArray>;
     template class Property<KDL::Wrench>;
     template class Property<KDL::Twist>;
     template class Property<KDL::Rotation>;
@@ -363,27 +362,7 @@ namespace RTT
         return false;
     }
 
-    //void decomposeProperty(const JntArray &v, PropertyBag& targetbag)
-    //{
-    //    targetbag.setType("JntArray");
-    //    int dimension = v.rows();
-    //
-    //    assert(targetbag.empty());
-    //
-    //    for( int i=0;i<dimension;i++)
-    //        targetbag.add(new Property<double>("","",v(i)));
-    //}
-    //
-    //bool composeProperty(const PropertyBag& bag, JntArray &v)
-    //{
-    //    if (bag.getType()==PropertyBag& bag, JntArray& result){
-    //        Property<double>* comp;
-    //        int dimension = bag.size();
-    //
-    //    JntArrayComposer vas( bag );
-    //    return vas.getResult(v);
-    //}
-
+    
     void decomposeProperty(const Vector &v, PropertyBag& targetbag)
     {
         // construct a property with same name and description, but containing a typed PropertyBag.

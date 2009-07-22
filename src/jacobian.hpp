@@ -23,52 +23,57 @@
 #define KDL_JACOBIAN_HPP
 
 #include "frames.hpp"
+#include <Eigen/Core>
 
 namespace KDL
 {
-    //Forward declaration
-    class ChainJntToJacSolver;
-
     class Jacobian
     {
-        friend class ChainJntToJacSolver;
-    private:
-        unsigned int size;
-        unsigned int nr_blocks;
     public:
-        Twist* twists;
-        Jacobian(unsigned int size=0,unsigned int nr=1);
+        Eigen::Matrix<double,6,Eigen::Dynamic> data;
+        Jacobian();
+        Jacobian(unsigned int nr_of_columns);
         Jacobian(const Jacobian& arg);
 
-        void resize(unsigned int newSize, unsigned int newNnr=1);
+        ///Allocates memory for new size (can break realtime behavior)
+        void resize(unsigned int newNrOfColumns);
 
+        ///Allocates memory if size of this and argument is different
         Jacobian& operator=(const Jacobian& arg);
 
-        bool operator ==(const Jacobian& arg);
-        bool operator !=(const Jacobian& arg);
+        bool operator ==(const Jacobian& arg)const;
+        bool operator !=(const Jacobian& arg)const;
         
         friend bool Equal(const Jacobian& a,const Jacobian& b,double eps=epsilon);
         
 
         ~Jacobian();
 
-        double operator()(int i,int j)const;
-        double& operator()(int i,int j);
+        double operator()(unsigned int i,unsigned int j)const;
+        double& operator()(unsigned int i,unsigned int j);
         unsigned int rows()const;
         unsigned int columns()const;
 
         friend void SetToZero(Jacobian& jac);
 
-        friend void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
-        friend void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
-        friend void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
+        friend bool changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
+        friend bool changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
+        friend bool changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
+
+        Twist getColumn(unsigned int i) const;
+        void setColumn(unsigned int i,const Twist& t);
+
+        void changeRefPoint(const Vector& base_AB);
+        void changeBase(const Rotation& rot);
+        void changeRefFrame(const Frame& frame);
 
 
     };
 
-    void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
-    void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
-    void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
+    bool changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
+    bool changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
+    bool changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
+
 
 }
 

@@ -25,6 +25,8 @@
 #include "frames.hpp"
 #include "jacobian.hpp"
 
+#include <Eigen/Core>
+
 namespace KDL
 {
     /**
@@ -66,10 +68,9 @@ class MyTask : public RTT::TaskContext
 
     class JntArray
     {
-    private:
-        unsigned int size;
-        double* data;
     public:
+        Eigen::VectorXd data;
+
         /** Construct with _no_ data array
          * @post NULL == data
          * @post 0 == rows()
