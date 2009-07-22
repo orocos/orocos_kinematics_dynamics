@@ -27,6 +27,12 @@ IF(ENABLE_TESTS)
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
   ADD_TEST(inertiatest inertiatest)
 
+  ADD_EXECUTABLE(jacobiantest jacobiantest.cpp test-runner.cpp)
+  TARGET_LINK_LIBRARIES(jacobiantest orocos-kdl ${CPPUNIT})
+  SET_TARGET_PROPERTIES( jacobiantest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
+  ADD_TEST(jacobiantest jacobiantest)
+
   #ADD_EXECUTABLE(rframestest  rframestest.cpp)
   #TARGET_LINK_LIBRARIES(rframestest orocos-kdl)
   #ADD_TEST(rframestest rframestest)

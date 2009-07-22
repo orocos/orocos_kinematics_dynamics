@@ -2,7 +2,7 @@
 #include <frames_io.hpp>
 #include <framevel_io.hpp>
 #include <kinfam_io.hpp>
-#include <ctime>
+#include <time.h>
 
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SolverTest );
@@ -145,6 +145,7 @@ void SolverTest::FkVelAndIkVelTest()
     ChainFkSolverVel_recursive fksolver3(chain3);
     ChainIkSolverVel_pinv iksolver3(chain3);
     ChainIkSolverVel_pinv_givens iksolver_pinv_givens3(chain3);
+    std::cout<<"KDL-SVD-HouseHolder"<<std::endl;
     FkVelAndIkVelLocal(chain3,fksolver3,iksolver3);
     std::cout<<"KDL-SVD-Givens"<<std::endl;
     FkVelAndIkVelLocal(chain3,fksolver3,iksolver_pinv_givens3);
@@ -154,6 +155,7 @@ void SolverTest::FkVelAndIkVelTest()
     ChainFkSolverVel_recursive fksolver4(chain4);
     ChainIkSolverVel_pinv iksolver4(chain4);
     ChainIkSolverVel_pinv_givens iksolver_pinv_givens4(chain4);
+    std::cout<<"KDL-SVD-HouseHolder"<<std::endl;
     FkVelAndIkVelLocal(chain4,fksolver4,iksolver4);
     std::cout<<"KDL-SVD-Givens"<<std::endl;
     FkVelAndIkVelLocal(chain4,fksolver4,iksolver_pinv_givens4);
@@ -161,41 +163,52 @@ void SolverTest::FkVelAndIkVelTest()
 
 void SolverTest::FkPosAndIkPosTest()
 {
+    std::cout<<"square problem"<<std::endl;
     ChainFkSolverPos_recursive fksolver1(chain1);
     ChainIkSolverVel_pinv iksolver1v(chain1);
     ChainIkSolverVel_pinv_givens iksolverv_pinv_givens1(chain1);
     ChainIkSolverPos_NR iksolver1(chain1,fksolver1,iksolver1v);
-    ChainIkSolverPos_NR iksolver1_givens(chain1,fksolver1,iksolverv_pinv_givens1);
+    ChainIkSolverPos_NR iksolver1_givens(chain1,fksolver1,iksolverv_pinv_givens1,1000);
 
+    std::cout<<"KDL-SVD-HouseHolder"<<std::endl;
     FkPosAndIkPosLocal(chain1,fksolver1,iksolver1);
+    std::cout<<"KDL-SVD-Givens"<<std::endl;
     FkPosAndIkPosLocal(chain1,fksolver1,iksolver1_givens);
 
+    std::cout<<"underdetermined problem"<<std::endl;
     ChainFkSolverPos_recursive fksolver2(chain2);
     ChainIkSolverVel_pinv iksolverv2(chain2);
     ChainIkSolverVel_pinv_givens iksolverv_pinv_givens2(chain2);
     ChainIkSolverPos_NR iksolver2(chain2,fksolver2,iksolverv2);
-    ChainIkSolverPos_NR iksolver2_givens(chain2,fksolver2,iksolverv_pinv_givens2);
+    ChainIkSolverPos_NR iksolver2_givens(chain2,fksolver2,iksolverv_pinv_givens2,1000);
 
+    std::cout<<"KDL-SVD-HouseHolder"<<std::endl;
     FkPosAndIkPosLocal(chain2,fksolver2,iksolver2);
+    std::cout<<"KDL-SVD-Givens"<<std::endl;
     FkPosAndIkPosLocal(chain2,fksolver2,iksolver2_givens);
 
-
+    std::cout<<"overdetermined problem"<<std::endl;
     ChainFkSolverPos_recursive fksolver3(chain3);
     ChainIkSolverVel_pinv iksolverv3(chain3);
     ChainIkSolverVel_pinv_givens iksolverv_pinv_givens3(chain3);
     ChainIkSolverPos_NR iksolver3(chain3,fksolver3,iksolverv3);
-    ChainIkSolverPos_NR iksolver3_givens(chain3,fksolver3,iksolverv_pinv_givens3);
+    ChainIkSolverPos_NR iksolver3_givens(chain3,fksolver3,iksolverv_pinv_givens3,1000);
 
+    std::cout<<"KDL-SVD-HouseHolder"<<std::endl;
     FkPosAndIkPosLocal(chain3,fksolver3,iksolver3);
+    std::cout<<"KDL-SVD-Givens"<<std::endl;
     FkPosAndIkPosLocal(chain3,fksolver3,iksolver3_givens);
 
+    std::cout<<"overdetermined problem"<<std::endl;
     ChainFkSolverPos_recursive fksolver4(chain4);
     ChainIkSolverVel_pinv iksolverv4(chain4);
     ChainIkSolverVel_pinv_givens iksolverv_pinv_givens4(chain4);
-    ChainIkSolverPos_NR iksolver4(chain4,fksolver4,iksolverv4);
-    ChainIkSolverPos_NR iksolver4_givens(chain4,fksolver4,iksolverv_pinv_givens4);
+    ChainIkSolverPos_NR iksolver4(chain4,fksolver4,iksolverv4,1000);
+    ChainIkSolverPos_NR iksolver4_givens(chain4,fksolver4,iksolverv_pinv_givens4,1000);
 
+    std::cout<<"KDL-SVD-HouseHolder"<<std::endl;
     FkPosAndIkPosLocal(chain4,fksolver4,iksolver4);
+    std::cout<<"KDL-SVD-Givens"<<std::endl;
     FkPosAndIkPosLocal(chain4,fksolver4,iksolver4_givens);
 }
 
@@ -265,31 +278,37 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
 
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
-    for(unsigned int i=0;i<chain.getNrOfJoints();i++){
-        random(q(i));
-        random(qdot(i));
-    }
-    JntArrayVel qvel(q,qdot);
-    JntArray qdot_solved(chain.getNrOfJoints());
+    clock_t start, finish;
+    start = clock();
+    for(unsigned int i=0;i<1000;i++){
 
-    FrameVel cart;
-
-    CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart));
-    for(unsigned int i=0;i<1;i++){
+        for(unsigned int i=0;i<chain.getNrOfJoints();i++){
+            random(q(i));
+            random(qdot(i));
+        }
+        JntArrayVel qvel(q,qdot);
+        JntArray qdot_solved(chain.getNrOfJoints());
+        
+        FrameVel cart;
+        
+        CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart));
+        
         int ret = iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved);
         CPPUNIT_ASSERT(0<=ret);
+
+        qvel.deriv()=qdot_solved;
+        
+        if(chain.getNrOfJoints()<=6)
+            CPPUNIT_ASSERT_EQUAL(qvel.qdot,qdot_solved);//,1e-7));
+        else{
+            FrameVel cart_solved;
+            CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
+            CPPUNIT_ASSERT(Equal(cart.deriv(),cart_solved.deriv(),1e-5));
+        }
     }
-
-    qvel.deriv()=qdot_solved;
-
-    if(chain.getNrOfJoints()<=6)
-        CPPUNIT_ASSERT_EQUAL(qvel.qdot,qdot_solved);//,1e-7));
-    else{
-        FrameVel cart_solved;
-        CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
-        CPPUNIT_ASSERT(Equal(cart.deriv(),cart_solved.deriv(),1e-5));
-    }
-
+    finish = clock();
+    
+    std::cout<<"Time elapsed: "<<(double(finish - start)/CLOCKS_PER_SEC )<<std::endl;
 }
 
 
