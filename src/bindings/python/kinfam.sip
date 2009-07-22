@@ -329,39 +329,74 @@ public:
     ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
-    void setWeightTS(SIP_PYTUPLE);
+    void setWeightTS(SIP_PYLIST);
 %MethodCode
-    //void setWeightTS(const ublas::symmetric_matrix<double> Mx);
+    //void setWeightTS(const Eigen::MatrixXd& Mx);
     //Mx has to be a 6x6 Matrix
-    double arr[6];
-    PyArg_ParseTuple(a0, "dddddd", &arr[0], &arr[1], &arr[2], &arr[3], &arr[4], &arr[5]);
-    ublas::symmetric_matrix<double> Wts(ublas::identity_matrix<double>(6));
-    Wts(0,0) = arr[0];
-    Wts(1,1) = arr[1];
-    Wts(2,2) = arr[2];
-    Wts(3,3) = arr[3];
-    Wts(4,5) = arr[4];
-    Wts(5,5) = arr[5];
 
-    sipCpp->setWeightTS(Wts);
-
+    Py_ssize_t numRows,numCols;
+    double c_item;
+    PyObject *list=a0;
+    numRows=PyList_Size(list);
+    PyObject *temp1;
+    temp1=PyList_GetItem(list,0);
+    numCols=PyList_Size(temp1);
+    if (numRows!=numCols) {
+       sipIsErr=1; //todo: raise exception
+    }
+    if (numRows!=6) {
+       sipIsErr=1; //todo: raise exception
+    }
+    Eigen::MatrixXd Mx;
+    Mx=Eigen::MatrixXd::Identity(numRows,numCols);
+    
+    for (Py_ssize_t r=0;r<numRows;r++) {
+        PyObject *row;
+        row=PyList_GetItem(list,r);
+        if (numCols!=PyList_Size(row)) {
+           sipIsErr=1; //todo: raise exception
+        }
+        for (Py_ssize_t c=0;c<numCols;c++) {
+            PyObject *item;
+            item=PyList_GetItem(row,c);
+            c_item=PyFloat_AsDouble(item);
+            Mx(r,c)= c_item;
+        }
+    }
+    sipCpp->setWeightTS(Mx);
 %End
 
-    void setWeightJS(SIP_PYTUPLE);
+    void setWeightJS(SIP_PYLIST);
 %MethodCode
-    //void setWeightJS(const ublas::symmetric_matrix<double> Mx);
-    //Mx has to be a 6x6 Matrix
-    double arr[6];
-    PyArg_ParseTuple(a0, "dddddd", &arr[0], &arr[1], &arr[2], &arr[3], &arr[4], &arr[5]);
-    ublas::symmetric_matrix<double> Wts(ublas::identity_matrix<double>(6));
-    Wts(0,0) = arr[0];
-    Wts(1,1) = arr[1];
-    Wts(2,2) = arr[2];
-    Wts(3,3) = arr[3];
-    Wts(4,5) = arr[4];
-    Wts(5,5) = arr[5];
-
-    sipCpp->setWeightJS(Wts);
+    //void setWeightJS(const Eigen::MatrixXd& Mx);
+    //Mx has to be a simetric positive definite Matrix
+    //unsigned int nOfJoints=sipCpp->chain.getNrOfJoints(); //To check that we are receiving valid data dimensions. This doesn't work, chain is a private member. todo: How can we check for this?
+    Py_ssize_t numRows,numCols;
+    double c_item;
+    PyObject *list=a0;
+    numRows=PyList_Size(list);
+    PyObject *temp1;
+    temp1=PyList_GetItem(list,0);
+    numCols=PyList_Size(temp1);
+    if (numRows!=numCols) {
+       sipIsErr=1; //todo: raise exception
+    }
+    Eigen::MatrixXd Mq;
+    Mq=Eigen::MatrixXd::Identity(numRows,numCols);
+    for (Py_ssize_t r=0;r<numRows;r++) {
+        PyObject *row;
+        row=PyList_GetItem(list,r);
+        if (numCols!=PyList_Size(row)) {
+           sipIsErr=1; //todo: raise exception
+        }
+        for (Py_ssize_t c=0;c<numCols;c++) {
+            PyObject *item;
+            item=PyList_GetItem(row,c);
+            c_item=PyFloat_AsDouble(item);
+            Mq(r,c)= c_item;
+        }
+    }
+    sipCpp->setWeightJS(Mq);
 %End
 
     void setLambda(const double& lambda);
