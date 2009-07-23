@@ -137,9 +137,11 @@ public:
     static Rotation RotY(double angle)/Factory/;
     static Rotation RotZ(double angle)/Factory/;
     static Rotation Rot(const Vector& vec,double angle)/Factory/;
+    static Rotation Rot2(const Vector& vec,double angle)/Factory/;
     static Rotation EulerZYZ(double Alfa,double Beta,double Gamma)/Factory/;
     static Rotation RPY(double roll,double pitch,double yaw)/Factory/;
     static Rotation EulerZYX(double Alfa,double Beta,double Gamma)/Factory/;
+    static Rotation Quaternion(double x, double y, double z, double w)/Factory/;
     
 
     void DoRotX(double angle);
@@ -151,6 +153,8 @@ public:
     void GetEulerZYZ(double& alfa /Out/,double& beta /Out/,double& gamma /Out/) const;
     void GetRPY(double& roll /Out/,double& pitch /Out/,double& yaw /Out/) const;
     void GetEulerZYX(double& Alfa /Out/,double& Beta /Out/,double& Gamma /Out/) const;
+    void GetQuaternion(double& x /Out/,double& y /Out/,double& z /Out/, double& w) const;
+
     
     Vector operator*(const Vector& v) const /Numeric,Factory/;
     Twist operator*(const Twist& arg) const /Numeric,Factory/;
@@ -159,6 +163,11 @@ public:
     Vector UnitX() const /Factory/;
     Vector UnitY() const /Factory/;
     Vector UnitZ() const /Factory/;
+
+    void UnitX(const Vector& X);
+    void UnitY(const Vector& X);
+    void UnitZ(const Vector& X);
+
     
 };
 bool Equal(const Rotation& a,const Rotation& b,double eps=epsilon);
