@@ -17,7 +17,7 @@ SET (BINDINGS_MAKEFILE ${CMAKE_CURRENT_BINARY_DIR}/Makefile)
 ADD_CUSTOM_TARGET(python ALL DEPENDS ${BINDINGS_LIBS})
 
 # don't run python before the libs are built
-ADD_DEPENDENCIES (python orocos-kdl)
+#ADD_DEPENDENCIES (python orocos-kdl)
 
 TARGET_LINK_LIBRARIES(python orocos-kdl)
 
@@ -49,20 +49,12 @@ ADD_CUSTOM_COMMAND(TARGET python POST_BUILD
 #IF (BINDINGS_GLOBAL_INSTALL)
 
 # python's site-packages dir: bindings will be installed here
-IF (UNIX)
-  SET (CMD "
-import sys
-v = sys.version_info
-print '${CMAKE_INSTALL_PREFIX}' + '/lib/python' + str(v[0]) + '.' + str(v[1]) + '/site-packages'
-")
-ELSE (UNIX)
-  SET (CMD "
-import sys
-print sys.exec_prefix + '/lib/site-packages'
-")
-ENDIF (UNIX)
-
-EXEC_PROGRAM(${PYTHON_EXECUTABLE} ARGS -c "\"${CMD}\"" OUTPUT_VARIABLE SITE_PKG_PATH)
+execute_process(
+    COMMAND
+    ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print sysconfig.get_python_lib(1,0,prefix='${CMAKE_INSTALL_EXEC_PREFIX}')"
+    OUTPUT_VARIABLE PYTHON_INSTDIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 
 #ELSE (BINDINGS_GLOBAL_INSTALL)
 #
@@ -72,7 +64,7 @@ EXEC_PROGRAM(${PYTHON_EXECUTABLE} ARGS -c "\"${CMD}\"" OUTPUT_VARIABLE SITE_PKG_
 
 
 # Step 4: install built libs to python's site packages
-INSTALL(FILES ${BINDINGS_LIBS} DESTINATION ${SITE_PKG_PATH})
+INSTALL(FILES ${BINDINGS_LIBS} DESTINATION ${PYTHON_INSTDIR})
 
 
 ENDIF(HAVE_PYTHON)
