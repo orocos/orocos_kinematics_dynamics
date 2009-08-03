@@ -1,0 +1,71 @@
+Source: orocos-kdl
+Priority: extra
+Maintainer: Ruben Smits <ruben.smits@mech.kuleuven.be>
+Build-Depends: debhelper (>= 5), cmake (>=2.6.0), pkg-config, libboost-dev | libboost1.35-dev | libboost1.36-dev | libboost1.37-dev, tao-idl, liborocos-rtt-common-dev, python-all-dev(>=2.3.5-11), python-sip4-dev (>=4.4.5), python-sip4, python-support, sip4, libeigen2-dev @BUILD_DEPS@
+Standards-Version: 3.7.2
+Section: libs
+
+Package: liborocos-kdl@LIBVER@-dev
+Section: libdevel
+Architecture: any
+Depends: liborocos-kdl@LIBVER@ (= ${Source-Version})
+Provides: liborocos-kdl-dev
+Conflicts: liborocos-kdl-dev
+Replaces: liborocos-kdl-dev
+Description: Kinematics and Dynamics Library development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdl@LIBVER@
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Kinematics and Dynamics Library runtime
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-common@LIBVER@-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-rtt-common-dev, liborocos-kdl@LIBVER@-dev
+#, liborocos-kdltk-gnulinux@LIBVER@ | liborocos-kdltk-lxrt@LIBVER@ | liborocos-kdltk-xenomai@LIBVER@
+Provides: liborocos-kdltk-common-dev
+Conflicts: liborocos-kdltk-common-dev
+Replaces: liborocos-kdltk-common-dev
+Description: orocos-rtt binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-corba-common@LIBVER@-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-rtt-corba-common-dev, liborocos-kdltk-common@LIBVER@-dev
+#, liborocos-kdltk-corba-gnulinux@LIBVER@ | liborocos-kdltk-corba-lxrt@LIBVER@ | liborocos-kdltk-corba-xenomai@LIBVER@
+Provides: liborocos-kdltk-corba-common-dev
+Conflicts: liborocos-kdltk-corba-common-dev
+Replaces: liborocos-kdltk-corba-common-dev
+Description: orocos-rtt binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+
+Package: python-orocos-kdl@LIBVER@
+Section: libs
+Architecture: any
+Depends: ${python:Depends}, python, liborocos-kdl@LIBVER@
+XS-Python-Version: current
+XB-Python-Version:${python:Versions}
+Description: Kinematics and Dynamics Library python binding
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+

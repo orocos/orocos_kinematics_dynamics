@@ -1,0 +1,15 @@
+
+configure-xenomai: configure-stamp-xenomai
+configure-stamp-xenomai:
+	mkdir -p dbuild.xenomai
+	cd  dbuild.xenomai; \
+	cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=xenomai -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr; cmake ../ -DENABLE_CORBA=ON;
+	touch configure-stamp-xenomai
+
+build-xenomai: build-stamp-xenomai
+build-stamp-xenomai: configure-stamp-xenomai
+	cd dbuild.xenomai; $(MAKE) VERBOSE=1
+	touch build-stamp-xenomai
+
+install-xenomai: build-xenomai
+	cd dbuild.xenomai; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp

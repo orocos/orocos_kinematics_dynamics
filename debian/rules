@@ -5,9 +5,16 @@
 # As a special exception, when this file is copied by dh-make into a
 # dh-make output file, you may use that output file without restriction.
 # This special exception was added by Craig Small in version 0.37 of dh-make.
-           
+
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
+
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
 
 CFLAGS = -Wall -g
 
@@ -17,56 +24,58 @@ else
 	CFLAGS += -O2
 endif
 
+# allow parallel build using recommended approach from 
+# http://www.de.debian.org/doc/debian-policy/ch-source.html@s-debianrules-options
+#
+# For Bash type:
+#
+# export DEB_BUILD_OPTIONS="parallel=2"
+# svn-buildpackage ...
+#
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	NUMJOBS=$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	MAKE_FLAGS += -j$(NUMJOBS)
+endif
+
 # shared library versions, option 1
-version=2.0.5
-major=2
+#version=2.0.5
+#major=2
+version=`grep orocos-kdl debian/changelog | head -1 | awk '{print substr($$2,2,length($$2)-2)}'`
+major=`grep orocos-kdl debian/changelog | head -1 | awk '{print substr($$2,2,3)}'`
 # option 2, assuming the library is created as src/.libs/libfoo.so.2.0.5 or so
 #version=`ls src/.libs/lib*.so.* | \
 # awk '{if (match($$0,/[0-9]+\.[0-9]+\.[0-9]+$$/)) print substr($$0,RSTART)}'`
 #major=`ls src/.libs/lib*.so.* | \
 # awk '{if (match($$0,/\.so\.[0-9]+$$/)) print substr($$0,RSTART+4)}'`
 
-configure: configure-stamp
+include debian/rules.targets
+
+configure: configure-stamp $(CONFIGURE_TARGETS)
 configure-stamp:
 	dh_testdir
-	# Add here commands to configure the package.
-	mkdir -p build.gnulinux; cd build.gnulinux; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=gnulinux -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/usr;cmake ../ -DENABLE_CORBA=ON;
-	mkdir -p build.lxrt; cd build.lxrt; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=lxrt -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;cmake .. -DENABLE_CORBA=ON;	
-	mkdir -p build.xenomai; cd build.xenomai; cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=xenomai -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;cmake ../ -DENABLE_CORBA=ON;
 	touch configure-stamp
 
 
-build: build-stamp
+build: build-stamp $(BUILD_TARGETS)
 build-stamp: configure-stamp 
 	dh_testdir
-
-	# Add here commands to compile the package.
-	cd build.lxrt; $(MAKE) VERBOSE=1;
-	cd build.xenomai; $(MAKE) VERBOSE=1;
-	cd build.gnulinux; $(MAKE) VERBOSE=1;$(MAKE) python VERBOSE=1;
-	touch $@
-
+	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
+	rm -f build-stamp* 
+	rm -f configure-stamp*
 
-	# Add here commands to clean up after the build process.
+# Add here commands to clean up after the build process.
 	-rm -rf build*
 
 	dh_clean 
 
-install: build
+install: build  $(INSTALL_TARGETS)
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
 	dh_installdirs
-
-	# Add here commands to install the package into debian/tmp
-	cd build.gnulinux; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-	cd build.lxrt; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-	cd build.xenomai; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -79,7 +88,7 @@ binary-arch: build install
 	dh_installchangelogs 
 	dh_installdocs
 	dh_installexamples
-	dh_install --sourcedir=debian/tmp
+	dh_install --sourcedir=debian/tmp --list-missing
 #	dh_installmenu
 #	dh_installdebconf	
 #	dh_installlogrotate
@@ -96,6 +105,8 @@ binary-arch: build install
 	dh_fixperms
 #	dh_perl
 	dh_pysupport
+#	dh_pycentral
+#	dh_python
 	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps

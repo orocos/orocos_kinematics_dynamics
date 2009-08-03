@@ -1,0 +1,46 @@
+Package: liborocos-kdltk-@TARGET@@LIBVER@
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Kinematics and Dynamics Library rtt-@TARGET@ binding
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-corba-@TARGET@@LIBVER@
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Kinematics and Dynamics Library rtt-corba-@TARGET@ binding
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-@TARGET@@LIBVER@-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-kdltk-common@LIBVER@-dev, liborocos-kdltk-@TARGET@@LIBVER@
+Provides: liborocos-kdltk-@TARGET@-dev
+Conflicts: liborocos-kdltk-@TARGET@-dev
+Replaces: liborocos-kdltk-@TARGET@-dev
+Description: orocos-rtt-@TARGET@ binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+
+Package: liborocos-kdltk-corba-@TARGET@@LIBVER@-dev
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, liborocos-rtt-corba-common-dev, liborocos-kdltk-corba-common@LIBVER@-dev, liborocos-kdltk-@TARGET@@LIBVER@-dev, liborocos-kdltk-corba-@TARGET@@LIBVER@
+Provides: liborocos-kdltk-corba-@TARGET@-dev
+Conflicts: liborocos-kdltk-corba-@TARGET@-dev
+Replaces: liborocos-kdltk-corba-@TARGET@-dev
+Description: orocos-rtt-corba-@TARGET@ binding development files
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+

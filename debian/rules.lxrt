@@ -1,0 +1,15 @@
+
+configure-lxrt: configure-stamp-lxrt
+configure-stamp-lxrt:
+	mkdir -p dbuild.lxrt
+	cd  dbuild.lxrt; \
+	cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=lxrt -DPYTHON_BINDINGS=OFF -DCMAKE_INSTALL_PREFIX=/usr;cmake .. -DENABLE_CORBA=ON;
+	touch configure-stamp-lxrt
+
+build-lxrt: build-stamp-lxrt
+build-stamp-lxrt: configure-stamp-lxrt
+	cd dbuild.lxrt; $(MAKE) VERBOSE=1
+	touch build-stamp-lxrt
+
+install-lxrt: build-lxrt
+	cd dbuild.lxrt; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp

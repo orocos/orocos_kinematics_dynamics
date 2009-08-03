@@ -1,0 +1,2 @@
+usr/lib/rtt/@TARGET@/plugins/liborocos-kdltk-corba-@TARGET@.so
+usr/lib/pkgconfig/orocos-kdltk-corba-@TARGET@.pc
