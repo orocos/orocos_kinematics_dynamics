@@ -24,17 +24,38 @@
 namespace KDL {
 
     // constructor for joint along x,y or z axis, at origin of reference frame
+    Joint::Joint(const std::string& _name, const JointType& _type, const double& _scale, const double& _offset,
+                 const double& _inertia, const double& _damping, const double& _stiffness):
+      name(_name),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
+    {
+      if (type == RotAxis || type == TransAxis) throw joint_type_ex;
+    }
+
+    // constructor for joint along x,y or z axis, at origin of reference frame
     Joint::Joint(const JointType& _type, const double& _scale, const double& _offset,
                  const double& _inertia, const double& _damping, const double& _stiffness):
-        type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
+      name("NoName"),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
     {
       if (type == RotAxis || type == TransAxis) throw joint_type_ex;
     }
 
     // constructor for joint along arbitrary axis, at arbitrary origin
-    Joint::Joint(const Vector& _origin, const Vector& _axis, const JointType& _type, const double& _scale, const double& _offset,
-	         const double& _inertia, const double& _damping, const double& _stiffness):
-      origin(_origin), axis(_axis / _axis.Norm()), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
+    Joint::Joint(const std::string& _name, const Vector& _origin, const Vector& _axis, const JointType& _type, const double& _scale, 
+                 const double& _offset, const double& _inertia, const double& _damping, const double& _stiffness):
+      name(_name), origin(_origin), axis(_axis / _axis.Norm()), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
+    {
+      if (type != RotAxis && type != TransAxis) throw joint_type_ex;
+
+      // initialize
+      joint_pose.p = origin;
+      joint_pose.M = Rotation::Rot2(axis, offset);
+      q_previous = 0;
+    }
+
+    // constructor for joint along arbitrary axis, at arbitrary origin
+    Joint::Joint(const Vector& _origin, const Vector& _axis, const JointType& _type, const double& _scale, 
+                 const double& _offset, const double& _inertia, const double& _damping, const double& _stiffness):
+      name("NoName"), origin(_origin), axis(_axis / _axis.Norm()), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
     {
       if (type != RotAxis && type != TransAxis) throw joint_type_ex;
 

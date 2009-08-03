@@ -69,13 +69,15 @@ namespace KDL
         int nrOfJoints;
         int nrOfSegments;
 
-        bool addTreeRecursive(SegmentMap::const_iterator root, const std::string& tree_name, const std::string& hook_name);
+        std::string root_name;
+
+        bool addTreeRecursive(SegmentMap::const_iterator root, const std::string& hook_name);
 
     public:
         /**
          * The constructor of a tree, a new tree is always empty
          */
-        Tree();
+        Tree(const std::string& root_name="root");
         Tree(const Tree& in);
         Tree& operator= (const Tree& arg);
 
@@ -84,39 +86,33 @@ namespace KDL
          * hook_name as segment_name
          *
          * @param segment new segment to add
-         * @param segment_name name of the new segment
          * @param hook_name name of the segment to connect this
          * segment with.
          *
          * @return false if hook_name could not be found.
          */
-        bool addSegment(const Segment& segment, const std::string& segment_name, const std::string& hook_name);
+         bool addSegment(const Segment& segment, const std::string& hook_name);
 
         /**
          * Adds a complete chain to the end of the segment with
-         * hook_name as segment_name. Segment i of
-         * the chain will get chain_name+".Segment"+i as segment_name.
+         * hook_name as segment_name. 
          *
-         * @param chain Chain to add
-         * @param chain_name name of the chain
          * @param hook_name name of the segment to connect the chain with.
          *
          * @return false if hook_name could not be found.
          */
-        bool addChain(const Chain& chain, const std::string& chain_name, const std::string& hook_name);
+        bool addChain(const Chain& chain, const std::string& hook_name);
 
         /**
          * Adds a complete tree to the end of the segment with
-         * hookname as segment_name. The segments of the tree will get
-         * tree_name+segment_name as segment_name.
+         * hookname as segment_name. 
          *
          * @param tree Tree to add
-         * @param tree_name name of the tree
          * @param hook_name name of the segment to connect the tree with
          *
          * @return false if hook_name could not be found
          */
-        bool addTree(const Tree& tree, const std::string& tree_name,const std::string& hook_name);
+        bool addTree(const Tree& tree, const std::string& hook_name);
 
         /**
          * Request the total number of joints in the tree.\n
@@ -148,16 +144,26 @@ namespace KDL
         {
             return segments.find(segment_name);
         };
+        /**
+         * Request the root segment of the tree
+         *
+         * @return constant iterator pointing to the root segment
+         */
+        SegmentMap::const_iterator getRootSegment()const
+        {
+          return segments.find(root_name);
+        };
 
         /**
          * Request the chain of the tree between chain_root and chain_tip. The chain_root must be an ancester from chain_tip
          *
          * @param chain_root the name of the root segment of the chain
          * @param chain_tip the name of the tip segment of the chain
+         * @param chain the resulting chain
          *
-         * @return the chain form chain_root to chain_tip, copied from the tree
+         * @return success or failure
          */
-        Chain getChain(const std::string& chain_root, const std::string& chain_tip)const;
+      bool getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const;
 
 
         const SegmentMap& getSegments()const
@@ -166,6 +172,7 @@ namespace KDL
         }
 
         virtual ~Tree(){};
+
     };
 }
 #endif

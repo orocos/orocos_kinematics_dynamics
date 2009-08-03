@@ -46,11 +46,23 @@ namespace KDL {
     class Segment {
         friend class Chain;
     private:
+        std::string name;
         Joint joint;
         RigidBodyInertia I;
         Frame f_tip;
 
     public:
+        /**
+         * Constructor of the segment
+         *
+         * @param name name of the segment
+         * @param joint joint of the segment, default:
+         * Joint(Joint::None)
+         * @param f_tip frame from the end of the joint to the tip of
+         * the segment, default: Frame::Identity()
+         * @param M rigid body inertia of the segment, default: Inertia::Zero()
+         */
+        Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
         /**
          * Constructor of the segment
          *
@@ -87,6 +99,16 @@ namespace KDL {
          */
         Twist twist(const double& q,const double& qdot)const;
 
+        /**
+         * Request the name of the segment
+         *
+         *
+         * @return const reference to the name of the segment
+         */
+        const std::string& getName()const
+        {
+            return name;
+        }
         /**
          * Request the joint of the segment
          *

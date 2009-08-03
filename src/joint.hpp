@@ -48,6 +48,7 @@ namespace KDL {
         /**
          * Constructor of a joint.
          *
+         * @param name of the joint
          * @param type type of the joint, default: Joint::None
          * @param scale scale between joint input and actual geometric
          * movement, default: 1
@@ -58,8 +59,40 @@ namespace KDL {
          * @param stiffness 1D stiffness along the joint axis,
          * default: 0
          */
-        Joint(const JointType& type=None,const double& scale=1,const double& offset=0,
+         Joint(const std::string& name, const JointType& type=None,const double& scale=1,const double& offset=0,
               const double& inertia=0,const double& damping=0,const double& stiffness=0);
+        /**
+         * Constructor of a joint.
+         *
+         * @param type type of the joint, default: Joint::None
+         * @param scale scale between joint input and actual geometric
+         * movement, default: 1
+         * @param offset offset between joint input and actual
+         * geometric input, default: 0
+         * @param inertia 1D inertia along the joint axis, default: 0
+         * @param damping 1D damping along the joint axis, default: 0
+         * @param stiffness 1D stiffness along the joint axis,
+         * default: 0
+         */
+         Joint(const JointType& type=None,const double& scale=1,const double& offset=0,
+               const double& inertia=0,const double& damping=0,const double& stiffness=0);
+        /**
+         * Constructor of a joint.
+         *
+         * @param name of the joint
+         * @param origin the origin of the joint
+         * @param axis the axis of the joint
+         * @param scale scale between joint input and actual geometric
+         * movement, default: 1
+         * @param offset offset between joint input and actual
+         * geometric input, default: 0
+         * @param inertia 1D inertia along the joint axis, default: 0
+         * @param damping 1D damping along the joint axis, default: 0
+         * @param stiffness 1D stiffness along the joint axis,
+         * default: 0
+         */
+        Joint(const std::string& name, const Vector& _origin, const Vector& _axis, const JointType& type, const double& _scale=1, const double& _offset=0,
+	      const double& _inertia=0, const double& _damping=0, const double& _stiffness=0);
         /**
          * Constructor of a joint.
          *
@@ -108,8 +141,17 @@ namespace KDL {
          * @return Vector
          */
         Vector JointOrigin() const;
-
         /**
+           * Request the name of the joint
+           *
+           *
+           * @return const reference to the name of the joint
+           */
+          const std::string& getName()const
+          {
+              return name;
+          }
+          /**
          * Request the type of the joint.
          *
          * @return const reference to the type
@@ -153,6 +195,7 @@ namespace KDL {
         virtual ~Joint();
 
     private:
+        std::string name;
         Joint::JointType type;
         double scale;
         double offset;

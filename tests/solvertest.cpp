@@ -13,66 +13,66 @@ void SolverTest::setUp()
 {
     srand( (unsigned)time( NULL ));
 
-    chain1.addSegment(Segment(Joint(Joint::RotZ),
+    chain1.addSegment(Segment("Segment 1", Joint("Joint 1", Joint::RotZ),
                              Frame(Vector(0.0,0.0,0.0))));
-    chain1.addSegment(Segment(Joint(Joint::RotX),
+    chain1.addSegment(Segment("Segment 2", Joint("Joint 2", Joint::RotX),
                              Frame(Vector(0.0,0.0,0.9))));
-    chain1.addSegment(Segment(Joint(Joint::None),
+    chain1.addSegment(Segment("Segment 3", Joint("Joint 3", Joint::None),
                              Frame(Vector(-0.4,0.0,0.0))));
-    chain1.addSegment(Segment(Joint(Joint::RotX),
+    chain1.addSegment(Segment("Segment 4", Joint("Joint 4", Joint::RotX),
                              Frame(Vector(0.0,0.0,1.2))));
-    chain1.addSegment(Segment(Joint(Joint::None),
+    chain1.addSegment(Segment("Segment 5", Joint("Joint 5", Joint::None),
                              Frame(Vector(0.4,0.0,0.0))));
-    chain1.addSegment(Segment(Joint(Joint::RotZ),
+    chain1.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotZ),
                              Frame(Vector(0.0,0.0,1.4))));
-    chain1.addSegment(Segment(Joint(Joint::RotX),
+    chain1.addSegment(Segment("Segment 7", Joint("Joint 7", Joint::RotX),
                              Frame(Vector(0.0,0.0,0.0))));
-    chain1.addSegment(Segment(Joint(Joint::RotZ),
+    chain1.addSegment(Segment("Segment 8", Joint("Joint 8", Joint::RotZ),
                              Frame(Vector(0.0,0.0,0.4))));
-    chain1.addSegment(Segment(Joint(Joint::None),
+    chain1.addSegment(Segment("Segment 9", Joint("Joint 9", Joint::None),
                              Frame(Vector(0.0,0.0,0.0))));
 
-    chain2.addSegment(Segment(Joint(Joint::RotZ),
+    chain2.addSegment(Segment("Segment 1", Joint("Joint 1", Joint::RotZ),
                               Frame(Vector(0.0,0.0,0.5))));
-    chain2.addSegment(Segment(Joint(Joint::RotX),
+    chain2.addSegment(Segment("Segment 2", Joint("Joint 2", Joint::RotX),
                               Frame(Vector(0.0,0.0,0.4))));
-    chain2.addSegment(Segment(Joint(Joint::RotX),
+    chain2.addSegment(Segment("Segment 3", Joint("Joint 3", Joint::RotX),
                               Frame(Vector(0.0,0.0,0.3))));
-    chain2.addSegment(Segment(Joint(Joint::RotX),
+    chain2.addSegment(Segment("Segment 4", Joint("Joint 4", Joint::RotX),
                               Frame(Vector(0.0,0.0,0.2))));
-    chain2.addSegment(Segment(Joint(Joint::RotZ),
+    chain2.addSegment(Segment("Segment 5", Joint("Joint 5", Joint::RotZ),
                               Frame(Vector(0.0,0.0,0.1))));
 
 
-    chain3.addSegment(Segment(Joint(Joint::RotZ),
+    chain3.addSegment(Segment("Segment 1", Joint("Joint 1", Joint::RotZ),
                              Frame(Vector(0.0,0.0,0.0))));
-    chain3.addSegment(Segment(Joint(Joint::RotX),
+    chain3.addSegment(Segment("Segment 2", Joint("Joint 2", Joint::RotX),
                              Frame(Vector(0.0,0.0,0.9))));
-    chain3.addSegment(Segment(Joint(Joint::RotZ),
+    chain3.addSegment(Segment("Segment 3", Joint("Joint 3", Joint::RotZ),
                              Frame(Vector(-0.4,0.0,0.0))));
-    chain3.addSegment(Segment(Joint(Joint::RotX),
+    chain3.addSegment(Segment("Segment 4", Joint("Joint 4", Joint::RotX),
                              Frame(Vector(0.0,0.0,1.2))));
-    chain3.addSegment(Segment(Joint(Joint::None),
+    chain3.addSegment(Segment("Segment 5", Joint("Joint 5", Joint::None),
                              Frame(Vector(0.4,0.0,0.0))));
-    chain3.addSegment(Segment(Joint(Joint::RotZ),
+    chain3.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotZ),
                              Frame(Vector(0.0,0.0,1.4))));
-    chain3.addSegment(Segment(Joint(Joint::RotX),
+    chain3.addSegment(Segment("Segment 7", Joint("Joint 7", Joint::RotX),
                              Frame(Vector(0.0,0.0,0.0))));
-    chain3.addSegment(Segment(Joint(Joint::RotZ),
+    chain3.addSegment(Segment("Segment 8", Joint("Joint 8", Joint::RotZ),
                              Frame(Vector(0.0,0.0,0.4))));
-    chain3.addSegment(Segment(Joint(Joint::RotY),
+    chain3.addSegment(Segment("Segment 9", Joint("Joint 9", Joint::RotY),
                              Frame(Vector(0.0,0.0,0.0))));
 
 
-    chain4.addSegment(Segment(Joint(Vector(10,0,0), Vector(1,0,1),Joint::RotAxis),
+    chain4.addSegment(Segment("Segment 1", Joint("Joint 1", Vector(10,0,0), Vector(1,0,1),Joint::RotAxis),
 			       Frame(Vector(0.0,0.0,0.5))));
-    chain4.addSegment(Segment(Joint(Vector(0,5,0), Vector(1,0,0),Joint::RotAxis),
+    chain4.addSegment(Segment("Segment 2", Joint("Joint 2", Vector(0,5,0), Vector(1,0,0),Joint::RotAxis),
 			       Frame(Vector(0.0,0.0,0.4))));
-    chain4.addSegment(Segment(Joint(Vector(0,0,5), Vector(1,0,4),Joint::RotAxis),
+    chain4.addSegment(Segment("Segment 3", Joint("Joint 3", Vector(0,0,5), Vector(1,0,4),Joint::RotAxis),
                               Frame(Vector(0.0,0.0,0.3))));
-    chain4.addSegment(Segment(Joint(Vector(0,0,0), Vector(1,0,0),Joint::RotAxis),
+    chain4.addSegment(Segment("Segment 4", Joint("Joint 4", Vector(0,0,0), Vector(1,0,0),Joint::RotAxis),
                               Frame(Vector(0.0,0.0,0.2))));
-    chain4.addSegment(Segment(Joint(Vector(0,0,0), Vector(0,0,1),Joint::RotAxis),
+    chain4.addSegment(Segment("Segment 5", Joint("Joint 5", Vector(0,0,0), Vector(0,0,1),Joint::RotAxis),
                               Frame(Vector(0.0,0.0,0.1))));
 
 }
