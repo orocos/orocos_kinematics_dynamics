@@ -64,11 +64,6 @@ public:
     Vector& operator-=(const Vector& arg);
     Vector& operator +=(const Vector& arg);
 
-//%PickleCode
-//    sipRes=Py_BuildValue("ddd",sipCpp->x(),sipCpp->y(),sipCpp->z());
-//%End
-
-    
     static Vector Zero()/Factory/;
 
     double Norm();
