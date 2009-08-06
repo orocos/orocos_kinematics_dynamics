@@ -208,6 +208,7 @@ void KinFamTest::TreeTest()
     CPPUNIT_ASSERT(tree1.getChain("Segment 2", "Segment 4", extract_chain1));
     Chain extract_chain2; 
     CPPUNIT_ASSERT(tree1.getChain("Segment 4", "Segment 2", extract_chain2));
+    CPPUNIT_ASSERT(tree1.getChain("Segment 4", "Segment 2", extract_chain2));
     CPPUNIT_ASSERT(extract_chain1.getNrOfJoints()==extract_chain2.getNrOfJoints());
     CPPUNIT_ASSERT(extract_chain1.getNrOfSegments()==extract_chain2.getNrOfSegments());
     ChainFkSolverPos_recursive solver1(extract_chain1);

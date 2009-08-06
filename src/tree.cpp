@@ -110,6 +110,9 @@ bool Tree::addTreeRecursive(SegmentMap::const_iterator root, const std::string& 
 
 bool Tree::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const
 {
+    // clear chain
+    chain = Chain();
+
     // walk down from chain_root and chain_tip to the root of the tree
     vector<SegmentMap::key_type> parents_chain_root, parents_chain_tip;
     for (SegmentMap::const_iterator s=getSegment(chain_root); s!=segments.end(); s=s->second.parent){
