@@ -3,7 +3,7 @@ configure-gnulinux: configure-stamp-gnulinux
 configure-stamp-gnulinux:
 	mkdir -p dbuild.gnulinux
 	cd  dbuild.gnulinux; \
-	cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=gnulinux -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INCLUDE_PATH=/usr/include/eigen2; cmake ../ -DENABLE_CORBA=ON -DPYTHON_EXECUTABLE=python2.5;
+	cmake ../ -DOROCOS_PLUGIN=ON -DOROCOS_TARGET=gnulinux -DPYTHON_BINDINGS=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INCLUDE_PATH=/usr/include/eigen2; cmake ../ -DENABLE_CORBA=ON;
 	touch configure-stamp-gnulinux
 
 
