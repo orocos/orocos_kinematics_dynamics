@@ -37,7 +37,7 @@ namespace KDL
     class TreeElement
     {
     private:
-        TreeElement():q_nr(0)
+        TreeElement(const std::string& name):segment(name), q_nr(0)
         {};
     public:
         Segment segment;
@@ -50,9 +50,9 @@ namespace KDL
             segment=segment_in;
             parent=parent_in;
         };
-        static TreeElement Root()
+        static TreeElement Root(const std::string& root_name)
         {
-            return TreeElement();
+            return TreeElement(root_name);
         };
     };
 
