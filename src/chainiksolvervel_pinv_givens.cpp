@@ -28,7 +28,7 @@ namespace KDL
         chain(_chain),
         jnt2jac(chain),
         jac(chain.getNrOfJoints()),
-        transpose(chain.getNrOfJoints()>6),
+        transpose(chain.getNrOfJoints()>6),toggle(true),
         m((int)max(6,chain.getNrOfJoints())),
         n((int)min(6,chain.getNrOfJoints())),
         jac_eigen(m,n),
