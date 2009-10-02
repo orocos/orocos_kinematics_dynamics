@@ -946,7 +946,7 @@ public:
      double Normalize(double eps=epsilon);
 
      //!  @return the norm of the vector
-     inline double Norm() const;
+     double Norm() const;
 
      //! projects v in its XY plane, and sets *this to these values
      inline void Set3DXY(const Vector& v);
