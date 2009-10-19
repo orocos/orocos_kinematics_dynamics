@@ -783,6 +783,14 @@ IMETHOD double& Vector2::operator () (int index)
     FRAMES_CHECKI((0<=index)&&(index<=1));
     return data[index];
 }
+
+IMETHOD double Vector2::x() const { return data[0]; }
+IMETHOD double Vector2::y() const { return data[1]; }
+
+IMETHOD void Vector2::x( double _x ) { data[0] = _x; }
+IMETHOD void Vector2::y( double _y ) { data[1] = _y; }
+
+
 IMETHOD void Vector2::ReverseSign()
 {
     data[0] = -data[0];
@@ -1335,6 +1343,19 @@ IMETHOD bool operator!=(const Wrench& a,const Wrench& b) {
     return !operator==(a,b);
 }
 IMETHOD bool operator!=(const Rotation& a,const Rotation& b) {
+    return !operator==(a,b);
+}
+
+IMETHOD bool operator==(const Vector2& a,const Vector2& b) {
+#ifdef KDL_USE_EQUAL
+    return Equal(a,b);
+#else
+        return (a.data[0]==b.data[0]&&
+                a.data[1]==b.data[1] );
+#endif
+     }
+
+IMETHOD bool operator!=(const Vector2& a,const Vector2& b) {
     return !operator==(a,b);
 }
 

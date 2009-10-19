@@ -921,6 +921,23 @@ public:
      //! Access to elements, range checked when NDEBUG is not set, from 0..1
      inline double& operator() (int index);
 
+    //! Equivalent to double operator()(int index) const
+	double operator[] ( int index ) const
+	{
+		return this->operator() ( index );
+	}
+
+	//! Equivalent to double& operator()(int index)
+	double& operator[] ( int index )
+	{
+		return this->operator() ( index );
+	}
+
+	inline double x() const;
+	inline double y() const;
+	inline void x(double);
+	inline void y(double);
+
      inline void ReverseSign();
      inline Vector2& operator-=(const Vector2& arg);
      inline Vector2& operator +=(const Vector2& arg);
@@ -966,6 +983,11 @@ public:
      //! do not use operator == because the definition of Equal(.,.) is slightly
      //! different.  It compares whether the 2 arguments are equal in an eps-interval
      inline friend bool Equal(const Vector2& a,const Vector2& b,double eps=epsilon);
+
+	//! The literal equality operator==(), also identical.
+	inline friend bool operator==(const Vector2& a,const Vector2& b);
+	//! The literal inequality operator!=().
+	inline friend bool operator!=(const Vector2& a,const Vector2& b);
 
     friend class Rotation2;
 };
