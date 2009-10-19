@@ -401,7 +401,7 @@ public:
     
     //! Get the quaternion of this matrix
     //! \post the norm of (x,y,z,w) is 1
-    void GetQuaternion(double& x,double& y,double& z, double& w);
+    void GetQuaternion(double& x,double& y,double& z, double& w) const;
 
     //! Sets the value of this object to a rotation specified with RPY convention:
     //! first rotate around X with roll, then around the

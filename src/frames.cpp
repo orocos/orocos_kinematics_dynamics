@@ -192,7 +192,7 @@ namespace KDL {
        http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
        RobOOP::quaternion.cpp
     */
-    void Rotation::GetQuaternion(double& x,double& y,double& z, double& w)
+    void Rotation::GetQuaternion(double& x,double& y,double& z, double& w) const
     {
         double trace = (*this)(0,0) + (*this)(1,1) + (*this)(2,2) + 1.0f;
         if( trace > epsilon ){
