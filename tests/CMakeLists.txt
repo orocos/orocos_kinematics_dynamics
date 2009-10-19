@@ -1,7 +1,7 @@
 IF(ENABLE_TESTS)
   ENABLE_TESTING()
 
-  INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src)
+  INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src ${CPPUNIT_HEADERS})
 
   ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
   TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
