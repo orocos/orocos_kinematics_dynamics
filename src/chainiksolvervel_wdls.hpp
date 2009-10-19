@@ -41,6 +41,12 @@ namespace KDL
      *
      * and B = Ub*Db*Vb' is the SVD decomposition of B
      *
+     * Mq and Mx represent, respectively, the joint-space and task-space weighting
+     * matrices.
+     * Please refer to the documentation of setWeightJS(const Eigen::MatrixXd& Mq)
+     * and setWeightTS(const Eigen::MatrixXd& Mx) for details on the effects of
+     * these matrices.
+     *
      * For more details on Weighted Pseudo Inverse, see :
      * 1) [Ben Israel 03] A. Ben Israel & T.N.E. Greville.
      * Generalized Inverses : Theory and Applications,
