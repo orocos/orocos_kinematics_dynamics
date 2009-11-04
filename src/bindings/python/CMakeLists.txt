@@ -1,4 +1,4 @@
-if(PYTHON_BINDINGS)
+if(PYTHON_BINDINGS AND SIP_IS_GOOD)
 include(SIPMacros)
 
 include_directories(
@@ -11,4 +11,4 @@ file(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.sip")
 set(SIP_INCLUDES ${SIP_FILES})
 add_sip_python_module(PyKDL ./PyKDL.sip orocos-kdl)
 #set(SIP_EXTRA_FILES_DEPEND ${SIP_FILES})
-endif(PYTHON_BINDINGS)
+endif(PYTHON_BINDINGS AND SIP_IS_GOOD)
