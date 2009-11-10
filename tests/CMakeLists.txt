@@ -3,35 +3,35 @@ IF(ENABLE_TESTS)
 
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src ${CPPUNIT_HEADERS})
 
-  ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
-  SET_TARGET_PROPERTIES( framestest PROPERTIES
+  ADD_EXECUTABLE(kdltest framestest.cpp kinfamtest.cpp solvertest.cpp inertiatest.cpp jacobiantest.cpp test-runner.cpp)
+  TARGET_LINK_LIBRARIES(kdltest orocos-kdl ${CPPUNIT})
+  SET_TARGET_PROPERTIES( kdltest PROPERTIES
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
-  ADD_TEST(framestest framestest)
+  ADD_TEST(kdltest kdltest)
   
-  ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
-  SET_TARGET_PROPERTIES( kinfamtest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
-  ADD_TEST(kinfamtest kinfamtest)
-
-  ADD_EXECUTABLE(solvertest solvertest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(solvertest orocos-kdl ${CPPUNIT})
-  SET_TARGET_PROPERTIES( solvertest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
-  ADD_TEST(solvertest solvertest)
-
-  ADD_EXECUTABLE(inertiatest inertiatest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(inertiatest orocos-kdl ${CPPUNIT})
-  SET_TARGET_PROPERTIES( inertiatest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
-  ADD_TEST(inertiatest inertiatest)
-
-  ADD_EXECUTABLE(jacobiantest jacobiantest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(jacobiantest orocos-kdl ${CPPUNIT})
-  SET_TARGET_PROPERTIES( jacobiantest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
-  ADD_TEST(jacobiantest jacobiantest)
+#  ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
+#  TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
+#  SET_TARGET_PROPERTIES( kinfamtest PROPERTIES
+#   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
+#  ADD_TEST(kinfamtest kinfamtest)
+#
+#  ADD_EXECUTABLE(solvertest solvertest.cpp test-runner.cpp)
+#  TARGET_LINK_LIBRARIES(solvertest orocos-kdl ${CPPUNIT})
+#  SET_TARGET_PROPERTIES( solvertest PROPERTIES
+#   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
+#  ADD_TEST(solvertest solvertest)
+#
+#  ADD_EXECUTABLE(inertiatest inertiatest.cpp test-runner.cpp)
+#  TARGET_LINK_LIBRARIES(inertiatest orocos-kdl ${CPPUNIT})
+#  SET_TARGET_PROPERTIES( inertiatest PROPERTIES
+#   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
+#  ADD_TEST(inertiatest inertiatest)
+#
+#  ADD_EXECUTABLE(jacobiantest jacobiantest.cpp test-runner.cpp)
+#  TARGET_LINK_LIBRARIES(jacobiantest orocos-kdl ${CPPUNIT})
+#  SET_TARGET_PROPERTIES( jacobiantest PROPERTIES
+#   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
+#  ADD_TEST(jacobiantest jacobiantest)
 
   #ADD_EXECUTABLE(rframestest  rframestest.cpp)
   #TARGET_LINK_LIBRARIES(rframestest orocos-kdl)
@@ -49,19 +49,19 @@ IF(ENABLE_TESTS)
 #    ADD_TEST(toolkittest toolkittest)
 #  ENDIF(OROCOS_PLUGIN)
 
-  IF(PYTHON_BINDINGS)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/framestest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/framestest.py COPY_ONLY)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/kinfamtest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/kinfamtest.py COPY_ONLY)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/frameveltest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/frameveltest.py COPY_ONLY)
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/PyKDLtest.py
-      ${CMAKE_CURRENT_BINARY_DIR}/PyKDLtest.py COPY_ONLY)
-    ADD_TEST(PyKDLtest PyKDLtest.py)
-    
-   
-  ENDIF(PYTHON_BINDINGS)
+#  IF(PYTHON_BINDINGS)
+#    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/framestest.py
+#      ${CMAKE_CURRENT_BINARY_DIR}/framestest.py COPY_ONLY)
+#    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/kinfamtest.py
+#      ${CMAKE_CURRENT_BINARY_DIR}/kinfamtest.py COPY_ONLY)
+#    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/frameveltest.py
+#      ${CMAKE_CURRENT_BINARY_DIR}/frameveltest.py COPY_ONLY)
+#    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/PyKDLtest.py
+#      ${CMAKE_CURRENT_BINARY_DIR}/PyKDLtest.py COPY_ONLY)
+#    ADD_TEST(PyKDLtest PyKDLtest.py)
+#    
+#   
+#  ENDIF(PYTHON_BINDINGS)
   
   ADD_CUSTOM_TARGET(check ctest -V WORKING_DIRECTORY ${PROJ_BINARY_DIR}/tests)
 ENDIF(ENABLE_TESTS)  
