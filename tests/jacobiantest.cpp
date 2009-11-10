@@ -66,7 +66,7 @@ void JacobianTest::TestChangeBase(){
 
 void JacobianTest::TestConstructor(){
     //Create an empty Jacobian
-    Jacobian j1;
+    Jacobian j1(2);
     //Get size
     CPPUNIT_ASSERT_EQUAL(j1.rows(),(unsigned int)6);
     CPPUNIT_ASSERT_EQUAL(j1.columns(),(unsigned int)0);
