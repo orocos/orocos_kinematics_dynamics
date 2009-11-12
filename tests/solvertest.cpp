@@ -199,7 +199,7 @@ void SolverTest::FkPosAndIkPosTest()
     std::cout<<"KDL-SVD-Givens"<<std::endl;
     FkPosAndIkPosLocal(chain3,fksolver3,iksolver3_givens);
 
-    std::cout<<"overdetermined problem"<<std::endl;
+    std::cout<<"underdetermined problem with WGs segment constructor"<<std::endl;
     ChainFkSolverPos_recursive fksolver4(chain4);
     ChainIkSolverVel_pinv iksolverv4(chain4);
     ChainIkSolverVel_pinv_givens iksolverv_pinv_givens4(chain4);
