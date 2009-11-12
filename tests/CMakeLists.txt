@@ -3,12 +3,12 @@ IF(ENABLE_TESTS)
 
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src ${CPPUNIT_HEADERS})
 
-  ADD_EXECUTABLE(kdltest framestest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(kdltest orocos-kdl ${CPPUNIT})
+  ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
+  TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
   SET(TESTNAME "framestest")
-  SET_TARGET_PROPERTIES( kdltest PROPERTIES
+  SET_TARGET_PROPERTIES( framestest PROPERTIES
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
-  ADD_TEST(kdltest kdltest)
+  ADD_TEST(framestest framestest)
   
  ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
  TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
