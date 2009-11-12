@@ -278,39 +278,31 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
 
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
-    clock_t start, finish;
-    start = clock();
-    for(unsigned int i=0;i<1000;i++){
 
-        for(unsigned int i=0;i<chain.getNrOfJoints();i++){
-            random(q(i));
-            random(qdot(i));
-        }
-        JntArrayVel qvel(q,qdot);
-        JntArray qdot_solved(chain.getNrOfJoints());
-        
-        FrameVel cart;
-        
-        CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart));
-        
-        int ret = iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved);
-        CPPUNIT_ASSERT(0<=ret);
-
-        qvel.deriv()=qdot_solved;
-        
-        if(chain.getNrOfJoints()<=6)
-            CPPUNIT_ASSERT(Equal(qvel.qdot,qdot_solved,1e-4));
-        else{
-            FrameVel cart_solved;
-            CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
-            CPPUNIT_ASSERT(Equal(cart.deriv(),cart_solved.deriv(),1e-5));
-        }
+    for(unsigned int i=0;i<chain.getNrOfJoints();i++){
+        random(q(i));
+        random(qdot(i));
     }
-    finish = clock();
+    JntArrayVel qvel(q,qdot);
+    JntArray qdot_solved(chain.getNrOfJoints());
+        
+    FrameVel cart;
     
-    std::cout<<"Time elapsed: "<<(double(finish - start)/CLOCKS_PER_SEC )<<std::endl;
+    CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart));
+    
+    int ret = iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved);
+    CPPUNIT_ASSERT(0<=ret);
+    
+    qvel.deriv()=qdot_solved;
+    
+    if(chain.getNrOfJoints()<=6)
+        CPPUNIT_ASSERT(Equal(qvel.qdot,qdot_solved,1e-5));
+    else{
+        FrameVel cart_solved;
+        CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
+        CPPUNIT_ASSERT(Equal(cart.deriv(),cart_solved.deriv(),1e-5));
+    }
 }
-
 
 
 void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, ChainIkSolverPos& iksolverpos)
