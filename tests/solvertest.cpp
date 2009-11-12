@@ -299,7 +299,7 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
         qvel.deriv()=qdot_solved;
         
         if(chain.getNrOfJoints()<=6)
-            CPPUNIT_ASSERT(Equal(qvel.qdot,qdot_solved,1e-5));
+            CPPUNIT_ASSERT(Equal(qvel.qdot,qdot_solved,1e-4));
         else{
             FrameVel cart_solved;
             CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
@@ -330,8 +330,7 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
     Frame F1,F2;
 
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F1));
-    int ret = iksolverpos.CartToJnt(q_init,F1,q_solved);
-    CPPUNIT_ASSERT(0<ret);
+    CPPUNIT_ASSERT(0==iksolverpos.CartToJnt(q_init,F1,q_solved));
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q_solved,F2));
 
     CPPUNIT_ASSERT_EQUAL(F1,F2);
