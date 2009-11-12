@@ -69,16 +69,16 @@ void JacobianTest::TestConstructor(){
     Jacobian j1(2);
     //Get size
     CPPUNIT_ASSERT_EQUAL(j1.rows(),(unsigned int)6);
-    CPPUNIT_ASSERT_EQUAL(j1.columns(),(unsigned int)0);
+    CPPUNIT_ASSERT_EQUAL(j1.columns(),(unsigned int)2);
     //Create a second Jacobian from empty
     Jacobian j2(j1);
     //Get size
     CPPUNIT_ASSERT_EQUAL(j2.rows(),(unsigned int)6);
-    CPPUNIT_ASSERT_EQUAL(j2.columns(),(unsigned int)0);
+    CPPUNIT_ASSERT_EQUAL(j2.columns(),(unsigned int)2);
     Jacobian j3=j1;
     //Get size
     CPPUNIT_ASSERT_EQUAL(j3.rows(),(unsigned int)6);
-    CPPUNIT_ASSERT_EQUAL(j3.columns(),(unsigned int)0);
+    CPPUNIT_ASSERT_EQUAL(j3.columns(),(unsigned int)2);
 
     //Test resize
     j1.resize(5);
