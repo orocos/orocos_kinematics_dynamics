@@ -35,8 +35,11 @@ int main(int argc, char** argv)
     // Adds the test to the list of test to run
     CppUnit::TextUi::TestRunner runner;
     runner.addTest( suite );
-
+#ifndef TESTNAME
     std::ofstream outputFile(std::string(suite->getName()+"-result.xml").c_str());
+#else
+    std::ofstream outputFile((std::string(TESTNAME)+std::string("-result.xml")).c_str());
+#endif
     // Change the default outputter to a compiler error format outputter
     runner.setOutputter( new CppUnit::XmlOutputter( &runner.result(),outputFile ) );
     
