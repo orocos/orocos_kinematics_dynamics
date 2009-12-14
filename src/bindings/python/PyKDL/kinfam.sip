@@ -52,6 +52,7 @@ class Segment
     
 %TypeHeaderCode
 #include <segment.hpp>
+#include <kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -60,16 +61,9 @@ public:
 
     const char* __repr__();
 %MethodCode
-    char tmp[200];
-    sprintf(tmp,"%s,[[%f,%f,%f;%f,%f,%f;%f,%f,%f],[%f,%f,%f]]",
-            sipCpp->getJoint().getTypeName().data(),
-            sipCpp->getFrameToTip().M(0,0),sipCpp->getFrameToTip().M(0,1),
-            sipCpp->getFrameToTip().M(0,2),sipCpp->getFrameToTip().M(1,0),
-            sipCpp->getFrameToTip().M(1,1),sipCpp->getFrameToTip().M(1,2),
-            sipCpp->getFrameToTip().M(2,0),sipCpp->getFrameToTip().M(2,1),
-            sipCpp->getFrameToTip().M(2,2),sipCpp->getFrameToTip().p(0),
-            sipCpp->getFrameToTip().p(1),sipCpp->getFrameToTip().p(2));
-    sipRes=tmp;
+    std::stringstream ss;
+    ss<<(*sipCpp);
+    sipRes=ss.str().c_str();
 %End
     
     const Joint& getJoint()const;
@@ -123,20 +117,11 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    char* __repr__();
+    const char* __repr__();
 %MethodCode
-    char tmp[2000]="[";
-    for(unsigned int i=0;i<sipCpp->rows();i++)
-    {
-        char it[10];
-        if(i==0)
-            sprintf(it,"%f",(*sipCpp)(i));
-        else
-            sprintf(it,",%f",(*sipCpp)(i));
-        strcat ( tmp, it );
-    }
-    strcat ( tmp, "]" );
-    sipRes=tmp;
+    std::stringstream ss;
+    ss<<sipCpp->data;
+    sipRes=ss.str().c_str();
 %End
 };
 
@@ -205,24 +190,11 @@ public:
     (*sipCpp)(i,j)=a1;
 %End
 
-    char* __repr__();
+    const char* __repr__();
 %MethodCode
-    char tmp[3000]="[";
-    for(unsigned int i=0;i<sipCpp->rows();i++)
-    {
-        char row[500]="";
-        for(unsigned int j=0;j<sipCpp->columns();j++){
-            char it[10];
-            if(j<sipCpp->columns()-1)
-                sprintf(it,"%f,",(*sipCpp)(i,j));
-            else
-                sprintf(it,"%f;\n",(*sipCpp)(i,j));
-            strcat ( row, it );
-        }
-        strcat(tmp,row);
-    }
-    strcat ( tmp, "]" );
-    sipRes=tmp;
+    std::stringstream ss;
+    ss<<sipCpp->data;
+    sipRes=ss.str().c_str();
 %End
 };
     void SetToZero(Jacobian& jac);
