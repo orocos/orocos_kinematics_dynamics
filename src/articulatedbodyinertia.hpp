@@ -106,7 +106,7 @@ namespace KDL {
         ArticulatedBodyInertia RefPoint(const Vector& p);
 
         ArticulatedBodyInertia(const Eigen::Matrix3d& M,const Eigen::Matrix3d& H,const Eigen::Matrix3d& I);
-    private:
+
         Eigen::Matrix3d M;
         Eigen::Matrix3d H;
         Eigen::Matrix3d I;

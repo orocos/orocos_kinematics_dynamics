@@ -30,7 +30,7 @@ namespace KDL{
     ArticulatedBodyInertia::ArticulatedBodyInertia(const RigidBodyInertia& rbi)
     {
         this->M.part<SelfAdjoint>()=Matrix3d::Identity()*rbi.m;
-        this->I.part<SelfAdjoint>()=Map<Matrix3d>(rbi.I.data).part<LowerTriangular>();
+        this->I.part<SelfAdjoint>()=Map<Matrix3d>(rbi.I.data);
         this->H << 0,-rbi.h[2],rbi.h[1],
             rbi.h[2],0,-rbi.h[0],
             -rbi.h[1],rbi.h[0],0;
@@ -43,26 +43,24 @@ namespace KDL{
 
     ArticulatedBodyInertia::ArticulatedBodyInertia(const Matrix3d& M, const Matrix3d& H, const Matrix3d& I)
     {
-        this->M.part<SelfAdjoint>()=M.part<LowerTriangular>();
-        this->I.part<SelfAdjoint>()=I.part<LowerTriangular>();
+        this->M.part<SelfAdjoint>()=M;
+        this->I.part<SelfAdjoint>()=I;
         this->H=H;
     }
     
     ArticulatedBodyInertia operator*(double a,const ArticulatedBodyInertia& I){
-        return ArticulatedBodyInertia(a*I.M.part<LowerTriangular>(),a*I.H,a*I.I.part<LowerTriangular>());
+        return ArticulatedBodyInertia(a*I.M,a*I.H,a*I.I);
     }
     
     ArticulatedBodyInertia operator+(const ArticulatedBodyInertia& Ia, const ArticulatedBodyInertia& Ib){
-        return ArticulatedBodyInertia(Ia.M.part<LowerTriangular>()+Ib.M.part<LowerTriangular>(),
-                                      Ia.H+Ib.H,Ia.I.part<LowerTriangular>()+Ib.I.part<LowerTriangular>());
+        return ArticulatedBodyInertia(Ia.M+Ib.M,Ia.H+Ib.H,Ia.I+Ib.I);
     }
 
     ArticulatedBodyInertia operator+(const RigidBodyInertia& Ia, const ArticulatedBodyInertia& Ib){
         return ArticulatedBodyInertia(Ia)+Ib;
     }
     ArticulatedBodyInertia operator-(const ArticulatedBodyInertia& Ia, const ArticulatedBodyInertia& Ib){
-        return ArticulatedBodyInertia(Ia.M.part<LowerTriangular>()-Ib.M.part<LowerTriangular>(),
-                                      Ia.H-Ib.H,Ia.I.part<LowerTriangular>()-Ib.I.part<LowerTriangular>());
+        return ArticulatedBodyInertia(Ia.M-Ib.M,Ia.H-Ib.H,Ia.I-Ib.I);
     }
 
     ArticulatedBodyInertia operator-(const RigidBodyInertia& Ia, const ArticulatedBodyInertia& Ib){
