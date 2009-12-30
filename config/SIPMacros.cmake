@@ -50,9 +50,7 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
     GET_FILENAME_COMPONENT(_child_module_name ${_x} NAME)
 
     GET_FILENAME_COMPONENT(_module_path ${MODULE_SIP} PATH)
-    MESSAGE("Test: "${_module_path})
     GET_FILENAME_COMPONENT(_abs_module_sip ${MODULE_SIP} ABSOLUTE)
-    MESSAGE("Test: "${_abs_module_sip})
     # We give this target a long logical target name.
     # (This is to avoid having the library name clash with any already
     # install library names. If that happens then cmake dependancy
@@ -96,15 +94,13 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
             FILE(APPEND filename "")
         ENDFOREACH(filename ${_sip_output_files})
     ENDIF(NOT WIN32)
-    MESSAGE(${_sip_output_files})
     ADD_CUSTOM_COMMAND(
         OUTPUT ${_sip_output_files} 
         COMMAND ${CMAKE_COMMAND} -E echo ${message}
         COMMAND ${TOUCH_COMMAND} ${_sip_output_files} 
         COMMAND ${SIP_EXECUTABLE} ${_sip_tags} ${_sip_x} ${SIP_EXTRA_OPTIONS} -j ${SIP_CONCAT_PARTS} -c ${CMAKE_CURRENT_BINARY_DIR}/${_module_path} ${_sip_includes} ${_abs_module_sip}
-        DEPENDS ${_abs_module_sip}
+        DEPENDS ${_abs_module_sip} ${SIP_EXTRA_FILES_DEPEND}
     )
-
     ADD_LIBRARY(${_logical_name} SHARED ${_sip_output_files} )
     TARGET_LINK_LIBRARIES(${_logical_name} ${PYTHON_LIBRARY})
     TARGET_LINK_LIBRARIES(${_logical_name} ${EXTRA_LINK_LIBRARIES})
