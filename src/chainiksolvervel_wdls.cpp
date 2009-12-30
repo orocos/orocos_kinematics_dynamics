@@ -79,7 +79,7 @@ namespace KDL
         
         // Create the Weighted jacobian
         tmp_jac_weight1 = (jac.data*weight_js).lazy();
-        tmp_jac_weight2 = (weight_ts,tmp_jac_weight1).lazy();
+        tmp_jac_weight2 = (weight_ts*tmp_jac_weight1).lazy();
    
         // Compute the SVD of the weighted jacobian
         int ret = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
