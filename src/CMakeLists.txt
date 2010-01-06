@@ -17,8 +17,8 @@ INSTALL_FILES( /include/kdl FILES ${KDL_HPPS})
 INSTALL_FILES( /include/kdl/utilities FILES ${UTIL_HPPS})
 
 # Orocos convention:
-CONFIGURE_FILE( kdl.pc.in src/orocos-kdl.pc @ONLY)
-INSTALL_FILES( /lib/pkgconfig FILES orocos-kdl.pc)
+CONFIGURE_FILE( kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
+INSTALL_FILES( /lib/pkgconfig FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc)
 
 IF( OROCOS_PLUGIN )
   ADD_SUBDIRECTORY( bindings/rtt )

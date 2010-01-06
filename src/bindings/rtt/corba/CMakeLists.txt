@@ -46,9 +46,9 @@ IF(ENABLE_CORBA )
   INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/rtt/${OROCOS_TARGET}/plugins")
   # Is used for building  the library
   TARGET_LINK_LIBRARIES(orocos-kdltk-corba-${OROCOS_TARGET} orocos-rtt-corba-${OROCOS_TARGET} orocos-kdltk-${OROCOS_TARGET} ${CORBA_LIBRARIES})
-  CONFIGURE_FILE( orocos-kdltk-corba.pc.in src/bindings/rtt/corba/orocos-kdltk-corba-${OROCOS_TARGET}.pc @ONLY)
+  CONFIGURE_FILE( orocos-kdltk-corba.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdltk-corba-${OROCOS_TARGET}.pc @ONLY)
 
   INSTALL_TARGETS(/lib/rtt/${OROCOS_TARGET}/plugins orocos-kdltk-corba-${OROCOS_TARGET})
-  INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk-corba-${OROCOS_TARGET}.pc)
+  INSTALL_FILES( /lib/pkgconfig FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdltk-corba-${OROCOS_TARGET}.pc)
 
 ENDIF(ENABLE_CORBA)

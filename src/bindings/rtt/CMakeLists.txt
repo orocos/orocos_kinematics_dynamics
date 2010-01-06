@@ -13,14 +13,15 @@ IF( OROCOS_PLUGIN )
 #    SET(ROTATION_PROPERTIES_EULER 1)
 #  ENDIF(${ROTATION_PROPERTIES} STREQUAL "EULER")
 
-  CONFIGURE_FILE( kdltk.hpp.in src/bindings/rtt/kdltk.hpp)
-  INSTALL_FILES( /include/kdl/bindings/rtt FILES kdltk.hpp)
+  CONFIGURE_FILE( kdltk.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/kdltk.hpp)
+  INSTALL_FILES( /include/kdl/bindings/rtt FILES ${CMAKE_CURRENT_BINARY_DIR}/kdltk.hpp)
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src)
 
   FILE( GLOB SRCS [^.]*.cpp [^.]*.cxx)
   FILE( GLOB HPPS [^.]*.hpp [^.]*.h)
   
   INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR} ${PROJ_BINARY_DIR}/src/bindings/rtt
+	${CMAKE_CURRENT_BINARY_DIR}/src/bindings/rtt/
       ${OROCOS_RTT_INCLUDE_DIRS} ${OROCOS_INSTALL}/include/rtt /usr/include/orbsvcs)
   ADD_DEFINITIONS(-D_REENTRANT)
   INCLUDE_DIRECTORIES(/usr/include/orbsvcs /usr/include/rtt)
@@ -33,8 +34,8 @@ IF( OROCOS_PLUGIN )
   INSTALL_FILES( /include/kdl/bindings/rtt FILES ${HPPS})
   TARGET_LINK_LIBRARIES(orocos-kdltk-${OROCOS_TARGET} orocos-kdl orocos-rtt-${OROCOS_TARGET})
 
-  CONFIGURE_FILE( kdltk.pc.in src/bindings/rtt/orocos-kdltk-${OROCOS_TARGET}.pc @ONLY)
-  INSTALL_FILES( /lib/pkgconfig FILES orocos-kdltk-${OROCOS_TARGET}.pc)
+  CONFIGURE_FILE( kdltk.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdltk-${OROCOS_TARGET}.pc @ONLY)
+  INSTALL_FILES( /lib/pkgconfig FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdltk-${OROCOS_TARGET}.pc)
 
   add_subdirectory(corba)
 
