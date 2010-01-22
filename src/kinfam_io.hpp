@@ -31,6 +31,7 @@
 #include "jntarray.hpp"
 #include "jacobian.hpp"
 #include "tree.hpp"
+#include "jntspaceinertiamatrix.hpp"
 
 namespace KDL {
 std::ostream& operator <<(std::ostream& os, const Joint& joint);
@@ -49,6 +50,8 @@ std::ostream& operator <<(std::ostream& os, const JntArray& array);
 std::istream& operator >>(std::istream& is, JntArray& array);
 std::ostream& operator <<(std::ostream& os, const Jacobian& jac);
 std::istream& operator >>(std::istream& is, Jacobian& jac);
+std::ostream& operator <<(std::ostream& os, const JntSpaceInertiaMatrix& jntspaceinertiamatrix);
+std::istream& operator >>(std::istream& is, JntSpaceInertiaMatrix& jntspaceinertiamatrix);
 
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {

@@ -96,6 +96,19 @@ std::ostream& operator <<(std::ostream& os, const Jacobian& jac) {
 std::istream& operator >>(std::istream& is, Jacobian& jac) {
 	return is;
 }
+std::ostream& operator <<(std::ostream& os, const JntSpaceInertiaMatrix& jntspaceinertiamatrix) {
+	os << "[";
+	for (unsigned int i = 0; i < jntspaceinertiamatrix.rows(); i++) {
+		for (unsigned int j = 0; j < jntspaceinertiamatrix.columns(); j++)
+			os << std::setw(KDL_FRAME_WIDTH) << jntspaceinertiamatrix(i, j);
+		os << std::endl;
+	}
+	os << "]";
+	return os;
+}
 
+std::istream& operator >>(std::istream& is, JntSpaceInertiaMatrix& jntspaceinertiamatrix) {
+	return is;
+}
 }
 

@@ -23,9 +23,20 @@ int main(int argc , char** argv){
     Wrenches f(p560.getNrOfSegments());
 
     for(unsigned int i=0;i<p560.getNrOfJoints();i++){
-        q(i)=2.1;
-        qdot(i)=1.5;
-        qdotdot(i)=1.3;
+      q(i)=0.0;
+      qdot(i)=0.0;
+      qdotdot(i)=0.0;
+      
+      //if(i<2)
+      //{
+	std::cout << "give q(" << i+1 << ")\n" << std::endl;
+	std::cin >> q(i);
+	std::cout << "give qdot(" << i+1 << ")\n" << std::endl;
+	std::cin >> qdot(i);
+	std::cout << "give qdotdot(" << i << ")\n" << std::endl;
+	std::cin >> qdotdot(i);
+      //}
+        
     }
     
     ChainFkSolverPos_recursive fksolver(p560);
