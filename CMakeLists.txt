@@ -1,13 +1,9 @@
 #
 # Test CMake version
 #
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #MARK_AS_ADVANCED( FORCE CMAKE_BACKWARDS_COMPATIBILITY )
 
-# for CMake 2.6 corrected behaviour (see "cmake --help-policy CMP0003")
-IF(COMMAND cmake_policy AND ${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 4)
-  CMAKE_POLICY(SET CMP0003 NEW)
-ENDIF(COMMAND cmake_policy AND ${CMAKE_MAJOR_VERSION} EQUAL 2 AND ${CMAKE_MINOR_VERSION} GREATER 4)
 
 ###################################################
 #                                                 #
@@ -108,7 +104,6 @@ ADD_CUSTOM_TARGET(uninstall
 ##                                                         #
 ############################################################
 
-IF ( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.4" )
 OPTION( CPACK_PACKAGES "Set to ON to build the packages. Requires cmake >2.4" OFF )
 IF (CPACK_PACKAGES)
 
@@ -140,8 +135,3 @@ SET(CPACK_STRIP_FILES "bin/cmake")
 #SET(CPACK_PACKAGE_EXECUTABLES "OrocosExec" "Orocos Executable")
 INCLUDE(CPack)
 ENDIF (CPACK_PACKAGES)
-ELSE ( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.4" )
-
-   MESSAGE ( "Disabling packaging for version ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}")
-
-ENDIF ( "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" STREQUAL "2.4" )
