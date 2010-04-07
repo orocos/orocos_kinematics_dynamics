@@ -24,7 +24,8 @@
 namespace KDL
 {
     ChainJntToJacSolver::ChainJntToJacSolver(const Chain& _chain):
-        chain(_chain)
+        chain(_chain),locked_joints_(chain.getNrOfJoints(),false),
+        nr_of_unlocked_joints_(chain.getNrOfJoints())
     {
     }
 
@@ -32,9 +33,21 @@ namespace KDL
     {
     }
 
+    int ChainJntToJacSolver::setLockedJoints(const std::vector<bool> locked_joints)
+    {
+        if(locked_joints.size()!=locked_joints_.size())
+            return -1;
+        locked_joints_=locked_joints;
+        for(unsigned int i=0;i<locked_joints_.size();i++){
+            nr_of_unlocked_joints_=0;
+            if(!locked_joints_[i])
+                nr_of_unlocked_joints_++;
+        }
+    }
+
     int ChainJntToJacSolver::JntToJac(const JntArray& q_in,Jacobian& jac)
     {
-        if(q_in.rows()!=chain.getNrOfJoints()||q_in.rows()!=jac.columns())
+        if(q_in.rows()!=chain.getNrOfJoints()||nr_of_unlocked_joints_==jac.columns())
             return -1;
         T_tmp = Frame::Identity();
         SetToZero(t_tmp);
@@ -45,9 +58,10 @@ namespace KDL
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
             	//pose of the new end-point expressed in the base
                 total = T_tmp*chain.getSegment(i).pose(q_in(j));
-                //changing base of new segment's twist to base frame
+                //changing base of new segment's twist to base frame if it is not locked
                 //t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);
-                t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
+                if(!locked_joints_[i])
+                    t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
             }else{
                 total = T_tmp*chain.getSegment(i).pose(0.0);
 
@@ -58,7 +72,9 @@ namespace KDL
 
             //Only increase jointnr if the segment has a joint
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
-                jac.setColumn(j,t_tmp);
+                //Only put the twist inside if it is not locked
+                if(!locked_joints_[i])
+                    jac.setColumn(j,t_tmp);
                 j++;
             }
 

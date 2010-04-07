@@ -54,11 +54,14 @@ namespace KDL
          * @return always returns 0
          */
         int JntToJac(const JntArray& q_in,Jacobian& jac);
-
+        
+        int setLockedJoints(const std::vector<bool> locked_joints);
     private:
         const Chain chain;
         Twist t_tmp;
         Frame T_tmp;
+        std::vector<bool> locked_joints_;
+        int nr_of_unlocked_joints_;
     };
 }
 #endif
