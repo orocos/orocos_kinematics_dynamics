@@ -1,0 +1,19 @@
+INSTALL_PREFIX=`rospack find kdl-trunk`
+EXTRA_CMAKE_FLAGS=-DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+		-DPYTHON_BINDINGS=ON \
+		-DBUILD_MODELS=ON \
+		-DCMAKE_PREFIX_PATH="`rospack find eigen`;`rosboost-cfg --root`"\
+		-DCMAKE_BUILD_TYPE="Release"\
+		-DOROCOS_PLUGIN=ON\
+		-DOROCOS_TARGET=gnulinux\
+		-DENABLE_CORBA=ON\
+		-DCORBA_IMPLEMENTATION=OMNIORB\
+		-DOROCOS_INSTALL=`rospack find rtt-1.10`/rtt\
+		-DPYTHON_SITE_PACKAGES_DIR=${INSTALL_PREFIX}/lib/python/site-packages
+
+default: all
+	cd build; make install
+
+
+include $(shell rospack find mk)/cmake.mk
+
