@@ -1,8 +1,8 @@
 # Locate KDL install directory
 
 # This module defines
-# KDL_INSTALL where to find include, lib, bin, etc.
-# KDL_FOUND, is set to true
+# Orocos-KDL_INSTALL where to find include, lib, bin, etc.
+# Orocos-KDL_FOUND, is set to true
 
 INCLUDE (FindPkgConfig)
 
@@ -17,16 +17,16 @@ IF ( PKG_CONFIG_FOUND )
   # find KDL itself
   set(ENV{PKG_CONFIG_PATH} "@CMAKE_INSTALL_PREFIX@/lib/pkgconfig/")
   message( "Looking for KDL in: @CMAKE_INSTALL_PREFIX@")
-  pkg_search_module(KDL ${IS_REQUIRED} orocos-kdl)
+  pkg_search_module(Orocos-KDL ${IS_REQUIRED} orocos-kdl)
   
-  IF( KDL_FOUND )
+  IF( Orocos-KDL_FOUND )
     IF(NOT Orocos-KDL_FIND_QUIETLY)
-      message("   Includes in: ${KDL_INCLUDE_DIRS}")
-      message(    "Compiler flags: ${KDL_CFLAGS}")  
-      message("   Libraries: ${KDL_LIBRARIES}")
-      message("   Libraries in: ${KDL_LIBRARY_DIRS}")
-      message("   Linker flags : ${KDL_LD_FLAGS}")
-      message("   Defines: ${KDL_DEFINES}")
+      message("   Includes in: ${Orocos-KDL_INCLUDE_DIRS}")
+      message(    "Compiler flags: ${Orocos-KDL_CFLAGS}")  
+      message("   Libraries: ${Orocos-KDL_LIBRARIES}")
+      message("   Libraries in: ${Orocos-KDL_LIBRARY_DIRS}")
+      message("   Linker flags : ${Orocos-KDL_LD_FLAGS}")
+      message("   Defines: ${Orocos-KDL_DEFINES}")
     ENDIF(NOT Orocos-KDL_FIND_QUIETLY)
 
 	# find requested components (if any)
@@ -55,11 +55,11 @@ IF ( PKG_CONFIG_FOUND )
 
 	endforeach (COMPONENT ${Orocos-KDL_FIND_COMPONENTS})
 
-  ELSE(KDL_FOUND)  
+  ELSE(Orocos-KDL_FOUND)  
     IF(Orocos-KDL_FIND_REQUIRED)
       MESSAGE(FATAL_ERROR "Could not find KDL")
     ENDIF(Orocos-KDL_FIND_REQUIRED)
-  ENDIF ( KDL_FOUND )
+  ENDIF ( Orocos-KDL_FOUND )
 ELSE  ( PKG_CONFIG_FOUND )
 
   MESSAGE( FATAL_ERROR "Can't find KDL without pkgconfig !")
