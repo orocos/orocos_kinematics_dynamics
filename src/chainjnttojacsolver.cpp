@@ -38,8 +38,8 @@ namespace KDL
         if(locked_joints.size()!=locked_joints_.size())
             return -1;
         locked_joints_=locked_joints;
+        nr_of_unlocked_joints_=0;
         for(unsigned int i=0;i<locked_joints_.size();i++){
-            nr_of_unlocked_joints_=0;
             if(!locked_joints_[i])
                 nr_of_unlocked_joints_++;
         }
@@ -52,6 +52,7 @@ namespace KDL
         T_tmp = Frame::Identity();
         SetToZero(t_tmp);
         int j=0;
+        int k=0;
         Frame total;
         for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
             //Calculate new Frame_base_ee
@@ -74,7 +75,7 @@ namespace KDL
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
                 //Only put the twist inside if it is not locked
                 if(!locked_joints_[i])
-                    jac.setColumn(j,t_tmp);
+                    jac.setColumn(k++,t_tmp);
                 j++;
             }
 
