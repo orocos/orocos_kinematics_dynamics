@@ -48,7 +48,7 @@ INCLUDE(${PROJ_SOURCE_DIR}/config/FindEigen2.cmake)
 
 OPTION( OROCOS_PLUGIN "Build Orocos-plugin?" OFF)
 IF( OROCOS_PLUGIN )
-  SET( RTT_VVERSION "v1.4.x" )
+  SET( RTT_VVERSION "v1.10.x" )
   IF(NOT OROCOS_INSTALL)
     SET( OROCOS_INSTALL /usr CACHE PATH "The RTT installation directory.")
   ENDIF(NOT OROCOS_INSTALL)

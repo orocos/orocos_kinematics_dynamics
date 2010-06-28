@@ -53,6 +53,7 @@ std::istream& operator >>(std::istream& is, Jacobian& jac);
 std::ostream& operator <<(std::ostream& os, const JntSpaceInertiaMatrix& jntspaceinertiamatrix);
 std::istream& operator >>(std::istream& is, JntSpaceInertiaMatrix& jntspaceinertiamatrix);
 
+    /*
 template<typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& vec) {
 	os << "[";
@@ -68,6 +69,7 @@ std::istream& operator >>(std::istream& is, std::vector<T>& vec) {
 	return is;
 }
 ;
+    */
 }
 #endif
 

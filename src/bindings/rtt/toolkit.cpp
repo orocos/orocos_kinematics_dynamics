@@ -41,6 +41,8 @@
 #include "motionproperties.hpp"
 #include "kinfamproperties.hpp"
 
+#include <rtt/VectorTemplateComposition.hpp>
+
 namespace KDL
 {
     using namespace RTT;
@@ -138,6 +140,21 @@ namespace KDL
         ti->addType( new JntArrayTypeInfo());
         ti->addType( new JacobianTypeInfo());
 
+
+
+        //RTT::TypeInfoRepository::Instance()->addType( new StdVectorTemplateTypeInfo<std::string>("stringList") );
+        ti->addType( new StdVectorTemplateTypeInfo<Frame,true>("frames") );
+        ti->addType( new StdVectorTemplateTypeInfo<Vector,true>("vectors") );
+        ti->addType( new StdVectorTemplateTypeInfo<Rotation,true>("rotations") );
+        ti->addType( new StdVectorTemplateTypeInfo<Wrench,true>("wrenches") );
+        ti->addType( new StdVectorTemplateTypeInfo<Twist,true>("twists") );
+
+//        RTT::TypeInfoRepository::Instance()->addType( new StdVectorTemplateTypeInfo<double,true>("doubles") );
+//        RTT::TypeInfoRepository::Instance()->type("doubles")->addConstructor(newConstructor(stdvector_ctor<double>() ) );
+//        RTT::TypeInfoRepository::Instance()->type("doubles")->addConstructor(newConstructor(stdvector_ctor2<double>() ) );
+//        RTT::TypeInfoRepository::Instance()->type("doubles")->addConstructor(new StdVectorBuilder<double>() );
+//        RTT::OperatorRepository::Instance()->add( newBinaryOperator( "[]", stdvector_index<double>() ) );
+        
         return true;
     }
 
@@ -363,6 +380,29 @@ namespace KDL
         ti->type("wrench")->addConstructor( newConstructor(&wrenchft) );
         ti->type("twist")->addConstructor( newConstructor(&twistvw) );
 
+        
+        ti->type("frames")->addConstructor(newConstructor(stdvector_ctor<Frame>() ) );
+        ti->type("frames")->addConstructor(newConstructor(stdvector_ctor2<Frame>() ) );
+        ti->type("frames")->addConstructor(new StdVectorBuilder<Frame>() );
+
+        ti->type("vectors")->addConstructor(newConstructor(stdvector_ctor<Vector>() ) );
+        ti->type("vectors")->addConstructor(newConstructor(stdvector_ctor2<Vector>() ) );
+        ti->type("vectors")->addConstructor(new StdVectorBuilder<Vector>() );
+
+        ti->type("rotations")->addConstructor(newConstructor(stdvector_ctor<Rotation>() ) );
+        ti->type("rotations")->addConstructor(newConstructor(stdvector_ctor2<Rotation>() ) );
+        ti->type("rotations")->addConstructor(new StdVectorBuilder<Rotation>() );
+
+        ti->type("wrenches")->addConstructor(newConstructor(stdvector_ctor<Wrench>() ) );
+        ti->type("wrenches")->addConstructor(newConstructor(stdvector_ctor2<Wrench>() ) );
+        ti->type("wrenches")->addConstructor(new StdVectorBuilder<Wrench>() );
+
+        ti->type("twists")->addConstructor(newConstructor(stdvector_ctor<Twist>() ) );
+        ti->type("twists")->addConstructor(newConstructor(stdvector_ctor2<Twist>() ) );
+        ti->type("twists")->addConstructor(new StdVectorBuilder<Twist>() );
+
+
+
         return true;
     }
 
@@ -437,6 +477,26 @@ namespace KDL
 
         oreg->add( newBinaryOperator( "[]", wrenchtwist_index<Wrench>() ) );
         oreg->add( newBinaryOperator( "[]", wrenchtwist_index<Twist>() ) );
+
+
+        
+
+        oreg->add( newBinaryOperator( "[]", stdvector_index<Frame>() ) );
+        oreg->add( newDotOperator( "size", get_size<const std::vector<Frame>&>() ) );
+
+        oreg->add( newBinaryOperator( "[]", stdvector_index<Vector>() ) );
+        oreg->add( newDotOperator( "size", get_size<const std::vector<Vector>&>() ) );
+
+        oreg->add( newBinaryOperator( "[]", stdvector_index<Rotation>() ) );
+        oreg->add( newDotOperator( "size", get_size<const std::vector<Rotation>&>() ) );
+
+        oreg->add( newBinaryOperator( "[]", stdvector_index<Twist>() ) );
+        oreg->add( newDotOperator( "size", get_size<const std::vector<Twist>&>() ) );
+
+        oreg->add( newBinaryOperator( "[]", stdvector_index<Wrench>() ) );
+        oreg->add( newDotOperator( "size", get_size<const std::vector<Wrench>&>() ) );
+
+
 
         return true;
     }
