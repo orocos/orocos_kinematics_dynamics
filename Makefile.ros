@@ -9,7 +9,8 @@ EXTRA_CMAKE_FLAGS=-DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
 		-DENABLE_CORBA=ON\
 		-DCORBA_IMPLEMENTATION=OMNIORB\
 		-DOROCOS_INSTALL=`rospack find rtt_1.10`/rtt\
-		-DPYTHON_SITE_PACKAGES_DIR=${INSTALL_PREFIX}/lib/python/site-packages
+		-DPYTHON_SITE_PACKAGES_DIR=${INSTALL_PREFIX}/lib/python/site-packages\
+		-DENABLE_TESTS=ON
 
 default: all
 	cd build; make install
