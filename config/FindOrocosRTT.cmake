@@ -86,7 +86,7 @@ IF ( CMAKE_PKGCONFIG_EXECUTABLE AND NOT SKIP_BUILD)
       ENDFOREACH(FLAVOR ${OROCOS_RTT_FLAVORS})
       
       IF( NOT OROCOS_RTT )
-	MESSAGE(FATAL_ERROR "Please set OROCOS_TARGET variable (now: ${OROCOS_TARGET}) to one of the detected targets above.")
+	MESSAGE(WARNING "Please set OROCOS_TARGET variable (now: ${OROCOS_TARGET}) to one of the detected targets above.")
       ENDIF( NOT OROCOS_RTT )
 
     ELSE ( OROCOS_RTT_FLAVORS ) 
@@ -148,7 +148,7 @@ IF ( CMAKE_PKGCONFIG_EXECUTABLE AND NOT SKIP_BUILD)
 	ENDIF (CORBA_ENABLED)
 
       ELSE  ( OROCOS_RTT )
-        MESSAGE( FATAL_ERROR "Can't find Orocos Real-Time Toolkit (orocos-rtt.pc)")
+        MESSAGE( WARNING "Can't find Orocos Real-Time Toolkit (orocos-rtt.pc)")
       ENDIF ( OROCOS_RTT )
     ENDIF ( OROCOS_RTT_FLAVORS ) 
 
@@ -156,7 +156,7 @@ ELSE  ( CMAKE_PKGCONFIG_EXECUTABLE  AND NOT SKIP_BUILD)
 
     IF (NOT CMAKE_PKGCONFIG_EXECUTABLE)
     # Can't find pkg-config -- have to search manually
-    MESSAGE( FATAL_ERROR "Can't find pkg-config ")
+    MESSAGE( WARNING "Can't find pkg-config ")
     ENDIF (NOT CMAKE_PKGCONFIG_EXECUTABLE)
 
 ENDIF ( CMAKE_PKGCONFIG_EXECUTABLE  AND NOT SKIP_BUILD)
