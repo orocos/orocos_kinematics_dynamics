@@ -35,10 +35,10 @@ public:
      * @param q_out output joint coordinates
      *
      * @return if < 0 something went wrong
+	  *         otherwise (>=0) remaining (weighted) distance to target
      */
-    virtual int CartToJnt(const JntArray& q_init, const Frames& p_in,
-            JntArray& q_out)=0;
-
+    virtual double CartToJnt(const JntArray& q_init, const Frames& p_in,JntArray& q_out)=0;
+    
     virtual ~TreeIkSolverPos() {
     }
     ;
@@ -61,9 +61,9 @@ public:
      * @param qdot_out output joint velocities
      *
      * @return if < 0 something went wrong
+	  *         distance to goal otherwise (weighted norm of v_in)
      */
-    virtual int CartToJnt(const JntArray& q_in, const Twists& v_in,
-            JntArray& qdot_out)=0;
+    virtual double CartToJnt(const JntArray& q_in, const Twists& v_in, JntArray& qdot_out)=0;
 
     virtual ~TreeIkSolverVel() {
     }

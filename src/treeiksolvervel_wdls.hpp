@@ -18,10 +18,10 @@ namespace KDL {
 
     class TreeIkSolverVel_wdls: public TreeIkSolverVel {
     public:
-        TreeIkSolverVel_wdls(const Tree& tree, std::vector<std::string> endpoints);
+        TreeIkSolverVel_wdls(const Tree& tree, const std::vector<std::string>& endpoints);
         virtual ~TreeIkSolverVel_wdls();
         
-        virtual int CartToJnt(const JntArray& q_in, const Twists& v_in, JntArray& qdot_out);
+        virtual double CartToJnt(const JntArray& q_in, const Twists& v_in, JntArray& qdot_out);
 
         /*
          * Set the joint space weighting matrix
@@ -46,6 +46,7 @@ namespace KDL {
          * more detailed explanation : vincent.padois@upmc.fr
          */
         void setWeightJS(const MatrixXd& Mq);
+        const MatrixXd& getWeightJS() const {return Wq;}
         
         /*
          * Set the task space weighting matrix
@@ -71,16 +72,18 @@ namespace KDL {
          * For more detailed explanation : vincent.padois@upmc.fr
          */
         void setWeightTS(const MatrixXd& Mx);
-        
+        const MatrixXd& getWeightTS() const {return Wy;}
+
         void setLambda(const double& lambda);
-        
+        double getLambda () const {return lambda;}
+
     private:
         Tree tree;
         TreeJntToJacSolver jnttojacsolver;
         Jacobians jacobians;
         
         MatrixXd J, Wy, Wq, J_Wq, Wy_J_Wq, U, V, Wy_U, Wq_V;
-        VectorXd t, qdot, tmp, S;
+        VectorXd t, Wy_t, qdot, tmp, S;
         double lambda;
     };
     
