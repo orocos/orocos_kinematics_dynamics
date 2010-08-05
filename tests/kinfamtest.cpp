@@ -220,7 +220,7 @@ void KinFamTest::TreeTest()
     JntArray jnt2(extract_chain2.getNrOfJoints());
     for (int i=0; i<(int)extract_chain2.getNrOfJoints(); i++){
       jnt1(i) = (i+1)*2;
-      jnt2((int)extract_chain2.getNrOfJoints()-i-1) = -jnt1(i);
+      jnt2((int)extract_chain2.getNrOfJoints()-i-1) = jnt1(i);
     }
     solver1.JntToCart(jnt1, f1);
     solver2.JntToCart(jnt2, f2);

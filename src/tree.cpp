@@ -142,10 +142,10 @@ bool Tree::addTreeRecursive(SegmentMap::const_iterator root, const std::string& 
             Frame f_tip = seg.pose(0.0).Inverse();
             Joint jnt = seg.getJoint();
             if (jnt.getType() == Joint::RotX || jnt.getType() == Joint::RotY || jnt.getType() == Joint::RotZ || jnt.getType() == Joint::RotAxis)
-                jnt = Joint(jnt.getName(), f_tip*jnt.JointOrigin(), f_tip.M*jnt.JointAxis(), Joint::RotAxis);
-            else if (jnt.getType() == Joint::TransX || jnt.getType() == Joint::TransY || jnt.getType() == Joint::TransZ || jnt.getType() == Joint::TransAxis)
-                jnt = Joint(jnt.getName(),f_tip*jnt.JointOrigin(), f_tip.M*jnt.JointAxis(), Joint::TransAxis);
-            chain.addSegment(Segment(getSegment(parents_chain_root[s+1])->second.segment.getName(),
+	      jnt = Joint(jnt.getName(), f_tip*jnt.JointOrigin(), f_tip.M*(-jnt.JointAxis()), Joint::RotAxis);
+	    else if (jnt.getType() == Joint::TransX || jnt.getType() == Joint::TransY || jnt.getType() == Joint::TransZ || jnt.getType() == Joint::TransAxis)
+	      jnt = Joint(jnt.getName(),f_tip*jnt.JointOrigin(), f_tip.M*(-jnt.JointAxis()), Joint::TransAxis);
+	    chain.addSegment(Segment(getSegment(parents_chain_root[s+1])->second.segment.getName(),
                                      jnt, f_tip, getSegment(parents_chain_root[s+1])->second.segment.getInertia()));
         }
         
