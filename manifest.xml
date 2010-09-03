@@ -15,7 +15,7 @@ Library (KDL), distributed by the Orocos Project.
   <python path="${prefix}/kdl/lib/python/site-packages"  />
 </export>
 <depend package="eigen"/>
-<depend package="rtt-1.10"/>
+<depend package="rtt_1.10"/>
 <rosdep name="cppunit"/>
 <rosdep name="python-sip4"/>
 
