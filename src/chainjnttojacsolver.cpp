@@ -61,7 +61,7 @@ namespace KDL
                 total = T_tmp*chain.getSegment(i).pose(q_in(j));
                 //changing base of new segment's twist to base frame if it is not locked
                 //t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);
-                if(!locked_joints_[i])
+                if(!locked_joints_[j])
                     t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
             }else{
                 total = T_tmp*chain.getSegment(i).pose(0.0);
@@ -74,7 +74,7 @@ namespace KDL
             //Only increase jointnr if the segment has a joint
             if(chain.getSegment(i).getJoint().getType()!=Joint::None){
                 //Only put the twist inside if it is not locked
-                if(!locked_joints_[i])
+                if(!locked_joints_[j])
                     jac.setColumn(k++,t_tmp);
                 j++;
             }
