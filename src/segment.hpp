@@ -144,10 +144,11 @@ namespace KDL {
          * Request the pose from the joint end to the tip of the
          *segment.
          *
-         * @return const reference to the joint end - segment tip pose.
+         * @return the original parent end - segment end pose.
          */
-        const Frame& getFrameToTip()const
+        Frame getFrameToTip()const
         {
+            
             return joint.pose(0)*f_tip;
         }
 
