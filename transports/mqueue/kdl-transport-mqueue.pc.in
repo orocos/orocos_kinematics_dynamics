@@ -1,0 +1,18 @@
+# Generated from orogen/lib/orogen/templates/typekit/mqueue/transport-mqueue.pc
+
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib/orocos/types
+includedir=${prefix}/include/orocos
+
+project_name=kdl
+
+type_registry=${prefix}/share/orogen/kdl.tlb
+
+Name: kdlMQueueTransport
+Version: 
+
+Description: kdl types support for the Orocos type system
+Libs: -L${libdir} -l@libname_mqueue@
+Cflags: -I${includedir}
+
