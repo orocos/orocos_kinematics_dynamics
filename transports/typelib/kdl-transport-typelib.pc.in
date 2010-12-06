@@ -1,0 +1,18 @@
+# Generated from orogen/lib/orogen/templates/typekit/typelib/transport-typelib.pc 
+
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib/orocos/types
+includedir=${prefix}/include/orocos
+
+project_name=kdl
+
+type_registry=${prefix}/share/orogen/kdl.tlb
+
+Name: kdlTypelibTransport
+Version: 
+
+Description: kdl types support for the Orocos type system
+Libs: -L${libdir} -lkdl-transport-typelib
+Cflags: -I${includedir}
+

@@ -1,0 +1,37 @@
+/* Generated from orogen/lib/orogen/templates/typekit/corba/Types.idl */
+
+#ifndef __OROGEN_TYPEKIT_KDL_IDL__
+#define __OROGEN_TYPEKIT_KDL_IDL__
+
+
+
+module orogen {
+    module KDL {
+        module Corba {
+            struct Rotation {
+                double data[9];
+            };
+            struct Vector {
+                double data[3];
+            };
+            struct Frame {
+                orogen::KDL::Corba::Vector p;
+                orogen::KDL::Corba::Rotation M;
+            };
+            struct Twist {
+                orogen::KDL::Corba::Vector vel;
+                orogen::KDL::Corba::Vector rot;
+            };
+            struct Wrench {
+                orogen::KDL::Corba::Vector force;
+                orogen::KDL::Corba::Vector torque;
+            };
+        };
+
+    };
+
+};
+
+
+#endif
+

@@ -1,0 +1,16 @@
+<package>
+  <description brief="kdl_typekit">
+
+      Definitions to use the <a href="http://www.orocos.org/kdl">Kinematics and Dynamics Library (KDL)</a>
+      in the Orocos Real-Time Toolkit (RTT), which is part of the <a
+      href="http://www.orocos.org/wiki/orocos/toolchain">Orocos Toolchain</a>.
+
+  </description>
+  <author>Steven Bellens - based on the typegen tool written by Sylvain Joyeux</author>
+  <license>LGPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kdl_typekit</url>
+  <depend package="rtt"/>
+  <depend package="orocos_kdl"/>
+
+</package>
