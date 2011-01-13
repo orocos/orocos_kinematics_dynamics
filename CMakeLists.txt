@@ -25,13 +25,11 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/types)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-include_directories(${OrocosRTT_INCLUDE_DIRS})
-add_definitions(${OrocosRTT_CFLAGS_OTHER})
-link_directories(${OrocosRTT_LIBRARY_DIRS})
+find_package(Orocos-RTT REQUIRED)
+include(${OROCOS-RTT_USE_FILE_PATH}/UseOROCOS-RTT.cmake)
 
 # Generate the base typekit shared library
-set(libname kdl-typekit-${OROCOS_TARGET})
-rosbuild_add_library(${libname} ${CMAKE_CURRENT_SOURCE_DIR}/Plugin.cpp
+orocos_typekit(kdl-typekit ${CMAKE_CURRENT_SOURCE_DIR}/Plugin.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/type_info/__KDL__Frame.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/type_info/__KDL__Frames.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/type_info/__KDL__Rotation.cpp
@@ -48,9 +46,6 @@ rosbuild_add_library(${libname} ${CMAKE_CURRENT_SOURCE_DIR}/Plugin.cpp
     ${TOOLKIT_ADDITIONAL_SOURCES}
     )
 
-
-target_link_libraries(${libname} ${OrocosRTT_LIBRARIES} ${TYPEKIT_ADDITIONAL_LIBRARIES} ${TOOLKIT_ADDITIONAL_LIBRARIES})
-target_link_libraries(${libname} LINK_INTERFACE_LIBRARIES ${OrocosRTT_LIBRARIES})
 
 #add_subdirectory(transports/typelib)
     

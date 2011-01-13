@@ -29,8 +29,8 @@ IF(OROCOS-RTT_CORBA_FOUND)
   include_directories(${OrocosCORBA_Typekit_INCLUDE_DIRS})
   
   # Generate the CORBA transport
-  set(libname_corba kdl-transport-corba-${OROCOS_TARGET})
-  rosbuild_add_library(${libname_corba}
+  set(libname_corba kdl-transport-corba)
+  orocos_typekit(${libname_corba}
       ${CMAKE_SOURCE_DIR}/transports/corba/Convertions.cpp
       ${CMAKE_SOURCE_DIR}/transports/corba/TransportPlugin.cpp
       ${CMAKE_SOURCE_DIR}/transports/corba/__KDL__Frame.cpp
@@ -40,7 +40,7 @@ IF(OROCOS-RTT_CORBA_FOUND)
       ${CMAKE_SOURCE_DIR}/transports/corba/__KDL__Wrench.cpp
       ${CORBA_FILES})
   target_link_libraries(${libname_corba}
-      kdl-typekit-${OROCOS_TARGET}
+      kdl-typekit
       ${OrocosCORBA_LIBRARIES})
 
 

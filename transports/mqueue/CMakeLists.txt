@@ -14,8 +14,8 @@ IF (OROCOS-RTT_MQUEUE_FOUND)
   set(MQueue_FILES "")
   
   # Generate the MQueue transport
-  set(libname_mqueue kdl-transport-mqueue-${OROCOS_TARGET})
-  rosbuild_add_library(${libname_mqueue} 
+  set(libname_mqueue kdl-transport-mqueue)
+  orocos_typekit(${libname_mqueue}
       ${CMAKE_SOURCE_DIR}/transports/mqueue/TransportPlugin.cpp
       ${CMAKE_SOURCE_DIR}/transports/mqueue/__KDL__Frame.cpp
       ${CMAKE_SOURCE_DIR}/transports/mqueue/__KDL__Rotation.cpp
@@ -24,7 +24,7 @@ IF (OROCOS-RTT_MQUEUE_FOUND)
       ${CMAKE_SOURCE_DIR}/transports/mqueue/__KDL__Wrench.cpp
       ${MQueue_FILES})
   target_link_libraries(${libname_mqueue}
-      kdl-typekit-${OROCOS_TARGET}
+      kdl-typekit
       ${OROCOS-RTT_MQUEUE_LIBRARIES})
   
   
