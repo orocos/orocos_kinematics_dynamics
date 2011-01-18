@@ -1,9 +1,3 @@
-orocos-kdl (1.1.0) maverick; urgency=low
-
-  * Release 1.1.0
-
- -- Ruben Smits <ruben.smits@mech.kuleuven.be>  Tue, 18 Jan 2011 11:31:02 +0100
-
 orocos-kdl (1.0.0) UNRELEASED; urgency=low
 
   * First major number release
