@@ -60,7 +60,7 @@ protected:
 
 TEST_F(KDLPluginTest,loadTypekit)
 {
-    ASSERT_TRUE(depl.import("kdl_rtt_plugin"));
+    ASSERT_TRUE(depl.import("kdl_typekit"));
 }
 
 TEST_F(KDLPluginTest,getKDLTypes)
