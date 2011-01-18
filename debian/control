@@ -5,10 +5,10 @@ Build-Depends: debhelper (>= 5), cmake (>=2.6.0), pkg-config, python-all-dev(>=2
 Standards-Version: 3.7.2
 Section: libs
 
-Package: liborocos-kdl1.0-dev
+Package: liborocos-kdl1.1-dev
 Section: libdevel
 Architecture: any
-Depends: liborocos-kdl1.0 (= ${Source-Version})
+Depends: liborocos-kdl1.1 (= ${Source-Version})
 Provides: liborocos-kdl-dev
 Conflicts: liborocos-kdl-dev
 Replaces: liborocos-kdl-dev
@@ -18,7 +18,7 @@ Description: Kinematics and Dynamics Library development files
  representations for kinematic structures and their inverse and forward
  kinematic solvers.
 
-Package: liborocos-kdl1.0
+Package: liborocos-kdl1.1
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}
@@ -28,10 +28,10 @@ Description: Kinematics and Dynamics Library runtime
  representations for kinematic structures and their inverse and forward
  kinematic solvers.
 
-Package: python-orocos-kdl1.0
+Package: python-orocos-kdl1.1
 Section: libs
 Architecture: any
-Depends: ${python:Depends}, python, liborocos-kdl1.0
+Depends: ${python:Depends}, python, liborocos-kdl1.1
 XS-Python-Version: current
 XB-Python-Version:${python:Versions}
 Description: Kinematics and Dynamics Library python binding

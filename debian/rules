@@ -50,12 +50,20 @@ major=`grep orocos-kdl debian/changelog | head -1 | awk '{print substr($$2,2,3)}
 
 configure: configure-stamp
 configure-stamp:
+	mkdir -p dbuild
+	cd dbuild;\
+	cmake .. \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DPYTHON_BINDINGS=ON \
+		-DBUILD_MODELS=ON \
+		-DCMAKE_BUILD_TYPE="Release"\
+		-DPYTHON_SITE_PACKAGES_DIR=lib/python/site-packages
 	dh_testdir
 	touch configure-stamp
 
-
 build: build-stamp
 build-stamp: configure-stamp 
+	cd dbuild;$(MAKE)
 	dh_testdir
 	touch build-stamp
 
@@ -71,6 +79,7 @@ clean:
 	dh_clean 
 
 install: build
+	cd dbuild;$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
 	dh_testdir
 	dh_testroot
 	dh_installdirs
