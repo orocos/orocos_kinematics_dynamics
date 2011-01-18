@@ -29,32 +29,6 @@ IF ( PKG_CONFIG_FOUND )
       message("   Defines: ${Orocos-KDL_DEFINES}")
     ENDIF(NOT Orocos-KDL_FIND_QUIETLY)
 
-	# find requested components (if any)
-	foreach (COMPONENT ${Orocos-KDL_FIND_COMPONENTS})
-	  string(TOUPPER ${COMPONENT} UCOMPONENT)
-
-	  # we only handle toolkits (for now)
-	  if (${COMPONENT} MATCHES "kdltk.*")
-
-		# ensure we have any required variables
-		IF (NOT OROCOS_TARGET)
-		  MESSAGE(FATAL_ERROR "For toolkit support you must set OROCOS_TARGET (e.g. gnulinux, macosx, lxrt)")
-		ENDIF (NOT OROCOS_TARGET)
-
-		# variable names for this component (eg "KDLTK")
-		SET(COMP_PREFIX "${UCOMPONENT}")
-
-		# module name to search for (eg "orocos-kdltk-gnulinux")
-		string(TOLOWER "orocos-${COMPONENT}-${OROCOS_TARGET}" COMP_MODULE)
-
-		pkg_search_module(${COMP_PREFIX} ${IS_REQUIRED} ${COMP_MODULE})
-
-	 else (${COMPONENT} MATCHES "kdltk.*")
-	   MESSAGE(FATAL_ERROR "Unsupported component '${COMPONENT}'")
-	 endif (${COMPONENT} MATCHES "kdltk.*")
-
-	endforeach (COMPONENT ${Orocos-KDL_FIND_COMPONENTS})
-
   ELSE(Orocos-KDL_FOUND)  
     IF(Orocos-KDL_FIND_REQUIRED)
       MESSAGE(FATAL_ERROR "Could not find KDL")
