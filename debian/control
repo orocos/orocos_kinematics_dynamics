@@ -1,7 +1,7 @@
 Source: orocos-kdl
 Priority: extra
 Maintainer: Ruben Smits <ruben.smits@mech.kuleuven.be>
-Build-Depends: debhelper (>= 5), cmake (>=2.6.0), pkg-config, libboost-dev | libboost1.35-dev | libboost1.36-dev | libboost1.37-dev, tao-idl, liborocos-rtt-common-dev, python-all-dev(>=2.3.5-11), python-sip4-dev (>=4.4.5), python-sip4, python-support, sip4, libeigen2-dev 
+Build-Depends: debhelper (>= 5), cmake (>=2.6.0), pkg-config, python-all-dev(>=2.3.5-11), python-sip4-dev (>=4.4.5), python-sip4, python-support, sip4, libeigen2-dev 
 Standards-Version: 3.7.2
 Section: libs
 
