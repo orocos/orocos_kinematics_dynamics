@@ -48,15 +48,13 @@ major=`grep orocos-kdl debian/changelog | head -1 | awk '{print substr($$2,2,3)}
 #major=`ls src/.libs/lib*.so.* | \
 # awk '{if (match($$0,/\.so\.[0-9]+$$/)) print substr($$0,RSTART+4)}'`
 
-include debian/rules.targets
-
-configure: configure-stamp $(CONFIGURE_TARGETS)
+configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	touch configure-stamp
 
 
-build: build-stamp $(BUILD_TARGETS)
+build: build-stamp
 build-stamp: configure-stamp 
 	dh_testdir
 	touch build-stamp
@@ -72,7 +70,7 @@ clean:
 
 	dh_clean 
 
-install: build  $(INSTALL_TARGETS)
+install: build
 	dh_testdir
 	dh_testroot
 	dh_installdirs
