@@ -2,7 +2,6 @@
 #include <deployment/DeploymentComponent.hpp>
 #include <rtt/types/TypekitRepository.hpp>
 #include <rtt/types/Types.hpp>
-#include <rtt/marsh/MarshallingService.hpp>
 #include <rtt/marsh/Marshalling.hpp>
 #include <kdl/frames.hpp>
 #include <kdl/chain.hpp>

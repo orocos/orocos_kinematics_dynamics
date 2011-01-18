@@ -11,8 +11,5 @@
     <depend package="rtt" />
     <depend package="ocl" />
     <depend package="orocos_kdl" />
-
-    <rosdep name="gtest"/>
-
 </package>
 
