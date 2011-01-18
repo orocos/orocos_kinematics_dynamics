@@ -74,7 +74,7 @@ clean:
 	rm -f configure-stamp*
 
 # Add here commands to clean up after the build process.
-	-rm -rf build*
+	-rm -rf build* install*
 
 	dh_clean 
 
