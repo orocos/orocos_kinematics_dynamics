@@ -56,7 +56,7 @@ class Segment
 using namespace KDL;
 %End
 public:
-    Segment(const Joint& joint=Joint::None, const Frame& f_from_parent=Frame::Identity());
+    Segment(const Joint& joint=Joint(Joint::None), const Frame& f_from_parent=Frame::Identity());
     Segment(const Segment& in);
 
     const char* __repr__();
