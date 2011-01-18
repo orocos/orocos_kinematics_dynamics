@@ -90,7 +90,7 @@ class MyTask : public RTT::TaskContext
          * @post 0 < rows()
          * @post all elements in data have 0 value
          */
-        JntSpaceInertiaMatrix(int size);
+        explicit JntSpaceInertiaMatrix(int size);
         /** Copy constructor 
          * @note Will correctly copy an empty object
          */

@@ -36,9 +36,9 @@ namespace KDL
         JntArray qdot;
     public:
         JntArrayVel(){};
-        JntArrayVel(unsigned int size);
+        explicit JntArrayVel(unsigned int size);
         JntArrayVel(const JntArray& q,const JntArray& qdot);
-        JntArrayVel(const JntArray& q);
+        explicit JntArrayVel(const JntArray& q);
 
         void resize(unsigned int newSize);
 

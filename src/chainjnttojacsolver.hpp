@@ -40,7 +40,7 @@ namespace KDL
     class ChainJntToJacSolver
     {
     public:
-        ChainJntToJacSolver(const Chain& chain);
+        explicit ChainJntToJacSolver(const Chain& chain);
         ~ChainJntToJacSolver();
         /**
          * Calculate the jacobian expressed in the base frame of the

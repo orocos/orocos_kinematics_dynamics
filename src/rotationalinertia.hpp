@@ -34,7 +34,7 @@ namespace KDL
 	class RotationalInertia{
     public:
               
-        RotationalInertia(double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
+        explicit RotationalInertia(double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
         
         static inline RotationalInertia Zero(){
             return RotationalInertia(0,0,0,0,0,0);

@@ -37,10 +37,10 @@ namespace KDL
         JntArray qdotdot;
     public:
       JntArrayAcc(){};
-        JntArrayAcc(unsigned int size);
+        explicit JntArrayAcc(unsigned int size);
         JntArrayAcc(const JntArray& q,const JntArray& qdot,const JntArray& qdotdot);
         JntArrayAcc(const JntArray& q,const JntArray& qdot);
-        JntArrayAcc(const JntArray& q);
+        explicit JntArrayAcc(const JntArray& q);
 
         void resize(unsigned int newSize);
 

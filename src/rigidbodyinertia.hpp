@@ -41,7 +41,7 @@ namespace KDL {
          * 	This constructor creates a cartesian space inertia matrix,
          * 	the arguments are the mass, the vector from the reference point to cog and the rotational inertia in the cog.
          */
-        RigidBodyInertia(double m=0, const Vector& oc=Vector::Zero(), const RotationalInertia& Ic=RotationalInertia::Zero());
+        explicit RigidBodyInertia(double m=0, const Vector& oc=Vector::Zero(), const RotationalInertia& Ic=RotationalInertia::Zero());
         
         /**
          * Creates an inertia with zero mass, and zero RotationalInertia

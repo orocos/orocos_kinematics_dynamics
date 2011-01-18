@@ -75,7 +75,7 @@ namespace KDL
          *
          */
 
-        ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
+        explicit ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
         //=ublas::identity_matrix<double>
         ~ChainIkSolverVel_wdls();
 

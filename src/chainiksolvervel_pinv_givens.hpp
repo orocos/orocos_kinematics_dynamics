@@ -35,7 +35,7 @@ namespace KDL
          * default: 150
          *
          */
-        ChainIkSolverVel_pinv_givens(const Chain& chain);
+        explicit ChainIkSolverVel_pinv_givens(const Chain& chain);
         ~ChainIkSolverVel_pinv_givens();
 
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);

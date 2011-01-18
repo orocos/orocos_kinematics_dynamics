@@ -32,7 +32,7 @@ namespace KDL
     public:
         Eigen::Matrix<double,6,Eigen::Dynamic> data;
         Jacobian();
-        Jacobian(unsigned int nr_of_columns);
+        explicit Jacobian(unsigned int nr_of_columns);
         Jacobian(const Jacobian& arg);
 
         ///Allocates memory for new size (can break realtime behavior)

@@ -77,7 +77,7 @@ namespace KDL
         /**
          * The constructor of a tree, a new tree is always empty
          */
-        Tree(const std::string& root_name="root");
+        explicit Tree(const std::string& root_name="root");
         Tree(const Tree& in);
         Tree& operator= (const Tree& arg);
 
