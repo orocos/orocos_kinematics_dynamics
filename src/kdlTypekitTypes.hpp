@@ -212,7 +212,7 @@ namespace boost
         {
             using boost::serialization::make_nvp;
             a & make_nvp("force", b.force);
-a & make_nvp("torque", b.torque);
+            a & make_nvp("torque", b.torque);
         }
     }
 }

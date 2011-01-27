@@ -429,8 +429,8 @@ namespace RTT
         VectorDecomposer vel( t.vel );
         VectorDecomposer rot( t.rot );
 
-        targetbag.add( new Property<PropertyBag>("Trans_Vel","Translational Velocity", vel.result() ) );
-        targetbag.add( new Property<PropertyBag>("Rot_Vel","Rotational Velocity",rot.result() ));
+        targetbag.add( new Property<PropertyBag>("vel","Translational Velocity", vel.result() ) );
+        targetbag.add( new Property<PropertyBag>("rot","Rotational Velocity",rot.result() ));
     }
 
     bool composeProperty(const PropertyBag& bag, Twist &t)
@@ -439,7 +439,7 @@ namespace RTT
             {
 
                 // pass the subbag to the vector Composers
-                Property<PropertyBag>* subbag = bag.getPropertyType<PropertyBag>("Trans_Vel");
+                Property<PropertyBag>* subbag = bag.getPropertyType<PropertyBag>("vel");
                 if (! subbag ) {
                     Logger::log() << Logger::Error << "Aborting composition of Property< KDL.Twist > "
                                   << ": Trans_Vel not found."
@@ -448,7 +448,7 @@ namespace RTT
                 }
                 VectorComposer vas_vel( subbag->value() );
 
-                subbag = bag.getPropertyType<PropertyBag>("Rot_Vel");
+                subbag = bag.getPropertyType<PropertyBag>("rot");
                 if (! subbag ) {
                     Logger::log() << Logger::Error << "Aborting composition of Property< KDL.Twist > "
                                   << ": Rot_Vel not found."
@@ -474,8 +474,8 @@ namespace RTT
         VectorDecomposer force( b.force );
         VectorDecomposer torque( b.torque );
 
-        targetbag.add( new Property<PropertyBag>("Force", "Axial Force", force.result() ) );
-        targetbag.add( new Property<PropertyBag>("Torque", "Axial Torque", torque.result() ) );
+        targetbag.add( new Property<PropertyBag>("force", "Axial Force", force.result() ) );
+        targetbag.add( new Property<PropertyBag>("torque", "Axial Torque", torque.result() ) );
     }
 
     bool composeProperty(const PropertyBag& bag,Wrench &w)
@@ -484,7 +484,7 @@ namespace RTT
             {
 
                 // pass this bag to the vector Composers
-                Property<PropertyBag>* subbag = bag.getPropertyType<PropertyBag>("Force");
+                Property<PropertyBag>* subbag = bag.getPropertyType<PropertyBag>("force");
                 if (! subbag ) {
                     Logger::log() << Logger::Error << "Aborting composition of Property< KDL.Wrench > "
                                   << ": Force not found."
@@ -493,7 +493,7 @@ namespace RTT
                 }
                 VectorComposer vas_force( subbag->value() );
 
-                subbag = bag.getPropertyType<PropertyBag>("Torque");
+                subbag = bag.getPropertyType<PropertyBag>("torque");
                 if (! subbag ) {
                     Logger::log() << Logger::Error << "Aborting composition of Property< KDL.Wrench > "
                                   << ": Torque not found."
@@ -528,8 +528,8 @@ namespace RTT
 # endif
 #endif
 
-        targetbag.add( new Property<PropertyBag>("Position","", vel.result() ) );
-        targetbag.add( new Property<PropertyBag>("Rotation","", rot.result() ) );
+        targetbag.add( new Property<PropertyBag>("p","", vel.result() ) );
+        targetbag.add( new Property<PropertyBag>("M","", rot.result() ) );
     }
 
     bool composeProperty(const PropertyBag& f_bag, Frame &f)
@@ -537,7 +537,7 @@ namespace RTT
         if ( f_bag.getType() == "KDL.Frame" ||  f_bag.getType() == "MotCon::Frame" )
             {
                 // pass this bag to the vector Composers
-                Property<PropertyBag>* subbag = f_bag.getPropertyType<PropertyBag>("Position");
+                Property<PropertyBag>* subbag = f_bag.getPropertyType<PropertyBag>("p");
                 if (! subbag ) {
                     Logger::log() << Logger::Error << "Aborting composition of Property< KDL.Frame > "
                                   << ": Position not found."
@@ -546,7 +546,7 @@ namespace RTT
                 }
                 VectorComposer vas_pos( subbag->value() );
 
-                subbag = f_bag.getPropertyType<PropertyBag>("Rotation");
+                subbag = f_bag.getPropertyType<PropertyBag>("M");
                 if (! subbag ) {
                     Logger::log() << Logger::Error << "Aborting composition of Property< KDL.Frame > "
                                   << ": Rotation not found."
