@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <deployment/DeploymentComponent.hpp>
+#include <ocl/DeploymentComponent.hpp>
 #include <rtt/types/TypekitRepository.hpp>
 #include <rtt/types/Types.hpp>
 #include <rtt/marsh/Marshalling.hpp>
