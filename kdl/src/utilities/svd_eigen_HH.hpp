@@ -28,7 +28,7 @@
 #include <Eigen/Core>
 #include <algorithm>
 
-USING_PART_OF_NAMESPACE_EIGEN;
+using namespace Eigen;
 
 namespace KDL
 {

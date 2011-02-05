@@ -68,23 +68,23 @@ namespace KDL {
                 //lets put the jacobian in the big matrix and put the twist in the big t:
                 J.block(6*k,0, 6,tree.getNrOfJoints()) = jac_it->second.data;
                 const Twist& twist=v_in.find(jac_it->first)->second;
-                t.segment(6*k,3)   = Eigen::Map<Eigen::Vector3d>(twist.vel.data);
-                t.segment(6*k+3,3) = Eigen::Map<Eigen::Vector3d>(twist.rot.data);
+                t.segment(6*k,3)   = Eigen::Map<Eigen::Vector3d>((double*)twist.vel.data);
+                t.segment(6*k+3,3) = Eigen::Map<Eigen::Vector3d>((double*)twist.rot.data);
             }
             ++k;
         }
         
         //Lets use the wdls algorithm to find the qdot:
         // Create the Weighted jacobian
-        J_Wq = (J * Wq).lazy();
-        Wy_J_Wq = (Wy * J_Wq).lazy();
+        J_Wq = J.lazyProduct(Wq);
+        Wy_J_Wq = Wy.lazyProduct(J_Wq);
         
         // Compute the SVD of the weighted jacobian
         int ret = svd_eigen_HH(Wy_J_Wq, U, S, V, tmp);
         
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
-        Wy_t = (Wy * t).lazy();
-        Wq_V = (Wq * V).lazy();
+        Wy_t = Wy.lazyProduct(t);
+        Wq_V = Wq.lazyProduct(V);
         
         // tmp = (Si*Wy*U'*y),
         for (unsigned int i = 0; i < J.cols(); i++) {
@@ -99,7 +99,7 @@ namespace KDL {
         }
         
         // x = Lx^-1*V*tmp + x
-        qdot_out.data = (Wq_V * tmp).lazy();
+        qdot_out.data = Wq_V.lazyProduct(tmp);
         
         return Wy_t.norm();
     }

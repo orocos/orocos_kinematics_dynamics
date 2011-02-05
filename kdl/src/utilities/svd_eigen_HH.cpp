@@ -30,7 +30,7 @@ namespace KDL{
         const int cols = A.cols();
     
         U.setZero();
-        U.corner(Eigen::TopLeft,rows,cols)=A;
+        U.topLeftCorner(rows,cols)=A;
 
         int i(-1),its(-1),j(-1),jj(-1),k(-1),nm=0;
         int ppi(0);
