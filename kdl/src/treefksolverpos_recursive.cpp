@@ -52,7 +52,7 @@ namespace KDL {
 		const TreeElement& currentElement = it->second;
 		Frame currentFrame = currentElement.segment.pose(q_in(currentElement.q_nr));
 		
-		SegmentMap::const_iterator rootIterator = tree.getSegment("root");
+		SegmentMap::const_iterator rootIterator = tree.getRootSegment();
 		if(it == rootIterator){
 			return currentFrame;	
 		}
