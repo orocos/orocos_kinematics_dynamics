@@ -33,7 +33,7 @@ int TreeJntToJacSolver::JntToJac(const JntArray& q_in, Jacobian& jac, const std:
     //Let's make the jacobian zero:
     SetToZero(jac);
     
-    SegmentMap::const_iterator root = tree.getSegments().find("root");
+    SegmentMap::const_iterator root = tree.getRootSegment();
 
     Frame T_total = Frame::Identity();
     //Lets recursively iterate until we are in the root segment

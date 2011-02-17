@@ -10,6 +10,6 @@
     <url>http://ros.org/wiki/orocos_kdl</url>
     <depend package="rtt" />
     <depend package="ocl" />
-    <depend package="kdl" />
+    <depend package="orocos_kdl" />
 </package>
 
