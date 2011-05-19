@@ -56,7 +56,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     void ReverseSign();
@@ -118,7 +119,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
     
     void SetInverse();
@@ -209,7 +211,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     Frame DH_Craig1989(double a,double alpha,double d,double theta);
@@ -266,7 +269,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     static Twist Zero() /Factory/;
@@ -326,7 +330,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     static Wrench Zero() /Factory/;

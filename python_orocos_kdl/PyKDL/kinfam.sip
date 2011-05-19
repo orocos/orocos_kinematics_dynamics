@@ -63,7 +63,8 @@ public:
 %MethodCode
     std::stringstream ss;
     ss<<(*sipCpp);
-    sipRes=ss.str().c_str();
+    std::string s(ss.str());
+    sipRes=s.c_str();
 %End
     
     const Joint& getJoint()const;
@@ -121,7 +122,8 @@ public:
 %MethodCode
     std::stringstream ss;
     ss<<sipCpp->data;
-    sipRes=ss.str().c_str();
+    std::string s(ss.str());
+    sipRes=s.c_str();
 %End
 };
 
@@ -194,7 +196,8 @@ public:
 %MethodCode
     std::stringstream ss;
     ss<<sipCpp->data;
-    sipRes=ss.str().c_str();
+    std::string s(ss.str());
+    sipRes=s.c_str();
 %End
 };
     void SetToZero(Jacobian& jac);
