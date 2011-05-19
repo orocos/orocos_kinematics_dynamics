@@ -44,11 +44,19 @@ public:
 
     double __getitem__ (int index) const;
 %MethodCode
+    if (a0 < 0 || a0 > 2) {
+	    PyErr_SetString(PyExc_IndexError, "Vector index out of range");
+	    return NULL;
+    }
     sipRes=(*sipCpp)(a0);
 %End
 
     void __setitem__(int index, double value);
 %MethodCode
+    if (a0 < 0 || a0 > 2) {
+        PyErr_SetString(PyExc_IndexError, "Vector index out of range");
+        return NULL;
+    }
     (*sipCpp)(a0)=a1;
 %End
 
@@ -105,6 +113,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0, "ii", &i, &j);
+    if (i < 0 || j < 0 || i > 2 || j > 2) {
+        PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
+        return NULL;
+    }
     sipRes=((const Rotation)(*sipCpp))(i,j);
 %End
 
@@ -112,6 +124,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
+    if (i < 0 || j < 0 || i > 2 || j > 2) {
+        PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
+        return NULL;
+    }
     (*sipCpp)(i,j)=a1;
 %End
 
@@ -194,6 +210,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
+    if (i < 0 || j < 0 || i > 2 || j > 3) {
+        PyErr_SetString(PyExc_IndexError, "Frame index out of range");
+        return NULL;
+    }
     sipRes=(*sipCpp)(i,j);
 %End
 
@@ -201,6 +221,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
+    if (i < 0 || j < 0 || i > 2 || j > 3) {
+        PyErr_SetString(PyExc_IndexError, "Frame index out of range");
+        return NULL;
+    }
     if(j==3)
         (*sipCpp).p(i)=a1;
     else
@@ -257,11 +281,19 @@ public:
 
     double __getitem__ (int i) const;
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     sipRes=(*sipCpp)(a0);
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     (*sipCpp)(a0)=a1;
 %End
 
@@ -318,11 +350,19 @@ public:
 
     double __getitem__ (int i) const;
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     sipRes=(*sipCpp)(a0);
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     (*sipCpp)(a0)=a1;
 %End
 
