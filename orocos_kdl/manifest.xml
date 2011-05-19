@@ -12,11 +12,11 @@ Library (KDL), distributed by the Orocos Project.
 <export>
   <cpp cflags="-I${prefix}/install/include" lflags="-Wl,-rpath,${prefix}/lib  -L${prefix}/install/lib -lorocos-kdl"/>
   <doxymaker external="http://www.orocos.org/kdl" />
-  <python path="${prefix}/install/lib/python/site-packages"  />
 </export>
+
 <depend package="eigen"/>
 <rosdep name="cppunit"/>
-<rosdep name="python-sip4"/>
+
 
 </package>
 

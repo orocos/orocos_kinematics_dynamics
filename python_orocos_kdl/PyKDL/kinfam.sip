@@ -23,7 +23,7 @@
 class Joint{
 
 %TypeHeaderCode
-#include <joint.hpp>
+#include <kdl/joint.hpp>
 using namespace KDL;
 %End
 
@@ -51,8 +51,8 @@ class Segment
 {
     
 %TypeHeaderCode
-#include <segment.hpp>
-#include <kinfam_io.hpp>
+#include <kdl/segment.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -76,7 +76,7 @@ class Chain
 {
     
 %TypeHeaderCode
-#include <chain.hpp>
+#include <kdl/chain.hpp>
 using namespace KDL;
 %End
 
@@ -97,7 +97,7 @@ public:
 class JntArray{
 
 %TypeHeaderCode
-#include <jntarray.hpp>
+#include <kdl/jntarray.hpp>
 using namespace KDL;
 %End
 
@@ -138,7 +138,7 @@ bool operator==(const JntArray& src1,const JntArray& src2);
 class JntArrayVel
 {
 %TypeHeaderCode
-#include <jntarrayvel.hpp>
+#include <kdl/jntarrayvel.hpp>
 using namespace KDL;
 %End
 
@@ -167,7 +167,7 @@ bool Equal(const JntArrayVel& src1,const JntArrayVel& src2,double eps=epsilon);
 class Jacobian
 {
 %TypeHeaderCode
-#include <jntarray.hpp>
+#include <kdl/jntarray.hpp>
 using namespace KDL;
 %End
 public:
@@ -207,7 +207,7 @@ public:
 class ChainFkSolverPos
 {
 %TypeHeaderCode
-#include <chainfksolver.hpp>
+#include <kdl/chainfksolver.hpp>
 using namespace KDL;
 %End
     virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1)=0;
@@ -216,7 +216,7 @@ using namespace KDL;
 class ChainFkSolverVel
 {
 %TypeHeaderCode
-#include <chainfksolver.hpp>
+#include <kdl/chainfksolver.hpp>
 using namespace KDL;
 %End
     virtual int JntToCart(const JntArrayVel& q_in, FrameVel& p_out,int
@@ -226,7 +226,7 @@ using namespace KDL;
 class ChainFkSolverPos_recursive : ChainFkSolverPos
 {
 %TypeHeaderCode
-#include <chainfksolverpos_recursive.hpp>
+#include <kdl/chainfksolverpos_recursive.hpp>
 using namespace KDL;
 %End
 
@@ -238,7 +238,7 @@ public:
 class ChainFkSolverVel_recursive : ChainFkSolverVel
 {
 %TypeHeaderCode
-#include <chainfksolvervel_recursive.hpp>
+#include <kdl/chainfksolvervel_recursive.hpp>
 using namespace KDL;
 %End
 public:
@@ -249,7 +249,7 @@ public:
 
 class ChainIkSolverPos {
 %TypeHeaderCode
-#include <chainiksolver.hpp>
+#include <kdl/chainiksolver.hpp>
 using namespace KDL;
 %End
 public:
@@ -258,7 +258,7 @@ public:
 
 class ChainIkSolverVel {
 %TypeHeaderCode
-#include <chainiksolver.hpp>
+#include <kdl/chainiksolver.hpp>
 using namespace KDL;
 %End
 public:
@@ -269,7 +269,7 @@ public:
 class ChainIkSolverPos_NR : ChainIkSolverPos
 {
 %TypeHeaderCode
-#include <chainiksolverpos_nr.hpp>
+#include <kdl/chainiksolverpos_nr.hpp>
 using namespace KDL;
 %End
 public:
@@ -282,7 +282,7 @@ public:
 class ChainIkSolverVel_pinv : ChainIkSolverVel
 {
 %TypeHeaderCode
-#include <chainiksolvervel_pinv.hpp>
+#include <kdl/chainiksolvervel_pinv.hpp>
 using namespace KDL;
 %End
 public:
@@ -294,7 +294,7 @@ public:
 class ChainIkSolverVel_wdls : ChainIkSolverVel
 {
 %TypeHeaderCode
-#include <chainiksolvervel_wdls.hpp>
+#include <kdl/chainiksolvervel_wdls.hpp>
 using namespace KDL;
 %End
 public:
@@ -378,7 +378,7 @@ public:
 class ChainJntToJacSolver
 {
 %TypeHeaderCode
-#include <chainjnttojacsolver.hpp>
+#include <kdl/chainjnttojacsolver.hpp>
 using namespace KDL;
 %End
 public:
