@@ -23,7 +23,7 @@ class doubleVel
 {
         
 %TypeHeaderCode
-#include <framevel.hpp>
+#include <kdl/framevel.hpp>
 using namespace KDL;
 %End
 public:
@@ -41,7 +41,7 @@ bool Equal(const doubleVel& r1,const doubleVel& r2,double eps=epsilon);
 class VectorVel
 {
 %TypeHeaderCode
-#include <framevel.hpp>
+#include <kdl/framevel.hpp>
 using namespace KDL;
 %End
 public:
@@ -91,7 +91,7 @@ doubleVel dot(const Vector& lhs,const VectorVel& rhs);
 class RotationVel
 {
 %TypeHeaderCode
-#include <framevel.hpp>
+#include <kdl/framevel.hpp>
 using namespace KDL;
 %End
 
@@ -144,7 +144,7 @@ class FrameVel
 {
         
 %TypeHeaderCode
-#include <framevel.hpp>
+#include <kdl/framevel.hpp>
 using namespace KDL;
 %End
 
@@ -187,7 +187,7 @@ bool Equal(const FrameVel& r1,const Frame& r2,double eps=epsilon);
 class TwistVel
 {
 %TypeHeaderCode
-#include <framevel.hpp>
+#include <kdl/framevel.hpp>
 using namespace KDL;
 %End    
 

@@ -23,8 +23,8 @@
 class Vector{
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -87,8 +87,8 @@ bool Equal(const Vector& a,const Vector& b,double eps=epsilon);
 class Rotation{
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -173,8 +173,8 @@ Rotation operator *(const Rotation& lhs,const Rotation& rhs)/Factory/;
 class Frame{
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -237,8 +237,8 @@ class Twist
 {
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -295,8 +295,8 @@ class Wrench
 {
     
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
