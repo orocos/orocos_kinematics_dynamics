@@ -60,6 +60,7 @@ IF( ENABLE_TESTS )
   # export CMAKE_INCLUDE_PATH=/opt/local/include
   # export CMAKE_LIBRARY_PATH=/opt/local/lib
   FIND_LIBRARY(CPPUNIT cppunit)
+  SET(CPPUNIT ${CPPUNIT} "dl")
   FIND_PATH(CPPUNIT_HEADERS cppunit/TestRunner.h)
   IF ( CPPUNIT AND CPPUNIT_HEADERS)
     MESSAGE("-- Looking for Cppunit - found")
