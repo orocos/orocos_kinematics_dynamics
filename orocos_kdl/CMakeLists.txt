@@ -49,11 +49,6 @@ INCLUDE_DIRECTORIES(${EIGEN2_INCLUDE_DIR})
 
 INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
 
-OPTION( PYTHON_BINDINGS "Build python-bindings?" OFF)
-IF(PYTHON_BINDINGS)
-INCLUDE (${PROJ_SOURCE_DIR}/config/FindSIPandPython.cmake)
-ENDIF(PYTHON_BINDINGS)
-
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
 IF( ENABLE_TESTS )
   # If not in standard paths, set CMAKE_xxx_PATH's in environment, eg.
