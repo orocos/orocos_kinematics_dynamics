@@ -5,7 +5,5 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/orocos_kinematics_dynamics</url>
   <depend stack="geometry" /> <!-- eigen -->
-  <depend stack="orocos_toolchain_ros" /> <!-- rtt, ocl -->
-  <depend stack="ros" />
 
 </stack>
