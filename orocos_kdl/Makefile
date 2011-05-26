@@ -6,11 +6,10 @@ EXTRA_CMAKE_FLAGS=-DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
 		-DCMAKE_BUILD_TYPE="Release"\
 		-DENABLE_TESTS=ON
 
-include $(shell rospack find mk)/cmake.mk
-
 default: all
 	cd build; ${MAKE} install
 
+include $(shell rospack find mk)/cmake.mk
 
 else
 $(warning This Makefile only works with ROS rosmake. Without rosmake, create a build directory and run cmake ..)
