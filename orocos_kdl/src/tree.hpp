@@ -155,7 +155,9 @@ namespace KDL
         };
 
         /**
-         * Request the chain of the tree between chain_root and chain_tip. The chain_root must be an ancester from chain_tip
+         * Request the chain of the tree between chain_root and chain_tip.  The chain_root
+         * and chain_tip can be in different branches of the tree, the chain_root can be
+         * an ancestor of chain_tip, and chain_tip can be an ancestor of chain_root.
          *
          * @param chain_root the name of the root segment of the chain
          * @param chain_tip the name of the tip segment of the chain
