@@ -55,6 +55,7 @@
 #include <rtt/types/OperatorTypes.hpp>
 #include <rtt/internal/mystd.hpp>
 #include <rtt/os/StartStopManager.hpp>
+#include <rtt/internal/GlobalService.hpp>
 
 #include <kdl/frames_io.hpp>
 
