@@ -1,0 +1,8 @@
+python-sip:
+  ubuntu: python-sip-dev
+  debian: python-sip4-dev sip4
+  fedora: sip-devel
+  macports: py26-sip
+  gentoo: dev-python/sip
+  arch: sip
+  freebsd: py26-sip
