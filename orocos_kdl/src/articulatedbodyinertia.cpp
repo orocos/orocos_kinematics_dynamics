@@ -27,10 +27,11 @@ using namespace Eigen;
 
 namespace KDL{
     
-    ArticulatedBodyInertia::ArticulatedBodyInertia(const RigidBodyInertia& rbi)
+  ArticulatedBodyInertia::ArticulatedBodyInertia(const RigidBodyInertia& rbi):
+    M(Matrix3d::Zero()),I(Matrix3d::Zero()),H(Matrix3d::Zero())
     {
-        this->M.part<SelfAdjoint>()=Matrix3d::Identity()*rbi.m;
-        this->I.part<SelfAdjoint>()=Map<Matrix3d>(rbi.I.data);
+        this->M=Matrix3d::Identity()*rbi.m;
+        this->I=Map<const Matrix3d>(rbi.I.data);
         this->H << 0,-rbi.h[2],rbi.h[1],
             rbi.h[2],0,-rbi.h[0],
             -rbi.h[1],rbi.h[0],0;
@@ -41,10 +42,11 @@ namespace KDL{
         *this = RigidBodyInertia(m,c,Ic);
     }
 
-    ArticulatedBodyInertia::ArticulatedBodyInertia(const Matrix3d& M, const Matrix3d& H, const Matrix3d& I)
+  ArticulatedBodyInertia::ArticulatedBodyInertia(const Matrix3d& M, const Matrix3d& H, const Matrix3d& I):
+    M(Matrix3d::Zero()),I(Matrix3d::Zero()),H(Matrix3d::Zero())
     {
-        this->M.part<SelfAdjoint>()=M;
-        this->I.part<SelfAdjoint>()=I;
+        this->M=M;
+        this->I=I;
         this->H=H;
     }
     
@@ -90,7 +92,7 @@ namespace KDL{
     }
 
     ArticulatedBodyInertia operator*(const Rotation& M,const ArticulatedBodyInertia& I){
-        Map<Matrix3d> E(M.data);
+        Map<const Matrix3d> E(M.data);
         return ArticulatedBodyInertia(E.transpose()*I.M*E,E.transpose()*I.H*E,E.transpose()*I.I*E);
     }
 

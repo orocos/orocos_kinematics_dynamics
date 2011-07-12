@@ -8,7 +8,7 @@
 
 #include <Eigen/Core>
 
-USING_PART_OF_NAMESPACE_EIGEN;
+using namespace Eigen;
 
 namespace KDL
 {

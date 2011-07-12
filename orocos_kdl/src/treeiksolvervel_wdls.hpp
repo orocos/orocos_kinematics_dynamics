@@ -14,7 +14,7 @@
 
 namespace KDL {
 
-    USING_PART_OF_NAMESPACE_EIGEN;
+    using namespace Eigen;
 
     class TreeIkSolverVel_wdls: public TreeIkSolverVel {
     public:

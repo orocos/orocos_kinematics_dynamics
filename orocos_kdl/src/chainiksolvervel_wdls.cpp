@@ -78,15 +78,15 @@ namespace KDL
         */
         
         // Create the Weighted jacobian
-        tmp_jac_weight1 = (jac.data*weight_js).lazy();
-        tmp_jac_weight2 = (weight_ts*tmp_jac_weight1).lazy();
+        tmp_jac_weight1 = jac.data.lazyProduct(weight_js);
+        tmp_jac_weight2 = weight_ts.lazyProduct(tmp_jac_weight1);
    
         // Compute the SVD of the weighted jacobian
         int ret = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
                 
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
-        tmp_ts = (weight_ts*U.corner(Eigen::TopLeft,6,6)).lazy();
-        tmp_js = (weight_js*V).lazy(); 
+        tmp_ts = weight_ts.lazyProduct(U.topLeftCorner(6,6));
+        tmp_js = weight_js.lazyProduct(V);
         
         // tmp = (Si*U'*Ly*y), 
         for (i=0;i<jac.columns();i++) {
@@ -112,7 +112,7 @@ namespace KDL
             qdot_out(i)=sum;
         }
         */
-        qdot_out.data=(tmp_js*tmp).lazy();
+        qdot_out.data=tmp_js.lazyProduct(tmp);
         return ret;
     }
     

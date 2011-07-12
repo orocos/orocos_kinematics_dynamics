@@ -6,7 +6,6 @@
 #include <articulatedbodyinertia.hpp>
 
 #include <Eigen/Core>
-#include <Eigen/Array>
 CPPUNIT_TEST_SUITE_REGISTRATION( InertiaTest );
 
 using namespace KDL;
@@ -136,7 +135,7 @@ void InertiaTest::TestArticulatedBodyInertia() {
     RotationalInertia Ic;
     random(mass);
     random(c);
-    Matrix3d::Map(Ic.data).part<SelfAdjoint>()= Matrix3d::Random().part<LowerTriangular>();
+    Matrix3d::Map(Ic.data).triangularView<Lower>()= Matrix3d::Random().triangularView<Lower>();
     RigidBodyInertia RBI2(mass,c,Ic);
     ArticulatedBodyInertia I2(RBI2);
     ArticulatedBodyInertia I1(mass,c,Ic);
