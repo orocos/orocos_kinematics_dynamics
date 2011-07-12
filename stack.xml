@@ -8,5 +8,6 @@
   <depend stack="orocos_toolchain_ros" /> <!-- rtt, ocl -->
   <depend stack="eigen" /> <!-- eigen -->
   <depend stack="ros" />
+  <depend stack="common_rosdeps" />
 
 </stack>
