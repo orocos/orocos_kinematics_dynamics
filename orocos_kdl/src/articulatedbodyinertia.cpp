@@ -31,7 +31,7 @@ namespace KDL{
     M(Matrix3d::Zero()),I(Matrix3d::Zero()),H(Matrix3d::Zero())
     {
         this->M=Matrix3d::Identity()*rbi.m;
-        this->I=Map<Matrix3d>((double*)rbi.I.data);
+        this->I=Map<const Matrix3d>(rbi.I.data);
         this->H << 0,-rbi.h[2],rbi.h[1],
             rbi.h[2],0,-rbi.h[0],
             -rbi.h[1],rbi.h[0],0;
@@ -92,7 +92,7 @@ namespace KDL{
     }
 
     ArticulatedBodyInertia operator*(const Rotation& M,const ArticulatedBodyInertia& I){
-        Map<Matrix3d> E((double*)M.data);
+        Map<const Matrix3d> E(M.data);
         return ArticulatedBodyInertia(E.transpose()*I.M*E,E.transpose()*I.H*E,E.transpose()*I.I*E);
     }
 

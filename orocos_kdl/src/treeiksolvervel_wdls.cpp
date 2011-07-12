@@ -68,8 +68,8 @@ namespace KDL {
                 //lets put the jacobian in the big matrix and put the twist in the big t:
                 J.block(6*k,0, 6,tree.getNrOfJoints()) = jac_it->second.data;
                 const Twist& twist=v_in.find(jac_it->first)->second;
-                t.segment(6*k,3)   = Eigen::Map<Eigen::Vector3d>((double*)twist.vel.data);
-                t.segment(6*k+3,3) = Eigen::Map<Eigen::Vector3d>((double*)twist.rot.data);
+                t.segment(6*k,3)   = Eigen::Map<const Eigen::Vector3d>(twist.vel.data);
+                t.segment(6*k+3,3) = Eigen::Map<const Eigen::Vector3d>(twist.rot.data);
             }
             ++k;
         }
