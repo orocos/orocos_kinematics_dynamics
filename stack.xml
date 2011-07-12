@@ -5,5 +5,5 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/orocos_kinematics_dynamics</url>
   <depend stack="ros" />
-  <depend stack="eigen" />
+  <depend stack="common_rosdeps" />
 </stack>
