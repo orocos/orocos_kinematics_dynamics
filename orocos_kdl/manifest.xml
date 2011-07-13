@@ -14,6 +14,7 @@ Library (KDL), distributed by the Orocos Project.
   <doxymaker external="http://www.orocos.org/kdl" />
 </export>
 
+<depend package="eigen"/>
 <rosdep name="eigen"/>
 <rosdep name="cppunit"/>
 
