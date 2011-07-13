@@ -4,7 +4,6 @@
   <license>GPL,LGPL / BSD,LGPL</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/orocos_kinematics_dynamics</url>
-  <depend stack="eigen" /> <!-- eigen -->
   <depend stack="ros" />
   <depend stack="common_rosdeps" />
 </stack>
