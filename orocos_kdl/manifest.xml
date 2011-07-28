@@ -10,7 +10,7 @@ Library (KDL), distributed by the Orocos Project.
 <review status="reviewed" notes=""/>
 <url>http://www.orocos.org/kdl</url>
 <export>
-  <cpp cflags="-I${prefix}/install/include" lflags="-Wl,-rpath,${prefix}/install/lib  -L${prefix}/install/lib -lorocos-kdl"/>
+  <cpp cflags="-I${prefix}/install_dir/include" lflags="-Wl,-rpath,${prefix}/install_dir/lib  -L${prefix}/install_dir/lib -lorocos-kdl"/>
   <doxymaker external="http://www.orocos.org/kdl" />
 </export>
 
