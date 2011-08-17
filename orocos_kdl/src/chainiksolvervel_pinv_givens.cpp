@@ -70,9 +70,9 @@ namespace KDL
         //std::cout<<"# sweeps: "<<ret<<std::endl;
 
         if(transpose)
-            UY = (V.transpose() * v_in_eigen).lazy();
+            UY = V.transpose().lazyProduct(v_in_eigen);
         else
-            UY = (U.transpose() * v_in_eigen).lazy();
+            UY = U.transpose().lazyProduct(v_in_eigen);
 
         for (unsigned int i = 0; i < n; i++){
             double wi = UY(i);
@@ -85,9 +85,9 @@ namespace KDL
             SUY(i)= alpha * wi;
         }
         if(transpose)
-            qdot_eigen = (U * SUY).lazy();
+            qdot_eigen = U.lazyProduct(SUY);
         else
-            qdot_eigen = (V * SUY).lazy();
+            qdot_eigen = V.lazyProduct(SUY);
 
         for (unsigned int j=0;j<chain.getNrOfJoints();j++)
             qdot_out(j)=qdot_eigen(j);

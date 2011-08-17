@@ -1,0 +1,21 @@
+<package>
+  <description brief="python_orocos_kdl">
+
+     python_orocos_kdl
+
+  </description>
+  <author>Ruben Smits</author>
+  <license>GPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/python_orocos_kdl</url>
+
+  <depend package="orocos_kdl"/>
+  <rosdep name="python-sip"/>
+
+  <export>
+    <python path="${prefix}/lib"  />
+  </export>
+
+</package>
+
+

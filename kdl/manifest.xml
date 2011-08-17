@@ -2,20 +2,16 @@
 <description brief="The Kinematics and Dynamics Library (latest)">
 
 This package contains a recent version of the Kinematics and Dynamics
-Library (KDL), distributed by the Orocos Project. 
+Library (KDL), distributed by the Orocos Project. It is a meta-package that depends on orocos_kdl which contains the c++ version and python_orocos_kdl which contains the generated python bindings 
 
 </description>
 <author>Ruben Smits, Erwin Aertbelien, Orocos Developers</author>
 <license>LGPL</license>
 <review status="reviewed" notes=""/>
 <url>http://www.orocos.org/kdl</url>
-<export>
-  <cpp cflags="-I${prefix}/install_dir/include `pkg-config --cflags eigen3`" lflags="-Wl,-rpath,${prefix}/install_dir/lib  -L${prefix}/install_dir/lib -lorocos-kdl"/>
-  <doxymaker external="http://www.orocos.org/kdl" />
-</export>
 
-<rosdep name="cppunit"/>
-<rosdep name="pkg-config"/>
+<depend package="orocos_kdl"/>
+<depend package="python_orocos_kdl"/>
 
 
 </package>

@@ -23,8 +23,8 @@
 class Vector{
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -44,11 +44,19 @@ public:
 
     double __getitem__ (int index) const;
 %MethodCode
+    if (a0 < 0 || a0 > 2) {
+	    PyErr_SetString(PyExc_IndexError, "Vector index out of range");
+	    return NULL;
+    }
     sipRes=(*sipCpp)(a0);
 %End
 
     void __setitem__(int index, double value);
 %MethodCode
+    if (a0 < 0 || a0 > 2) {
+        PyErr_SetString(PyExc_IndexError, "Vector index out of range");
+        return NULL;
+    }
     (*sipCpp)(a0)=a1;
 %End
 
@@ -56,7 +64,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     void ReverseSign();
@@ -87,8 +96,8 @@ bool Equal(const Vector& a,const Vector& b,double eps=epsilon);
 class Rotation{
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -104,6 +113,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0, "ii", &i, &j);
+    if (i < 0 || j < 0 || i > 2 || j > 2) {
+        PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
+        return NULL;
+    }
     sipRes=((const Rotation)(*sipCpp))(i,j);
 %End
 
@@ -111,6 +124,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
+    if (i < 0 || j < 0 || i > 2 || j > 2) {
+        PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
+        return NULL;
+    }
     (*sipCpp)(i,j)=a1;
 %End
 
@@ -118,7 +135,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
     
     void SetInverse();
@@ -173,8 +191,8 @@ Rotation operator *(const Rotation& lhs,const Rotation& rhs)/Factory/;
 class Frame{
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -192,6 +210,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
+    if (i < 0 || j < 0 || i > 2 || j > 3) {
+        PyErr_SetString(PyExc_IndexError, "Frame index out of range");
+        return NULL;
+    }
     sipRes=(*sipCpp)(i,j);
 %End
 
@@ -199,6 +221,10 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
+    if (i < 0 || j < 0 || i > 2 || j > 3) {
+        PyErr_SetString(PyExc_IndexError, "Frame index out of range");
+        return NULL;
+    }
     if(j==3)
         (*sipCpp).p(i)=a1;
     else
@@ -209,7 +235,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     Frame DH_Craig1989(double a,double alpha,double d,double theta);
@@ -237,8 +264,8 @@ class Twist
 {
 
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -254,11 +281,19 @@ public:
 
     double __getitem__ (int i) const;
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     sipRes=(*sipCpp)(a0);
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     (*sipCpp)(a0)=a1;
 %End
 
@@ -266,7 +301,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     static Twist Zero() /Factory/;
@@ -295,8 +331,8 @@ class Wrench
 {
     
 %TypeHeaderCode
-#include <frames.hpp>
-#include <frames_io.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/frames_io.hpp>
 #include <sstream>
 using namespace KDL;
 %End
@@ -314,11 +350,19 @@ public:
 
     double __getitem__ (int i) const;
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     sipRes=(*sipCpp)(a0);
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
+    if (a0 < 0 || a0 > 5) {
+        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        return NULL;
+    }
     (*sipCpp)(a0)=a1;
 %End
 
@@ -326,7 +370,8 @@ public:
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
-    sipRes=oss.str().c_str();
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 
     static Wrench Zero() /Factory/;
