@@ -22,11 +22,12 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 find_package(PythonInterp REQUIRED)
+find_package(PythonLibs REQUIRED)
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(SIP REQUIRED)
 include(SIPMacros)
 
-include_directories(${SIP_INCLUDE_DIR})
+include_directories(${SIP_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
 
 file(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.sip")
 set(SIP_INCLUDES ${SIP_FILES})
