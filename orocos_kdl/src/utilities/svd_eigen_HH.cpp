@@ -216,7 +216,6 @@ namespace KDL{
                     }
                     z=PYTHAG(f,h);
                     S(j)=z;
-                    assert(z!=0);
                     if (fabs(z)>epsilon) {
                         z=1.0/z;
                         c=f*z;
