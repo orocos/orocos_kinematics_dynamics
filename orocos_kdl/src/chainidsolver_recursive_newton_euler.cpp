@@ -79,5 +79,6 @@ namespace KDL{
             if(i!=0)
                 f[i-1]=f[i-1]+X[i]*f[i];
         }
+	return 0;
     }
 }//namespace
