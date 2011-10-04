@@ -45,6 +45,10 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
 SET( KDL_CFLAGS "" CACHE INTERNAL "")
 
 find_package(Eigen 3.0)
+if(EIGEN-NOT-FOUND)
+include(${PROJ_SOURCE_DIR}/config/FindEigen3.cmake)
+include_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
+endif()
 INCLUDE_DIRECTORIES(${EIGEN_INCLUDE_DIRS})
 
 INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
