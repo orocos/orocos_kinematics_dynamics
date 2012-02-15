@@ -24,7 +24,8 @@
 
 namespace KDL {
 std::ostream& operator <<(std::ostream& os, const Joint& joint) {
-	return os << joint.getTypeName();
+	return os << joint.getName()<<":["<<joint.getTypeName()
+              <<", axis: "<<joint.JointAxis() << ", origin"<<joint.JointOrigin()<<"]";
 }
 
 std::istream& operator >>(std::istream& is, Joint& joint) {
@@ -32,7 +33,7 @@ std::istream& operator >>(std::istream& is, Joint& joint) {
 }
 
 std::ostream& operator <<(std::ostream& os, const Segment& segment) {
-	os << "[" << segment.getJoint() << ",\n" << segment.getFrameToTip() << "]";
+	os << segment.getName()<<":[" << segment.getJoint() << ",\n tip: \n" << segment.getFrameToTip() << "]";
 	return os;
 }
 
