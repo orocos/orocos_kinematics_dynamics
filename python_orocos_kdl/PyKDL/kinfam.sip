@@ -29,23 +29,72 @@ using namespace KDL;
 
 
 public:
-    enum JointType {RotX,RotY,RotZ,TransX,TransY,TransZ,None};
+    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None};
+    Joint(std::string name, JointType type=None,double scale=1,double offset=0,
+              double inertia=0,double damping=0,double stiffness=0);
     Joint(JointType type=None,double scale=1,double offset=0,
           double inertia=0,const double damping=0,double stiffness=0);
+    Joint(std::string name, Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
+	      double inertia=0, double damping=0, double stiffness=0);
+    Joint(Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
+	      double inertia=0, double damping=0, double stiffness=0);
+    
     Joint(const Joint& in);
     
     Frame pose(const double& q)const /Factory/ ;
     Twist twist(const double& qdot)const /Factory/ ;
+    Vector JointAxis() const /Factory/;
+    Vector JointOrigin() const /Factory/;
+    std::string getName()const;
+
     JointType getType() const;
-    const char* getTypeName() const;
-%MethodCode
-    sipRes=sipCpp->getTypeName().data();
-%End
+    std::string getTypeName() const;
     const char* __repr__();
 %MethodCode
-    sipRes=sipCpp->getTypeName().data();
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=s.c_str();
 %End
 };
+
+class RotationalInertia
+{
+%TypeHeaderCode
+#include <kdl/rotationalinertia.hpp>
+#include <kdl/kinfam_io.hpp>
+using namespace KDL;
+%End
+public:
+    RotationalInertia(double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
+        
+    static RotationalInertia Zero()/Factory/;
+    Vector operator*(Vector omega) const /Factory/;
+};
+RotationalInertia operator*(double a, const RotationalInertia& I)/Factory/;
+RotationalInertia operator+(const RotationalInertia& Ia, const RotationalInertia& Ib)/Factory/;
+
+
+class RigidBodyInertia
+{
+%TypeHeaderCode
+#include <kdl/rigidbodyinertia.hpp>
+#include <kdl/kinfam_io.hpp>
+using namespace KDL;
+%End
+public:
+    RigidBodyInertia(double m=0, const Vector& oc=Vector::Zero(), const RotationalInertia& Ic=RotationalInertia::Zero());
+    static RigidBodyInertia Zero() /Factory/;        
+    RigidBodyInertia RefPoint(const Vector& p) /Factory/;
+    double getMass()const /Factory/;        
+    Vector getCOG() const /Factory/;
+    RotationalInertia getRotationalInertia() const /Factory/;
+};
+RigidBodyInertia operator*(double a,const RigidBodyInertia& I) /Factory/;
+RigidBodyInertia operator+(const RigidBodyInertia& Ia,const RigidBodyInertia& Ib) /Factory/;
+Wrench operator*(const RigidBodyInertia& I,const Twist& t) /Factory/;
+RigidBodyInertia operator*(const Frame& T,const RigidBodyInertia& I) /Factory/;
+RigidBodyInertia operator*(const Rotation& R,const RigidBodyInertia& I) /Factory/;
 
 class Segment
 {
@@ -56,7 +105,8 @@ class Segment
 using namespace KDL;
 %End
 public:
-    Segment(const Joint& joint=Joint(Joint::None), const Frame& f_from_parent=Frame::Identity());
+    Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+    Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Segment& in);
 
     const char* __repr__();
@@ -67,10 +117,13 @@ public:
     sipRes=s.c_str();
 %End
     
-    const Joint& getJoint()const;
-    const Frame& getFrameToTip()const;
+    const Frame& getFrameToTip()const /Factory/;
     Frame pose(const double& q)const /Factory/ ;
     Twist twist(const double& q,const double& qdot)const /Factory/ ;
+    const std::string& getName()const /Factory/;
+    const Joint& getJoint()const /Factory/;
+    const RigidBodyInertia& getInertia()const /Factory/;
+    void setInertia(const RigidBodyInertia& Iin);
 };
 
 class Chain
@@ -91,7 +144,7 @@ public:
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
         
-    const Segment& getSegment(unsigned int nr)const;
+    const Segment& getSegment(unsigned int nr)const /Factory/;
 
 };
 
@@ -107,12 +160,13 @@ public:
     JntArray(const JntArray& arg);
     unsigned int rows()const;
     unsigned int columns()const;
+    void resize(unsigned int newSize);
 
     double __getitem__ (int index);
 %MethodCode
     if (a0 < 0 || a0 >= sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
-        return NULL;
+        return 0;
     }
     sipRes=(*sipCpp)(a0);
 %End
@@ -121,7 +175,7 @@ public:
 %MethodCode
     if (a0 < 0 || a0 >= sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
-        return NULL;
+        return 0;
     }
     (*sipCpp)(a0)=a1;
 %End
@@ -158,9 +212,10 @@ public:
     JntArrayVel(unsigned int size);
     JntArrayVel(const JntArray& q,const JntArray& qdot);
     JntArrayVel(const JntArray& q);
+    void resize(unsigned int newSize);
     
-    JntArray value()const;
-    JntArray deriv()const;
+    JntArray value()const /Factory/;
+    JntArray deriv()const /Factory/;
 };
 
 void Add(const JntArrayVel& src1,const JntArrayVel& src2,JntArrayVel& dest);
@@ -185,6 +240,7 @@ public:
     Jacobian(const Jacobian& arg);
     unsigned int rows()const;
     unsigned int columns()const;
+    void resize(unsigned int newNrOfColumns);
 
     double __getitem__ (SIP_PYTUPLE);
 %MethodCode
@@ -192,7 +248,7 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 5 || j >= sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
-        return NULL;
+        return 0;
     }
     sipRes=(*sipCpp)(i,j);
 %End
@@ -203,7 +259,7 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 5 || j >= sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
-        return NULL;
+        return 0;
     }
     (*sipCpp)(i,j)=a1;
 %End
@@ -215,12 +271,19 @@ public:
     std::string s(ss.str());
     sipRes=s.c_str();
 %End
-};
-    void SetToZero(Jacobian& jac);
+    Twist getColumn(unsigned int i) const /Factory/;
+    void setColumn(unsigned int i,const Twist& t);
     
-    void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
-    void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
-    void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
+    void changeRefPoint(const Vector& base_AB);
+    void changeBase(const Rotation& rot);
+    void changeRefFrame(const Frame& frame);
+
+};
+void SetToZero(Jacobian& jac);
+    
+void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
+void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
+void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
 
 
 class ChainFkSolverPos
