@@ -42,9 +42,6 @@ TreeIkSolverPos_Online::TreeIkSolverPos_Online(const double& nr_of_jnts,
                                                iksolver_(iksolver),
                                                q_dot_(nr_of_jnts)
 {
-    assert(q_min.rows() == nr_of_jnts);
-    assert(q_max.rows() == nr_of_jnts);
-    assert(q_dot_max.rows() == nr_of_jnts);
     q_min_ = q_min;
     q_max_ = q_max;
     q_dot_max_ = q_dot_max;
@@ -65,9 +62,6 @@ TreeIkSolverPos_Online::~TreeIkSolverPos_Online()
 
 double TreeIkSolverPos_Online::CartToJnt(const JntArray& q_in, const Frames& p_in, JntArray& q_out)
 {
-  assert(q_out.rows() == q_in.rows());
-  assert(q_dot_.rows() == q_out.rows());
-
   q_out = q_in;
 
   // First check, if all elements in p_in are available
@@ -92,6 +86,12 @@ double TreeIkSolverPos_Online::CartToJnt(const JntArray& q_in, const Frames& p_i
   }
 
   double res = iksolver_.CartToJnt(q_out, delta_twists_, q_dot_);
+
+  if(res<0)
+      return res;
+  //If we got here q_out is definitely of the right size
+  if(q_out.rows()!=q_min_.rows() || q_out.rows()!=q_max_.rows() || q_out.rows()!= q_dot_max_.rows())
+      return -1;
 
   // Checks, if joint velocities (q_dot_) exceed their maximum and scales them, if necessary
   enforceJointVelLimits();
