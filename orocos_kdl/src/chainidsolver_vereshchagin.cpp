@@ -1,8 +1,8 @@
-// Copyright  (C)  2009
+// Copyright  (C)  2009, 2011
 
 // Version: 1.0
-// Author:
-// Maintainer:
+// Author: Ruben Smits, Herman Bruyninckx, Azamat Shakhimardanov
+// Maintainer: Ruben Smits, Azamat Shakhimardanov
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -29,8 +29,8 @@ namespace KDL
 using namespace Eigen;
 
 ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twist root_acc, unsigned int _nc) :
-chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(_nc),
-results(ns + 1, segment_info(nc))
+    chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(_nc),
+    results(ns + 1, segment_info(nc))
 {
     acc_root = root_acc;
 
@@ -90,7 +90,7 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
         s.Z = s.F.M.Inverse(segment.twist(q(j), 1.0));
         //Put Z in the joint root reference frame:
         s.Z = s.F * s.Z;
-      
+
         //The total velocity of the segment expressed in the the segments reference frame (tip)
         if (i != 0)
         {
@@ -113,7 +113,7 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
         s.H = segment.getInertia();
 
         //wrench of the rigid body bias forces and the external forces on the segment (in body coordinates, tip)
-        //external forces are taken into account through s.U. Check why s.U is given as below
+        //external forces are taken into account through s.U.
         Wrench FextLocal = F_total.M.Inverse() * f_ext[i];
         s.U = s.v * (s.H * s.v) - FextLocal; //f_ext[i];
         if (segment.getJoint().getType() != Joint::None)
@@ -234,35 +234,6 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
                 j--;
         }
-
-        /*
-        std::cout<<"E~ "<<i<<": "<<s.E_tilde<<std::endl;
-        std::cout<<"R~ "<<i<<": "<<s.R_tilde<<std::endl;
-        std::cout<<"M  "<<i<<": "<<s.M<<std::endl;
-        std::cout<<"G  "<<i<<": "<<s.G<<std::endl;
-         *
-        std::cout<<"E"<<i<<": "<<s.E<<std::endl;
-        std::cout<<"Z: "<<s.Z<<std::endl;
-        std::cout<<"D: "<<s.D<<std::endl;
-        std::cout<<"PZ: "<<s.PZ<<std::endl;
-        std::cout<<"E'Z: "<<s.EZ<<std::endl;
-        std::cout<<"G: "<<s.G<<std::endl;
-        std::cout<<"M: "<<s.M<<std::endl;
-         */
-        /*
-        std::cout<<"For segment "<<i<<std::endl;
-        std::cout<<"D: "<<s.D<<std::endl;
-        std::cout<<"E~: "<<s.E_tilde<<std::endl;
-        std::cout<<"E: "<<s.E<<std::endl;
-
-        std::cout<<"E: "<<s.E<<std::endl;
-        std::cout<<"Z: "<<s.Z.rot<<s.Z.vel<<std::endl;
-        Matrix6d tmp;
-        tmp<<s.P_tilde.I,s.P_tilde.H,s.P_tilde.H.transpose(),s.P_tilde.M;
-        std::cout<<"P~: \n"<<tmp<<std::endl;
-        tmp<<s.P.I,s.P.H,s.P.H.transpose(),s.P.M;
-        std::cout<<"P: \n"<<tmp<<std::endl;
-         */
     }
 }
 
@@ -341,7 +312,8 @@ void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
         //s.constAccComp = torques(j) / s.D;
         s.constAccComp = constraint_torque / s.D;
         s.nullspaceAccComp = s.u / s.D;
-
+        //total joint space acceleration resulting from accelerations of parent joints, constraint forces and
+        // nullspace forces.
         q_dotdot(j) = (s.nullspaceAccComp + parentAccComp + s.constAccComp);
         s.acc = s.F.Inverse(a_p + s.Z * q_dotdot(j) + s.C);//returns acceleration in link distal tip coordinates. For use needs to be transformed
         if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
@@ -492,22 +464,6 @@ void ChainIdSolver_Vereshchagin::getLinkBiasForceMatrix(Wrenches& R_tilde)
         std::cout << "s.R_tilde " << i << ":  " << results[i + 1].R_tilde << std::endl;
     }
     return;
-}
-
-//this method should retur array of M's
-
-void ChainIdSolver_Vereshchagin::getLinkUnitForceAccelerationEnergy(Eigen::MatrixXd& M)
-{
-
-
-}
-
-//this method should retur array of E_tilde's
-
-void ChainIdSolver_Vereshchagin::getLinkUnitForceMatrix(Matrix6Xd& E_tilde)
-{
-
-
 }
 
 */

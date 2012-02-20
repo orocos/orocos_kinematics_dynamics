@@ -14,23 +14,23 @@ void SolverTest::setUp()
     srand( (unsigned)time( NULL ));
 
     chain1.addSegment(Segment("Segment 1", Joint("Joint 1", Joint::RotZ),
-                             Frame(Vector(0.0,0.0,0.0))));
+                              Frame(Vector(0.0,0.0,0.0))));
     chain1.addSegment(Segment("Segment 2", Joint("Joint 2", Joint::RotX),
-                             Frame(Vector(0.0,0.0,0.9))));
+                              Frame(Vector(0.0,0.0,0.9))));
     chain1.addSegment(Segment("Segment 3", Joint("Joint 3", Joint::None),
-                             Frame(Vector(-0.4,0.0,0.0))));
+                              Frame(Vector(-0.4,0.0,0.0))));
     chain1.addSegment(Segment("Segment 4", Joint("Joint 4", Joint::RotX),
-                             Frame(Vector(0.0,0.0,1.2))));
+                              Frame(Vector(0.0,0.0,1.2))));
     chain1.addSegment(Segment("Segment 5", Joint("Joint 5", Joint::None),
-                             Frame(Vector(0.4,0.0,0.0))));
+                              Frame(Vector(0.4,0.0,0.0))));
     chain1.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotZ),
-                             Frame(Vector(0.0,0.0,1.4))));
+                              Frame(Vector(0.0,0.0,1.4))));
     chain1.addSegment(Segment("Segment 7", Joint("Joint 7", Joint::RotX),
-                             Frame(Vector(0.0,0.0,0.0))));
+                              Frame(Vector(0.0,0.0,0.0))));
     chain1.addSegment(Segment("Segment 8", Joint("Joint 8", Joint::RotZ),
-                             Frame(Vector(0.0,0.0,0.4))));
+                              Frame(Vector(0.0,0.0,0.4))));
     chain1.addSegment(Segment("Segment 9", Joint("Joint 9", Joint::None),
-                             Frame(Vector(0.0,0.0,0.0))));
+                              Frame(Vector(0.0,0.0,0.0))));
 
     chain2.addSegment(Segment("Segment 1", Joint("Joint 1", Joint::RotZ),
                               Frame(Vector(0.0,0.0,0.5))));
@@ -45,35 +45,62 @@ void SolverTest::setUp()
 
 
     chain3.addSegment(Segment("Segment 1", Joint("Joint 1", Joint::RotZ),
-                             Frame(Vector(0.0,0.0,0.0))));
+                              Frame(Vector(0.0,0.0,0.0))));
     chain3.addSegment(Segment("Segment 2", Joint("Joint 2", Joint::RotX),
-                             Frame(Vector(0.0,0.0,0.9))));
+                              Frame(Vector(0.0,0.0,0.9))));
     chain3.addSegment(Segment("Segment 3", Joint("Joint 3", Joint::RotZ),
-                             Frame(Vector(-0.4,0.0,0.0))));
+                              Frame(Vector(-0.4,0.0,0.0))));
     chain3.addSegment(Segment("Segment 4", Joint("Joint 4", Joint::RotX),
-                             Frame(Vector(0.0,0.0,1.2))));
+                              Frame(Vector(0.0,0.0,1.2))));
     chain3.addSegment(Segment("Segment 5", Joint("Joint 5", Joint::None),
-                             Frame(Vector(0.4,0.0,0.0))));
+                              Frame(Vector(0.4,0.0,0.0))));
     chain3.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotZ),
-                             Frame(Vector(0.0,0.0,1.4))));
+                              Frame(Vector(0.0,0.0,1.4))));
     chain3.addSegment(Segment("Segment 7", Joint("Joint 7", Joint::RotX),
-                             Frame(Vector(0.0,0.0,0.0))));
+                              Frame(Vector(0.0,0.0,0.0))));
     chain3.addSegment(Segment("Segment 8", Joint("Joint 8", Joint::RotZ),
-                             Frame(Vector(0.0,0.0,0.4))));
+                              Frame(Vector(0.0,0.0,0.4))));
     chain3.addSegment(Segment("Segment 9", Joint("Joint 9", Joint::RotY),
-                             Frame(Vector(0.0,0.0,0.0))));
+                              Frame(Vector(0.0,0.0,0.0))));
 
 
     chain4.addSegment(Segment("Segment 1", Joint("Joint 1", Vector(10,0,0), Vector(1,0,1),Joint::RotAxis),
-			       Frame(Vector(0.0,0.0,0.5))));
+                              Frame(Vector(0.0,0.0,0.5))));
     chain4.addSegment(Segment("Segment 2", Joint("Joint 2", Vector(0,5,0), Vector(1,0,0),Joint::RotAxis),
-			       Frame(Vector(0.0,0.0,0.4))));
+                              Frame(Vector(0.0,0.0,0.4))));
     chain4.addSegment(Segment("Segment 3", Joint("Joint 3", Vector(0,0,5), Vector(1,0,4),Joint::RotAxis),
                               Frame(Vector(0.0,0.0,0.3))));
     chain4.addSegment(Segment("Segment 4", Joint("Joint 4", Vector(0,0,0), Vector(1,0,0),Joint::RotAxis),
                               Frame(Vector(0.0,0.0,0.2))));
     chain4.addSegment(Segment("Segment 5", Joint("Joint 5", Vector(0,0,0), Vector(0,0,1),Joint::RotAxis),
                               Frame(Vector(0.0,0.0,0.1))));
+
+
+
+    //chain definition for vereshchagin's dynamic solver
+    Joint rotJoint0 = Joint(Joint::RotZ, 1, 0, 0.01);
+    Joint rotJoint1 = Joint(Joint::RotZ, 1, 0, 0.01);
+
+    Frame refFrame(Rotation::RPY(0.0, 0.0, 0.0), Vector(0.0, 0.0, 0.0));
+    Frame frame1(Rotation::RPY(0.0, 0.0, 0.0), Vector(0.0, -0.4, 0.0));
+    Frame frame2(Rotation::RPY(0.0, 0.0, 0.0), Vector(0.0, -0.4, 0.0));
+
+    //chain segments
+    Segment segment1 = Segment(rotJoint0, frame1);
+    Segment segment2 = Segment(rotJoint1, frame2);
+
+    //rotational inertia around symmetry axis of rotation
+    RotationalInertia rotInerSeg1(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+    //spatial inertia
+    RigidBodyInertia inerSegment1(0.3, Vector(0.0, -0.4, 0.0), rotInerSeg1);
+    RigidBodyInertia inerSegment2(0.3, Vector(0.0, -0.4, 0.0), rotInerSeg1);
+    segment1.setInertia(inerSegment1);
+    segment2.setInertia(inerSegment2);
+
+    //chain
+    chaindyn.addSegment(segment1);
+    chaindyn.addSegment(segment2);
 
 }
 
@@ -213,7 +240,6 @@ void SolverTest::FkPosAndIkPosTest()
 }
 
 
-
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
 {
     double deltaq = 1E-4;
@@ -224,13 +250,15 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
     JntArray q(chain.getNrOfJoints());
     Jacobian jac(chain.getNrOfJoints());
 
-    for(unsigned int i=0;i<chain.getNrOfJoints();i++){
+    for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
+    {
         random(q(i));
     }
 
     jacsolver.JntToJac(q,jac);
 
-    for (int i=0; i< q.rows() ;i++) {
+    for (int i=0; i< q.rows() ; i++)
+    {
         // test the derivative of J towards qi
         double oldqi = q(i);
         q(i) = oldqi+deltaq;
@@ -256,7 +284,8 @@ void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, C
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
 
-    for(unsigned int i=0;i<chain.getNrOfJoints();i++){
+    for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
+    {
         random(q(i));
         random(qdot(i));
     }
@@ -279,25 +308,27 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
 
-    for(unsigned int i=0;i<chain.getNrOfJoints();i++){
+    for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
+    {
         random(q(i));
         random(qdot(i));
     }
     JntArrayVel qvel(q,qdot);
     JntArray qdot_solved(chain.getNrOfJoints());
-        
+
     FrameVel cart;
-    
+
     CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart));
-    
+
     int ret = iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved);
     CPPUNIT_ASSERT(0<=ret);
-    
+
     qvel.deriv()=qdot_solved;
-    
+
     if(chain.getNrOfJoints()<=6)
         CPPUNIT_ASSERT(Equal(qvel.qdot,qdot_solved,1e-5));
-    else{
+    else
+    {
         FrameVel cart_solved;
         CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
         CPPUNIT_ASSERT(Equal(cart.deriv(),cart_solved.deriv(),1e-5));
@@ -308,12 +339,14 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
 void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, ChainIkSolverPos& iksolverpos)
 {
     JntArray q(chain.getNrOfJoints());
-    for(unsigned int i=0;i<chain.getNrOfJoints();i++){
+    for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
+    {
         random(q(i));
     }
     JntArray q_init(chain.getNrOfJoints());
     double tmp;
-    for(unsigned int i=0;i<chain.getNrOfJoints();i++){
+    for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
+    {
         random(tmp);
         q_init(i)=q(i)+0.1*tmp;
     }
@@ -331,3 +364,116 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
 }
 
 
+void SolverTest::VereshchaginTest()
+{
+
+    Vector constrainXLinear(1.0, 0.0, 0.0);
+    Vector constrainXAngular(0.0, 0.0, 0.0);
+    Vector constrainYLinear(0.0, 0.0, 0.0);
+    Vector constrainYAngular(0.0, 0.0, 0.0);
+    // Vector constrainZLinear(0.0, 0.0, 0.0);
+    //Vector constrainZAngular(0.0, 0.0, 0.0);
+    Twist constraintForcesX(constrainXLinear, constrainXAngular);
+    Twist constraintForcesY(constrainYLinear, constrainYAngular);
+    //Twist constraintForcesZ(constrainZLinear, constrainZAngular);
+    Jacobian alpha(1);
+    //alpha.setColumn(0, constraintForcesX);
+    alpha.setColumn(0, constraintForcesX);
+    //alpha.setColumn(0, constraintForcesZ);
+
+    //Acceleration energy at  the end-effector
+    JntArray betha(1); //set to zero
+    betha(0) = 0.0;
+    //betha(1) = 0.0;
+    //betha(2) = 0.0;
+
+    //arm root acceleration
+    Vector linearAcc(0.0, 10, 0.0); //gravitational acceleration along Y
+    Vector angularAcc(0.0, 0.0, 0.0);
+    Twist twist1(linearAcc, angularAcc);
+
+    //external forces on the arm
+    Vector externalForce1(0.0, 0.0, 0.0);
+    Vector externalTorque1(0.0, 0.0, 0.0);
+    Vector externalForce2(0.0, 0.0, 0.0);
+    Vector externalTorque2(0.0, 0.0, 0.0);
+    Wrench externalNetForce1(externalForce1, externalTorque1);
+    Wrench externalNetForce2(externalForce2, externalTorque2);
+    Wrenches externalNetForce;
+    externalNetForce.push_back(externalNetForce1);
+    externalNetForce.push_back(externalNetForce2);
+    //~Definition of constraints and external disturbances
+    //-------------------------------------------------------------------------------------//
+
+
+    //Definition of solver and initial configuration
+    //-------------------------------------------------------------------------------------//
+    int numberOfConstraints = 1;
+    ChainIdSolver_Vereshchagin constraintSolver(chaindyn, twist1, numberOfConstraints);
+
+    //These arrays of joint values contain actual and desired values
+    //actual is generated by a solver and integrator
+    //desired is given by an interpolator
+    //error is the difference between desired-actual
+    //in this test only the actual values are printed.
+    int k = 1;
+    JntArray jointPoses[k];
+    JntArray jointRates[k];
+    JntArray jointAccelerations[k];
+    JntArray jointTorques[k];
+    for (int i = 0; i < k; i++)
+    {
+        JntArray jointValues(chaindyn.getNrOfJoints());
+        jointPoses[i] = jointValues;
+        jointRates[i] = jointValues;
+        jointAccelerations[i] = jointValues;
+        jointTorques[i] = jointValues;
+    }
+
+    // Initial arm position configuration/constraint
+    JntArray jointInitialPose(chaindyn.getNrOfJoints());
+    jointInitialPose(0) = 0.0; // initial joint0 pose
+    jointInitialPose(1) = M_PI/6.0; //initial joint1 pose, negative in clockwise
+    //j0=0.0, j1=pi/6.0 correspond to x = 0.2, y = -0.7464
+    //j0=2*pi/3.0, j1=pi/4.0 correspond to x = 0.44992, y = 0.58636
+
+    //actual
+    jointPoses[0](0) = jointInitialPose(0);
+    jointPoses[0](1) = jointInitialPose(1);
+
+    //~Definition of solver and initial configuration
+    //-------------------------------------------------------------------------------------//
+
+
+    //Definition of process main loop
+    //-------------------------------------------------------------------------------------//
+    //Time required to complete the task move(frameinitialPose, framefinalPose)
+    double taskTimeConstant = 0.1;
+    double simulationTime = 1*taskTimeConstant;
+    double timeDelta = 0.01;
+    int status;
+
+    const std::string msg = "Assertion failed, check matrix and array sizes";
+
+    for (double t = 0.0; t <=simulationTime; t = t + timeDelta)
+    {
+        status = constraintSolver.CartToJnt(jointPoses[0], jointRates[0], jointAccelerations[0], alpha, betha, externalNetForce, jointTorques[0]);
+
+        CPPUNIT_ASSERT((status == 0));
+        if (status != 0)
+        {
+            std::cout << "Check matrix and array sizes. Something does not match " << std::endl;
+            exit(1);
+        }
+        else
+        {
+            //Integration(robot joint values for rates and poses; actual) at the given "instanteneous" interval for joint position and velocity.
+            jointRates[0](0) = jointRates[0](0) + jointAccelerations[0](0) * timeDelta; //Euler Forward
+            jointPoses[0](0) = jointPoses[0](0) + (jointRates[0](0) - jointAccelerations[0](0) * timeDelta / 2.0) * timeDelta; //Trapezoidal rule
+            jointRates[0](1) = jointRates[0](1) + jointAccelerations[0](1) * timeDelta; //Euler Forward
+            jointPoses[0](1) = jointPoses[0](1) + (jointRates[0](1) - jointAccelerations[0](1) * timeDelta / 2.0) * timeDelta;
+            //printf("time, j0_pose, j1_pose, j0_rate, j1_rate, j0_acc, j1_acc, j0_constraintTau, j1_constraintTau \n");
+            printf("%f          %f      %f       %f     %f       %f      %f     %f      %f\n", t, jointPoses[0](0), jointPoses[0](1), jointRates[0](0), jointRates[0](1), jointAccelerations[0](0), jointAccelerations[0](1), jointTorques[0](0), jointTorques[0](1));
+        }
+    }
+}
