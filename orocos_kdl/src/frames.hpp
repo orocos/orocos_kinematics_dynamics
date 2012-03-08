@@ -493,7 +493,7 @@ public:
 
      //! do not use operator == because the definition of Equal(.,.) is slightly
      //! different.  It compares whether the 2 arguments are equal in an eps-interval
-     friend bool Equal(const Rotation& a,const Rotation& b,double eps=epsilon);
+     friend bool Equal(const Rotation& a,const Rotation& b,double eps);
 
 	 //! The literal equality operator==(), also identical.
      friend bool operator==(const Rotation& a,const Rotation& b);
@@ -503,6 +503,7 @@ public:
      friend class Frame;
 };
     bool operator==(const Rotation& a,const Rotation& b);
+    bool Equal(const Rotation& a,const Rotation& b,double eps=epsilon);
 
 
 
