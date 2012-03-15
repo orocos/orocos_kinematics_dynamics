@@ -22,6 +22,7 @@
 class Joint{
 
 %TypeHeaderCode
+#define Fixed None
 #include <kdl/joint.hpp>
 #include <kdl/kinfam_io.hpp>
 using namespace KDL;
@@ -29,10 +30,10 @@ using namespace KDL;
 
 
 public:
-    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None};
-    Joint(std::string name, JointType type=None,double scale=1,double offset=0,
+    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed};
+    Joint(std::string name, JointType type=Fixed,double scale=1,double offset=0,
               double inertia=0,double damping=0,double stiffness=0);
-    Joint(JointType type=None,double scale=1,double offset=0,
+    Joint(JointType type=Fixed,double scale=1,double offset=0,
           double inertia=0,const double damping=0,double stiffness=0);
     Joint(std::string name, Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
 	      double inertia=0, double damping=0, double stiffness=0);
@@ -105,8 +106,8 @@ class Segment
 using namespace KDL;
 %End
 public:
-    Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
-    Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+    Segment(const std::string& name, const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+    Segment(const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Segment& in);
 
     const std::string* __repr__();
@@ -380,6 +381,7 @@ public:
     virtual void updateInternalDataStructures()=0;
 };
 
+
 class ChainIkSolverPos_NR : ChainIkSolverPos
 {
 %TypeHeaderCode
@@ -394,6 +396,7 @@ public:
     virtual void updateInternalDataStructures();
 };
 
+
 class ChainIkSolverPos_NR_JL : ChainIkSolverPos
 {
 %TypeHeaderCode
@@ -401,10 +404,9 @@ class ChainIkSolverPos_NR_JL : ChainIkSolverPos
 using namespace KDL;
 %End
 public:
-    ChainIkSolverPos_NR_JL(const Chain& chain,const JntArray &q_min,const JntArray &q_max, 
-                        ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
+    ChainIkSolverPos_NR_JL(const Chain& chain, const JntArray& q_min, const JntArray& q_max, ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
                         unsigned int maxiter=100,double eps=epsilon);
-    
+
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
 };
