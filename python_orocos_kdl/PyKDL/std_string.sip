@@ -14,7 +14,13 @@
 //License along with this library; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
+%ModuleHeaderCode
+#if PY_VERSION_HEX >= 0x03000000
+#define PyString_AS_STRING PyBytes_AS_STRING
+#define PyString_FromString PyBytes_FromString
+#define PyString_Check PyBytes_Check
+#endif
+%End
 %MappedType std::string
 {
 %TypeHeaderCode
