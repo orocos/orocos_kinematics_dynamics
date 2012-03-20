@@ -14,6 +14,7 @@
 
   <export>
     <python path="${prefix}/lib"  />
+    <rosdoc config="rosdoc.yaml"/>
   </export>
 
 </package>

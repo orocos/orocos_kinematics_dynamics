@@ -1,0 +1,3 @@
+- builder: sphinx
+  output_dir: doc
+  sphinx_root_dir: doc
