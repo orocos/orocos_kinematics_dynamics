@@ -19,7 +19,6 @@
 //License along with this library; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
 class Joint{
 
 %TypeHeaderCode
@@ -146,6 +145,24 @@ public:
         
     const Segment& getSegment(unsigned int nr)const /Factory/;
 
+};
+
+class Tree {
+%TypeHeaderCode
+#include <kdl/tree.hpp>
+using namespace KDL;
+%End
+public:
+    Tree(const std::string& root_name="root");
+    bool addSegment(const Segment& segment, const std::string& hook_name);
+    unsigned int getNrOfJoints()const;
+    unsigned int getNrOfSegments()const;
+    Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const;
+%MethodCode
+    Chain* chain = new Chain();
+    sipCpp->getChain(*a0, *a1, *chain);
+    sipRes = chain;
+%End
 };
 
 class JntArray{
@@ -356,6 +373,20 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverPos_NR(const Chain& chain,ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
+                        unsigned int maxiter=100,double eps=epsilon);
+    
+    virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+};
+
+class ChainIkSolverPos_NR_JL : ChainIkSolverPos
+{
+%TypeHeaderCode
+#include <kdl/chainiksolverpos_nr_jl.hpp>
+using namespace KDL;
+%End
+public:
+    ChainIkSolverPos_NR_JL(const Chain& chain,const JntArray &q_min,const JntArray &q_max, 
+                        ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
                         unsigned int maxiter=100,double eps=epsilon);
     
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);

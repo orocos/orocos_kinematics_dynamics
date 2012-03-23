@@ -28,3 +28,5 @@
 %Include frames.sip
 %Include kinfam.sip
 %Include framevel.sip
+
+%Include dynamics.sip
