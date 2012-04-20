@@ -346,12 +346,13 @@ Vector Rotation::GetRot() const
  */
 double Rotation::GetRotAngle(Vector& axis,double eps) const {
 	double ca    = (data[0]+data[4]+data[8]-1)/2.0;
-	if (ca>1-eps) {
+	double t= eps*eps/2.0;
+	if (ca>1-t) {
 		// undefined choose the Z-axis, and angle 0
 		axis = Vector(0,0,1);
 		return 0;
 	}
-	if (ca < -1+eps) {
+	if (ca < -1+t) {
 		// The case of angles consisting of multiples of M_PI:
 		// two solutions, choose a positive Z-component of the axis
 		double x = sqrt( (data[0]+1.0)/2);
