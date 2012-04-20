@@ -326,18 +326,10 @@ Vector Rotation::GetRot() const
          // Returns a vector with the direction of the equiv. axis
          // and its norm is angle
      {
-       Vector axis  = Vector((data[7]-data[5]),
-			     (data[2]-data[6]),
-			     (data[3]-data[1]) )/2;
-
-       double sa    = axis.Norm();
-       double ca    = (data[0]+data[4]+data[8]-1)/2.0;
-       double alfa;
-       if (sa > epsilon)
-           alfa = ::atan2(sa,ca)/sa;
-       else
-           alfa = 1;
-       return axis * alfa;
+       Vector axis;
+       double angle;
+       angle = Rotation::GetRotAngle(axis,epsilon);
+       return axis * angle;
      }
 
 
@@ -345,7 +337,7 @@ Vector Rotation::GetRot() const
 /** Returns the rotation angle around the equiv. axis
  * @param axis the rotation axis is returned in this variable
  * @param eps :  in the case of angle == 0 : rot axis is undefined and choosen
- *                                         to be +/- Z-axis
+ *                                         to be the Z-axis
  *               in the case of angle == PI : 2 solutions, positive Z-component
  *                                            of the axis is choosen.
  * @result returns the rotation angle (between [0..PI] )
@@ -360,10 +352,16 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
 		return 0;
 	}
 	if (ca < -1+eps) {
+		// The case of angles consisting of multiples of M_PI:
 		// two solutions, choose a positive Z-component of the axis
-		double z = sqrt( (data[8]+1)/2 );
-		double x = (data[2])/2/z;
-		double y = (data[5])/2/z;
+		double x = sqrt( (data[0]+1.0)/2);
+		double y = sqrt( (data[4]+1.0)/2);
+		double z = sqrt( (data[8]+1.0)/2);
+		if ( data[2] < 0) x=-x;
+		if ( data[7] < 0) y=-y;
+		if ( x*y*data[1] < 0) x=-x;  // this last line can be necessary when z is 0
+		// z always >= 0 
+		// if z equal to zero 
 		axis = Vector( x,y,z  );
 		return PI;
 	}
