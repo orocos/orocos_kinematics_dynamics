@@ -38,7 +38,11 @@ private:
     void TestTwist2(Twist& t);
     void TestWrench2(Wrench& w);
     void TestRotation2(const Vector& v,double a,double b,double c);
-
+    void TestOneRotation(const char* msg,
+						 const KDL::Rotation& R,
+						 const double expectedAngle,
+                                                 const KDL::Vector& expectedAxis);
+ 
 };
 
 #endif

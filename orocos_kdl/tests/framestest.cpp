@@ -147,8 +147,71 @@ void FramesTest::TestRotation2(const Vector& v,double a,double b,double c) {
 	CPPUNIT_ASSERT_DOUBLES_EQUAL((v2).Norm(),::sqrt(dot(v2,v2)),epsilon);
 }
 
+
+void FramesTest::TestOneRotation(const char* msg,
+								 const KDL::Rotation& R,
+								 const double expectedAngle,
+								 const KDL::Vector& expectedAxis)
+{
+	double 		angle =0;
+	Vector		axis;
+
+	angle = R.GetRotAngle(axis);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE(msg, expectedAngle, angle, epsilon);
+	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, expectedAxis, axis);
+	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, expectedAngle * expectedAxis, R.GetRot());
+	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, Rotation::Rot(axis, angle), R);
+	(void)axis.Normalize();
+	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, Rotation::Rot2(axis, angle), R);
+}
+
+
+
 void FramesTest::TestRotation() {
 	TestRotation2(Vector(3,4,5),10*deg2rad,20*deg2rad,30*deg2rad);
+
+	// no rotation == +Z axis
+	TestOneRotation("RotX(0)", Rotation::RotX(0*deg2rad), 0*deg2rad, Vector(0,0,1));
+	TestOneRotation("RotY(0)", Rotation::RotY(0*deg2rad), 0*deg2rad, Vector(0,0,1));
+	TestOneRotation("RotZ(0)", Rotation::RotZ(0*deg2rad), 0*deg2rad, Vector(0,0,1));
+
+	TestOneRotation("RotX(10)", Rotation::RotX(10*deg2rad), 10*deg2rad, Vector(1,0,0));
+	TestOneRotation("RotY(10)", Rotation::RotY(10*deg2rad), 10*deg2rad, Vector(0,1,0));
+	TestOneRotation("RotZ(10)", Rotation::RotZ(10*deg2rad), 10*deg2rad, Vector(0,0,1));
+
+	TestOneRotation("RotX(45)", Rotation::RotX(45*deg2rad), 45*deg2rad, Vector(1,0,0));
+	TestOneRotation("RotY(45)", Rotation::RotY(45*deg2rad), 45*deg2rad, Vector(0,1,0));
+	TestOneRotation("RotZ(45)", Rotation::RotZ(45*deg2rad), 45*deg2rad, Vector(0,0,1));
+
+	TestOneRotation("RotX(90)", Rotation::RotX(90*deg2rad), 90*deg2rad, Vector(1,0,0));
+	TestOneRotation("RotY(90)", Rotation::RotY(90*deg2rad), 90*deg2rad, Vector(0,1,0));
+	TestOneRotation("RotZ(90)", Rotation::RotZ(90*deg2rad), 90*deg2rad, Vector(0,0,1));
+
+	// negative angle => negative axis + positive angle
+	TestOneRotation("RotX(-90)", Rotation::RotX(-90*deg2rad), 90*deg2rad, Vector(-1,0,0));
+	TestOneRotation("RotY(-90)", Rotation::RotY(-90*deg2rad), 90*deg2rad, Vector(0,-1,0));
+	TestOneRotation("RotZ(-90)", Rotation::RotZ(-90*deg2rad), 90*deg2rad, Vector(0,0,-1));
+
+	TestOneRotation("RotX(179.5)", Rotation::RotX(179.5*deg2rad), 179.5*deg2rad, Vector(1,0,0));
+	TestOneRotation("RotY(179.5)", Rotation::RotY(179.5*deg2rad), 179.5*deg2rad, Vector(0,1,0));
+	TestOneRotation("RotZ(179.5)", Rotation::RotZ(179.5*deg2rad), 179.5*deg2rad, Vector(0,0,1));
+
+	TestOneRotation("RotX(180)", Rotation::RotX(180*deg2rad), 180*deg2rad, Vector(1,0,0));
+	TestOneRotation("RotY(180)", Rotation::RotY(180*deg2rad), 180*deg2rad, Vector(0,1,0));
+	TestOneRotation("RotZ(180)", Rotation::RotZ(180*deg2rad), 180*deg2rad, Vector(0,0,1));
+
+	TestOneRotation("RotX(-179.5)", Rotation::RotX(-179.5*deg2rad), 179.5*deg2rad, Vector(-1,0,0));
+	TestOneRotation("RotY(-179.5)", Rotation::RotY(-179.5*deg2rad), 179.5*deg2rad, Vector(0,-1,0));
+	TestOneRotation("RotZ(-179.5)", Rotation::RotZ(-179.5*deg2rad), 179.5*deg2rad, Vector(0,0,-1));
+
+	TestOneRotation("RotX(-180)", Rotation::RotX(-180*deg2rad), 180*deg2rad, Vector(1,0,0));
+	TestOneRotation("RotY(-180)", Rotation::RotY(-180*deg2rad), 180*deg2rad, Vector(0,1,0));
+	TestOneRotation("RotZ(-180)", Rotation::RotZ(-180*deg2rad), 180*deg2rad, Vector(0,0,1));
+
+	TestOneRotation("rot([1 0 1],180)", KDL::Rotation::Rot(KDL::Vector(1,0,1),180*deg2rad), 180*deg2rad, Vector(1,0,1)/sqrt(2.0));
+	TestOneRotation("rot([1 0 1],180)", KDL::Rotation::Rot(KDL::Vector(-1,0,-1),180*deg2rad), 180*deg2rad, Vector(1,0,1)/sqrt(2.0));
+
+
 }
 
 void FramesTest::TestQuaternion() {
