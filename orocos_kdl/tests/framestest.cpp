@@ -187,7 +187,10 @@ void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 	TestArbitraryRotation(msg, v, 45,   45, expectedVector);
 	TestArbitraryRotation(msg, v, 90,   90, expectedVector);
 	TestArbitraryRotation(msg, v, 179, 179, expectedVector);
-//	TestArbitraryRotation(msg, v, 180, 180, expectedVector);	// sign VARIES by case!
+//	TestArbitraryRotation(msg, v, 180, 180, expectedVector);	// sign VARIES by case because 180 degrees not
+                                                                // full determined: it can return +/- the axis
+                                                                // depending on what the original axis was.
+                                                                // BOTH RESULTS ARE CORRECT.
 	TestArbitraryRotation(msg, v, 181, 179, -expectedVector);	// >+180 rotation => <+180 + negative axis
 	TestArbitraryRotation(msg, v, 270,  90, -expectedVector);
 	TestArbitraryRotation(msg, v, 359,   1, -expectedVector);
@@ -195,7 +198,7 @@ void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 	TestArbitraryRotation(msg, v, 361,   1, expectedVector);
 	TestArbitraryRotation(msg, v, 450,  90, expectedVector);
 	TestArbitraryRotation(msg, v, 539, 179, expectedVector);
-//	TestArbitraryRotation(msg, v, 540, 180, expectedVector);	// sign VARIES by case!
+//	TestArbitraryRotation(msg, v, 540, 180, expectedVector);	// see above 
 	TestArbitraryRotation(msg, v, 541, 179, -expectedVector);	// like 181
 	TestArbitraryRotation(msg, v, 630,  90, -expectedVector);	// like 270
 	TestArbitraryRotation(msg, v, 719,   1, -expectedVector);	// like 259
@@ -204,7 +207,7 @@ void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 	TestArbitraryRotation(msg, v, -45,   45, -expectedVector);
 	TestArbitraryRotation(msg, v, -90,   90, -expectedVector);
 	TestArbitraryRotation(msg, v, -179, 179, -expectedVector);
-//	TestArbitraryRotation(msg, v, -180, 180, expectedVector);	// sign VARIES by case!
+//	TestArbitraryRotation(msg, v, -180, 180, expectedVector);	// see above 
 	TestArbitraryRotation(msg, v, -181, 179, expectedVector);
 	TestArbitraryRotation(msg, v, -270,  90, expectedVector);
 	TestArbitraryRotation(msg, v, -359,   1, expectedVector);
@@ -212,7 +215,7 @@ void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 	TestArbitraryRotation(msg, v, -361,   1, -expectedVector);
 	TestArbitraryRotation(msg, v, -450,  90, -expectedVector);
 	TestArbitraryRotation(msg, v, -539, 179, -expectedVector);
-//	TestArbitraryRotation(msg, v, -540, 180, -expectedVector);	// sign VARIES by case!
+//	TestArbitraryRotation(msg, v, -540, 180, -expectedVector);	// see above 
 	TestArbitraryRotation(msg, v, -541, 179, expectedVector);
 	TestArbitraryRotation(msg, v, -630,  90, expectedVector);
 	TestArbitraryRotation(msg, v, -719,   1, expectedVector);
