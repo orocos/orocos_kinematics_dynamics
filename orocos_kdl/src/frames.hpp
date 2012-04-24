@@ -405,7 +405,7 @@ public:
 
     //! Sets the value of this object to a rotation specified with RPY convention:
     //! first rotate around X with roll, then around the
-    //!               old Y with pitch, then around old Z with alfa
+    //!               old Y with pitch, then around old Z with yaw 
     static Rotation RPY(double roll,double pitch,double yaw);
 
     //! Gives back a vector in RPY coordinates, variables are bound by
@@ -414,7 +414,7 @@ public:
     //!   -PI/2 <= PITCH <= PI/2
     //!
     //!  convention : first rotate around X with roll, then around the
-    //!               old Y with pitch, then around old Z with alfa
+    //!               old Y with pitch, then around old Z with yaw 
     void GetRPY(double& roll,double& pitch,double& yaw) const;
 
 
@@ -1079,16 +1079,125 @@ public:
      inline friend bool Equal(const Frame2& a,const Frame2& b,double eps=epsilon);
 };
 
-IMETHOD Vector diff(const Vector& a,const Vector& b,double dt=1);
+/**
+ * determines the difference of vector b with vector a.
+ *
+ * see diff for Rotation matrices for further background information.
+ *
+ * \param p_w_a start vector a expressed to some frame w
+ * \param p_w_b end vector   b expressed to some frame w .
+ * \param dt [optional][obsolete] time interval over which the numerical differentiation takes place.
+ * \return the difference (b-a) expressed to the frame w.
+ */
+IMETHOD Vector diff(const Vector& p_w_a,const Vector& p_w_b,double dt=1);
+
+
+/**
+ * determines the (scaled) rotation axis necessary to rotate from b1 to b2.  
+ *
+ * This rotation axis is expressed w.r.t. frame a.  The rotation axis is scaled
+ * by the necessary rotation angle. The rotation angle is always in the 
+ * (inclusive) interval \f$ [0 , \pi] \f$.
+ *
+ * This definition is chosen in this way to facilitate numerical differentiation.
+ * With this definition diff(a,b) == -diff(b,a).
+ *
+ * The diff() function is overloaded for all classes in frames.hpp and framesvel.hpp, such that 
+ * numerical differentiation, equality checks with tolerances, etc.  can be performed 
+ * without caring exactly on which type the operation is performed.  
+ *  
+ * \param R_a_b1: The rotation matrix \f$ _a^{b1} R  \f$ of b1 with respect to frame a. 
+ * \param R_a_b2: The Rotation matrix \f$ _a^{b2} R \f$ of b2 with respect to frame a. 
+ * \param dt [optional][obsolete] time interval over which the numerical differentiation takes place. By default this is set to 1.0.
+ * \return rotation axis to rotate from b1 to b2, scaled by the rotation angle, expressed in frame a.
+ * \warning - The result is not a rotational vector, i.e. it is not a mathematical vector.
+ *          (no communitative addition). 
+ *
+ * \warning - When used in the context of numerical differentiation, with the frames b1 and b2 very
+ *           close to each other, the semantics correspond to the twist, scaled by the time. 
+ *
+ * \warning - For angles equal to \f$ \pi \f$, The negative of the
+ *          return value is equally valid. 
+ */
 IMETHOD Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt=1);
+
+/**
+ * determines the rotation axis necessary to rotate the frame b1 to the same orientation as frame b2 and the vector
+ * necessary to translate the origin of b1 to the origin of b2, and stores the result in a Twist datastructure.   
+ * \param F_a_b1 frame b1 expressed with respect to some frame a. 
+ * \param F_a_b2 frame b2 expressed with respect to some frame a. 
+ * \warning The result is not a Twist!  
+ * see diff() for Rotation and Vector arguments for further detail on the semantics.
+ */
 IMETHOD Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt=1);
+
+/**
+ * determines the difference between two twists i.e. the difference between
+ * the underlying velocity vectors and rotational velocity vectors. 
+ */
 IMETHOD Twist diff(const Twist& a,const Twist& b,double dt=1);
+
+/**
+ * determines the difference between two wrenches i.e. the difference between
+ * the underlying torque vectors and force vectors. 
+ */
 IMETHOD Wrench diff(const Wrench& W_a_p1,const Wrench& W_a_p2,double dt=1);
-IMETHOD Vector addDelta(const Vector& a,const Vector&da,double dt=1);
-IMETHOD Rotation addDelta(const Rotation& a,const Vector&da,double dt=1);
-IMETHOD Frame addDelta(const Frame& a,const Twist& da,double dt=1);
+
+/**
+ * \brief adds vector da to vector a.
+ * see also the corresponding diff() routine.
+ * \param p_w_a vector a expressed to some frame w.
+ * \param p_w_da vector da expressed to some frame w.
+ * \returns the vector resulting from the displacement of vector a by vector da, expressed in the frame w.
+ */
+IMETHOD Vector addDelta(const Vector& p_w_a,const Vector& p_w_da,double dt=1);
+
+/**
+ * returns the rotation matrix resulting from the rotation of frame a by the axis and angle
+ * specified with da_w.  
+ *
+ * see also the corresponding diff() routine.
+ *
+ * \param R_w_a Rotation matrix of frame a expressed to some frame w.
+ * \param da_w  axis and angle of the rotation expressed to some frame w.
+ * \returns the rotation matrix resulting from the rotation of frame a by the axis and angle
+ *          specified with da.   The resulting rotation matrix is expressed with respect to
+ *          frame w.
+ */
+IMETHOD Rotation addDelta(const Rotation& R_w_a,const Vector& da_w,double dt=1);
+
+/**
+ * returns the frame resulting from the rotation of frame a by the axis and angle
+ * specified in da_w and the translation of the origin (also specified in da_w). 
+ *
+ * see also the corresponding diff() routine.
+ * \param R_w_a Rotation matrix of frame a expressed to some frame w.
+ * \param da_w  axis and angle of the rotation (da_w.rot), together with a displacement vector for the origin (da_w.vel),  expressed to some frame w.
+ * \returns the frame resulting from the rotation of frame a by the axis and angle
+ *          specified with da.rot, and the translation of the origin da_w.vel .  The resulting frame is expressed with respect to frame w.
+ */
+IMETHOD Frame addDelta(const Frame& F_w_a,const Twist& da_w,double dt=1);
+
+/**
+ * \brief adds the twist da to the twist a.
+ * see also the corresponding diff() routine.
+ * \param a a twist wrt some frame
+ * \param da a twist difference wrt some frame
+ * \returns The twist (a+da) wrt the corresponding frame.
+ */
 IMETHOD Twist addDelta(const Twist& a,const Twist&da,double dt=1);
+
+
+/**
+ * \brief adds the wrench da to the wrench w.
+ * see also the corresponding diff() routine.
+ * see also the corresponding diff() routine.
+ * \param a a wrench wrt some frame
+ * \param da a wrench difference wrt some frame
+ * \returns the wrench (a+da) wrt the corresponding frame.
+ */
 IMETHOD Wrench addDelta(const Wrench& a,const Wrench&da,double dt=1);
+
 #ifdef KDL_INLINE
 //    #include "vector.inl"
 //   #include "wrench.inl"
