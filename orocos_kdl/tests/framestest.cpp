@@ -307,10 +307,9 @@ void FramesTest::TestRotationDiff() {
 								   Rotation::RPY(-5*deg2rad,0,+0*deg2rad)),
 						 Vector(-10*deg2rad,0,0));
 
-	// correct?
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RPY(+5*deg2rad,0,-90*deg2rad),
-								   Rotation::RPY(-5*deg2rad,0,+90*deg2rad)),
-						 Vector(-15.688*deg2rad, 0, 179.315*deg2rad));
+    KDL::Rotation R1 = Rotation::RPY(+5*deg2rad,0,-90*deg2rad);
+	CPPUNIT_ASSERT_EQUAL(KDL::diff(R1, Rotation::RPY(-5*deg2rad,0,+90*deg2rad)),
+						           R1*Vector(0, 0, 180*deg2rad));
 }
 
 void FramesTest::TestFrame() {
