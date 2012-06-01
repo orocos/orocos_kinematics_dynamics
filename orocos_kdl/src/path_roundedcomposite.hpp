@@ -51,8 +51,8 @@
 namespace KDL {
 
 /**
- * The specification of a path, composed of
- * way-points with rounded corners.
+ * The specification of a path, composed of way-points with rounded corners.
+ *
  * @ingroup Motion
  */
 class Path_RoundedComposite : public Path
@@ -79,14 +79,29 @@ class Path_RoundedComposite : public Path
 		 * @param radius : radius of the rounding circles
 		 * @param eqradius : equivalent radius to compare rotations/velocities
 		 * @param orient   : method of rotational_interpolation interpolation
+		 * @param aggregate : if true, this object will own the _orient pointer, i.e. it will delete the _orient pointer
+		 *                    when the destructor of this object is called.
 		 */
-		Path_RoundedComposite(double radius,double _eqradius,RotationalInterpolation* _orient, bool _aggregate=true);
+		Path_RoundedComposite(double radius,double eqradius,RotationalInterpolation* orient, bool aggregate=true);
 
 		/**
 		 * Adds a point to this rounded composite, between to adjecent points
 		 * a Path_Line will be created, between two lines there will be
 		 * rounding with the given radius with a Path_Circle
-		 * Can throw Error_MotionPlanning_Not_Feasible object
+		 *
+		 * The Error_MotionPlanning_Not_Feasible has a type (obtained by GetType) of:
+		 * - 3101 if the eq. radius <= 0
+		 * - 3102 if the first segment in a rounding has zero length.
+		 * - 3103 if the second segment in a rounding has zero length.
+		 * - 3104 if the angle between the first and the second segment is close to M_PI.
+		 *         (meaning that the segments are on top of each other)
+		 * - 3105 if the distance needed for the rounding is larger then the first segment.
+		 * - 3106 if the distance needed for the rounding is larger then the second segment.
+		 *
+		 * @param F_base_point the pose of a new via point.
+		 * @warning Can throw Error_MotionPlanning_Not_Feasible object
+		 * @TODO handle the case of error type 3105 and 3106 by skipping segments, such that the class could be applied
+		 *       with points that are very close to each other.
 		 */
 		void Add(const Frame& F_base_point);
 
