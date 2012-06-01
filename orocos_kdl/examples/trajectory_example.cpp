@@ -2,7 +2,12 @@
  * \file path_example.cpp
  * An example to demonstrate the use of trajectory generation
  * functions.
+ *
+ * There are is a matlab/octave file in the examples directory to visualise the results
+ * of this example program. (visualize_trajectory.m)
+ *
  */
+
 #include <kdl/frames.hpp>
 #include <kdl/frames_io.hpp>
 #include <kdl/trajectory.hpp>
