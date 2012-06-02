@@ -1,5 +1,5 @@
 IF(ENABLE_EXAMPLES)
- INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/install_dir/include)
+INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src ${PROJ_SOURCE_DIR}/models)
 
  add_executable(geometry geometry.cpp )
  TARGET_LINK_LIBRARIES(geometry orocos-kdl)

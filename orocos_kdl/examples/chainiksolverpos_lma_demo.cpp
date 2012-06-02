@@ -50,10 +50,10 @@ estimate of shortest time per invposkin (ms) 0.155544
  ***************************************************************************/
 
 #include <iostream>
-#include <kdl/frames_io.hpp>
-#include <kdl/models.hpp>
-#include <kdl/chainiksolverpos_lma.hpp>
-#include <kdl/chainfksolverpos_recursive.hpp>
+#include <frames_io.hpp>
+#include <models.hpp>
+#include <chainiksolverpos_lma.hpp>
+#include <chainfksolverpos_recursive.hpp>
 #include <boost/timer.hpp>
 
 /**

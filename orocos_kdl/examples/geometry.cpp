@@ -1,5 +1,5 @@
-#include <kdl/frames.hpp>
-#include <kdl/frames_io.hpp>
+#include <frames.hpp>
+#include <frames_io.hpp>
 
 int main()
 {

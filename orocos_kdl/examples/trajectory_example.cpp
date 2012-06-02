@@ -8,17 +8,17 @@
  *
  */
 
-#include <kdl/frames.hpp>
-#include <kdl/frames_io.hpp>
-#include <kdl/trajectory.hpp>
-#include <kdl/trajectory_segment.hpp>
-#include <kdl/trajectory_stationary.hpp>
-#include <kdl/trajectory_composite.hpp>
-#include <kdl/trajectory_composite.hpp>
-#include <kdl/velocityprofile_trap.hpp>
-#include <kdl/path_roundedcomposite.hpp>
-#include <kdl/rotational_interpolation_sa.hpp>
-#include <kdl/utilities/error.h>
+#include <frames.hpp>
+#include <frames_io.hpp>
+#include <trajectory.hpp>
+#include <trajectory_segment.hpp>
+#include <trajectory_stationary.hpp>
+#include <trajectory_composite.hpp>
+#include <trajectory_composite.hpp>
+#include <velocityprofile_trap.hpp>
+#include <path_roundedcomposite.hpp>
+#include <rotational_interpolation_sa.hpp>
+#include <utilities/error.h>
 
 int main(int argc,char* argv[]) {
 	using namespace KDL;
