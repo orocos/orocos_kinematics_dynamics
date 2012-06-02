@@ -378,22 +378,32 @@ public:
 	double GetRotAngle(Vector& axis,double eps=epsilon) const;
 
 
-    //! Gives back a rotation matrix specified with EulerZYZ convention :
-    //!  First rotate around Z with alfa,
-    //!  then around the new Y with beta, then around
-    //!  new Z with gamma.
+/**     Gives back a rotation matrix specified with EulerZYZ convention :
+	 *       - First rotate around Z with alfa,
+	 *       - then around the new Y with beta,
+	 *	     - then around new Z with gamma.
+	 *  Invariants:
+	 *  	- EulerZYX(alpha,beta,gamma) == EulerZYX(alpha +/- PHI, -beta, gamma +/- PI)
+	 *  	- (angle + 2*k*PI)
+	 **/
     static Rotation EulerZYZ(double Alfa,double Beta,double Gamma);
 
-    //! Gives back the EulerZYZ convention description of the rotation matrix :
-    //!  First rotate around Z with alfa,
-    //!  then around the new Y with beta, then around
-    //!  new Z with gamma.
-    //!
-    //! Variables are bound by
-    //!  (-PI <= alfa <= PI),
-    //! (0 <= beta <= PI),
-    //!  (-PI <= alfa <= PI)
-    void GetEulerZYZ(double& alfa,double& beta,double& gamma) const;
+	/** Gives back the EulerZYZ convention description of the rotation matrix :
+	 First rotate around Z with alpha,
+	 then around the new Y with beta, then around
+	 new Z with gamma.
+
+	 Variables are bound by:
+	 - (-PI <  alpha  <= PI),
+	 - (0   <= beta  <= PI),
+	 - (-PI <  gamma <= PI)
+
+	 if beta==0 or beta==PI, then alpha and gamma are not unique, in this case gamma is chosen to be zero.
+	 Invariants:
+	   - EulerZYX(alpha,beta,gamma) == EulerZYX(alpha +/- PI, -beta, gamma +/- PI)
+	   - angle + 2*k*PI
+	 */
+    void GetEulerZYZ(double& alpha,double& beta,double& gamma) const;
 
     //! Sets the value of this object to a rotation specified with Quaternion convention
     //! the norm of (x,y,z,w) should be equal to 1
@@ -403,42 +413,74 @@ public:
     //! \post the norm of (x,y,z,w) is 1
     void GetQuaternion(double& x,double& y,double& z, double& w) const;
 
-    //! Sets the value of this object to a rotation specified with RPY convention:
-    //! first rotate around X with roll, then around the
-    //!               old Y with pitch, then around old Z with yaw 
+    /**
+     *
+     * Sets the value of this object to a rotation specified with RPY convention:
+     * first rotate around X with roll, then around the
+     *              old Y with pitch, then around old Z with yaw
+     *
+     * Invariants:
+     *  - RPY(roll,pitch,yaw) == RPY( roll +/- PI, PI-pitch, yaw +/- PI )
+     *  - angles + 2*k*PI
+     */
     static Rotation RPY(double roll,double pitch,double yaw);
 
-    //! Gives back a vector in RPY coordinates, variables are bound by
-    //!   -PI <= roll <= PI
-    //!    -PI <= Yaw  <= PI
-    //!   -PI/2 <= PITCH <= PI/2
-    //!
-    //!  convention : first rotate around X with roll, then around the
-    //!               old Y with pitch, then around old Z with yaw 
+/**  Gives back a vector in RPY coordinates, variables are bound by
+     -  -PI <= roll <= PI
+     -   -PI <= Yaw  <= PI
+     -  -PI/2 <= PITCH <= PI/2
+
+	 convention :
+	 - first rotate around X with roll,
+	 - then around the old Y with pitch,
+	 - then around old Z with yaw
+
+	 if pitch == PI/2 or pitch == -PI/2, multiple solutions for gamma and alpha exist.  The solution where roll==0
+	 is chosen.
+
+	 Invariants:
+	 - RPY(roll,pitch,yaw) == RPY( roll +/- PI, PI-pitch, yaw +/- PI )
+	 - angles + 2*k*PI
+
+**/
     void GetRPY(double& roll,double& pitch,double& yaw) const;
 
 
-    //! Gives back a rotation matrix specified with EulerZYX convention :
-    //!  First rotate around Z with alfa,
-    //!  then around the new Y with beta, then around
-    //!  new X with gamma.
-    //!
-    //! closely related to RPY-convention
+    /**  EulerZYX constructs a Rotation from the Euler ZYX parameters:
+     *   -  First rotate around Z with alfa,
+     *   - then around the new Y with beta,
+     *   - then around new X with gamma.
+     *
+     *  Closely related to RPY-convention.
+     *
+     *  Invariants:
+     *  	- EulerZYX(alpha,beta,gamma) == EulerZYX(alpha +/- PI, PI-beta, gamma +/- PI)
+     *  	- (angle + 2*k*PI)
+     **/
     inline static Rotation EulerZYX(double Alfa,double Beta,double Gamma) {
         return RPY(Gamma,Beta,Alfa);
     }
 
-    //! GetEulerZYX gets the euler ZYX parameters of a rotation :
-    //!  First rotate around Z with alfa,
-    //!  then around the new Y with beta, then around
-    //!  new X with gamma.
-    //!
-    //! Range of the results of GetEulerZYX :
-    //!   -PI <= alfa <= PI
-    //!    -PI <= gamma <= PI
-    //!   -PI/2 <= beta <= PI/2
-    //!
-    //! Closely related to RPY-convention.
+    /**   GetEulerZYX gets the euler ZYX parameters of a rotation :
+     *   First rotate around Z with alfa,
+     *   then around the new Y with beta, then around
+     *   new X with gamma.
+     *
+     *  Range of the results of GetEulerZYX :
+     *  -  -PI <= alfa <= PI
+     *  -   -PI <= gamma <= PI
+     *  -  -PI/2 <= beta <= PI/2
+     *
+     *  if beta == PI/2 or beta == -PI/2, multiple solutions for gamma and alpha exist.  The solution where gamma==0
+     *  is chosen.
+     *
+     *
+     *  Invariants:
+     *  	- EulerZYX(alpha,beta,gamma) == EulerZYX(alpha +/- PI, PI-beta, gamma +/- PI)
+     *  	- and also (angle + 2*k*PI)
+     *
+     *  Closely related to RPY-convention.
+     **/
     inline void GetEulerZYX(double& Alfa,double& Beta,double& Gamma) const {
         GetRPY(Gamma,Beta,Alfa);
     }

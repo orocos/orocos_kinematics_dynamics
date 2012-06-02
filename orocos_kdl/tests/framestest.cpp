@@ -179,6 +179,123 @@ void FramesTest::TestArbitraryRotation(const std::string& msg,
 	TestOneRotation(ss.str(), Rotation::Rot(v,angle*deg2rad), expectedAngle*deg2rad, expectedVector);
 }
 
+
+//std::cout << "-----\n" << R(0,0) << std::endl;\
+//std::cout << R(0,1) << std::endl;\
+//std::cout << R(0,2) << std::endl;\
+//std::cout << R(1,0) << std::endl;\
+//std::cout << R(1,1) << std::endl;\
+//std::cout << R(1,2) << std::endl;\
+//std::cout << R(2,0) << std::endl;\
+//std::cout << R(2,1) << std::endl;\
+//std::cout << R(2,2) << std::endl;\
+
+
+#define TESTEULERZYX(a,b,g) \
+		{\
+			double eps=1E-14;\
+			Rotation R = Rotation::EulerZYX((a),(b),(g));\
+			double alpha,beta,gamma;\
+			R.GetEulerZYX(alpha,beta,gamma);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL((a),alpha,eps);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL((b),beta,eps);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL((g),gamma,eps);\
+		}
+
+#define TESTEULERZYZ(a,b,g) \
+		{\
+			double eps=1E-14;\
+			Rotation R = Rotation::EulerZYZ((a),(b),(g));\
+			double alpha,beta,gamma;\
+			R.GetEulerZYZ(alpha,beta,gamma);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL((a),alpha,eps);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL((b),beta,eps);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL((g),gamma,eps);\
+		}
+#define TESTEULERZYX_INVARIANT(a,b,g,a2,b2,g2)\
+		{\
+			double eps=1E-14;\
+			Rotation R1=Rotation::EulerZYX(a,b,g);\
+			Rotation R2=Rotation::EulerZYX(a2,b2,g2);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(0,diff(R2,R1).Norm(),eps);\
+		}
+#define TESTEULERZYZ_INVARIANT(a,b,g,a2,b2,g2)\
+		{\
+			double eps=1E-14;\
+			Rotation R1=Rotation::EulerZYZ(a,b,g);\
+			Rotation R2=Rotation::EulerZYZ(a2,b2,g2);\
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(0,diff(R2,R1).Norm(),eps);\
+		}
+void FramesTest::TestEuler() {
+	using namespace KDL;
+	TESTEULERZYX(0.1,0.2,0.3)
+	TESTEULERZYX(-0.1,0.2,0.3)
+	TESTEULERZYX(0.1,-0.2,0.3)
+	TESTEULERZYX(0.1,0.2,-0.3)
+	TESTEULERZYX(0,0.2,0.3)
+	TESTEULERZYX(0.1,0.2,0)
+	TESTEULERZYX(0.1,0,0.3)
+	TESTEULERZYX(0.1,0,0)
+	TESTEULERZYX(0,0,0.3)
+	TESTEULERZYX(0,0,0)
+	TESTEULERZYX(0.3,0.999*M_PI/2,0.1)
+	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be choosen to be zero !
+	// so we test with gamma==0 !
+	TESTEULERZYX(0.3,0.9999999999*M_PI/2,0)
+	TESTEULERZYX(0.3,0.99999999*M_PI/2,0)
+	TESTEULERZYX(0.3,0.999999*M_PI/2,0)
+	TESTEULERZYX(0.3,0.9999*M_PI/2,0)
+	TESTEULERZYX(0.3,0.99*M_PI/2,0)
+	//TESTEULERZYX(0.1,-M_PI/2,0.3)
+	TESTEULERZYX(0,M_PI/2,0)
+
+	TESTEULERZYX(0.3,-M_PI/2,0)
+	TESTEULERZYX(0.3,-0.9999999999*M_PI/2,0)
+	TESTEULERZYX(0.3,-0.99999999*M_PI/2,0)
+	TESTEULERZYX(0.3,-0.999999*M_PI/2,0)
+	TESTEULERZYX(0.3,-0.9999*M_PI/2,0)
+	TESTEULERZYX(0.3,-0.99*M_PI/2,0)
+	TESTEULERZYX(0,-M_PI/2,0)
+
+	// extremes of the range:
+	TESTEULERZYX(M_PI,-M_PI/2,0)
+	TESTEULERZYX(-M_PI,-M_PI/2,0)
+	TESTEULERZYX(M_PI,1,0)
+	TESTEULERZYX(-M_PI,1,0)
+	//TESTEULERZYX(0,-M_PI/2,M_PI)  gamma will be chosen zero
+	//TESTEULERZYX(0,M_PI/2,-M_PI)  gamma will be chosen zero
+	TESTEULERZYX(0,1,M_PI)
+
+	TESTEULERZYZ(0.1,0.2,0.3)
+	TESTEULERZYZ(-0.1,0.2,0.3)
+	TESTEULERZYZ(0.1,0.9*M_PI,0.3)
+	TESTEULERZYZ(0.1,0.2,-0.3)
+	TESTEULERZYZ(0,0,0)
+	TESTEULERZYZ(0,0,0)
+	TESTEULERZYZ(0,0,0)
+	TESTEULERZYZ(PI,0,0)
+	TESTEULERZYZ(0,0.2,PI)
+	TESTEULERZYZ(0.4,PI,0)
+	TESTEULERZYZ(0,PI,0)
+	TESTEULERZYZ(PI,PI,0)
+	TESTEULERZYX(0.3,M_PI/2,0)
+	TESTEULERZYZ(0.3,0.9999999999*M_PI/2,0)
+	TESTEULERZYZ(0.3,0.99999999*M_PI/2,0)
+	TESTEULERZYZ(0.3,0.999999*M_PI/2,0)
+	TESTEULERZYZ(0.3,0.9999*M_PI/2,0)
+	TESTEULERZYZ(0.3,0.99*M_PI/2,0)
+
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  M_PI-0.2, 0.3+M_PI);
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  M_PI-0.2, 0.3-M_PI);
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  M_PI-0.2, 0.3+M_PI);
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  M_PI-0.2, 0.3-M_PI);
+
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  -0.2, 0.3+M_PI);
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  -0.2, 0.3+M_PI);
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  -0.2, 0.3-M_PI);
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  -0.2, 0.3-M_PI);
+}
+
 void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
 											const KDL::Vector& v,
 											const KDL::Vector& expectedVector)

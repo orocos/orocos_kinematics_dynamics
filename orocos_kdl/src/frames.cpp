@@ -238,13 +238,13 @@ Rotation Rotation::RPY(double roll,double pitch,double yaw)
 // Gives back a rotation matrix specified with RPY convention
 void Rotation::GetRPY(double& roll,double& pitch,double& yaw) const
     {
-        if (fabs(data[6]) > 1.0 - epsilon ) {
-            roll = -sign(data[6]) * atan2(data[1], data[4]);
-            pitch= -sign(data[6]) * PI / 2;
-            yaw  = 0.0 ;
+		double epsilon=1E-12;
+		pitch = atan2(-data[6], sqrt( sqr(data[0]) +sqr(data[3]) )  );
+        if ( fabs(pitch) > (M_PI/2.0-epsilon) ) {
+            yaw = atan2(	-data[1], data[4]);
+            roll  = 0.0 ;
         } else {
             roll  = atan2(data[7], data[8]);
-            pitch = atan2(-data[6], sqrt( sqr(data[0]) +sqr(data[3]) )  );
             yaw   = atan2(data[3], data[0]);
         }
     }
@@ -262,18 +262,19 @@ Rotation Rotation::EulerZYZ(double Alfa,double Beta,double Gamma) {
      }
 
 
-void Rotation::GetEulerZYZ(double& alfa,double& beta,double& gamma) const {
-        if (fabs(data[6]) < epsilon ) {
-            alfa=0.0;
+void Rotation::GetEulerZYZ(double& alpha,double& beta,double& gamma) const {
+		double epsilon = 1E-12;
+        if (fabs(data[8]) > 1-epsilon  ) {
+            gamma=0.0;
             if (data[8]>0) {
                 beta = 0.0;
-                gamma= atan2(-data[1],data[0]);
+                alpha= atan2(data[3],data[0]);
             } else {
                 beta = PI;
-                gamma= atan2(data[1],-data[0]);
+                alpha= atan2(-data[3],-data[0]);
             }
         } else {
-            alfa=atan2(data[5], data[2]);
+            alpha=atan2(data[5], data[2]);
             beta=atan2(sqrt( sqr(data[6]) +sqr(data[7]) ),data[8]);
             gamma=atan2(data[7], -data[6]);
         }
