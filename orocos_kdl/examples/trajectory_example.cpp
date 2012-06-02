@@ -71,8 +71,21 @@ int main(int argc,char* argv[]) {
 			//traject->Acc(t);
 		}
 		of.close();
-		delete traject;
+
+		// you can get some meta-info on the path:
+		for (int segmentnr=0;  segmentnr < path->GetNrOfSegments(); segmentnr++) {
+			double starts,ends;
+			if (segmentnr==0) {
+				starts = 0.0;
+			} else {
+				starts = path->GetLengthToEndOfSegment(segmentnr-1);
+			}
+			ends = path->GetLengthToEndOfSegment(segmentnr);
+			std::cout << "segment " << segmentnr << " runs from s="<<starts << " to s=" <<ends << std::endl;
+		}
         std::cout << " trajectory written to the ./trajectory.dat file " << std::endl;
+
+        delete traject;
 	} catch(Error& error) {
 		std::cout <<"I encountered this error : " << error.Description() << std::endl;
 		std::cout << "with the following type " << error.GetType() << std::endl;

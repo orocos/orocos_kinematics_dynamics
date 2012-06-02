@@ -151,6 +151,35 @@ class Path_RoundedComposite : public Path
 		 */
 		virtual void Write(std::ostream& os);
 
+		/**
+		 * returns the number of underlying segments.
+		 */
+		virtual int GetNrOfSegments();
+
+		/**
+		 * returns a pointer to the underlying Path of the given segment number i.
+		 * \param i segment number
+		 * \return pointer to the underlying Path
+		 * \warning The pointer is still owned by this class and is lifetime depends on the lifetime
+		 *          of this class.
+		 */
+		virtual Path* GetSegment(int i);
+
+		/**
+		 * gets the length to the end of the given segment.
+		 * \param i segment number
+		 * \return length to the end of the segment, i.e. the value for s corresponding to the end of
+		 *         this segment.
+		 */
+		virtual double GetLengthToEndOfSegment(int i);
+
+		/**
+		 * \param s [INPUT] path length variable for the composite.
+		 * \param segment_number [OUTPUT] segments that corresponds to the path length variable s.
+		 * \param inner_s [OUTPUT] path length to use within the segment.
+		 */
+		virtual void GetCurrentSegmentLocation(double s, int &segment_number, double& inner_s);
+
 		virtual ~Path_RoundedComposite();
 	};
 

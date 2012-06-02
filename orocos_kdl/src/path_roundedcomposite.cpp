@@ -77,7 +77,7 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 		if (bcdist < eps) {
 			throw Error_MotionPlanning_Not_Feasible(3);
 		}
-		double alpha = ::acos(dot(ab, bc) / abdist / bcdist);
+		double alpha = acos(dot(ab, bc) / abdist / bcdist);
 		if ((PI - alpha) < eps) {
 			throw Error_MotionPlanning_Not_Feasible(4);
 		}
@@ -90,17 +90,20 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 			F_base_via = F_base_point;
 		} else {
 			double d = radius / tan((PI - alpha) / 2); // tan. is garantueed not to return zero.
-
 			if (d >= abdist)
 				throw Error_MotionPlanning_Not_Feasible(5);
+
 			if (d >= bcdist)
 				throw Error_MotionPlanning_Not_Feasible(6);
-			std::auto_ptr<Path> line1(
-					new Path_Line(F_base_start, F_base_via, orient->Clone(),
-							eqradius));
-			std::auto_ptr<Path> line2(
-					new Path_Line(F_base_via, F_base_point, orient->Clone(),
-							eqradius));
+
+			std::auto_ptr < Path
+					> line1(
+							new Path_Line(F_base_start, F_base_via,
+									orient->Clone(), eqradius));
+			std::auto_ptr < Path
+					> line2(
+							new Path_Line(F_base_via, F_base_point,
+									orient->Clone(), eqradius));
 			Frame F_base_circlestart = line1->Pos(line1->LengthToS(abdist - d));
 			Frame F_base_circleend = line2->Pos(line2->LengthToS(d));
 			// end of circle segment, beginning of next line
@@ -119,16 +122,19 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 			F_base_via = F_base_point;
 		}
 	}
+
 	nrofpoints++;
 }
 
 void Path_RoundedComposite::Finish() {
-	if (nrofpoints>=1) {
-		comp->Add(new Path_Line(F_base_start,F_base_via,orient->Clone(),eqradius));
+	if (nrofpoints >= 1) {
+		comp->Add(
+				new Path_Line(F_base_start, F_base_via, orient->Clone(),
+						eqradius));
 	}
 }
 
-double Path_RoundedComposite::LengthToS(double length)  {
+double Path_RoundedComposite::LengthToS(double length) {
 	return comp->LengthToS(length);
 }
 
@@ -140,16 +146,33 @@ Frame Path_RoundedComposite::Pos(double s) const {
 	return comp->Pos(s);
 }
 
-Twist Path_RoundedComposite::Vel(double s,double sd) const {
-	return comp->Vel(s,sd);
+Twist Path_RoundedComposite::Vel(double s, double sd) const {
+	return comp->Vel(s, sd);
 }
 
-Twist Path_RoundedComposite::Acc(double s,double sd,double sdd) const {
-	return comp->Acc(s,sd,sdd);
+Twist Path_RoundedComposite::Acc(double s, double sd, double sdd) const {
+	return comp->Acc(s, sd, sdd);
 }
 
-void Path_RoundedComposite::Write(std::ostream& os)  {
+void Path_RoundedComposite::Write(std::ostream& os) {
 	comp->Write(os);
+}
+
+int Path_RoundedComposite::GetNrOfSegments() {
+	return comp->GetNrOfSegments();
+}
+
+Path* Path_RoundedComposite::GetSegment(int i) {
+	return comp->GetSegment(i);
+}
+
+double Path_RoundedComposite::GetLengthToEndOfSegment(int i) {
+	return comp->GetLengthToEndOfSegment(i);
+}
+
+void Path_RoundedComposite::GetCurrentSegmentLocation(double s,
+		int& segment_number, double& inner_s) {
+	comp->GetCurrentSegmentLocation(s,segment_number,inner_s);
 }
 
 Path_RoundedComposite::~Path_RoundedComposite() {
