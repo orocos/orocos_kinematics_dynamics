@@ -58,7 +58,8 @@ namespace KDL
  *
  * De general principles behind the optimisation is inspired on:
  *   Jorge Nocedal, Stephen J. Wright, Numerical Optimization,Springer-Verlag New York, 1999.
- *
+
+ * \ingroup KinematicFamily
  */
 class ChainIkSolverPos_LMA : public KDL::ChainIkSolverPos
 {
