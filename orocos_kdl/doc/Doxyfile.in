@@ -83,7 +83,8 @@ WARN_LOGFILE           =
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = @PROJ_SOURCE_DIR@/src \
-			  @PROJ_SOURCE_DIR@/src/bindings/rtt
+			  @PROJ_SOURCE_DIR@/src/bindings/rtt \
+			  @PROJ_SOURCE_DIR@/src/utilties
 FILE_PATTERNS          = *.cpp \
                          *.cxx \
                          *.h \

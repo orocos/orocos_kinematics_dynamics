@@ -22,14 +22,40 @@
 
 //implementation of svd according to (Maciejewski and Klein,1989)
 //and (Braun, Ulrey, Maciejewski and Siegel,2002)
+
+/**
+ * \file svd_eigen_Macie.hpp
+ * provides Maciejewski's implementation for SVD.
+ */
+
 #ifndef SVD_BOOST_MACIE
 #define SVD_BOOST_MACIE
 
 #include <Eigen/Core>
 using namespace Eigen;
 
+
 namespace KDL
 {
+
+	/**
+	 * svd_eigen_Macie provides Maciejewski implementation for SVD.
+	 *
+	 * computes the singular value decomposition of a matrix A, such that
+	 * A=U*Sm*V
+	 *
+	 * (Maciejewski and Klein,1989) and (Braun, Ulrey, Maciejewski and Siegel,2002)
+	 *
+	 * \param A [INPUT] is an \f$m \cross n$\f$-matrix, where \f$[ m \geq n \f$\].
+	 * \param S [OUTPUT] is an \f$n\f$-vector, representing the diagonal elements of the diagonal matrix Sm.
+	 * \param U [INPUT/OUTPUT] is an \f$m \cross m$\f$ orthonormal matrix.
+	 * \param V [INPUT/OUTPUT] is an \f$n \cross n$\f$ orthonormal matrix.
+	 * \param B [TEMPORARY] is an \f$m \cross n$\f$ matrix used for temporary storage.
+	 * \param tempi [TEMPORARY] is an \f$m$\f$ vector used for temporary storage.
+	 * \param thresshold [INPUT] Thresshold to determine orthogonality.
+	 * \param toggle [INPUT] toggle this boolean variable on each call of this routine.
+	 *
+	 */
     int svd_eigen_Macie(const MatrixXd& A,MatrixXd& U,VectorXd& S, MatrixXd& V,
                         MatrixXd& B, VectorXd& tempi,
                         double treshold,bool toggle)
