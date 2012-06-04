@@ -93,6 +93,15 @@ double Path_Composite::PathLength() {
 	return pathlength;
 }
 
+double Path_Composite::NumberOfSubPaths(){
+	return dv.size();
+}
+
+double Path_Composite::SubPathLength(int i) {
+	if (i<0||i>dv.size())
+		return -1;
+	return dv[i];
+}
 Frame Path_Composite::Pos(double s) const {
 	s = Lookup(s);
 	return gv[cached_index].first->Pos(s);

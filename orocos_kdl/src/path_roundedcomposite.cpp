@@ -89,7 +89,7 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 			F_base_start = F_base_via;
 			F_base_via = F_base_point;
 		} else {
-			double d = radius / tan((PI - alpha) / 2); // tan. is garantueed not to return zero.
+			double d = radius / tan((PI - alpha) / 2); // tan. is guaranteed not to return zero.
 			if (d >= abdist)
 				throw Error_MotionPlanning_Not_Feasible(5);
 
@@ -136,6 +136,14 @@ void Path_RoundedComposite::Finish() {
 
 double Path_RoundedComposite::LengthToS(double length) {
 	return comp->LengthToS(length);
+}
+
+double Path_RoundedComposite::SubPathLength(int i){
+	return comp->SubPathLength(i);
+}
+
+double Path_RoundedComposite::NumberOfSubPaths(){
+	return comp->NumberOfSubPaths();
 }
 
 double Path_RoundedComposite::PathLength() {
