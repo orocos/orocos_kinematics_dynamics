@@ -46,12 +46,12 @@ namespace KDL
 	 *
 	 * (Maciejewski and Klein,1989) and (Braun, Ulrey, Maciejewski and Siegel,2002)
 	 *
-	 * \param A [INPUT] is an \f$m \cross n$\f$-matrix, where \f$[ m \geq n \f$\].
+	 * \param A [INPUT] is an \f$m \times n\f$-matrix, where \f$ m \geq n \f$.
 	 * \param S [OUTPUT] is an \f$n\f$-vector, representing the diagonal elements of the diagonal matrix Sm.
-	 * \param U [INPUT/OUTPUT] is an \f$m \cross m$\f$ orthonormal matrix.
-	 * \param V [INPUT/OUTPUT] is an \f$n \cross n$\f$ orthonormal matrix.
-	 * \param B [TEMPORARY] is an \f$m \cross n$\f$ matrix used for temporary storage.
-	 * \param tempi [TEMPORARY] is an \f$m$\f$ vector used for temporary storage.
+	 * \param U [INPUT/OUTPUT] is an \f$m \times m\f$ orthonormal matrix.
+	 * \param V [INPUT/OUTPUT] is an \f$n \times n\f$ orthonormal matrix.
+	 * \param B [TEMPORARY] is an \f$m \times n\f$ matrix used for temporary storage.
+	 * \param tempi [TEMPORARY] is an \f$m\f$ vector used for temporary storage.
 	 * \param thresshold [INPUT] Thresshold to determine orthogonality.
 	 * \param toggle [INPUT] toggle this boolean variable on each call of this routine.
 	 *

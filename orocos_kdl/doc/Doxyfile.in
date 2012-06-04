@@ -84,7 +84,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 INPUT                  = @PROJ_SOURCE_DIR@/src \
 			  @PROJ_SOURCE_DIR@/src/bindings/rtt \
-			  @PROJ_SOURCE_DIR@/src/utilties
+			  @PROJ_SOURCE_DIR@/src/utilities/svd_eigen_Macie.hpp
 FILE_PATTERNS          = *.cpp \
                          *.cxx \
                          *.h \
@@ -238,5 +238,5 @@ DOT_CLEANUP            = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to the search engine   
 #---------------------------------------------------------------------------
-SEARCHENGINE           = NO
+SEARCHENGINE           = YES 
 USE_MATHJAX            = YES
