@@ -122,16 +122,6 @@ class Path_RoundedComposite : public Path
 		 */
 		virtual double PathLength();
 
-		/**
-		 * Returns the size of the first @param i paths.
-		 */
-		double SubPathLength(int i);
-
-		/**
-		 * Returns the number of subpaths created;
-		 */
-		double NumberOfSubPaths();
-
 
 		/**
 		 * Returns the Frame at the current path length s

@@ -138,13 +138,6 @@ double Path_RoundedComposite::LengthToS(double length) {
 	return comp->LengthToS(length);
 }
 
-double Path_RoundedComposite::SubPathLength(int i){
-	return comp->SubPathLength(i);
-}
-
-double Path_RoundedComposite::NumberOfSubPaths(){
-	return comp->NumberOfSubPaths();
-}
 
 double Path_RoundedComposite::PathLength() {
 	return comp->PathLength();
