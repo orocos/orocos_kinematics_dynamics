@@ -54,7 +54,7 @@ namespace KDL
 	 * \param tempi [TEMPORARY] is an \f$m\f$ vector used for temporary storage.
 	 * \param thresshold [INPUT] Thresshold to determine orthogonality.
 	 * \param toggle [INPUT] toggle this boolean variable on each call of this routine.
-	 *
+	 * \return number of sweeps.
 	 */
     int svd_eigen_Macie(const MatrixXd& A,MatrixXd& U,VectorXd& S, MatrixXd& V,
                         MatrixXd& B, VectorXd& tempi,
