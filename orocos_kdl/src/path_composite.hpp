@@ -153,6 +153,13 @@ namespace KDL {
 		 */
 		virtual void GetCurrentSegmentLocation(double s, int &segment_number, double& inner_s);
 
+		/**
+		 * gets an identifier indicating the type of this Path object
+		 */
+		virtual IdentifierType getIdentifier() const {
+			return ID_COMPOSITE;
+		}
+
 		virtual ~Path_Composite();
 	};
 

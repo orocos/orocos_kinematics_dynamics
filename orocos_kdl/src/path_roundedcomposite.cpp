@@ -49,6 +49,14 @@
 
 namespace KDL {
 
+// private constructor, to keep the type when cloning a Path_RoundedComposite, such that getIdentifier keeps on returning
+// the correct value:
+Path_RoundedComposite::Path_RoundedComposite(Path_Composite* _comp,
+		double _radius, double _eqradius, RotationalInterpolation* _orient,
+		bool _aggregate,int _nrofpoints):
+		comp(_comp), radius(_radius), eqradius(_eqradius), orient(_orient), aggregate(_aggregate), nrofpoints(_nrofpoints) {
+}
+
 Path_RoundedComposite::Path_RoundedComposite(double _radius,double _eqradius,RotationalInterpolation* _orient, bool _aggregate) :
 	comp( new Path_Composite()), radius(_radius),eqradius(_eqradius), orient(_orient), aggregate(_aggregate)
 {
@@ -176,6 +184,8 @@ void Path_RoundedComposite::GetCurrentSegmentLocation(double s,
 	comp->GetCurrentSegmentLocation(s,segment_number,inner_s);
 }
 
+
+
 Path_RoundedComposite::~Path_RoundedComposite() {
     if (aggregate)
         delete orient;
@@ -184,7 +194,7 @@ Path_RoundedComposite::~Path_RoundedComposite() {
 
 
 Path* Path_RoundedComposite::Clone() {
-	return comp->Clone();
+	return new Path_RoundedComposite(static_cast<Path_Composite*>(comp->Clone()),radius,eqradius,orient->Clone(), true, nrofpoints);
 }
 
 }

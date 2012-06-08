@@ -73,6 +73,9 @@ class Path_RoundedComposite : public Path
 		int nrofpoints;
 
 		bool aggregate;
+
+		Path_RoundedComposite(Path_Composite* comp,double radius,double eqradius,RotationalInterpolation* orient, bool aggregate, int nrofpoints);
+
 	public:
 
 		/**
@@ -180,6 +183,14 @@ class Path_RoundedComposite : public Path
 		 * \param inner_s [OUTPUT] path length to use within the segment.
 		 */
 		virtual void GetCurrentSegmentLocation(double s, int &segment_number, double& inner_s);
+
+		/**
+		 * gets an identifier indicating the type of this Path object
+		 */
+		virtual IdentifierType getIdentifier() const {
+			return ID_ROUNDED_COMPOSITE;
+		}
+
 
 		virtual ~Path_RoundedComposite();
 	};

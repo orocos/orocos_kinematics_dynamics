@@ -75,13 +75,27 @@ int main(int argc,char* argv[]) {
 		// you can get some meta-info on the path:
 		for (int segmentnr=0;  segmentnr < path->GetNrOfSegments(); segmentnr++) {
 			double starts,ends;
+			Path::IdentifierType pathtype;
 			if (segmentnr==0) {
 				starts = 0.0;
 			} else {
 				starts = path->GetLengthToEndOfSegment(segmentnr-1);
 			}
 			ends = path->GetLengthToEndOfSegment(segmentnr);
-			std::cout << "segment " << segmentnr << " runs from s="<<starts << " to s=" <<ends << std::endl;
+			pathtype = path->GetSegment(segmentnr)->getIdentifier();
+			std::cout << "segment " << segmentnr << " runs from s="<<starts << " to s=" <<ends;
+			switch(pathtype) {
+				case Path::ID_CIRCLE:
+					std::cout << " circle";
+					break;
+				case Path::ID_LINE:
+					std::cout << " line ";
+					break;
+				default:
+					std::cout << " unknown ";
+					break;
+			}
+			std::cout << std::endl;
 		}
         std::cout << " trajectory written to the ./trajectory.dat file " << std::endl;
 
