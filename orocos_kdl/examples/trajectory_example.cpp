@@ -19,6 +19,7 @@
 #include <path_roundedcomposite.hpp>
 #include <rotational_interpolation_sa.hpp>
 #include <utilities/error.h>
+#include <trajectory_composite.hpp>
 
 int main(int argc,char* argv[]) {
 	using namespace KDL;
@@ -50,11 +51,17 @@ int main(int argc,char* argv[]) {
 		path->Finish();
 
         // Trajectory defines a motion of the robot along a path.
-		Trajectory* traject;
         // This defines a trapezoidal velocity profile.
 		VelocityProfile* velpref = new VelocityProfile_Trap(0.5,0.1);
 		velpref->SetProfile(0,path->PathLength());  
-		traject = new Trajectory_Segment(path, velpref);
+		Trajectory* traject = new Trajectory_Segment(path, velpref);
+
+
+		Trajectory_Composite* ctraject = new Trajectory_Composite();
+		ctraject->Add(traject);
+		ctraject->Add(new Trajectory_Stationary(1.0,Frame(Rotation::RPY(0.7,0.7,0), Vector(1,1,0))));
+
+
 
 		// use the trajectory
 		double dt=0.1;
@@ -99,7 +106,7 @@ int main(int argc,char* argv[]) {
 		}
         std::cout << " trajectory written to the ./trajectory.dat file " << std::endl;
 
-        delete traject;
+        delete ctraject;
 	} catch(Error& error) {
 		std::cout <<"I encountered this error : " << error.Description() << std::endl;
 		std::cout << "with the following type " << error.GetType() << std::endl;
