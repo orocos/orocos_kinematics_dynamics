@@ -9,6 +9,7 @@ if (ROS_ROOT)
 else()
   find_package(Orocos-KDL)
   include_directories(${Orocos-KDL_INCLUDE_DIRS})
+  link_directories(${Orocos-KDL_LIBRARY_DIRS})
 endif()
 
 #set the default path for built executables to the "bin" directory
