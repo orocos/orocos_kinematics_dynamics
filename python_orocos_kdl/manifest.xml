@@ -5,7 +5,7 @@
 
   </description>
   <author>Ruben Smits</author>
-  <license>GPL</license>
+  <license>LGPL</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/python_orocos_kdl</url>
 
