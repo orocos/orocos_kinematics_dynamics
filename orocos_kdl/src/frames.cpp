@@ -27,6 +27,9 @@
 
 #include "frames.hpp"
 
+#define _USE_MATH_DEFINES  // For MSVC
+#include <math.h>
+
 namespace KDL {
 
 #ifndef KDL_INLINE

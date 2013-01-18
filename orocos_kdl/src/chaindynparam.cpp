@@ -102,6 +102,7 @@ namespace KDL {
 	  }
 
 	}
+	return 0;
     }
 
     //calculate coriolis matrix C
@@ -114,7 +115,7 @@ namespace KDL {
 	//the calculation of coriolis matrix C
 	chainidsolver_coriolis.CartToJnt(q, q_dot, jntarraynull, wrenchnull, coriolis);
 	
-
+	return 0;
     }
 
     //calculate gravity matrix G
@@ -126,6 +127,7 @@ namespace KDL {
 	SetToZero(jntarraynull);
 	//the calculation of coriolis matrix C
 	chainidsolver_gravity.CartToJnt(q, jntarraynull, jntarraynull, wrenchnull, gravity);
+	return 0;
     }
 
     ChainDynParam::~ChainDynParam()

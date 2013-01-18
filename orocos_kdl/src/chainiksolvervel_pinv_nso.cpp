@@ -129,14 +129,17 @@ namespace KDL
 	int ChainIkSolverVel_pinv_nso::setWeights(const JntArray & _weights)
 	{
 		weights = _weights;
+		return 0;
 	}
 	int ChainIkSolverVel_pinv_nso::setOptPos(const JntArray & _opt_pos)
 	{
 		opt_pos = _opt_pos;
+		return 0;
 	}
 	int ChainIkSolverVel_pinv_nso::setAlpha(const int _alpha)
 	{
 		alpha = _alpha;
+		return 0;
 	}
 
 
