@@ -89,6 +89,8 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/KDLConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake @ONLY)
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake DESTINATION share/orocos-kdl)
 
+INSTALL(FILES package.xml DESTINATION share/orocos-kdl)
+
 ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 
