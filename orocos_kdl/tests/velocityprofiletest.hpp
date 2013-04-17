@@ -16,6 +16,7 @@ class VelocityProfileTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestTrapHalf_SetProfile_Start);
     CPPUNIT_TEST(TestTrapHalf_SetProfile_End);
     CPPUNIT_TEST(TestTrapHalf_SetDuration_Start);
+    CPPUNIT_TEST(TestTrapHalf_SetDuration_End);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -31,6 +32,7 @@ public:
     void TestTrapHalf_SetProfile_Start();
     void TestTrapHalf_SetProfile_End();
     void TestTrapHalf_SetDuration_Start();
+    void TestTrapHalf_SetDuration_End();
 };
 
 #endif

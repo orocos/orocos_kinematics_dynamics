@@ -60,7 +60,7 @@ void VelocityProfile_TrapHalf::PlanProfile1(double v,double a) {
 	a1 = startpos;
 	b3 = a/2;
 	b2 = -a*t1;
-	b1 = startpos + a2*t1*t1/2;
+	b1 = startpos + a*t1*t1/2;
 	c3 = 0;
 	c2 = v;
 	c1 = endpos - v*duration;

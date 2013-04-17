@@ -253,34 +253,16 @@ void VelocityProfileTest::TestTrapHalf_SetDuration_Start()
 	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
 	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
 
-	// begin ramp at scaled velocity
+	// begin ramp at scaled acceleration
 	time = 2;
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.3333, v.Pos(time), 0.001);// WRONG, backwards!
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(2.0, v.Pos(time), 0.001);
 	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.3333, v.Acc(time), 0.001);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.333, v.Acc(time), 0.001);
 
-	// middle of ramp up?!
-	time = 3;
-	CPPUNIT_ASSERT_EQUAL(1.5, v.Pos(time));	// WRONG
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.3333, v.Vel(time), 0.001);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.3333, v.Acc(time), 0.001);
-
-	// middle of ramp up?!
-	time = 4;
-	CPPUNIT_ASSERT_EQUAL(2.0, v.Pos(time));	// WRONG
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.6667, v.Vel(time), 0.001);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.3333, v.Acc(time), 0.001);
-
-	// middle of ramp up!?
-	time = 6;
-	CPPUNIT_ASSERT_EQUAL(4.0, v.Pos(time));
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.3333, v.Vel(time), 0.001);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.3333, v.Acc(time), 0.001);
-
-	// middle of ramp up!?
-	time = 7;
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(5.5, v.Pos(time), 0.001);
-	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.6667, v.Vel(time), 0.001);
+	// middle of ramp up
+	time = 5;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(3.5, v.Pos(time), 0.001);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(1.0, v.Vel(time), 0.001);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.3333, v.Acc(time), 0.001);
 
 	// end - continue with given velocity
@@ -288,4 +270,67 @@ void VelocityProfileTest::TestTrapHalf_SetDuration_Start()
 	CPPUNIT_ASSERT_EQUAL(8.0, v.Pos(time));
 	CPPUNIT_ASSERT_EQUAL(2.0, v.Vel(time));
 	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+
+	// fenceposts - before and after
+	time = -1;
+	CPPUNIT_ASSERT_EQUAL(2.0, v.Pos(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+	time = 9;
+	CPPUNIT_ASSERT_EQUAL(8.0, v.Pos(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+
+}
+
+void VelocityProfileTest::TestTrapHalf_SetDuration_End()
+{
+	// same as TestTrapHalf__SetProfile_Start() but twice as slow
+	// Lingers at start position with zero velocity for a period of time,
+	// as does not scale the velocity; only scales the acceleration!?
+	VelocityProfile_TrapHalf	v(2, 1, true);
+	double						time;
+	v.SetProfileDuration(2+6, 2, 8);
+	CPPUNIT_ASSERT_EQUAL(8.0, v.Duration());
+
+	// start - no motion
+	time = 0;
+	CPPUNIT_ASSERT_EQUAL(8.0, v.Pos(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+
+	// no motion
+	time = 1.9;
+	CPPUNIT_ASSERT_EQUAL(8.0, v.Pos(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+
+	// begin ramp at scaled acceleration
+	time = 2;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(8.0, v.Pos(time), 0.001);// WRONG, backwards!
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-0.333, v.Acc(time), 0.001);
+
+	// middle of ramp up
+	time = 5;
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(6.5, v.Pos(time), 0.001);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.0, v.Vel(time), 0.001);
+	CPPUNIT_ASSERT_DOUBLES_EQUAL(-0.3333, v.Acc(time), 0.001);
+
+	// end - continue with given velocity
+	time = 8;
+	CPPUNIT_ASSERT_EQUAL(2.0, v.Pos(time));
+	CPPUNIT_ASSERT_EQUAL(-2.0, v.Vel(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+
+	// fenceposts - before and after
+	time = -1;
+	CPPUNIT_ASSERT_EQUAL(8.0, v.Pos(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+	time = 9;
+	CPPUNIT_ASSERT_EQUAL(2.0, v.Pos(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Vel(time));
+	CPPUNIT_ASSERT_EQUAL(0.0, v.Acc(time));
+
 }
