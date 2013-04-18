@@ -1,10 +1,8 @@
 #ifndef PVTESTS_H
 #define PVTESTS_H
 
-
-
-#include <kdl/jacobianexpr.hpp>
-#include <kdl/test_macros.h>
+#include <jacobianexpr.hpp>
+//#include <kdl/test_macros.h>
 #include <iostream>
 
 #include <string>
@@ -19,7 +17,6 @@ void random(Jacobian<T>& rv) {
 		random(rv.deriv(i));
 	}
 }
-
 
 template <typename T>
 void posrandom(Jacobian<T>& rv) {
@@ -43,22 +40,15 @@ class checkUnary {
 	typedef UnaryOp<OpID,A> myOp;
 public:
 	inline static void check(void (*rnd)(Jacobian<A>&) = &random,double dt=1E-8,double eps=1E-4,int size=1) {
-        KDL_CTX;
+        	KDL_CTX;
 		Jacobian<A> a(size);
 		rnd(a);
-        KDL_ARG1(a);
+        	KDL_ARG1(a);
 		int i;
 		for (i=0;i<a.nrOfDeriv();++i) {
-			checkEqual(
-				myOp::deriv(a.value(),a.deriv(i)),
-				diff(
-					myOp::value(a.value()),
-					myOp::value(
-						addDelta(a.value(),a.deriv(i),dt)
-					),
-					dt),
-				eps
-				);
+			checkEqual(	myOp::deriv(a.value(),a.deriv(i)),
+					diff(myOp::value(a.value()),myOp::value(addDelta(a.value(),a.deriv(i),dt)),	dt),eps
+			);
 		}		
 	}
 };
@@ -118,40 +108,24 @@ public:
         KDL_ARG2(a,b);
 		int i;
 		for (i=0;i<a.nrOfDeriv();++i) {
-			checkEqual(
-				myOp::derivVV(a.value(),a.deriv(i),b.value(),b.deriv(i)),
-				diff(
-					myOp::value(a.value(),b.value()),
-					myOp::value(
-						addDelta(a.value(),a.deriv(i),dt),
-						addDelta(b.value(),b.deriv(i),dt)
-					),
-					dt),
-				eps
-				);
-			checkEqual(
-				myOp::derivVC(a.value(),a.deriv(i),b.value()),
-				diff(
-					myOp::value(a.value(),b.value()),
-					myOp::value(
-						addDelta(a.value(),a.deriv(i),dt),
-						b.value()
-					),
-					dt),
-				eps
-				);
-			checkEqual(
-				myOp::derivCV(a.value(),b.value(),b.deriv(i)),
-				diff(
-					myOp::value(a.value(),b.value()),
-					myOp::value(
-						a.value(),
-						addDelta(b.value(),b.deriv(i),dt)
-					),
-					dt),
-				eps
-				);
-
+			checkEqual(	myOp::derivVV(a.value(),a.deriv(i),b.value(),b.deriv(i)),
+						diff(	myOp::value(a.value(),b.value()),
+								myOp::value(addDelta(a.value(),a.deriv(i),dt),addDelta(b.value(),b.deriv(i),dt)),
+								dt),
+						eps
+						);
+//			checkEqual(	myOp::derivVC(a.value(),a.deriv(i),b.value()),
+//						diff(	myOp::value(a.value(),b.value()),
+//								myOp::value(addDelta(a.value(),a.deriv(i),dt),b.value()),
+//								dt),
+//						eps
+//						);
+//			checkEqual(	myOp::derivCV(a.value(),b.value(),b.deriv(i)),
+//						diff(	myOp::value(a.value(),b.value()),
+//								myOp::value(a.value(), addDelta(b.value(),b.deriv(i),dt)),
+//								dt),
+//						eps
+//						);
 		}		
 	}
 };

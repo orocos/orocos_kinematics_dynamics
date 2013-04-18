@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -45,10 +46,10 @@
 #define KDL_MOTION_PATH_H
 
 #include "frames.hpp"
-
 #include <vector>
-
 #include "frames_io.hpp"
+#include <boost/shared_ptr.hpp>
+
 
 namespace KDL {
 
@@ -57,6 +58,8 @@ namespace KDL {
  */
 class Path
 	{
+	typedef boost::shared_ptr<Path> PathPtr;
+
 	public:
 		enum IdentifierType {
 			ID_LINE=1,
@@ -64,7 +67,8 @@ class Path
 			ID_COMPOSITE=3,
 			ID_ROUNDED_COMPOSITE=4,
 			ID_POINT=5,
-			ID_CYCLIC_CLOSED=6
+			ID_CYCLIC_CLOSED=6,
+			ID_SPLINE=7
 		};
 		/**
 		 * LengthToS() converts a physical length along the trajectory
@@ -74,11 +78,14 @@ class Path
 		 * User should be sure that the lineair distance travelled by this
 		 * path object is NOT zero, when using this method !
 		 * (e.g. the case of only rotational change)
-		 * throws Error_MotionPlanning_Not_Applicable if used on composed
-		 * path objects.
+		 *
+		 * Exit value: \n
+		 * 		0: OK \n
+		 * 		152: Error: Motion planning not applicable (if used on composed path objects). \n
+		 *
 		 * @ingroup Motion
 		 */
-		virtual double LengthToS(double length)  = 0;
+		virtual int LengthToS(double length, double& returned_length)  = 0;
 
 		/**
 		 * Returns the total path length of the trajectory
@@ -90,37 +97,62 @@ class Path
 
 		/**
 		 * Returns the Frame at the current path length s
+		 *
+	     * Exit codes: \n
+	     * 		0: OK \n
+	     * 		153: Error: Motion planning incompatible \n
 		 */
-		virtual Frame Pos(double s) const = 0;
+		virtual int Pos(double s, Frame& returned_position) const = 0;
 
 		/**
 		 * Returns the velocity twist at path length s theta and with
 		 * derivative of s == sd
+		 *
+	     * Exit codes: \n
+	     * 		0: OK \n
+	     * 		153: Error: Motion planning incompatible \n
 		 */
-		virtual Twist Vel(double s,double sd) const  = 0;
+		virtual int Vel(double s,double sd, Twist& returned_velocity) const  = 0;
 
 		/**
 		 * Returns the acceleration twist at path length s and with
 		 * derivative of s == sd, and 2nd derivative of s == sdd
+		 *
+	     * Exit codes: \n
+	     * 		0: OK \n
+	     * 		153: Error: Motion planning incompatible \n
 		 */
-		virtual Twist Acc(double s,double sd,double sdd) const  = 0;
+		virtual int Acc(double s,double sd,double sdd, Twist& returned_acceleration) const  = 0;
 
 		/**
 		 * Writes one of the derived objects to the stream
 		 */
 		virtual void Write(std::ostream& os)  = 0;
 
-		/**
-		 * Reads one of the derived objects from the stream and returns a pointer
-		 * (factory method)
-		 */
-		static Path* Read(std::istream& is);
+	/**
+	 * Reads one of the derived objects from the stream and returns a pointer
+	 * (factory method)
+	 *
+	 * Exit codes: \n
+	 * 		0: OK \n
+	 * 		141: Error: Motion planning not feasible: the eq. radius <= 0 \n
+	 *		142: Error: Motion planning not feasible: the first segment in a rounding has zero length \n
+	 *		143: Error: Motion planning not feasible: the second segment in a rounding has zero length \n
+	 *		144: Error: Motion planning not feasible: the angle between the first and the second segment is close to M_PI (meaning that the segments are on top of each other) \n
+	 *		145: Error: Motion planning not feasible: the distance needed for the rounding is larger then the first segment \n
+	 *		146: Error: Motion planning not feasible: the distance needed for the rounding is larger then the second segment \n
+	 * 		147: Error: MotionIO unexpected trajectory. \n
+	 * 		148: Error: Call to an operation that hasn't been implemented. \n
+	 *		149: Error: Motion planning circle too small \n
+	 * 		150: Error: Motion planning circle no plane \n
+	 */
+		static int Read(std::istream& is, PathPtr& returned_path);
 
 		/**
 		 * Virtual constructor, constructing by copying,
 		 * Returns a deep copy of this Path Object
 		 */
-		virtual Path* Clone() = 0;
+		virtual PathPtr Clone() = 0;
 
 		/**
 		 * gets an identifier indicating the type of this Path object

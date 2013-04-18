@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -48,7 +49,7 @@
 #include "frames_io.hpp"
 #include "path.hpp"
 #include <vector>
-
+#include <boost/shared_ptr.hpp>
 
 namespace KDL {
 
@@ -59,20 +60,26 @@ namespace KDL {
 	  */
 	 class Path_Cyclic_Closed : public Path
 	{
+		typedef boost::shared_ptr<Path> PathPtr;
+		typedef boost::shared_ptr<Path_Cyclic_Closed> PathCyclicClosedPtr;
+
 		int times;
-		Path* geom;
+		PathPtr geom;
 		bool aggregate;
+
 	public:
-		Path_Cyclic_Closed(Path* _geom,int _times, bool _aggregate=true);
-		virtual double LengthToS(double length);
+		static int Create(	PathPtr _geom,
+							int _times,
+							PathCyclicClosedPtr& cyclic_closed,
+							bool _aggregate=true);
+		virtual int LengthToS(double length, double& returned_length);
 		virtual double PathLength();
-		virtual Frame Pos(double s) const;
-		virtual Twist Vel(double s,double sd) const;
-		virtual Twist Acc(double s,double sd,double sdd) const;
+		virtual int Pos(double s, Frame& returned_position) const;
+		virtual int Vel(double s,double sd, Twist& returned_velocity) const;
+		virtual int Acc(double s,double sd,double sdd, Twist& returned_acceleration) const;
 
 		virtual void Write(std::ostream& os);
-		static Path* Read(std::istream& is);
-		virtual Path* Clone();
+		virtual PathPtr Clone();
 		/**
 		 * gets an identifier indicating the type of this Path object
 		 */
@@ -80,10 +87,10 @@ namespace KDL {
 			return ID_CYCLIC_CLOSED;
 		}
 		virtual ~Path_Cyclic_Closed();
+
+	private:
+		Path_Cyclic_Closed() {};
 	};
-
-
-
 }
 
 

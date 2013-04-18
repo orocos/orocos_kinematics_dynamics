@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -47,6 +48,7 @@
 #include "path.hpp"
 #include "path_composite.hpp"
 #include "rotational_interpolation.hpp"
+#include <boost/shared_ptr.hpp>
 
 namespace KDL {
 
@@ -57,15 +59,19 @@ namespace KDL {
  */
 class Path_RoundedComposite : public Path
 	{
+		typedef boost::shared_ptr<Path_Composite> PathCompositePtr;
+		typedef boost::shared_ptr<RotationalInterpolation> RotationalInterpolationPtr;
+		typedef boost::shared_ptr<Path> PathPtr;
+		typedef boost::shared_ptr<Path_RoundedComposite> PathRoundedCompositePtr;
+
 		/** a Path_Composite is aggregated to hold the rounded trajectory
 		 * with circles and lines
 		 */
-		Path_Composite* comp;
-
+		PathCompositePtr comp;
 
 		double radius;
 		double eqradius;
-		RotationalInterpolation* orient;
+		RotationalInterpolationPtr orient;
 		// cached from underlying path objects for generating the rounding :
 		Frame F_base_start;
 		Frame F_base_via;
@@ -73,8 +79,6 @@ class Path_RoundedComposite : public Path
 		int nrofpoints;
 
 		bool aggregate;
-
-		Path_RoundedComposite(Path_Composite* comp,double radius,double eqradius,RotationalInterpolation* orient, bool aggregate, int nrofpoints);
 
 	public:
 
@@ -84,29 +88,38 @@ class Path_RoundedComposite : public Path
 		 * @param orient   : method of rotational_interpolation interpolation
 		 * @param aggregate : if true, this object will own the _orient pointer, i.e. it will delete the _orient pointer
 		 *                    when the destructor of this object is called.
+		 *
+		 * Exit codes: \n
+		 * 		0: OK \n
+		 * 		141: Error: Motion planning not feasible: the eq. radius <= 0 \n
 		 */
-		Path_RoundedComposite(double radius,double eqradius,RotationalInterpolation* orient, bool aggregate=true);
+		static int Create(	double radius,
+							double eqradius,
+							RotationalInterpolationPtr orient,
+							PathRoundedCompositePtr& rounded_composite,
+							bool aggregate=true);
 
 		/**
-		 * Adds a point to this rounded composite, between to adjecent points
+		 * Adds a point to this rounded composite, between to adjacent points
 		 * a Path_Line will be created, between two lines there will be
 		 * rounding with the given radius with a Path_Circle
 		 *
-		 * The Error_MotionPlanning_Not_Feasible has a type (obtained by GetType) of:
-		 * - 3101 if the eq. radius <= 0
-		 * - 3102 if the first segment in a rounding has zero length.
-		 * - 3103 if the second segment in a rounding has zero length.
-		 * - 3104 if the angle between the first and the second segment is close to M_PI.
-		 *         (meaning that the segments are on top of each other)
-		 * - 3105 if the distance needed for the rounding is larger then the first segment.
-		 * - 3106 if the distance needed for the rounding is larger then the second segment.
-		 *
 		 * @param F_base_point the pose of a new via point.
-		 * @warning Can throw Error_MotionPlanning_Not_Feasible object
-		 * @TODO handle the case of error type 3105 and 3106 by skipping segments, such that the class could be applied
+		 *
+		 * Exit codes: \n
+		 * 		0: OK \n
+		 *		142: Error: Motion planning not feasible: the first segment in a rounding has zero length \n
+		 *		143: Error: Motion planning not feasible: the second segment in a rounding has zero length \n
+		 *		144: Error: Motion planning not feasible: the angle between the first and the second segment is close to M_PI (meaning that the segments are on top of each other) \n
+		 *		145: Error: Motion planning not feasible: the distance needed for the rounding is larger then the first segment \n
+		 *		146: Error: Motion planning not feasible: the distance needed for the rounding is larger then the second segment \n
+		 *		149: Error: Motion planning circle too small \n
+		 *		150: Error: Motion planning circle no plane \n
+		 *
+		 * @TODO handle the case of error type 5 and 6 by skipping segments, such that the class could be applied
 		 *       with points that are very close to each other.
 		 */
-		void Add(const Frame& F_base_point);
+		int Add(const Frame& F_base_point);
 
 		/**
 		 * to be called after the last line is added to finish up
@@ -114,8 +127,7 @@ class Path_RoundedComposite : public Path
 		 */
 		void Finish();
 
-
-		virtual double LengthToS(double length);
+		virtual int LengthToS(double length, double& returned_length);
 
 		/**
 		 * Returns the total path length of the trajectory
@@ -125,30 +137,29 @@ class Path_RoundedComposite : public Path
 		 */
 		virtual double PathLength();
 
-
 		/**
 		 * Returns the Frame at the current path length s
 		 */
-		virtual Frame Pos(double s) const;
+		virtual int Pos(double s, Frame& returned_position) const;
 
 		/**
 		 * Returns the velocity twist at path length s theta and with
 		 * derivative of s == sd
 		 */
-		virtual Twist Vel(double s,double sd) const;
+		virtual int Vel(double s,double sd, Twist& returned_velocity) const;
 
 		/**
 		 * Returns the acceleration twist at path length s and with
 		 * derivative of s == sd, and 2nd derivative of s == sdd
 		 */
-		virtual Twist Acc(double s,double sd,double sdd) const;
+		virtual int Acc(double s,double sd,double sdd, Twist& returned_acceleration) const;
 
 		/**
 		 * virtual constructor, constructing by copying.
 		 * In this case it returns the Clone() of the aggregated Path_Composite
 		 * because this is all one ever will need.
 		 */
-		virtual Path* Clone();
+		virtual PathPtr Clone();
 
 		/**
 		 * Writes one of the derived objects to the stream
@@ -167,7 +178,7 @@ class Path_RoundedComposite : public Path
 		 * \warning The pointer is still owned by this class and is lifetime depends on the lifetime
 		 *          of this class.
 		 */
-		virtual Path* GetSegment(int i);
+		virtual PathPtr GetSegment(int i);
 
 		/**
 		 * gets the length to the end of the given segment.
@@ -182,7 +193,7 @@ class Path_RoundedComposite : public Path
 		 * \param segment_number [OUTPUT] segments that corresponds to the path length variable s.
 		 * \param inner_s [OUTPUT] path length to use within the segment.
 		 */
-		virtual void GetCurrentSegmentLocation(double s, int &segment_number, double& inner_s);
+		virtual void GetCurrentSegmentLocation(double s, int& segment_number, double& inner_s);
 
 		/**
 		 * gets an identifier indicating the type of this Path object
@@ -193,6 +204,18 @@ class Path_RoundedComposite : public Path
 
 
 		virtual ~Path_RoundedComposite();
+
+	private:
+		static int Create(  PathCompositePtr comp,
+							double radius,
+							double eqradius,
+							RotationalInterpolationPtr orient,
+							bool aggregate,
+							int nrofpoints,
+							PathRoundedCompositePtr& composite
+							);
+
+		Path_RoundedComposite() {};
 	};
 
 

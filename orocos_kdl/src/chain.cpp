@@ -46,21 +46,46 @@ namespace KDL {
         for(unsigned int i=0;i<arg.nrOfSegments;i++)
             addSegment(arg.getSegment(i));
         return *this;
-
     }
 
-    void Chain::addSegment(const Segment& segment)
-    {
-        segments.push_back(segment);
-        nrOfSegments++;
-        if(segment.getJoint().getType()!=Joint::None)
-            nrOfJoints++;
+//    void Chain::addSegment(const Segment& segment)
+//    {
+//        segments.push_back(segment);
+//        nrOfSegments++;
+//        if(segment.getJoint().getType()!=Joint::None)
+//            nrOfJoints++;
+//    }
+
+    bool Chain::addSegment(const Segment& segment) {
+    	if (segment.getName() != "NoName") {
+    		for (int i = 0; i < segments.size(); i++) {
+    			if (segments[i].getName() == segment.getName())
+    				return false;
+    		}
+    	}
+    	segments.push_back(segment);
+    	nrOfSegments++;
+    	if (segment.getJoint().getType() != Joint::None)
+    		nrOfJoints++;
+    	return true;
     }
 
-    void Chain::addChain(const Chain& chain)
-    {
-        for(unsigned int i=0;i<chain.getNrOfSegments();i++)
-            this->addSegment(chain.getSegment(i));
+//    void Chain::addChain(const Chain& chain)
+//    {
+//        for(unsigned int i=0;i<chain.getNrOfSegments();i++)
+//            this->addSegment(chain.getSegment(i));
+//    }
+
+    bool Chain::addChain(const Chain& chain) {
+    	Chain tmp_copy = *this;
+    	for (unsigned int i = 0; i < chain.getNrOfSegments(); i++){
+			bool exit_code = this->addSegment(chain.getSegment(i));
+			if(exit_code == false){
+				*this = tmp_copy;
+				return false;
+			}
+    	}
+    	return true;
     }
 
     const Segment& Chain::getSegment(unsigned int nr)const

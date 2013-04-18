@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -47,10 +48,9 @@
 
 #include "path.hpp"
 #include "rotational_interpolation.hpp"
-
+#include <boost/shared_ptr.hpp>
 
 namespace KDL {
-
 
 	/**
 	 * A path representing a line from A to B.
@@ -58,8 +58,12 @@ namespace KDL {
 	 */
 class Path_Line : public Path
 	{
+		typedef boost::shared_ptr<RotationalInterpolation> RotationalInterpolationPtr;
+		typedef boost::shared_ptr<Path_Line> PathLinePtr;
+		typedef boost::shared_ptr<Path> PathPtr;
+
 		// Orientatie gedeelte
-		RotationalInterpolation* orient;
+		RotationalInterpolationPtr orient;
 
 		// Lineair gedeelte
 		Vector V_base_start;
@@ -72,9 +76,10 @@ class Path_Line : public Path
 		double pathlength;
 		double scalelin;
 		double scalerot;
-
 		bool aggregate;
+
 	public:
+
 		/**
 		 * Constructs a Line Path
 		 * F_base_start and F_base_end give the begin and end frame wrt the base
@@ -84,43 +89,46 @@ class Path_Line : public Path
 		 *		the "amount of motion"(pos,vel,acc) of the rotation is taken
 		 *      to be the amount motion of a point at distance eqradius from the
 		 *      rotation axis.
-         *
-         * Eqradius is introduced because it is unavoidable that you have to compare rotations and translations :
-         * e.g. : You can have motions that only contain rotation, and motions that only contain translations.
-         * The motion planning goes as follows :
-         *  - translation is planned with the given parameters
-         *  - rotation is planned planned with the parameters calculated with eqradius.
-         *  - The longest of the previous two remains unchanged,
-         *    the shortest in duration is scaled to take as long as the longest.
-         * This guarantees that the geometric path in 6D space remains independent of the motion profile parameters.
-         *
-         * RotationalInterpolation_SingleAxis() has the advantage that it is independent
-         * of the frame in which you express your path.
-         * Other implementations for RotationalInterpolations COULD be
-         *    (not implemented) (yet) :
-         *    1) quaternion interpolation : but this is more difficult for the human to interprete
-         *    2) 3-axis interpolation : express the orientation of the frame in e.g.
-         *       euler zyx angles alfa,beta, gamma  and interpolate these parameters.
-         *       But this is dependent of the frame you choose as a reference and
-         *       their can occur representation singularities.
+		 *
+		 * Eqradius is introduced because it is unavoidable that you have to compare rotations and translations :
+		 * e.g. : You can have motions that only contain rotation, and motions that only contain translations.
+		 * The motion planning goes as follows :
+		 *  - translation is planned with the given parameters
+		 *  - rotation is planned planned with the parameters calculated with eqradius.
+		 *  - The longest of the previous two remains unchanged,
+		 *    the shortest in duration is scaled to take as long as the longest.
+		 * This guarantees that the geometric path in 6D space remains independent of the motion profile parameters.
+		 *
+		 * RotationalInterpolation_SingleAxis() has the advantage that it is independent
+		 * of the frame in which you express your path.
+		 * Other implementations for RotationalInterpolations COULD be
+		 *    (not implemented) (yet) :
+		 *    1) quaternion interpolation : but this is more difficult for the human to interprete
+		 *    2) 3-axis interpolation : express the orientation of the frame in e.g.
+		 *       euler zyx angles alfa,beta, gamma  and interpolate these parameters.
+		 *       But this is dependent of the frame you choose as a reference and
+		 *       their can occur representation singularities.
 		 */
-		Path_Line(const Frame& F_base_start,
-			const Frame& F_base_end,
-			RotationalInterpolation* orient,
-			double eqradius,
-			bool _aggregate=true);
-		Path_Line(const Frame& F_base_start,
-			const Twist& twist_in_base,
-			RotationalInterpolation* orient,
-			double eqradius,
-			bool _aggregate=true);
-		double LengthToS(double length);
+		static int Create(	const Frame& F_base_start,
+							const Frame& F_base_end,
+							RotationalInterpolationPtr orient,
+							double eqradius,
+							PathLinePtr& line,
+							bool _aggregate=true);
+
+		static int Create(	const Frame& F_base_start,
+							const Twist& twist_in_base,
+							RotationalInterpolationPtr orient,
+							double eqradius,
+							PathLinePtr& line,
+							bool _aggregate=true);
+		int LengthToS(double length, double& returned_length);
 		virtual double PathLength();
-		virtual Frame Pos(double s) const;
-		virtual Twist Vel(double s,double sd) const ;
-		virtual Twist Acc(double s,double sd,double sdd) const;
+		virtual int Pos(double s, Frame& returned_position) const;
+		virtual int Vel(double s,double sd, Twist& returned_velocity) const ;
+		virtual int Acc(double s,double sd,double sdd, Twist& returned_acceleration) const;
 		virtual void Write(std::ostream& os);
-		virtual Path* Clone();
+		virtual PathPtr Clone();
 
 		/**
 		 * gets an identifier indicating the type of this Path object
@@ -129,10 +137,9 @@ class Path_Line : public Path
 			return ID_LINE;
 		}
 		virtual ~Path_Line();
+
+	private:
+		Path_Line() {};
 	};
-
-
 }
-
-
 #endif

@@ -2,13 +2,12 @@
 #include <kdl/frames_io.hpp>
 #include <kdl/framevel.hpp>
 #include <kdl/framevel_io.hpp>
-#include <kdl/jacobianexpr.hpp>
+//#include <kdl/jacobianexpr.hpp>
 #include <kdl/jacobianframe.hpp>
 #include <kdl/jacobianframevel.hpp>
 #include "jacobianframetests.hpp"
 
 namespace KDL {
-
 
 void checkDiffs() {
     KDL_CTX;

@@ -35,8 +35,10 @@
 #include <ctype.h>
 #include <string.h>
 #include <iostream>
+#include <vector>
 
 namespace KDL {
+
 
 
 std::ostream& operator << (std::ostream& os,const Vector& v) {
@@ -66,7 +68,6 @@ std::ostream& operator << (std::ostream& os,const Wrench& v) {
        << "]";
     return os;
 }
-
 
 std::ostream& operator << (std::ostream& os,const Rotation& R) {
 #ifdef KDL_ROTATION_PROPERTIES_RPY
@@ -125,6 +126,20 @@ std::ostream& operator << (std::ostream& os, const Frame2& T)
     os << T.M << T.p;
     return os;
 }
+
+std::ostream& operator << (std::ostream& os,const std::vector<Vector>& v){
+	os << "[";
+	os << v.size() << ",";
+	for(int i = 0; i < v.size(); i++){
+		os << v[i] << ",";
+	}
+	os << "]";
+	return os;
+}
+
+
+
+
 
 std::istream& operator >> (std::istream& is,Vector& v)
 {   IOTrace("Stream input Vector (vector or ZERO)");
@@ -306,5 +321,22 @@ std::istream& operator >> (std::istream& is,Frame2& T)
     IOTracePop();
     return is;
 }
+
+std::istream& operator >> (std::istream& is,std::vector<Vector>& v)
+{
+    Eat(is,'[');
+    int size;
+    is >> size;
+    Eat(is,',');
+    Vector ptr;
+    for(int i = 0; i < size; i++){
+    	is >> ptr;
+    	v.push_back(ptr);
+        Eat(is,',');
+    }
+    EatEnd(is,']');
+    return is;
+}
+
 
 } // namespace Frame

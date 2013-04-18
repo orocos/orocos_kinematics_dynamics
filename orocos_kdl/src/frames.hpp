@@ -132,8 +132,6 @@
 
 namespace KDL {
 
-
-
 class Vector;
 class Rotation;
 class Frame;
@@ -142,8 +140,6 @@ class Twist;
 class Vector2;
 class Rotation2;
 class Frame2;
-
-
 
 /**
  * \brief A concrete implementation of a 3 dimensional vector class

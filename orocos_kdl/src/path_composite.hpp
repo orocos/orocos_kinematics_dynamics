@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -48,6 +49,8 @@
 #include "frames_io.hpp"
 #include "path.hpp"
 #include <vector>
+#include <boost/shared_ptr.hpp>
+
 
 namespace KDL {
 
@@ -57,7 +60,6 @@ namespace KDL {
 	  * For several of its methods, this class needs to lookup the segment corresponding to a value
 	  * of the path variable s.  To increase efficiency, this value is cached.
 	  *
-	  * \TODO Currently a linear search is used to look up the segment. A binary search is more efficient.  Can STL be used for this ?
 	  * \TODO Increase the efficiency for caching for the common case of a fine grained monotonously increasing path variable s.
 	  *
 	  * \TODO For all Path.., VelocityProfile.., Trajectory... check the bounds on the inputs with asserts.
@@ -68,11 +70,14 @@ namespace KDL {
 	  */
 	 class Path_Composite : public Path
 	{
-		typedef std::vector< std::pair<Path*,bool> > PathVector;
-		typedef std::vector<double>    DoubleVector;
+		typedef boost::shared_ptr<Path> PathPtr;
+		typedef boost::shared_ptr<Path_Composite> PathCompositePtr;
+
+		typedef std::vector< std::pair<PathPtr,bool> > PathVector;
+		typedef std::vector<double> DoubleVector;
 
 		PathVector gv;
-		DoubleVector   dv;
+		DoubleVector dv;
 		double pathlength;
 
 		// lookup mechanism :
@@ -80,18 +85,17 @@ namespace KDL {
 		mutable double cached_ends;
 		mutable int    cached_index;
 		double Lookup(double s) const;
+
 	public:
 
-
-		Path_Composite();
+		static int Create(PathCompositePtr& composite);
 
 		/**
 		 * Adds a Path* to this composite
 		 */
-		void Add(Path* geom, bool aggregate=true);
+		void Add(PathPtr geom, bool aggregate=true);
 
-
-		virtual double LengthToS(double length);
+		virtual int LengthToS(double length, double& returned_length);
 		/**
 		 * Returns the total path length of the trajectory
 		 * (has dimension LENGTH)
@@ -103,21 +107,21 @@ namespace KDL {
 		/**
 		 * Returns the Frame at the current path length s
 		 */
-		virtual Frame Pos(double s) const;
+		virtual int Pos(double s, Frame& returned_position) const;
 
 		/**
 		 * Returns the velocity twist at path length s theta and with
 		 * derivative of s == sd
 		 */
-		virtual Twist Vel(double s,double sd) const;
+		virtual int Vel(double s,double sd, Twist& returned_velocity) const;
 
 		/**
 		 * Returns the acceleration twist at path length s and with
 		 * derivative of s == sd, and 2nd derivative of s == sdd
 		 */
-		virtual Twist Acc(double s,double sd,double sdd) const;
+		virtual int Acc(double s,double sd,double sdd, Twist& returned_acceleration) const;
 
-		virtual Path* Clone();
+		virtual PathPtr Clone();
 
 		/**
 		 * Writes one of the derived objects to the stream
@@ -136,7 +140,7 @@ namespace KDL {
 		 * \warning The pointer is still owned by this class and is lifetime depends on the lifetime
 		 *          of this class.
 		 */
-		virtual Path* GetSegment(int i);
+		virtual PathPtr GetSegment(int i);
 
 		/**
 		 * gets the length to the end of the given segment.
@@ -151,7 +155,7 @@ namespace KDL {
 		 * \param segment_number [OUTPUT] segments that corresponds to the path length variable s.
 		 * \param inner_s [OUTPUT] path length to use within the segment.
 		 */
-		virtual void GetCurrentSegmentLocation(double s, int &segment_number, double& inner_s);
+		virtual void GetCurrentSegmentLocation(double s, int& segment_number, double& inner_s);
 
 		/**
 		 * gets an identifier indicating the type of this Path object
@@ -161,6 +165,9 @@ namespace KDL {
 		}
 
 		virtual ~Path_Composite();
+
+	private:
+		Path_Composite() {};
 	};
 
 

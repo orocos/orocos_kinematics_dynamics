@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -45,55 +46,68 @@
 
 namespace KDL {
 
+int Path_Circle::Create(const Frame& F_base_start,
+		const Vector& _V_base_center,
+		const Vector& V_base_p,
+		const Rotation& R_base_end,
+		double alpha,
+		RotationalInterpolationPtr _orient,
+		double _eqradius,
+        PathCirclePtr& returned_circle,
+        bool _aggregate
+        )
+		{
+			returned_circle = PathCirclePtr(new Path_Circle());
 
+			returned_circle->orient = _orient;
+			returned_circle->eqradius = _eqradius;
+			returned_circle->aggregate = _aggregate;
 
-Path_Circle::Path_Circle(const Frame& F_base_start,
-			const Vector& _V_base_center,
-			const Vector& V_base_p,
-			const Rotation& R_base_end,
-			double alpha,
-			RotationalInterpolation* _orient,
-			double _eqradius,
-            bool _aggregate) :
-				orient(_orient) ,
-				eqradius(_eqradius),
-                aggregate(_aggregate)
-			{
-					F_base_center.p = _V_base_center;
-					orient->SetStartEnd(F_base_start.M,R_base_end);
-					double oalpha = orient->Angle();
+			returned_circle->F_base_center.p = _V_base_center;
+			returned_circle->orient->SetStartEnd(F_base_start.M,R_base_end);
+			double oalpha = returned_circle->orient->Angle();
 
-					Vector x(F_base_start.p - F_base_center.p);
-					radius = x.Normalize();
-					if (radius < epsilon) throw Error_MotionPlanning_Circle_ToSmall();
-					Vector tmpv(V_base_p-F_base_center.p);
-					tmpv.Normalize();
-					Vector z( x * tmpv);
-                    double n = z.Normalize();
-				    if (n < epsilon) throw Error_MotionPlanning_Circle_No_Plane();
-					F_base_center.M = Rotation(x,z*x,z);
-					double dist = alpha*radius;
-					// See what has the slowest eq. motion, and adapt
-					// the other to this slower motion
-					// use eqradius to transform between rot and transl.
-					// the same as for lineair motion
-					if (oalpha*eqradius > dist) {
-						// rotational_interpolation is the limitation
-						pathlength = oalpha*eqradius;
-						scalerot   = 1/eqradius;
-						scalelin   = dist/pathlength;
-					} else {
-						// translation is the limitation
-						pathlength = dist;
-						scalerot   = oalpha/pathlength;
-						scalelin   = 1;
-					}
+			Vector x(F_base_start.p - returned_circle->F_base_center.p);
+			returned_circle->radius = x.Normalize();
+
+			if(returned_circle->radius < epsilon){
+				returned_circle = PathCirclePtr();
+				return 149;
 			}
 
+			Vector tmpv(V_base_p-returned_circle->F_base_center.p);
+			tmpv.Normalize();
+			Vector z( x * tmpv);
+			double n = z.Normalize();
 
+			if (n < epsilon){
+				returned_circle = PathCirclePtr();
+				return 150;
+			}
 
-double Path_Circle::LengthToS(double length) {
-	return length/scalelin;
+			returned_circle->F_base_center.M = Rotation(x,z*x,z);
+			double dist = alpha*returned_circle->radius;
+			// See what has the slowest eq. motion, and adapt
+			// the other to this slower motion
+			// use eqradius to transform between rot and transl.
+			// the same as for lineair motion
+			if (oalpha*returned_circle->eqradius > dist) {
+				// rotational_interpolation is the limitation
+				returned_circle->pathlength = oalpha*returned_circle->eqradius;
+				returned_circle->scalerot   = 1/returned_circle->eqradius;
+				returned_circle->scalelin   = dist/returned_circle->pathlength;
+			} else {
+				// translation is the limitation
+				returned_circle->pathlength = dist;
+				returned_circle->scalerot   = oalpha/returned_circle->pathlength;
+				returned_circle->scalelin   = 1;
+			}
+			return 0;
+		}
+
+int Path_Circle::LengthToS(double length, double& returned_length) {
+	returned_length = length/scalelin;
+	return 0;
 }
 
 
@@ -101,69 +115,83 @@ double Path_Circle::PathLength() {
 	return pathlength;
 }
 
-Frame Path_Circle::Pos(double s) const {
+int Path_Circle::Pos(double s, Frame& returned_position) const {
 	double p = s*scalelin / radius;
-	return Frame(orient->Pos(s*scalerot),
-		         F_base_center*Vector(radius*cos(p),radius*sin(p),0)
-		   );
-
+	Rotation position;
+	int exit_code = orient->Pos(s*scalerot, position);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	returned_position = Frame(position,F_base_center*Vector(radius*cos(p),radius*sin(p),0));
+	return 0;
 }
 
-Twist Path_Circle::Vel(double s,double sd) const {
-	double p = s*scalelin  / radius;
+int Path_Circle::Vel(double s,double sd, Twist& returned_velocity) const {
+	double p = s*scalelin / radius;
 	double v = sd*scalelin / radius;
-	return Twist( F_base_center.M*Vector(-radius*sin(p)*v,radius*cos(p)*v,0),
-		          orient->Vel(s*scalerot,sd*scalerot)
-		   );
+	Vector velocity;
+	int exit_code = orient->Vel(s*scalerot,sd*scalerot, velocity);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	returned_velocity = Twist( F_base_center.M*Vector(-radius*sin(p)*v,radius*cos(p)*v,0),velocity);
+	return 0;
 }
 
-Twist Path_Circle::Acc(double s,double sd,double sdd) const {
+int Path_Circle::Acc(double s,double sd,double sdd, Twist& returned_acceleration) const {
 	double p = s*scalelin / radius;
 	double cp = cos(p);
 	double sp = sin(p);
 	double v = sd*scalelin / radius;
 	double a = sdd*scalelin / radius;
-	return Twist( F_base_center.M*Vector(
-						-radius*cp*v*v  -  radius*sp*a,
-						-radius*sp*v*v  +  radius*cp*a,
-						0
-					  ),
-		          orient->Acc(s*scalerot,sd*scalerot,sdd*scalerot)
-		   );
+	Vector acceleration;
+	int exit_code = orient->Acc(s*scalerot,sd*scalerot,sdd*scalerot, acceleration);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	returned_acceleration = Twist( F_base_center.M*Vector(-radius*cp*v*v  -  radius*sp*a,-radius*sp*v*v  +  radius*cp*a,0),acceleration);
+	return 0;
 }
 
-Path* Path_Circle::Clone() {
-	return new Path_Circle(
-		Pos(0),
-		F_base_center.p,
-		F_base_center.M.UnitY(),
-		orient->Pos(pathlength*scalerot),
-		pathlength*scalelin/radius/deg2rad,
-		orient->Clone(),
-		eqradius,
-        aggregate
-	);
+boost::shared_ptr<Path> Path_Circle::Clone() {
+	PathCirclePtr circle;
+	Frame fp;
+	Pos(0,fp);
+	Rotation sp;
+	orient->Pos(pathlength*scalerot, sp);
+
+	Path_Circle::Create(	fp,
+							F_base_center.p,
+							F_base_center.M.UnitY(),
+							sp,
+							pathlength*scalelin/radius/deg2rad,
+							orient->Clone(),
+							eqradius,
+							circle,
+							aggregate
+        					);
+	return circle;
 }
 
 Path_Circle::~Path_Circle() {
     if (aggregate)
-        delete orient;
+        orient.reset();
 }
-
-
 
 void Path_Circle::Write(std::ostream& os) {
 	os << "CIRCLE[ ";
-	os << "  " << Pos(0) << std::endl;
+	Frame fp;
+	Pos(0,fp);
+	os << "  " << fp << std::endl;
 	os << "  " << F_base_center.p << std::endl;
 	os << "  " << F_base_center.M.UnitY() << std::endl;
-	os << "  " << orient->Pos(pathlength*scalerot) << std::endl;
+	Rotation sp;
+	orient->Pos(pathlength*scalerot,sp);
+	os << "  " << sp << std::endl;
 	os << "  " << pathlength*scalelin/radius/deg2rad << std::endl;
 	os << "  ";orient->Write(os);
 	os << "  " << eqradius;
 	os << "]"<< std::endl;
 }
-
-
 }
 

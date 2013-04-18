@@ -7,6 +7,7 @@
  *
  *	\par History
  *		- $log$
+ *		- Wouter Bancken (08/2012) - Refactored
  *
  *	\par Release
  *		$Id: trajectory_stationary.h 22 2004-09-21 08:58:54Z eaertbellocal $
@@ -17,6 +18,7 @@
 #define TRAJECTORY_STATIONARY_H
 
 #include "trajectory.hpp"
+#include <boost/shared_ptr.hpp>
 
 
 namespace KDL {
@@ -27,29 +29,48 @@ namespace KDL {
    */
 	class Trajectory_Stationary : public Trajectory
 	  {
+
+		typedef boost::shared_ptr<Trajectory_Stationary> TrajectoryStationaryPtr;
+		typedef boost::shared_ptr<Trajectory> TrajectoryPtr;
+
+
 		double duration;
 		Frame pos;
+
 	public:
-		Trajectory_Stationary(double _duration,const Frame& _pos):
-		  pos(_pos),duration(_duration) {}
+		static int Create(double _duration,const Frame& _pos, TrajectoryStationaryPtr& trajectory);
+
 		virtual double Duration() const {
 			return duration;
 		}
-		virtual Frame Pos(double time) const {
-			return pos;
+
+		virtual int Pos(double time, Frame& returned_position) const {
+			returned_position = pos;
+			return 0;
 		}
-		virtual Twist Vel(double time) const {
-			return Twist::Zero();
+
+		virtual int Vel(double time, Twist& returned_velocity) const {
+			returned_velocity = Twist::Zero();
+			return 0;
 		}
-		virtual Twist Acc(double time) const {
-			return Twist::Zero();
+
+		virtual int Acc(double time, Twist& returned_acceleration) const {
+			returned_acceleration = Twist::Zero();
+			return 0;
 		}
+
 		virtual void Write(std::ostream& os) const;
 
-		virtual Trajectory* Clone() const {
-			return new Trajectory_Stationary(duration,pos);
+		virtual TrajectoryPtr Clone() const {
+			TrajectoryStationaryPtr trajectory;
+			Trajectory_Stationary::Create(duration,pos, trajectory);
+			return trajectory;
 		}
+
 		virtual ~Trajectory_Stationary() {}
+
+	private:
+		Trajectory_Stationary() {};
 	};
 
 

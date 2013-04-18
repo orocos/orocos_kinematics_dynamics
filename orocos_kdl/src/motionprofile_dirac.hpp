@@ -6,6 +6,7 @@
     begin                : Fri February 11 2005
     copyright            : (C) 2005 Peter Soetens
     email                : peter.soetens@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -29,40 +30,57 @@
 #ifndef MOTIONPROFILE_DIRAC_H
 #define MOTIONPROFILE_DIRAC_H
 
-#include "velocityprofile.hpp"
+#include "motionprofile.hpp"
+#include <boost/shared_ptr.hpp>
 
 
 namespace KDL {
 	/**
-	 * A Dirac VelocityProfile generates an infinite velocity
+	 * A Dirac MotionProfile generates an infinite velocity
 	 * so that the position jumps from A to B in in infinite short time.
 	 * In practice, this means that the maximum values are ignored and
 	 * for any t : Vel(t) == 0 and Acc(t) == 0.
 	 * Further Pos( -0 ) = pos1 and Pos( +0 ) = pos2.
 	 *
 	 * However, if a duration is given, it will create an unbound
-	 * rectangular velocity profile for that duration, otherwise,
+	 * rectangular motion profile for that duration, otherwise,
 	 * Duration() == 0;
 	 * @ingroup Motion
 	 */
-	class VelocityProfile_Dirac : public VelocityProfile
+	class MotionProfile_Dirac : public MotionProfile
 	{
+		typedef boost::shared_ptr<MotionProfile_Dirac> MotionProfileDiracPtr;
+		typedef boost::shared_ptr<MotionProfile> MotionProfile;
+
 		double p1,p2,t;
 	public:
+		static int Create(MotionProfileDiracPtr& profile);
+
+		// constructs motion profile class. It also sets a trajectory from pos1 to pos2.
+		static int Create(MotionProfileDiracPtr& profile,double pos1,double pos2);
+
 		void SetProfile(double pos1,double pos2);
 		virtual void SetProfileDuration(double pos1,double pos2,double duration);
 		virtual double Duration() const;
-		virtual double Pos(double time) const;
-		virtual double Vel(double time) const;
-		virtual double Acc(double time) const;
+
+		virtual int Pos(double time, double& returned_position) const;
+
+		virtual int Vel(double time, double& returned_double) const;
+
+		virtual int Acc(double time, double& returned_acceleration) const;
+
 		virtual void Write(std::ostream& os) const;
-		virtual VelocityProfile* Clone() const {
-			VelocityProfile_Dirac* res =  new VelocityProfile_Dirac();
-			res->SetProfileDuration( p1, p2, t );
-			return res;
+		virtual MotionProfile Clone() const {
+			MotionProfileDiracPtr profile;
+			MotionProfile_Dirac::Create(profile);
+			profile->SetProfileDuration( p1, p2, t );
+			return profile;
 		}
 
-		virtual ~VelocityProfile_Dirac() {}
+		virtual ~MotionProfile_Dirac() {}
+
+	private:
+		MotionProfile_Dirac() {};
 	};
 
 }

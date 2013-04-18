@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -50,36 +51,46 @@ namespace KDL {
 
 using namespace std;
 
-RotationalInterpolation* RotationalInterpolation::Read(istream& is) {
-	// auto_ptr because exception can be thrown !
+typedef boost::shared_ptr<RotationalInterpolation_SingleAxis> RotationalInterpolationSingleAxisPtr;
+
+int RotationalInterpolation::Read(istream& is, RotationalInterpolationPtr& returned_interpolation) {
 	IOTrace("RotationalInterpolation::Read");
 	char storage[64];
 	EatWord(is,"[",storage,sizeof(storage));
 	Eat(is,'[');
+	int exit_code;
 	if (strcmp(storage,"SINGLEAXIS")==0) {
 		IOTrace("SINGLEAXIS");
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return new RotationalInterpolation_SingleAxis();
+		RotationalInterpolationSingleAxisPtr interpolation;
+		exit_code = RotationalInterpolation_SingleAxis::Create(interpolation);
+		if(exit_code != 0) {
+			returned_interpolation = RotationalInterpolationSingleAxisPtr();
+			return exit_code;
+		}
+		returned_interpolation = interpolation;
+		return 0;
 	} else if (strcmp(storage,"THREEAXIS")==0) {
 		IOTrace("THREEAXIS");
-		throw Error_Not_Implemented();
+		return 148;
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return NULL;
+		returned_interpolation = RotationalInterpolationPtr();
 	} else if (strcmp(storage,"TWOAXIS")==0) {
 		IOTrace("TWOAXIS");
-		throw Error_Not_Implemented();
+		return 148;
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return NULL;
+		returned_interpolation = RotationalInterpolationPtr();
 	} else {
-		throw Error_MotionIO_Unexpected_Traj();
+		return 147;
 	}
-	return NULL; // just to avoid the warning;
+	returned_interpolation = RotationalInterpolationPtr(); // just to avoid the warning;
+	return 0;
 }
 
 }

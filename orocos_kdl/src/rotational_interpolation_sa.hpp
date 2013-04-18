@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -47,10 +48,10 @@
 #include "frames.hpp"
 #include "frames_io.hpp"
 #include "rotational_interpolation.hpp"
+#include <boost/shared_ptr.hpp>
 
 
 namespace KDL {
-
 
 	 /**
 	  * An interpolation algorithm which rotates a frame over the existing
@@ -62,20 +63,27 @@ namespace KDL {
 	  */
 class RotationalInterpolation_SingleAxis: public RotationalInterpolation
 	{
+
+		typedef boost::shared_ptr<RotationalInterpolation_SingleAxis> RotationalInterpolationSingleAxisPtr;
+		typedef boost::shared_ptr<RotationalInterpolation> RotationalInterpolationPtr;
+
 		Rotation R_base_start;
 		Rotation R_base_end;
 		Vector rot_start_end;
 		double angle;
 	public:
-		RotationalInterpolation_SingleAxis();
+		static int Create(RotationalInterpolationSingleAxisPtr& interpolation);
 		virtual void SetStartEnd(Rotation start,Rotation end);
 		virtual double Angle();
-		virtual Rotation Pos(double th) const;
-		virtual Vector Vel(double th,double thd) const;
-		virtual Vector Acc(double th,double thd,double thdd)   const;
+		virtual int Pos(double th, Rotation& returned_position) const;
+		virtual int Vel(double th,double thd, Vector& returned_velocity) const;
+		virtual int Acc(double th,double thd,double thdd, Vector& returned_acceleration)   const;
 		virtual void Write(std::ostream& os) const;
-		virtual RotationalInterpolation* Clone() const;
+		virtual RotationalInterpolationPtr Clone() const;
 		virtual ~RotationalInterpolation_SingleAxis();
+
+	private:
+		RotationalInterpolation_SingleAxis() {};
 	};
 
 }

@@ -80,6 +80,7 @@
 #include "frames.hpp"
 #include "jntarray.hpp"
 #include "jacobian.hpp"
+#include <vector>
 
 namespace KDL {
 
@@ -96,6 +97,7 @@ namespace KDL {
     std::ostream& operator << (std::ostream& os,const Vector2& v);
     std::ostream& operator << (std::ostream& os,const Rotation2& R);
     std::ostream& operator << (std::ostream& os,const Frame2& T);
+    std::ostream& operator << (std::ostream& os,const std::vector<Vector>& v);
 
 
 
@@ -107,6 +109,7 @@ namespace KDL {
     std::istream& operator >> (std::istream& is,Vector2& v);
     std::istream& operator >> (std::istream& is,Rotation2& R);
     std::istream& operator >> (std::istream& is,Frame2& T);
+    std::istream& operator >> (std::istream& is,std::vector<Vector>& v);
 
 
 } // namespace Frame

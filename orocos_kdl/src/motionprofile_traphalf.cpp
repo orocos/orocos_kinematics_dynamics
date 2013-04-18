@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -39,22 +40,40 @@
  *		$Name:  $
  ****************************************************************************/
 
-
-//#include "error.h"
-#include "velocityprofile_traphalf.hpp"
+#include "motionprofile_traphalf.hpp"
 
 namespace KDL {
 
+int MotionProfile_TrapHalf::Create(	MotionProfileTrapHalfPtr& profile,
+										double _maxvel,
+										double _maxacc,
+										bool _starting)
+{
+	profile = MotionProfileTrapHalfPtr(new MotionProfile_TrapHalf());
+	profile->maxvel = _maxvel;
+	profile->maxacc = _maxacc;
+	profile->starting = _starting;
+	return 0;
+}
 
-VelocityProfile_TrapHalf::VelocityProfile_TrapHalf(double _maxvel,double _maxacc,bool _starting):
-		  maxvel(_maxvel),maxacc(_maxacc),starting(_starting) {}
+int MotionProfile_TrapHalf::Create(	MotionProfileTrapHalfPtr& profile,
+										double _maxvel,
+										double _maxacc,
+										bool _starting,
+										double pos1,
+										double pos2)
+{
+	Create(profile, _maxvel, _maxacc,_starting);
+	profile->SetProfile(pos1,pos2);
+	return 0;
+}
 
-void VelocityProfile_TrapHalf::SetMax(double _maxvel,double _maxacc, bool _starting)
+void MotionProfile_TrapHalf::SetMax(double _maxvel,double _maxacc, bool _starting)
 {
     maxvel = _maxvel; maxacc = _maxacc; starting = _starting;
 }
 
-void VelocityProfile_TrapHalf::PlanProfile1(double v,double a) {
+void MotionProfile_TrapHalf::PlanProfile1(double v,double a) {
 	a3 = 0;
 	a2 = 0;
 	a1 = startpos;
@@ -66,7 +85,7 @@ void VelocityProfile_TrapHalf::PlanProfile1(double v,double a) {
 	c1 = endpos - v*duration;
 }
 
-void VelocityProfile_TrapHalf::PlanProfile2(double v,double a) {
+void MotionProfile_TrapHalf::PlanProfile2(double v,double a) {
 	a3 = 0;
 	a2 = v;
 	a1 = startpos;
@@ -78,7 +97,7 @@ void VelocityProfile_TrapHalf::PlanProfile2(double v,double a) {
 	c1 = endpos;
 }
 
-void VelocityProfile_TrapHalf::SetProfile(double pos1,double pos2) {
+void MotionProfile_TrapHalf::SetProfile(double pos1,double pos2) {
 	startpos        = pos1;
 	endpos          = pos2;
 	double s        = sign(endpos-startpos);
@@ -94,9 +113,7 @@ void VelocityProfile_TrapHalf::SetProfile(double pos1,double pos2) {
 	}
 }
 
-void VelocityProfile_TrapHalf::SetProfileDuration(
-	double pos1,double pos2,double newduration)
-{
+void MotionProfile_TrapHalf::SetProfileDuration(double pos1,double pos2,double newduration) {
     SetProfile(pos1,pos2);
     double factor = duration/newduration;
 
@@ -134,67 +151,80 @@ void VelocityProfile_TrapHalf::SetProfileDuration(
 	}
 }
 
-double VelocityProfile_TrapHalf::Duration() const {
+double MotionProfile_TrapHalf::Duration() const {
 	return duration;
 }
 
-double VelocityProfile_TrapHalf::Pos(double time) const {
+int MotionProfile_TrapHalf::Pos(double time, double& returned_position) const {
 	if (time < 0) {
-		return startpos;
-	} else if (time<t1) {
-		return a1+time*(a2+a3*time);
-	} else if (time<t2) {
-		return b1+time*(b2+b3*time);
-	} else if (time<=duration) {
-		return c1+time*(c2+c3*time);
-	} else {
-		return endpos;
-	}
-}
-double VelocityProfile_TrapHalf::Vel(double time) const {
-	if (time < 0) {
+		returned_position = startpos;
 		return 0;
 	} else if (time<t1) {
-		return a2+2*a3*time;
+		returned_position = a1+time*(a2+a3*time);
+		return 0;
 	} else if (time<t2) {
-		return b2+2*b3*time;
+		returned_position = b1+time*(b2+b3*time);
+		return 0;
 	} else if (time<=duration) {
-		return c2+2*c3*time;
+		returned_position = c1+time*(c2+c3*time);
+		return 0;
 	} else {
+		returned_position = endpos;
 		return 0;
 	}
 }
 
-double VelocityProfile_TrapHalf::Acc(double time) const {
+
+int MotionProfile_TrapHalf::Vel(double time, double& returned_velocity) const {
 	if (time < 0) {
+		returned_velocity = 0;
 		return 0;
 	} else if (time<t1) {
-		return 2*a3;
+		returned_velocity = a2+2*a3*time;
+		return 0;
 	} else if (time<t2) {
-		return 2*b3;
+		returned_velocity = b2+2*b3*time;
+		return 0;
 	} else if (time<=duration) {
-		return 2*c3;
+		returned_velocity = c2+2*c3*time;
+		return 0;
 	} else {
+		returned_velocity = 0;
 		return 0;
 	}
 }
 
-VelocityProfile* VelocityProfile_TrapHalf::Clone() const {
-    VelocityProfile_TrapHalf* res =  new VelocityProfile_TrapHalf(maxvel,maxacc, starting);
-    res->SetProfileDuration( this->startpos, this->endpos, this->duration );
-	return res;
+int MotionProfile_TrapHalf::Acc(double time, double& returned_acceleration) const {
+	if (time < 0) {
+		returned_acceleration = 0;
+		return 0;
+	} else if (time<t1) {
+		returned_acceleration = 2*a3;
+		return 0;
+	} else if (time<t2) {
+		returned_acceleration = 2*b3;
+		return 0;
+	} else if (time<=duration) {
+		returned_acceleration = 2*c3;
+		return 0;
+	} else {
+		returned_acceleration =  0;
+		return 0;
+	}
 }
 
-VelocityProfile_TrapHalf::~VelocityProfile_TrapHalf() {}
+boost::shared_ptr<MotionProfile> MotionProfile_TrapHalf::Clone() const {
+	MotionProfileTrapHalfPtr profile;
+	MotionProfile_TrapHalf::Create(profile, maxvel, maxacc, starting);
+    profile->SetProfileDuration( this->startpos, this->endpos, this->duration );
+	return profile;
+}
 
+MotionProfile_TrapHalf::~MotionProfile_TrapHalf() {}
 
-void VelocityProfile_TrapHalf::Write(std::ostream& os) const {
+void MotionProfile_TrapHalf::Write(std::ostream& os) const {
 	os << "TRAPEZOIDALHALF[" << maxvel << "," << maxacc << "," << starting << "]";
 }
-
-
-
-
 
 }
 

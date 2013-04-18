@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -43,78 +44,96 @@
 #include "path_composite.hpp"
 #include "utilities/error.h"
 #include <memory>
+#include <vector>
+#include <algorithm>
 
 namespace KDL {
 
 // s should be in allowable limits, this is not checked
-// simple linear search : TODO : make it binary search
+// binary search
 // uses cached_... variables
 // returns the relative path length within the segment
 // you propably want to use the cached_index variable
 double Path_Composite::Lookup(double s) const
 {
+	//Asserts
 	assert(s>=0);
 	assert(s<=pathlength);
+
+	//Test cache
 	if ( (cached_starts <=s) && ( s <= cached_ends) ) {
 		return s - cached_starts;
 	}
-	double previous_s=0;
-	for (unsigned int i=0;i<dv.size();++i) {
-		if ((s <= dv[i])||(i == (dv.size()-1) )) {
-			cached_index = i;
-			cached_starts = previous_s;
-			cached_ends   = dv[i];
-			return s - previous_s;
-		}
-		previous_s = dv[i];
+
+	//Search
+	std::vector<double>::const_iterator low = lower_bound(dv.begin(), dv.end(), s);
+
+	//Evaluate:
+	if(int(low - dv.begin()) < dv.size()){
+		cached_index = int(low - dv.begin());
+		if(cached_index == 0)
+			cached_starts = 0;
+		else
+			cached_starts = *(low - 1);
+		cached_ends = *low;
+		return s - cached_starts;
 	}
+	else {
+		cached_index = int(low - dv.begin()) - 1;
+		cached_starts = *(low - 2);
+		cached_ends = *(low - 1);
+		return s - cached_starts;
+	}
+}
+
+int Path_Composite::Create(PathCompositePtr& composite){
+	composite = PathCompositePtr(new Path_Composite());
+	composite->pathlength    = 0;
+	composite->cached_starts = 0;
+	composite->cached_ends   = 0;
+	composite->cached_index  = 0;
 	return 0;
 }
 
-Path_Composite::Path_Composite() {
-	pathlength    = 0;
-	cached_starts = 0;
-	cached_ends   = 0;
-	cached_index  = 0;
-}
-
-void Path_Composite::Add(Path* geom, bool aggregate ) {
+void Path_Composite::Add(PathPtr geom, bool aggregate) {
 	pathlength += geom->PathLength();
 	dv.insert(dv.end(),pathlength);
 	gv.insert( gv.end(),std::make_pair(geom,aggregate) );
 }
 
-double Path_Composite::LengthToS(double length) {
-	throw Error_MotionPlanning_Not_Applicable();
-	return 0;
+int Path_Composite::LengthToS(double length, double& returned_length) {
+	return 152;
 }
 
 double Path_Composite::PathLength() {
 	return pathlength;
 }
 
-
-Frame Path_Composite::Pos(double s) const {
+int Path_Composite::Pos(double s, Frame& returned_position) const {
 	s = Lookup(s);
-	return gv[cached_index].first->Pos(s);
+	int exit_code = gv[cached_index].first->Pos(s, returned_position);
+	return exit_code;
 }
 
-Twist Path_Composite::Vel(double s,double sd) const {
+int Path_Composite::Vel(double s,double sd, Twist& returned_velocity) const {
 	s = Lookup(s);
-	return gv[cached_index].first->Vel(s,sd);
+	int exit_code = gv[cached_index].first->Vel(s,sd,returned_velocity);
+	return exit_code;
 }
 
-Twist Path_Composite::Acc(double s,double sd,double sdd) const {
+int Path_Composite::Acc(double s,double sd,double sdd, Twist& returned_acceleration) const {
 	s = Lookup(s);
-	return gv[cached_index].first->Acc(s,sd,sdd);
+	int exit_code = gv[cached_index].first->Acc(s,sd,sdd, returned_acceleration);
+	return exit_code;
 }
 
-Path* Path_Composite::Clone()  {
-	std::auto_ptr<Path_Composite> comp( new Path_Composite() );
+boost::shared_ptr<Path> Path_Composite::Clone()  {
+	PathCompositePtr comp;
+	Path_Composite::Create(comp);
 	for (unsigned int i = 0; i < dv.size(); ++i) {
 		comp->Add(gv[i].first->Clone(), gv[i].second);
 	}
-	return comp.release();
+	return comp;
 }
 
 void Path_Composite::Write(std::ostream& os)  {
@@ -130,7 +149,7 @@ int Path_Composite::GetNrOfSegments() {
 	return dv.size();
 }
 
-Path* Path_Composite::GetSegment(int i) {
+boost::shared_ptr<Path> Path_Composite::GetSegment(int i) {
 	assert(i>=0);
 	assert(i<dv.size());
 	return gv[i].first;
@@ -153,7 +172,7 @@ Path_Composite::~Path_Composite() {
 	PathVector::iterator it;
 	for (it=gv.begin();it!=gv.end();++it) {
 		if (it->second)
-            delete it->first;
+            (it->first).reset();
 	}
 }
 

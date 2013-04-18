@@ -47,6 +47,7 @@ IMETHOD void random(doubleVel& F) {
 	random(F.t);
 	random(F.grad);
 }
+
 IMETHOD void posrandom(doubleVel& F) {
 	posrandom(F.t);
 	posrandom(F.grad);

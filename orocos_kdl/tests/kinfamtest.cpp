@@ -147,12 +147,44 @@ void KinFamTest::ChainTest()
     CPPUNIT_ASSERT_EQUAL(chain1.getNrOfJoints(),(uint)6);
     CPPUNIT_ASSERT_EQUAL(chain1.getNrOfSegments(),(uint)7);
 
+    //Testing = operator
     Chain chain2 = chain1;
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfJoints(),chain1.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfSegments(),chain1.getNrOfSegments());
-    chain2.addChain(chain1);
-    CPPUNIT_ASSERT_EQUAL(chain2.getNrOfJoints(),chain1.getNrOfJoints()*(uint)2);
-    CPPUNIT_ASSERT_EQUAL(chain2.getNrOfSegments(),chain1.getNrOfSegments()*(uint)2);
+
+    Chain chain3;
+    chain3.addSegment(Segment("Segment 7", Joint("Joint 7", Joint::RotZ),
+                              Frame(Vector(0.0,0.0,0.0))));
+    chain3.addSegment(Segment("Segment 8", Joint("Joint 8", Joint::RotX),
+                              Frame(Vector(0.0,0.0,0.9))));
+    chain3.addSegment(Segment("Segment 9", Joint("Joint 9", Joint::RotX),
+                              Frame(Vector(0.0,0.0,1.2))));
+    chain3.addSegment(Segment("Segment 10", Joint("Joint 10", Joint::RotZ),
+                              Frame(Vector(0.0,0.0,1.5))));
+    chain3.addSegment(Segment("Segment 11", Joint("Joint 11", Joint::RotX),
+                              Frame(Vector(0.0,0.0,0.0))));
+    chain3.addSegment(Segment("Segment 12", Joint("Joint 12", Joint::RotZ),
+                              Frame(Vector(0.0,0.0,0.4))));
+    chain3.addSegment(Segment("Segment 13", Joint("Joint 13", Joint::None),
+    						  Frame(Vector(0.0,0.1,0.0))));
+
+    //Testing addChain - true case
+    bool exit_code = chain1.addChain(chain3);
+    CPPUNIT_ASSERT_EQUAL(exit_code,true);
+    CPPUNIT_ASSERT_EQUAL(chain1.getNrOfJoints(),chain3.getNrOfJoints()*(uint)2);
+    CPPUNIT_ASSERT_EQUAL(chain1.getNrOfSegments(),chain3.getNrOfSegments()*(uint)2);
+
+    //Testing addChain - false case
+    //Chain2 will remain unchanged
+    Chain chain4;
+    chain4.addSegment(Segment("Segment 1", Joint("Joint 1", Joint::RotZ),
+                              Frame(Vector(0.0,0.0,0.0))));
+    int nrOfJoints = chain2.getNrOfJoints();
+    int nrOfSegments = chain2.getNrOfSegments();
+    exit_code = chain2.addChain(chain4);
+    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(nrOfJoints==chain2.getNrOfJoints());
+    CPPUNIT_ASSERT(nrOfSegments==chain2.getNrOfSegments());
 }
 
 void KinFamTest::TreeTest()

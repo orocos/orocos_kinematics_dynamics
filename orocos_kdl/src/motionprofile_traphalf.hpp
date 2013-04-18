@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -43,25 +44,25 @@
  *      Experimental
  ****************************************************************************/
 
-#ifndef KDL_MOTION_VELOCITYPROFILE_TRAPHALF_H
-#define KDL_MOTION_VELOCITYPROFILE_TRAPHALF_H
+#ifndef KDL_MOTION_MOTIONPROFILE_TRAPHALF_H
+#define KDL_MOTION_MOTIONPROFILE_TRAPHALF_H
 
-#include "velocityprofile.hpp"
-
-
-
+#include "motionprofile.hpp"
+#include <boost/shared_ptr.hpp>
 
 namespace KDL {
 
-
 	/**
-	 * A 'Half' Trapezoidal VelocityProfile. A contructor flag
+	 * A 'Half' Trapezoidal MotionProfile. A contructor flag
 	 * indicates if the calculated profile should be starting
 	 * or ending.
 	 * @ingroup Motion
 	 */
-class VelocityProfile_TrapHalf : public VelocityProfile
+class MotionProfile_TrapHalf : public MotionProfile
 	{
+		typedef boost::shared_ptr<MotionProfile_TrapHalf> MotionProfileTrapHalfPtr;
+		typedef boost::shared_ptr<MotionProfile> MotionProfilePtr;
+
 		// For "running" a motion profile :
 		double a1,a2,a3; // coef. from ^0 -> ^2 of first part
 		double b1,b2,b3; // of 2nd part
@@ -75,7 +76,7 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		// Persistent state :
 		double maxvel;
 		double maxacc;
-		bool   starting;
+		bool starting;
 
 		void PlanProfile1(double v,double a);
 		void PlanProfile2(double v,double a);
@@ -87,13 +88,30 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		 * \param starting this value is true when initial velocity is zero
 		 *        and ending velocity is maxvel, is false for the reverse
 		 */
-		VelocityProfile_TrapHalf(double _maxvel=0,double _maxacc=0,bool _starting=true);
+		static int Create(	MotionProfileTrapHalfPtr& profile,
+							double _maxvel=0,
+							double _maxacc=0,
+							bool _starting=true
+							);
+
+		/**
+		 * \param maxvel maximal velocity of the motion profile (positive)
+		 * \param maxacc maximal acceleration of the motion profile (positive)
+		 * \param starting this value is true when initial velocity is zero
+		 *        and ending velocity is maxvel, is false for the reverse
+		 * \param pos1: start
+		 * \param pos2: end
+		 */
+		static int Create(	MotionProfileTrapHalfPtr& profile,
+							double _maxvel,
+							double _maxacc,
+							bool _starting,
+							double pos1,
+							double pos2);
+
 
         void SetMax(double _maxvel,double _maxacc, bool _starting );
 
-		/**
-		 * Can throw a Error_MotionPlanning_Not_Feasible
-		 */
 		virtual void SetProfile(double pos1,double pos2);
 
 		/**
@@ -112,18 +130,17 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		);
 
 		virtual double Duration() const;
-		virtual double Pos(double time) const;
-		virtual double Vel(double time) const;
-		virtual double Acc(double time) const;
+		virtual int Pos(double time, double& returned_position) const;
+		virtual int Vel(double time, double& returned_velocity) const;
+		virtual int Acc(double time, double& returned_acceleration) const;
 		virtual void Write(std::ostream& os) const;
-		virtual VelocityProfile* Clone() const;
+		virtual MotionProfilePtr Clone() const;
 
-		virtual ~VelocityProfile_TrapHalf();
+		virtual ~MotionProfile_TrapHalf();
+
+	private:
+		MotionProfile_TrapHalf(){};
 	};
-
-
-
 }
-
 
 #endif

@@ -7,6 +7,7 @@
  *
  *	\par History
  *		- $log$
+ *		- Wouter Bancken (08/2012) - Refactored
  *
  *	\par Release
  *		$Id: trajectory_composite.h 22 2004-09-21 08:58:54Z eaertbellocal $
@@ -31,33 +32,36 @@ namespace KDL {
    */
 class Trajectory_Composite: public Trajectory
 	{
-		typedef std::vector<Trajectory*> VectorTraj;
+		typedef std::vector<boost::shared_ptr<Trajectory> > VectorTraj;
 		typedef std::vector<double>         VectorDouble;
+		typedef boost::shared_ptr<Trajectory_Composite> TrajectoryCompositePtr;
+		typedef boost::shared_ptr<Trajectory> TrajectoryPtr;
+
 		VectorTraj vt;      // contains the element Trajectories
 		VectorDouble  vd;      // contains end time for each Trajectory
-		double duration;    // total duration of the composed
-				    // Trajectory
+		double duration;    // total duration of the composed Trajectory
 
 	public:
-		Trajectory_Composite();
-		// Constructs an empty composite
+		static int Create(TrajectoryCompositePtr& trajectory);
 
 		virtual double Duration() const;
-		virtual Frame Pos(double time) const;
-		virtual Twist Vel(double time) const;
-		virtual Twist Acc(double time) const;
+		virtual int Pos(double time, Frame& returned_position) const;
+		virtual int Vel(double time, Twist& returned_velocity) const;
+		virtual int Acc(double time, Twist& returned_acceleration) const;
 
-		virtual void Add(Trajectory* elem);
+		virtual void Add(TrajectoryPtr elem);
 		// Adds trajectory <elem> to the end of the sequence.
 
 		virtual void Destroy();
 		virtual void Write(std::ostream& os) const;
-		virtual Trajectory* Clone() const;
+		virtual TrajectoryPtr Clone() const;
 
 		virtual ~Trajectory_Composite();
+
+	private:
+		Trajectory_Composite();
+		// Constructs an empty composite
 	};
-
-
 }
 
 #endif

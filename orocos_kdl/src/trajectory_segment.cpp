@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -39,47 +40,97 @@
  *		$Name:  $
  ****************************************************************************/
 
-
 #include "trajectory_segment.hpp"
-
 
 namespace KDL {
 
-
-Trajectory_Segment::Trajectory_Segment(Path* _geom, VelocityProfile* _motprof, bool _aggregate):
-	motprof(_motprof),geom(_geom), aggregate(_aggregate)
+// assume everything is set or at least check if Duration() != 0
+int Trajectory_Segment::Create(	PathPtr _geom,
+								MotionProfilePtr _motprof,
+								TrajectorySegmentPtr& segment,
+								bool _aggregate)
 {
-    // assume everything is set or at least check if Duration() != 0
+	segment = TrajectorySegmentPtr(new Trajectory_Segment());
+	segment->motprof = _motprof;
+	segment->geom = _geom;
+	segment->aggregate = _aggregate;
+	return 0;
 }
 
-Trajectory_Segment::Trajectory_Segment(Path* _geom, VelocityProfile* _motprof, double _duration, bool _aggregate):
-	motprof(_motprof),geom(_geom), aggregate(_aggregate)
+// the duration was specified so assume motprof not yet set.
+int Trajectory_Segment::Create(	PathPtr _geom,
+								MotionProfilePtr _motprof,
+								double _duration,
+								TrajectorySegmentPtr& segment,
+								bool _aggregate)
 {
-    // the duration was specified so assume motprof not yet set.
-    motprof->SetProfileDuration(0, geom->PathLength(), _duration);
+	segment = TrajectorySegmentPtr(new Trajectory_Segment());
+	segment->motprof = _motprof;
+	segment->geom = _geom;
+	segment->aggregate = _aggregate;
+	segment->motprof->SetProfileDuration(0, segment->geom->PathLength(), _duration);
+	return 0;
 }
-
 
 double Trajectory_Segment::Duration() const
 {
 	return motprof->Duration();
 }
 
-Frame Trajectory_Segment::Pos(double time) const
+int Trajectory_Segment::Pos(double time, Frame& returned_position) const
 {
-	return geom->Pos(motprof->Pos(time));
+	double temp;
+	int exit_code = motprof->Pos(time,temp);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	double position;
+	exit_code = motprof->Pos(time,position);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	exit_code = geom->Pos(position, returned_position);
+	return exit_code;
 }
 
-Twist Trajectory_Segment::Vel(double time) const
+int Trajectory_Segment::Vel(double time, Twist& returned_velocity) const
 {
-	return geom->Vel(motprof->Pos(time),motprof->Vel(time));
+	double position;
+	double velocity;
+	int exit_code;
+	exit_code = motprof->Pos(time,position);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	exit_code = motprof->Vel(time, velocity);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	exit_code = geom->Vel(position, velocity, returned_velocity);
+	return exit_code;
 }
 
-Twist Trajectory_Segment::Acc(double time) const
+int Trajectory_Segment::Acc(double time, Twist& returned_acceleration) const
 {
-	return geom->Acc(motprof->Pos(time),motprof->Vel(time),motprof->Acc(time));
+	double position;
+	double velocity;
+	double acceleration;
+	int exit_code;
+	exit_code = motprof->Pos(time,position);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	exit_code = motprof->Vel(time, velocity);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	exit_code = motprof->Acc(time, acceleration);
+	if(exit_code != 0){
+		return exit_code;
+	}
+	exit_code = geom->Acc(position, velocity, acceleration, returned_acceleration);
+	return exit_code;
 }
-
 
 void Trajectory_Segment::Write(std::ostream& os) const
 {
@@ -93,15 +144,16 @@ Trajectory_Segment::~Trajectory_Segment()
 {
     if (aggregate)
         {
-            delete motprof;
-            delete geom;
+            motprof.reset();
+            geom.reset();
         }
 }
-Path* Trajectory_Segment::GetPath() {
+
+boost::shared_ptr<Path> Trajectory_Segment::GetPath() {
 	return geom;
 }
 
-VelocityProfile* Trajectory_Segment::GetProfile() {
+boost::shared_ptr<MotionProfile> Trajectory_Segment::GetProfile() {
 	return motprof;
 }
 

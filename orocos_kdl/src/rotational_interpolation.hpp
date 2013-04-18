@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -46,6 +47,8 @@
 
 #include "frames.hpp"
 #include "frames_io.hpp"
+#include <boost/shared_ptr.hpp>
+
 
 namespace KDL {
 
@@ -61,6 +64,9 @@ namespace KDL {
  */
 class RotationalInterpolation
 	{
+
+	typedef boost::shared_ptr<RotationalInterpolation> RotationalInterpolationPtr;
+
 	public:
 		/**
 		 * Set the start and end rotational_interpolation
@@ -78,20 +84,29 @@ class RotationalInterpolation
 
 		/**
 		 * Returns the rotation matrix at angle theta
+		 *
+		 * Exit codes:  \n
+		 * 		0: OK  \n
 		 */
-		virtual Rotation Pos(double theta) const = 0;
+		virtual int Pos(double theta, Rotation& returned_rotation) const = 0;
 
 		/**
 		 * Returns the rotational velocity at angle theta and with
 		 * derivative of theta == thetad
+		 *
+		 * Exit codes: \n
+		 * 		0: OK \n
 		 */
-		virtual Vector Vel(double theta,double thetad) const = 0;
+		virtual int Vel(double theta,double thetad, Vector& returned_velocity) const = 0;
 
 		/**
 		 * Returns the rotational acceleration at angle theta and with
 		 * derivative of theta == thetad, and 2nd derivative of theta == thdd
+		 *
+		 * Exit codes: \n
+		 * 		0: OK \n
 		 */
-		virtual Vector Acc(double theta,double thetad,double thetadd) const = 0;
+		virtual int Acc(double theta,double thetad,double thetadd, Vector& returned_acceleration) const = 0;
 
 		/**
 		 * Writes one of the derived objects to the stream
@@ -101,18 +116,22 @@ class RotationalInterpolation
 		/**
 		 * Reads one of the derived objects from the stream and returns a pointer
 		 * (factory method)
+		 *
+		 * Exit codes: \n
+		 * 		0: OK \n
+		 * 		147: Error: MotionIO unexpected trajectory \n
+		 * 		148: Error: Call to an operation that hasn't been implemented. \n
 		 */
-		static RotationalInterpolation* Read(std::istream& is);
+		static int Read(std::istream& is, RotationalInterpolationPtr& returned_interpolation);
 
 		/**
 		 * virtual constructor,  construction by copying ..
 		 */
-		virtual RotationalInterpolation* Clone() const = 0;
+		virtual RotationalInterpolationPtr Clone() const = 0;
 
 		virtual ~RotationalInterpolation() {}
 	};
 
 }
-
 
 #endif

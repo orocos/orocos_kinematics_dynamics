@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -54,27 +55,47 @@ namespace KDL {
 
 using namespace std;
 
-Trajectory* Trajectory::Read(std::istream& is) {
-	// auto_ptr because exception can be thrown !
+typedef boost::shared_ptr<Trajectory_Segment> TrajectorySegmentPtr;
+
+int Trajectory::Read(std::istream& is, TrajectoryPtr& returned_trajectory) {
 	IOTrace("Trajectory::Read");
 	char storage[64];
 	EatWord(is,"[",storage,sizeof(storage));
 	Eat(is,'[');
+	int exit_code;
 	if (strcmp(storage,"SEGMENT")==0) {
 		IOTrace("SEGMENT");
-		auto_ptr<Path>      geom(    Path::Read(is)       );
-		auto_ptr<VelocityProfile> motprof( VelocityProfile::Read(is)  );
+		PathPtr geom;
+		int exit_code = Path::Read(is,geom);
+		if(exit_code != 0){
+			returned_trajectory = TrajectoryPtr();
+			return exit_code;
+		}
+		MotionProfilePtr motprof;
+		exit_code = MotionProfile::Read(is,motprof);
+		if(exit_code != 0)
+		{
+			returned_trajectory = TrajectoryPtr();
+			return exit_code;
+		}
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return new  Trajectory_Segment(geom.release(),motprof.release());
+		TrajectorySegmentPtr segment;
+		exit_code = Trajectory_Segment::Create(geom,motprof, segment);
+		if(exit_code != 0){
+			returned_trajectory = TrajectoryPtr();
+			return exit_code;
+		}
+		returned_trajectory = segment;
+		return 0;
 	} else {
-		throw Error_MotionIO_Unexpected_Traj();
+		returned_trajectory = TrajectoryPtr();
+		return 147;
 	}
-	return NULL; // just to avoid the warning;
+	returned_trajectory =  TrajectoryPtr(); // just to avoid the warning;
+	return 0;
 }
-
-
 
 }
 

@@ -36,8 +36,9 @@ namespace KDL {
     private:
         int nrOfJoints;
         int nrOfSegments;
-    public:
         std::vector<Segment> segments;
+
+    public:
         /**
          * The constructor of a chain, a new chain is always empty.
          *
@@ -50,15 +51,26 @@ namespace KDL {
          * Adds a new segment to the <strong>end</strong> of the chain.
          *
          * @param segment The segment to add
+         * @return  false: 	when there is already a segment with the same name in the chain.
+         * 					"NoName" is ignored in this test (so it will return true even when there are multiple "NoName" segments in the chain).
+         * 					In this case the segment will not be added.
+         * 			true: 	in the other cases
          */
-        void addSegment(const Segment& segment);
+        //void addSegment(const Segment& segment);
+        bool addSegment(const Segment& segment);
+
         /**
          * Adds a complete chain to the <strong>end</strong> of the chain
          * The added chain is copied.
          *
          * @param chain The chain to add
+         * @return 	false: 	when the chain already contains at least one segment of the given chain.
+         * 					"NoName" is ignored in this test (so it will return true even when there are multiple "NoName" segments in the new chain).
+         * 					In this case the chain will not be added.
+         *			true:	in the other cases
          */
-        void addChain(const Chain& chain);
+        //void addChain(const Chain& chain);
+        bool addChain(const Chain& chain);
 
         /**
          * Request the total number of joints in the chain.\n
@@ -87,8 +99,6 @@ namespace KDL {
 
         virtual ~Chain();
     };
-
-
 
 }//end of namespace KDL
 

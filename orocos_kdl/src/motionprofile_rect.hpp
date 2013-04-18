@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -44,44 +45,54 @@
 #ifndef MOTIONPROFILE_RECT_H
 #define MOTIONPROFILE_RECT_H
 
-#include "velocityprofile.hpp"
+#include "motionprofile.hpp"
+#include <boost/shared_ptr.hpp>
 
 
 namespace KDL {
 	/**
-	 * A rectangular VelocityProfile generates a constant velocity
+	 * A rectangular MotionProfile generates a constant velocity
 	 * for moving from A to B.
 	 * @ingroup Motion
 	 */
-	class VelocityProfile_Rectangular : public VelocityProfile
-		// Defines a rectangular velocityprofile.
+	class MotionProfile_Rectangular : public MotionProfile
+		// Defines a rectangular motionprofile.
 		// (i.e. constant velocity)
 	{
+		typedef boost::shared_ptr<MotionProfile_Rectangular> MotionProfileRectangularPtr;
+		typedef boost::shared_ptr<MotionProfile> MotionProfilePtr;
+
 		double d,p,v;
 	public:
 		double maxvel;
 
-		VelocityProfile_Rectangular(double _maxvel=0):
-		  maxvel(_maxvel) {}
 		// constructs motion profile class with <maxvel> as parameter of the
 		// trajectory.
+		static int Create(MotionProfileRectangularPtr& profile, double _maxvel=0);
+		// constructs motion profile class with <maxvel> as parameter of the
+		// trajectory. It also sets a trajectory from pos1 to pos2.
+		static int Create(MotionProfileRectangularPtr& profile, double _maxvel, double pos1, double pos2);
 
 		void SetMax( double _maxvel );
 		void SetProfile(double pos1,double pos2);
 		virtual void SetProfileDuration(
 			double pos1,double pos2,double duration);
 		virtual double Duration() const;
-		virtual double Pos(double time) const;
-		virtual double Vel(double time) const;
-		virtual double Acc(double time) const;
+		virtual int Pos(double time, double& returned_position) const;
+		virtual int Vel(double time, double& returned_velocity) const;
+		virtual int Acc(double time, double& returned_acceleration) const;
 		virtual void Write(std::ostream& os) const;
-		virtual VelocityProfile* Clone() const{
-			VelocityProfile_Rectangular* res =  new VelocityProfile_Rectangular(maxvel);
-			res->SetProfileDuration( p, p+v*d, d );
-			return res;
+		virtual MotionProfilePtr Clone() const{
+			MotionProfileRectangularPtr profile;
+			MotionProfile_Rectangular::Create(profile, maxvel);
+			profile->SetProfileDuration( p, p+v*d, d );
+			return profile;
 		}
-		// returns copy of current VelocityProfile object. (virtual constructor)
-		virtual ~VelocityProfile_Rectangular() {}
+		// returns copy of current MotionProfile object. (virtual constructor)
+		virtual ~MotionProfile_Rectangular() {}
+
+	private:
+		MotionProfile_Rectangular() {}
 	};
 
 }

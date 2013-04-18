@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -45,38 +46,50 @@
 
 namespace KDL {
 
-Path_Cyclic_Closed::Path_Cyclic_Closed(Path* _geom,int _times, bool _aggregate):
-times(_times),geom(_geom), aggregate(_aggregate) {}
-
-double Path_Cyclic_Closed::LengthToS(double length) {
-	throw Error_MotionPlanning_Not_Applicable();
+int Path_Cyclic_Closed::Create(	PathPtr _geom,
+								int _times,
+								PathCyclicClosedPtr& cyclic_closed,
+								bool _aggregate)
+{
+	cyclic_closed = PathCyclicClosedPtr(new Path_Cyclic_Closed());
+	cyclic_closed->times = _times;
+	cyclic_closed->geom = _geom;
+	cyclic_closed->aggregate = _aggregate;
 	return 0;
+}
+
+int Path_Cyclic_Closed::LengthToS(double length, double& returned_length) {
+	return 152;
 }
 
 double Path_Cyclic_Closed::PathLength(){
 	return geom->PathLength()*times;
 }
 
-Frame Path_Cyclic_Closed::Pos(double s) const  {
-	return geom->Pos( fmod(s,geom->PathLength()) );
+int Path_Cyclic_Closed::Pos(double s, Frame& returned_position) const  {
+	int exit_code = geom->Pos( fmod(s,geom->PathLength()), returned_position );
+	return exit_code;
 }
 
-Twist Path_Cyclic_Closed::Vel(double s,double sd) const  {
-	return geom->Vel( fmod(s,geom->PathLength()),sd );
+int Path_Cyclic_Closed::Vel(double s,double sd, Twist& returned_velocity) const  {
+	int exit_code = geom->Vel( fmod(s,geom->PathLength()),sd, returned_velocity);
+	return exit_code;
 }
 
-Twist Path_Cyclic_Closed::Acc(double s,double sd,double sdd) const  {
-	return geom->Acc( fmod(s,geom->PathLength()),sd,sdd );
+int Path_Cyclic_Closed::Acc(double s,double sd,double sdd, Twist& returned_acceleration) const  {
+	int exit_code = geom->Acc( fmod(s,geom->PathLength()),sd,sdd, returned_acceleration );
+	return exit_code;
 }
-
 
 Path_Cyclic_Closed::~Path_Cyclic_Closed() {
     if (aggregate)
-        delete geom;
+        geom.reset();
 }
 
-Path* Path_Cyclic_Closed::Clone() {
-	return new Path_Cyclic_Closed(geom->Clone(),times, aggregate);
+boost::shared_ptr<Path> Path_Cyclic_Closed::Clone() {
+	PathCyclicClosedPtr cyclic_closed;
+	Path_Cyclic_Closed::Create(geom->Clone(),times, cyclic_closed, aggregate);
+	return cyclic_closed;
 }
 
 void Path_Cyclic_Closed::Write(std::ostream& os)  {

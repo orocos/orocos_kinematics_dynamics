@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Peter Soetens
     email                : peter.soetens@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -26,61 +27,68 @@
  ***************************************************************************/
 
 #include "utilities/error.h"
-#include "velocityprofile_dirac.hpp"
+#include "motionprofile_dirac.hpp"
 
 namespace KDL {
 
+	int MotionProfile_Dirac::Create(MotionProfileDiracPtr& profile){
+		profile = MotionProfileDiracPtr(new MotionProfile_Dirac());
+		return 0;
+	}
 
-    void VelocityProfile_Dirac::SetProfile(
-                                           double pos1,
-                                           double pos2
-                                           )
+	int MotionProfile_Dirac::Create(MotionProfileDiracPtr& profile,double pos1,double pos2){
+		Create(profile);
+		profile->SetProfile(pos1,pos2);
+		return 0;
+	}
+
+    void MotionProfile_Dirac::SetProfile(double pos1,double pos2)
     {
         p1 = pos1;
         p2 = pos2;
         t = 0;
     }
 
-    void VelocityProfile_Dirac::
-	SetProfileDuration(double pos1,double pos2,double duration)
+    void MotionProfile_Dirac::SetProfileDuration(double pos1,double pos2,double duration)
     {
         SetProfile(pos1,pos2);
         t = duration;
     }
 
-    double VelocityProfile_Dirac::Duration() const {
+    double MotionProfile_Dirac::Duration() const {
         return t;
     }
 
-    double VelocityProfile_Dirac::Pos(double time) const {
-        if ( t == 0 )
-            return time == 0 ? p1 : p2;
-        else
-            return p1 + (( p2 - p1)/t)*time;
+    int MotionProfile_Dirac::Pos(double time, double& returned_position) const {
+        if ( t == 0 ){
+            returned_position = time == 0 ? p1 : p2;
+            return 0;
+        }
+        else{
+            returned_position = p1 + (( p2 - p1)/t)*time;
+            return 0;
+        }
     }
 
-    double VelocityProfile_Dirac::Vel(double time) const {
+    int MotionProfile_Dirac::Vel(double time, double& returned_velocity) const {
         if ( t == 0 )
             {
-            throw Error_MotionPlanning_Incompatible();
+        	return 153;
             }
         else
-            if ( 0 < time && time < t )
-                return (p2-p1) / t;
+            if ( 0 < time && time < t ){
+            	returned_velocity = (p2-p1) / t;
+            	return 0;
+            }
         return 0;
     }
 
-    double VelocityProfile_Dirac::Acc(double time) const {
-        throw Error_MotionPlanning_Incompatible();
-        return 0;
+    int MotionProfile_Dirac::Acc(double time, double& returned_acceleration) const {
+       return 153;
     }
 
-
-    void VelocityProfile_Dirac::Write(std::ostream& os) const {
+    void MotionProfile_Dirac::Write(std::ostream& os) const {
         os << "DIRACVEL[ ]";
     }
-
-
-
 }
 

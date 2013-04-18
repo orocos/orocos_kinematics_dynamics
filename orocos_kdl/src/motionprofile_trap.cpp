@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -41,24 +42,44 @@
 
 
 //#include "error.h"
-#include "velocityprofile_trap.hpp"
+#include "motionprofile_trap.hpp"
 
 namespace KDL {
 
+// constructs motion profile class with <maxvel> as parameter of the
+// trajectory.
+int MotionProfile_Trap::Create(MotionProfileTrapPtr& profile, double _maxvel, double _maxacc)
+{
+	profile = MotionProfileTrapPtr(new MotionProfile_Trap());
+    profile->a1 = 0;
+    profile->a2 = 0;
+    profile->a3 = 0;
+    profile->b1 = 0;
+    profile->b2 = 0;
+    profile->b3 = 0;
+    profile->c1 = 0;
+    profile->c2 = 0;
+    profile->c3 = 0;
+    profile->duration = 0;
+    profile->t1 = 0;
+    profile->t2 =0;
+    profile->maxvel = _maxvel;
+    profile->maxacc = _maxacc;
+    profile->startpos = 0;
+    profile->endpos = 0;
+	return 0;
+}
 
-VelocityProfile_Trap::VelocityProfile_Trap(double _maxvel,double _maxacc):
-          a1(0), a2(0), a3(0),
-          b1(0), b2(0), b3(0),
-          c1(0), c2(0), c3(0),
-          duration(0), t1(0), t2(0),
-		  maxvel(_maxvel),maxacc(_maxacc),
-          startpos(0), endpos(0)
+// constructs motion profile class with <maxvel> as parameter of the
+// trajectory. It also sets a trajectory from pos1 to pos2 as fast as possible.
+int MotionProfile_Trap::Create(MotionProfileTrapPtr& profile, double _maxvel, double _maxacc, double pos1, double pos2)
+{
+	Create(profile, _maxvel, _maxacc);
+	profile->SetProfile(pos1,pos2);
+	return 0;
+}
 
-{}
-		// constructs motion profile class with <maxvel> as parameter of the
-		// trajectory.
-
-void VelocityProfile_Trap::SetProfile(double pos1,double pos2) {
+void MotionProfile_Trap::SetProfile(double pos1,double pos2) {
 	startpos = pos1;
 	endpos   = pos2;
 	t1 = maxvel/maxacc;
@@ -88,8 +109,7 @@ void VelocityProfile_Trap::SetProfile(double pos1,double pos2) {
 	c1 = b1+t2*(b2+b3*t2) - t2*(c2+t2*c3);
 }
 
-void VelocityProfile_Trap::SetProfileDuration(
-	double pos1,double pos2,double newduration) {
+void MotionProfile_Trap::SetProfileDuration(double pos1,double pos2,double newduration) {
 	// duration should be longer than originally planned duration
     // Fastest :
 	SetProfile(pos1,pos2);
@@ -108,72 +128,83 @@ void VelocityProfile_Trap::SetProfileDuration(
 	t2 /= factor;
 }
 
-void VelocityProfile_Trap::SetMax(double _maxvel,double _maxacc)
+void MotionProfile_Trap::SetMax(double _maxvel,double _maxacc)
 {
     maxvel = _maxvel; maxacc = _maxacc;
 }
 
-double VelocityProfile_Trap::Duration() const {
+double MotionProfile_Trap::Duration() const {
 	return duration;
 }
 
-double VelocityProfile_Trap::Pos(double time) const {
+int MotionProfile_Trap::Pos(double time, double& returned_position) const {
 	if (time < 0) {
-		return startpos;
-	} else if (time<t1) {
-		return a1+time*(a2+a3*time);
-	} else if (time<t2) {
-		return b1+time*(b2+b3*time);
-	} else if (time<=duration) {
-		return c1+time*(c2+c3*time);
-	} else {
-		return endpos;
-	}
-}
-double VelocityProfile_Trap::Vel(double time) const {
-	if (time < 0) {
+		returned_position = startpos;
 		return 0;
 	} else if (time<t1) {
-		return a2+2*a3*time;
+		returned_position = a1+time*(a2+a3*time);
+		return 0;
 	} else if (time<t2) {
-		return b2+2*b3*time;
+		returned_position = b1+time*(b2+b3*time);
+		return 0;
 	} else if (time<=duration) {
-		return c2+2*c3*time;
+		returned_position = c1+time*(c2+c3*time);
+		return 0;
 	} else {
+		returned_position = endpos;
 		return 0;
 	}
 }
-
-double VelocityProfile_Trap::Acc(double time) const {
+int MotionProfile_Trap::Vel(double time, double& returned_velocity) const {
 	if (time < 0) {
+		returned_velocity = 0;
 		return 0;
 	} else if (time<t1) {
-		return 2*a3;
+		returned_velocity = a2+2*a3*time;
+		return 0;
 	} else if (time<t2) {
-		return 2*b3;
+		returned_velocity = b2+2*b3*time;
+		return 0;
 	} else if (time<=duration) {
-		return 2*c3;
+		returned_velocity = c2+2*c3*time;
+		return 0;
 	} else {
+		returned_velocity = 0;
 		return 0;
 	}
 }
 
-VelocityProfile* VelocityProfile_Trap::Clone() const {
-    VelocityProfile_Trap* res =  new VelocityProfile_Trap(maxvel,maxacc);
-    res->SetProfileDuration( this->startpos, this->endpos, this->duration );
-	return res;
+int MotionProfile_Trap::Acc(double time, double& returned_acceleration) const {
+	if (time < 0) {
+		returned_acceleration = 0;
+		return 0;
+	} else if (time<t1) {
+		returned_acceleration = 2*a3;
+		return 0;
+	} else if (time<t2) {
+		returned_acceleration = 2*b3;
+		return 0;
+	} else if (time<=duration) {
+		returned_acceleration = 2*c3;
+		return 0;
+	} else {
+		returned_acceleration = 0;
+		return 0;
+	}
 }
 
-VelocityProfile_Trap::~VelocityProfile_Trap() {}
+boost::shared_ptr<MotionProfile> MotionProfile_Trap::Clone() const {
+	MotionProfileTrapPtr profile;
+	MotionProfile_Trap::Create(profile,maxvel,maxacc);
+    profile->SetProfileDuration( this->startpos, this->endpos, this->duration );
+	return profile;
+}
+
+MotionProfile_Trap::~MotionProfile_Trap() {}
 
 
-void VelocityProfile_Trap::Write(std::ostream& os) const {
+void MotionProfile_Trap::Write(std::ostream& os) const {
 	os << "TRAPEZOIDAL[" << maxvel << "," << maxacc <<"]";
 }
-
-
-
-
-
 }
 

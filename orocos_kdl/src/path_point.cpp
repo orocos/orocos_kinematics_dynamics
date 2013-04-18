@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -44,40 +45,47 @@
 
 namespace KDL {
 
-Path_Point::Path_Point(const Frame& startpos)
-    :F_base_start(startpos)
-   {
-   }
+int Path_Point::Create(const Frame& startpos, PathPointPtr& point)
+{
+	point = PathPointPtr(new Path_Point());
+	point->F_base_start = startpos;
+	return 0;
+}
 
-double Path_Point::LengthToS(double length) {
-	return length;
+int Path_Point::LengthToS(double length, double& returned_length) {
+	returned_length = length;
+	return 0;
 }
 double Path_Point::PathLength(){
 	return 0;
 }
-Frame Path_Point::Pos(double s) const  {
-	return F_base_start;
+int Path_Point::Pos(double s, Frame& returned_position) const  {
+	returned_position = F_base_start;
+	return 0;
 }
 
-Twist Path_Point::Vel(double s,double sd) const  {
-	return Twist::Zero();
+int Path_Point::Vel(double s,double sd, Twist& returned_velocity) const  {
+	returned_velocity = Twist::Zero();
+	return 0;
 }
 
-Twist Path_Point::Acc(double s,double sd,double sdd) const  {
-	return Twist::Zero();
+int Path_Point::Acc(double s,double sd,double sdd, Twist& returned_acceleration) const  {
+	returned_acceleration = Twist::Zero();
+	return 0;
 }
 
 Path_Point::~Path_Point() {
 }
 
-Path* Path_Point::Clone() {
-	return new Path_Point( F_base_start	);
+boost::shared_ptr<Path> Path_Point::Clone() {
+	PathPointPtr point;
+	Path_Point::Create(F_base_start, point);
+	return point;
 }
 
 void Path_Point::Write(std::ostream& os)  {
 	os << "POINT[ "<< F_base_start  << "]"  << std::endl;
 }
-
 
 }
 

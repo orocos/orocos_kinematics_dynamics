@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -45,6 +46,7 @@
 #include "utilities/error_stack.h"
 #include "path.hpp"
 #include "path_line.hpp"
+#include "path_spline.hpp"
 #include "path_point.hpp"
 #include "path_circle.hpp"
 #include "path_composite.hpp"
@@ -53,17 +55,26 @@
 #include <memory>
 #include <string.h>
 
+
 namespace KDL {
 
 using namespace std;
 
+typedef boost::shared_ptr<Path_Point> PathPointPtr;
+typedef boost::shared_ptr<Path_Circle> PathCirclePtr;
+typedef boost::shared_ptr<RotationalInterpolation> RotationalInterpolationPtr;
+typedef boost::shared_ptr<Path_Line> PathLinePtr;
+typedef boost::shared_ptr<Path_RoundedComposite> PathRoundedCompositePtr;
+typedef boost::shared_ptr<Path_Composite> PathCompositePtr;
+typedef boost::shared_ptr<Path_Cyclic_Closed> PathCyclicClosedPtr;
+typedef boost::shared_ptr<Path_Spline> PathSplinePtr;
 
-Path* Path::Read(istream& is) {
-	// auto_ptr because exception can be thrown !
+int Path::Read(istream& is, PathPtr& returned_path) {
 	IOTrace("Path::Read");
 	char storage[64];
 	EatWord(is,"[",storage,sizeof(storage));
 	Eat(is,'[');
+	int exit_code;
 	if (strcmp(storage,"POINT")==0) {
 		IOTrace("POINT");
 		Frame startpos;
@@ -71,21 +82,70 @@ Path* Path::Read(istream& is) {
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return new Path_Point(startpos);
+		PathPointPtr point;
+		exit_code = Path_Point::Create(startpos, point);
+		if(exit_code != 0){
+			returned_path = PathPtr();
+			return exit_code;
+		}
+		returned_path = point;
+		return 0;
 	} else 	if (strcmp(storage,"LINE")==0) {
 		IOTrace("LINE");
 		Frame startpos;
 		Frame endpos;
 		is >> startpos;
 		is >> endpos;
-		auto_ptr<RotationalInterpolation> orient( RotationalInterpolation::Read(is) );
+		RotationalInterpolationPtr orient;
+		exit_code = RotationalInterpolation::Read(is, orient);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
 		double eqradius;
 		is >> eqradius;
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return new Path_Line(startpos,endpos,orient.release(),eqradius);
-	} else if (strcmp(storage,"CIRCLE")==0) {
+		PathLinePtr line;
+		exit_code = Path_Line::Create(startpos,endpos,orient,eqradius, line);
+		if(exit_code != 0){
+			returned_path = PathPtr();
+			return exit_code;
+		}
+		returned_path = line;
+		return 0;
+	} else if (strcmp(storage,"SPLINE")==0) {
+		IOTrace("SPLINE");
+		vector<Vector> coeff_vector;
+		is >> coeff_vector;
+		int discretization;
+		is >> discretization;
+		RotationalInterpolationPtr orient;
+		exit_code = RotationalInterpolation::Read(is, orient);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
+		double eqradius;
+		is >> eqradius;
+		EatEnd(is,']');
+		IOTracePop();
+		IOTracePop();
+
+		PathSplinePtr spline;
+		exit_code = Path_Spline::Create(coeff_vector, discretization, orient, eqradius, spline);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
+		returned_path = spline;
+		return 0;
+	}
+	else if (strcmp(storage,"CIRCLE")==0) {
 		IOTrace("CIRCLE");
 		Frame F_base_start;
 		Vector V_base_center;
@@ -99,72 +159,125 @@ Path* Path::Read(istream& is) {
 		is >> R_base_end;
 		is >> alpha;
 		alpha *= deg2rad;
-		auto_ptr<RotationalInterpolation> orient( RotationalInterpolation::Read(is) );
+		RotationalInterpolationPtr orient;
+		exit_code = RotationalInterpolation::Read(is, orient);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
 		is >> eqradius;
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return new Path_Circle(
-						F_base_start,
-						V_base_center,
-						V_base_p,
-						R_base_end,
-						alpha,
-						orient.release() ,
-						eqradius
-					);
+
+		PathCirclePtr circle;
+		exit_code = Path_Circle::Create(	F_base_start,
+												V_base_center,
+												V_base_p,
+												R_base_end,
+												alpha,
+												orient,
+												eqradius, circle);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
+		returned_path = circle;
+		return 0;
 	} else if (strcmp(storage,"ROUNDEDCOMPOSITE")==0) {
 		IOTrace("ROUNDEDCOMPOSITE");
 		double radius;
 		is >> radius;
 		double eqradius;
 		is >> eqradius;
-		auto_ptr<RotationalInterpolation> orient( RotationalInterpolation::Read(is) );
-		auto_ptr<Path_RoundedComposite> tr(
-			new Path_RoundedComposite(radius,eqradius,orient.release())
-		);
+		RotationalInterpolationPtr orient;
+		exit_code = RotationalInterpolation::Read(is,orient);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
+		PathRoundedCompositePtr tr;
+		exit_code = Path_RoundedComposite::Create(radius,eqradius,orient, tr);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
 		int size;
 		is >> size;
 		int i;
 		for (i=0;i<size;i++) {
 			Frame f;
 			is >> f;
-			tr->Add(f);
+			exit_code = tr->Add(f);
+			if(exit_code != 0){
+				returned_path = PathPtr();
+				return exit_code;
+			}
 		}
 		tr->Finish();
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return tr.release();
+		returned_path = tr;
+		return 0;
 	} else if (strcmp(storage,"COMPOSITE")==0) {
 		IOTrace("COMPOSITE");
 		int size;
-		auto_ptr<Path_Composite> tr( new Path_Composite() );
+		PathCompositePtr tr;
+		exit_code = Path_Composite::Create(tr);
+		if(exit_code != 0){
+			returned_path = PathPtr();
+			return exit_code;
+		}
 		is >> size;
 		int i;
 		for (i=0;i<size;i++) {
-			tr->Add(Path::Read(is));
+			PathPtr path;
+			exit_code = Path::Read(is, path);
+			if(exit_code != 0)
+			{
+				returned_path = PathPtr();
+				return exit_code;
+			}
+			tr->Add(path);
 		}
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return tr.release();
+		returned_path = tr;
+		return 0;
 	} else if (strcmp(storage,"CYCLIC_CLOSED")==0) {
 		IOTrace("CYCLIC_CLOSED");
 		int times;
-		auto_ptr<Path> tr( Path::Read(is) );
+		PathPtr tr;
+		exit_code = Path::Read(is,tr);
+		if(exit_code != 0)
+		{
+			returned_path = PathPtr();
+			return exit_code;
+		}
 		is >> times;
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return new Path_Cyclic_Closed(tr.release(),times);
+		PathCyclicClosedPtr cyclic_closed;
+		exit_code = Path_Cyclic_Closed::Create(tr,times, cyclic_closed);
+		if(exit_code != 0){
+			returned_path = PathPtr();
+			return exit_code;
+		}
+		returned_path = cyclic_closed;
+		return 0;
 	} else {
-		throw Error_MotionIO_Unexpected_Traj();
+		returned_path = PathPtr();
+		return 147;
 	}
-	return NULL; // just to avoid the warning;
+	returned_path = PathPtr(); // just to avoid the warning;
+	return 0;
 }
-
-
-
 }
 

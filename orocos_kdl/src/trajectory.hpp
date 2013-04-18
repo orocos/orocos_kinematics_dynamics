@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -60,46 +61,78 @@
 #include "frames.hpp"
 #include "frames_io.hpp"
 #include "path.hpp"
-#include "velocityprofile.hpp"
-
-
+#include "motionprofile.hpp"
+#include <boost/shared_ptr.hpp>
 
 namespace KDL {
-
-
-
 
 	/**
 	 * An abstract class that implements
 	 * a trajectory contains a cartesian space trajectory and an underlying
-	 * velocity profile.
-	  * @ingroup Motion
+	 * motion profile.
+	 * @ingroup Motion
 	 */
 	class Trajectory
 	{
+		typedef boost::shared_ptr<Trajectory> TrajectoryPtr;
+		typedef boost::shared_ptr<Path> PathPtr;
+		typedef boost::shared_ptr<MotionProfile> MotionProfilePtr;
+
 	public:
 		virtual double Duration() const = 0;
 		// The duration of the trajectory
 
-		virtual Frame Pos(double time) const = 0;
-		// Position of the trajectory at <time>.
+		/**
+		 * Position of the trajectory at <time>.
+		 *
+	     * Exit codes: \n
+	     * 		0: OK \n
+	     * 		153: Error: Motion planning incompatible \n
+		 */
+		virtual int Pos(double time, Frame& returned_position) const = 0;
 
-		virtual Twist Vel(double time) const = 0;
-		// The velocity of the trajectory at <time>.
-		virtual Twist Acc(double time) const = 0;
-		// The acceleration of the trajectory at <time>.
+		/**
+		 * The velocity of the trajectory at <time>.
+		 *
+	     * Exit codes: \n
+	     * 		0: OK \n
+	     * 		153: Error: Motion planning incompatible \n
+		 */
+		virtual int Vel(double time, Twist& returned_velocity) const = 0;
 
-		virtual Trajectory* Clone() const = 0;
+		/**
+		 * The acceleration of the trajectory at <time>.
+		 *
+	     * Exit codes: \n
+	     * 		0: OK \n
+	     * 		153: Error: Motion planning incompatible \n
+		 */
+		virtual int Acc(double time, Twist& returned_acceleration) const = 0;
+
+
+		virtual TrajectoryPtr Clone() const = 0;
 		virtual void Write(std::ostream& os) const = 0;
-		static Trajectory* Read(std::istream& is);
+
+		/**
+		 * Exit codes \n
+		 * 		0: OK \n
+		 * 		141: Error: Motion planning not feasible: the eq. radius <= 0 \n
+		 *		142: Error: Motion planning not feasible: the first segment in a rounding has zero length \n
+		 *		143: Error: Motion planning not feasible: the second segment in a rounding has zero length \n
+		 *		144: Error: Motion planning not feasible: the angle between the first and the second segment is close to M_PI (meaning that the segments are on top of each other) \n
+		 *		145: Error: Motion planning not feasible: the distance needed for the rounding is larger then the first segment \n
+		 *		146: Error: Motion planning not feasible: the distance needed for the rounding is larger then the second segment \n
+		 * 		147: Error: MotionIO unexpected trajectory. \n
+		 * 		148: Error: Call to an operation that hasn't been implemented. \n
+		 *		149: Error: Motion planning circle too small \n
+		 * 		150: Error: Motion planning circle no plane \n
+		 * 		151: Error: MotionIO unexpected motion profile \n
+		 */
+		static int Read(std::istream& is, TrajectoryPtr& returned_trajectory);
 		virtual ~Trajectory() {}
 		// note : you cannot declare this destructor abstract
 		// it is always called by the descendant's destructor !
 	};
 
-
-
 }
-
-
 #endif

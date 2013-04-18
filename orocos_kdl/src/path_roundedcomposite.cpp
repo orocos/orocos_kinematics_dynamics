@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -49,24 +50,61 @@
 
 namespace KDL {
 
-// private constructor, to keep the type when cloning a Path_RoundedComposite, such that getIdentifier keeps on returning
-// the correct value:
-Path_RoundedComposite::Path_RoundedComposite(Path_Composite* _comp,
-		double _radius, double _eqradius, RotationalInterpolation* _orient,
-		bool _aggregate,int _nrofpoints):
-		comp(_comp), radius(_radius), eqradius(_eqradius), orient(_orient), aggregate(_aggregate), nrofpoints(_nrofpoints) {
-}
+typedef boost::shared_ptr<Path_Line> PathLinePtr;
+typedef boost::shared_ptr<Path_Circle> PathCirclePtr;
 
-Path_RoundedComposite::Path_RoundedComposite(double _radius,double _eqradius,RotationalInterpolation* _orient, bool _aggregate) :
-	comp( new Path_Composite()), radius(_radius),eqradius(_eqradius), orient(_orient), aggregate(_aggregate)
+// private creator, to keep the type when cloning a Path_RoundedComposite, such that getIdentifier keeps on returning
+// the correct value
+int Path_RoundedComposite::Create(	PathCompositePtr _comp,
+									double _radius,
+									double _eqradius,
+									RotationalInterpolationPtr _orient,
+									bool _aggregate,
+									int _nrofpoints,
+									PathRoundedCompositePtr& composite
+									)
 {
-		nrofpoints = 0;
-		if (eqradius<=0) {
-			throw Error_MotionPlanning_Not_Feasible(1);
-		}
+	composite = PathRoundedCompositePtr(new Path_RoundedComposite());
+	composite->comp = _comp;
+	composite->radius = _radius;
+	composite->eqradius = _eqradius;
+	composite->orient = _orient;
+	composite->aggregate = _aggregate;
+	composite->nrofpoints = _nrofpoints;
+	return 0;
 }
 
-void Path_RoundedComposite::Add(const Frame& F_base_point) {
+int Path_RoundedComposite::Create(	double _radius,
+									double _eqradius,
+									RotationalInterpolationPtr _orient,
+									PathRoundedCompositePtr& rounded_composite,
+									bool _aggregate
+									)
+{
+	rounded_composite = PathRoundedCompositePtr(new Path_RoundedComposite());
+	rounded_composite->radius = _radius;
+	rounded_composite->eqradius = _eqradius;
+	rounded_composite->orient = _orient;
+	rounded_composite->aggregate = _aggregate;
+
+	PathCompositePtr composite;
+	int exit_code = Path_Composite::Create(composite);
+	if(exit_code != 0){
+		rounded_composite = PathRoundedCompositePtr();
+		return exit_code;
+	}
+	rounded_composite->comp = composite;
+
+	rounded_composite->nrofpoints = 0;
+
+	if (rounded_composite->eqradius<=0) {
+		rounded_composite = PathRoundedCompositePtr();
+		return 141;
+	}
+	return 0;
+}
+
+int Path_RoundedComposite::Add(const Frame& F_base_point) {
 	double eps = 1E-7;
 	if (nrofpoints == 0) {
 		F_base_start = F_base_point;
@@ -80,70 +118,103 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 		double abdist = ab.Norm();
 		double bcdist = bc.Norm();
 		if (abdist < eps) {
-			throw Error_MotionPlanning_Not_Feasible(2);
+			return 142;
 		}
 		if (bcdist < eps) {
-			throw Error_MotionPlanning_Not_Feasible(3);
+			return 143;
 		}
 		double alpha = acos(dot(ab, bc) / abdist / bcdist);
 		if ((PI - alpha) < eps) {
-			throw Error_MotionPlanning_Not_Feasible(4);
+			return 144;
 		}
 		if (alpha < eps) {
 			// no rounding is done in the case of parallel line segments
-			comp->Add(
-					new Path_Line(F_base_start, F_base_via, orient->Clone(),
-							eqradius));
+
+			boost::shared_ptr<Path_Line> line;
+			int exit_code = Path_Line::Create(F_base_start, F_base_via, orient->Clone(), eqradius, line);
+			if(exit_code != 0)
+				return exit_code;
+			comp->Add(line);
+
 			F_base_start = F_base_via;
 			F_base_via = F_base_point;
 		} else {
 			double d = radius / tan((PI - alpha) / 2); // tan. is guaranteed not to return zero.
 			if (d >= abdist)
-				throw Error_MotionPlanning_Not_Feasible(5);
+				return 145;
 
 			if (d >= bcdist)
-				throw Error_MotionPlanning_Not_Feasible(6);
+				return 146;
 
-			std::auto_ptr < Path
-					> line1(
-							new Path_Line(F_base_start, F_base_via,
-									orient->Clone(), eqradius));
-			std::auto_ptr < Path
-					> line2(
-							new Path_Line(F_base_via, F_base_point,
-									orient->Clone(), eqradius));
-			Frame F_base_circlestart = line1->Pos(line1->LengthToS(abdist - d));
-			Frame F_base_circleend = line2->Pos(line2->LengthToS(d));
+			PathLinePtr line1;
+			int exit_code = Path_Line::Create(F_base_start, F_base_via, orient->Clone(), eqradius, line1);
+			if(exit_code != 0)
+				return exit_code;
+
+			PathLinePtr line2;
+			exit_code = Path_Line::Create(F_base_via, F_base_point, orient->Clone(), eqradius,line2);
+			if(exit_code != 0)
+				return exit_code;
+
+			double length;
+			line1->LengthToS(abdist - d, length);
+			Frame F_base_circlestart;
+			exit_code = line1->Pos(length, F_base_circlestart);
+			if(exit_code != 0){
+				return exit_code;
+			}
+			line2->LengthToS(d, length);
+
+
+			Frame F_base_circleend;
+			exit_code = line2->Pos(length, F_base_circleend);
+			if(exit_code != 0){
+				return exit_code;
+			}
+
 			// end of circle segment, beginning of next line
 			Vector V_base_t = ab * (ab * bc);
 			V_base_t.Normalize();
-			comp->Add(
-					new Path_Line(F_base_start, F_base_circlestart,
-							orient->Clone(), eqradius));
-			comp->Add(
-					new Path_Circle(F_base_circlestart,
-							F_base_circlestart.p - V_base_t * radius,
-							F_base_circleend.p, F_base_circleend.M, alpha,
-							orient->Clone(), eqradius));
+
+			PathLinePtr line;
+			exit_code = Path_Line::Create(F_base_start, F_base_circlestart, orient->Clone(), eqradius,line);
+			if(exit_code != 0)
+				return exit_code;
+			comp->Add(line);
+
+			PathCirclePtr circle;
+			exit_code = Path_Circle::Create(	F_base_circlestart,
+													F_base_circlestart.p - V_base_t * radius,
+													F_base_circleend.p,
+													F_base_circleend.M,
+													alpha,
+													orient->Clone(),
+													eqradius, circle);
+			if(exit_code != 0){
+				return exit_code;
+			}
+			comp->Add(circle);
+
 			// shift for next line
 			F_base_start = F_base_circleend; // end of the circle segment
 			F_base_via = F_base_point;
 		}
 	}
-
 	nrofpoints++;
+	return 0;
 }
 
 void Path_RoundedComposite::Finish() {
 	if (nrofpoints >= 1) {
-		comp->Add(
-				new Path_Line(F_base_start, F_base_via, orient->Clone(),
-						eqradius));
+		PathLinePtr line;
+		Path_Line::Create(F_base_start, F_base_via, orient->Clone(), eqradius, line);
+		comp->Add(line);
 	}
 }
 
-double Path_RoundedComposite::LengthToS(double length) {
-	return comp->LengthToS(length);
+int Path_RoundedComposite::LengthToS(double length, double& returned_length) {
+	int exit_code =  comp->LengthToS(length, returned_length);
+	return exit_code;
 }
 
 
@@ -151,16 +222,19 @@ double Path_RoundedComposite::PathLength() {
 	return comp->PathLength();
 }
 
-Frame Path_RoundedComposite::Pos(double s) const {
-	return comp->Pos(s);
+int Path_RoundedComposite::Pos(double s, Frame& returned_position) const {
+	int exit_code = comp->Pos(s,returned_position);
+	return exit_code;
 }
 
-Twist Path_RoundedComposite::Vel(double s, double sd) const {
-	return comp->Vel(s, sd);
+int Path_RoundedComposite::Vel(double s, double sd, Twist& returned_velocity) const {
+	int exit_code = comp->Vel(s, sd, returned_velocity);
+	return exit_code;
 }
 
-Twist Path_RoundedComposite::Acc(double s, double sd, double sdd) const {
-	return comp->Acc(s, sd, sdd);
+int Path_RoundedComposite::Acc(double s, double sd, double sdd, Twist& returned_acceleration) const {
+	int exit_code = comp->Acc(s, sd, sdd, returned_acceleration);
+	return exit_code;
 }
 
 void Path_RoundedComposite::Write(std::ostream& os) {
@@ -171,7 +245,7 @@ int Path_RoundedComposite::GetNrOfSegments() {
 	return comp->GetNrOfSegments();
 }
 
-Path* Path_RoundedComposite::GetSegment(int i) {
+boost::shared_ptr<Path> Path_RoundedComposite::GetSegment(int i) {
 	return comp->GetSegment(i);
 }
 
@@ -184,17 +258,16 @@ void Path_RoundedComposite::GetCurrentSegmentLocation(double s,
 	comp->GetCurrentSegmentLocation(s,segment_number,inner_s);
 }
 
-
-
 Path_RoundedComposite::~Path_RoundedComposite() {
     if (aggregate)
-        delete orient;
-	delete comp;
+        orient.reset();
+	comp.reset();
 }
 
-
-Path* Path_RoundedComposite::Clone() {
-	return new Path_RoundedComposite(static_cast<Path_Composite*>(comp->Clone()),radius,eqradius,orient->Clone(), true, nrofpoints);
+boost::shared_ptr<Path> Path_RoundedComposite::Clone() {
+	boost::shared_ptr<Path_RoundedComposite> composite;
+	Path_RoundedComposite::Create(boost::static_pointer_cast<Path_Composite>(comp->Clone()),radius,eqradius,orient->Clone(), true, nrofpoints, composite);
+	return composite;
 }
 
 }

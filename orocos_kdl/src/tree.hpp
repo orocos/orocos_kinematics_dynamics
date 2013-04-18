@@ -144,6 +144,7 @@ namespace KDL
         {
             return segments.find(segment_name);
         };
+
         /**
          * Request the root segment of the tree
          *

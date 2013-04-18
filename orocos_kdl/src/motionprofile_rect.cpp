@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -41,15 +42,25 @@
 
 
 #include "utilities/error.h"
-#include "velocityprofile_rect.hpp"
+#include "motionprofile_rect.hpp"
 
 namespace KDL {
 
+int MotionProfile_Rectangular::Create(MotionProfileRectangularPtr& profile, double _maxvel)
+{
+	profile = MotionProfileRectangularPtr(new MotionProfile_Rectangular());
+	profile->maxvel = _maxvel;
+	return 0;
+}
 
-void VelocityProfile_Rectangular::SetProfile(
-	double pos1,
-	double pos2
-	)
+int MotionProfile_Rectangular::Create(MotionProfileRectangularPtr& profile, double _maxvel, double pos1, double pos2)
+{
+	Create(profile,_maxvel);
+	profile->SetProfile(pos1,pos2);
+	return 0;
+}
+
+void MotionProfile_Rectangular::SetProfile(double pos1,double pos2)
 {
 	double diff;
 	diff = pos2-pos1;          // increment per sec.
@@ -67,13 +78,13 @@ void VelocityProfile_Rectangular::SetProfile(
         }
 }
 
-    void VelocityProfile_Rectangular::SetMax( double vMax )
-    {
-        maxvel = vMax;
-    }
+void MotionProfile_Rectangular::SetMax( double vMax )
+{
+    maxvel = vMax;
+}
 
 
-void VelocityProfile_Rectangular::
+void MotionProfile_Rectangular::
 	SetProfileDuration(double pos1,double pos2,double duration)
 {
 	double diff;
@@ -94,40 +105,42 @@ void VelocityProfile_Rectangular::
         }
 }
 
-double VelocityProfile_Rectangular::Duration() const {
+double MotionProfile_Rectangular::Duration() const {
 	return d;
 }
 
-double VelocityProfile_Rectangular::Pos(double time) const {
+int MotionProfile_Rectangular::Pos(double time, double& returned_position) const {
     if (time < 0) {
-        return p;
+        returned_position = p;
+        return 0;
     } else if (time>d) {
-        return v*d+p;
+        returned_position = v*d+p;
+        return 0;
     } else {
-        return v*time+p;
+        returned_position = v*time+p;
+        return 0;
     }
 }
 
-double VelocityProfile_Rectangular::Vel(double time) const {
+int MotionProfile_Rectangular::Vel(double time, double& returned_velocity) const {
     if (time < 0) {
+        returned_velocity = 0;
         return 0;
     } else if (time>d) {
+        returned_velocity = 0;
         return 0;
     } else {
-        return v;
+        returned_velocity = v;
+        return 0;
     }
 }
 
-double VelocityProfile_Rectangular::Acc(double time) const {
-	throw Error_MotionPlanning_Incompatible();
-	return 0;
+int MotionProfile_Rectangular::Acc(double time, double& returned_acceleration) const {
+	return 153;
 }
 
-
-void VelocityProfile_Rectangular::Write(std::ostream& os) const {
+void MotionProfile_Rectangular::Write(std::ostream& os) const {
 	os << "CONSTVEL[" << maxvel << "]";
 }
-
-
 }
 

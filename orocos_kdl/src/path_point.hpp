@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -48,11 +49,9 @@
 
 #include "path.hpp"
 #include "rotational_interpolation.hpp"
-
+#include <boost/shared_ptr.hpp>
 
 namespace KDL {
-
-
 
 /**
  * A Path consisting only of a point in space.
@@ -60,19 +59,23 @@ namespace KDL {
  */
 class Path_Point : public Path
 	{
+		typedef boost::shared_ptr<Path_Point> PathPointPtr;
+		typedef boost::shared_ptr<Path> PathPtr;
+
+
 		Frame F_base_start;
 	public:
 		/**
 		 * Constructs a Point Path
 		 */
-		Path_Point(const Frame& F_base_start);
-		double LengthToS(double length);
+		static int Create(const Frame& F_base_start, PathPointPtr& point);
+		int LengthToS(double length, double& returned_length);
 		virtual double PathLength();
-		virtual Frame Pos(double s) const;
-		virtual Twist Vel(double s,double sd) const ;
-		virtual Twist Acc(double s,double sd,double sdd) const;
+		virtual int Pos(double s, Frame& returned_position) const;
+		virtual int Vel(double s,double sd, Twist& returned_velocity) const ;
+		virtual int Acc(double s,double sd,double sdd, Twist& returned_acceleration) const;
 		virtual void Write(std::ostream& os);
-		virtual Path* Clone();
+		virtual PathPtr Clone();
 
 		/**
 		 * gets an identifier indicating the type of this Path object
@@ -81,6 +84,9 @@ class Path_Point : public Path
 			return ID_POINT;
 		}
 		virtual ~Path_Point();
+
+	private:
+		Path_Point() {};
 	};
 
 }

@@ -25,7 +25,6 @@ void JacobianTest::TestChangeRefPoint(){
     j3.resize(5);
     CPPUNIT_ASSERT(changeRefPoint(j2,-p,j3));
     CPPUNIT_ASSERT_EQUAL(j1,j3);
-
 }
 
 void JacobianTest::TestChangeRefFrame(){

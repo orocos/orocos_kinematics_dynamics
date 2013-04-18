@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -48,64 +49,82 @@
 #include "frames_io.hpp"
 #include "trajectory.hpp"
 #include "path.hpp"
-#include "velocityprofile.hpp"
+#include "motionprofile.hpp"
+#include <boost/shared_ptr.hpp>
 
 
 namespace KDL {
 
-
 	/**
-	 * Trajectory_Segment combines a VelocityProfile and a Path into a
+	 * Trajectory_Segment combines a MotionProfile and a Path into a
 	 * trajectory
 	 * @ingroup Motion
 	 */
 	class Trajectory_Segment :  public Trajectory
 	{
-		VelocityProfile* motprof;
-		Path*      geom;
+		typedef boost::shared_ptr<Path> PathPtr;
+		typedef boost::shared_ptr<MotionProfile> MotionProfilePtr;
+		typedef boost::shared_ptr<Trajectory_Segment> TrajectorySegmentPtr;
+		typedef boost::shared_ptr<Trajectory> TrajectoryPtr;
+
+		MotionProfilePtr motprof;
+		PathPtr geom;
 		bool aggregate;
+
 	public:
-		/**
-		 * This constructor assumes that \a geom and <_motprof> are initialised correctly.
-		 */
-		Trajectory_Segment(Path* _geom, VelocityProfile* _motprof, bool _aggregate=true);
 
 		/**
-		 * This constructor assumes that \a geom is initialised and <_motprof> needs to be
+		 * This creator assumes that \a geom and <_motprof> are initialised correctly.
+		 */
+		static int Create(	PathPtr _geom,
+							MotionProfilePtr _motprof,
+							TrajectorySegmentPtr& segment,
+							bool _aggregate=true
+							);
+
+		/**
+		 * This creator assumes that \a geom is initialised and <_motprof> needs to be
 		 * set according to \a duration.
 		 */
-		Trajectory_Segment(Path* _geom, VelocityProfile* _motprof, double duration, bool _aggregate=true);
+		static int Create(	PathPtr _geom,
+							MotionProfilePtr _motprof,
+							double duration,
+							TrajectorySegmentPtr& segment,
+							bool _aggregate=true);
 
 		virtual double Duration() const;
 		// The duration of the trajectory
 
-		virtual Frame Pos(double time) const;
+		virtual int Pos(double time, Frame& returned_position) const;
 		// Position of the trajectory at <time>.
 
-		virtual Twist Vel(double time) const;
+		virtual int Vel(double time, Twist& returned_velocity) const;
 		// The velocity of the trajectory at <time>.
-		virtual Twist Acc(double time) const;
+		virtual int Acc(double time, Twist& returned_acceleration) const;
 		// The acceleration of the trajectory at <time>.
 
- 		virtual Trajectory* Clone() const
+ 		virtual TrajectoryPtr Clone() const
 			{
-				if ( aggregate )
-					return new Trajectory_Segment( geom->Clone(), motprof->Clone(), true );
-				return new Trajectory_Segment( geom, motprof, false );
+ 				TrajectorySegmentPtr segment;
+				if ( aggregate ){
+					Trajectory_Segment::Create(geom->Clone(), motprof->Clone(), segment, true );
+					return segment;
+				}
+				Trajectory_Segment::Create(geom, motprof, segment, false );
+				return segment;
 			}
 
 		virtual void Write(std::ostream& os) const;
 
-	    virtual Path* GetPath();
+	    virtual PathPtr GetPath();
 
-	    virtual VelocityProfile* GetProfile();
-
+	    virtual MotionProfilePtr GetProfile();
 
 		virtual ~Trajectory_Segment();
+
+	private:
+		Trajectory_Segment() {};
 	};
-
-
-
 }
 
 

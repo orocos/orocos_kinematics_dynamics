@@ -6,6 +6,7 @@
     begin                : Mon January 10 2005
     copyright            : (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -47,6 +48,7 @@
 
 #include "path.hpp"
 #include "rotational_interpolation.hpp"
+#include <boost/shared_ptr.hpp>
 
 
 namespace KDL {
@@ -59,9 +61,12 @@ namespace KDL {
 	 */
 class Path_Circle : public Path
 	{
+		typedef boost::shared_ptr<RotationalInterpolation> RotationalInterpolationPtr;
+		typedef boost::shared_ptr<Path> PathPtr;
+		typedef boost::shared_ptr<Path_Circle> PathCirclePtr;
 
 		// Orientatie gedeelte
-		RotationalInterpolation* orient;
+		RotationalInterpolationPtr orient;
 
 		// Circular gedeelte
 		double radius;
@@ -79,26 +84,30 @@ class Path_Circle : public Path
 
 	public:
 
-		/**
-		 *
-		 * CAN THROW Error_MotionPlanning_Circle_ToSmall
-		 * CAN THROW Error_MotionPlanning_Circle_No_Plane
+		/*
+		 * Exit codes: \n
+		 * 0: OK \n
+		 * 149: Error: Motion planning circle too small \n
+		 * 150: Error: Motion planning circle no plane \n
 		 */
-		Path_Circle(const Frame& F_base_start,const Vector& V_base_center,
+		static int Create(const Frame& F_base_start,
+			const Vector& _V_base_center,
 			const Vector& V_base_p,
 			const Rotation& R_base_end,
 			double alpha,
-			RotationalInterpolation* otraj,
-			double eqradius,
-			bool _aggregate=true);
+			RotationalInterpolationPtr _orient,
+			double _eqradius,
+			PathCirclePtr& returned_circle,
+            bool _aggregate = true);
 
-		double LengthToS(double length);
+		int LengthToS(double length, double& returned_length);
 
 		virtual double PathLength();
-		virtual Frame Pos(double s) const;
-		virtual Twist Vel(double s,double sd) const;
-		virtual Twist Acc(double s,double sd,double sdd) const;
-		virtual Path* Clone();
+		virtual int Pos(double s, Frame& returned_position) const;
+		virtual int Vel(double s,double sd, Twist& returned_velocity) const;
+		virtual int Acc(double s,double sd,double sdd, Twist& returned_acceleration) const;
+
+		virtual PathPtr Clone();
 		virtual void Write(std::ostream& os);
 
 		/**
@@ -109,6 +118,9 @@ class Path_Circle : public Path
 		}
 
 		virtual ~Path_Circle();
+
+	private:
+		Path_Circle() {};
 	};
 
 

@@ -6,6 +6,7 @@
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
+    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *
@@ -45,9 +46,11 @@
 
 namespace KDL {
 
-
-RotationalInterpolation_SingleAxis::RotationalInterpolation_SingleAxis()
-	{};
+int RotationalInterpolation_SingleAxis::Create(RotationalInterpolationSingleAxisPtr& interpolation)
+{
+	interpolation = RotationalInterpolationSingleAxisPtr(new RotationalInterpolation_SingleAxis());
+	return 0;
+}
 
 void RotationalInterpolation_SingleAxis::SetStartEnd(Rotation start,Rotation end) {
 	R_base_start = start;
@@ -56,16 +59,19 @@ void RotationalInterpolation_SingleAxis::SetStartEnd(Rotation start,Rotation end
 	angle = R_start_end.GetRotAngle(rot_start_end);
 }
 
-Rotation RotationalInterpolation_SingleAxis::Pos(double theta) const {
-	return R_base_start* Rotation::Rot2(rot_start_end,theta);
+int RotationalInterpolation_SingleAxis::Pos(double theta, Rotation& returned_position) const {
+	returned_position = R_base_start* Rotation::Rot2(rot_start_end,theta);
+	return 0;
 }
 
-Vector RotationalInterpolation_SingleAxis::Vel(double theta,double thetad) const {
-	return R_base_start * ( rot_start_end*thetad );
+int RotationalInterpolation_SingleAxis::Vel(double theta,double thetad, Vector& returned_velocity) const {
+	returned_velocity = R_base_start * ( rot_start_end*thetad );
+	return 0;
 }
 
-Vector RotationalInterpolation_SingleAxis::Acc(double theta,double thetad,double thetadd) const {
-	return R_base_start * ( rot_start_end* thetadd);
+int RotationalInterpolation_SingleAxis::Acc(double theta,double thetad,double thetadd, Vector& returned_acceleration) const {
+	returned_acceleration = R_base_start * ( rot_start_end* thetadd);
+	return 0;
 }
 
 double RotationalInterpolation_SingleAxis::Angle() {
@@ -80,8 +86,10 @@ RotationalInterpolation_SingleAxis::~RotationalInterpolation_SingleAxis() {
 }
 
 
-RotationalInterpolation* RotationalInterpolation_SingleAxis::Clone() const {
-	return new RotationalInterpolation_SingleAxis();
+boost::shared_ptr<RotationalInterpolation> RotationalInterpolation_SingleAxis::Clone() const {
+	RotationalInterpolationSingleAxisPtr interpolation;
+	RotationalInterpolation_SingleAxis::Create(interpolation);
+	return interpolation;
 }
 
 }
