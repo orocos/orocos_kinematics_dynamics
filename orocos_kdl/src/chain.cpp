@@ -34,8 +34,11 @@ namespace KDL {
     Chain::Chain(const Chain& in):nrOfJoints(0),
                                   nrOfSegments(0)
     {
-        for(unsigned int i=0;i<in.getNrOfSegments();i++)
-            this->addSegment(in.getSegment(i));
+        for(unsigned int i=0;i<in.getNrOfSegments();i++){
+        	Segment segm;
+        	in.getSegment(i,segm);
+            this->addSegment(segm);
+        }
     }
 
     Chain& Chain::operator=(const Chain& arg)
@@ -43,8 +46,11 @@ namespace KDL {
         nrOfJoints=0;
         nrOfSegments=0;
         segments.resize(0);
-        for(unsigned int i=0;i<arg.nrOfSegments;i++)
-            addSegment(arg.getSegment(i));
+        for(unsigned int i=0;i<arg.nrOfSegments;i++){
+        	Segment segm;
+        	arg.getSegment(i,segm);
+            addSegment(segm);
+        }
         return *this;
     }
 
@@ -56,7 +62,8 @@ namespace KDL {
 //            nrOfJoints++;
 //    }
 
-    bool Chain::addSegment(const Segment& segment) {
+    bool Chain::addSegment(const Segment& segment)
+    {
     	if (segment.getName() != "NoName") {
     		for (int i = 0; i < segments.size(); i++) {
     			if (segments[i].getName() == segment.getName())
@@ -76,10 +83,13 @@ namespace KDL {
 //            this->addSegment(chain.getSegment(i));
 //    }
 
-    bool Chain::addChain(const Chain& chain) {
+    bool Chain::addChain(const Chain& chain)
+    {
     	Chain tmp_copy = *this;
     	for (unsigned int i = 0; i < chain.getNrOfSegments(); i++){
-			bool exit_code = this->addSegment(chain.getSegment(i));
+    		Segment segm;
+    		chain.getSegment(i,segm);
+			bool exit_code = this->addSegment(segm);
 			if(exit_code == false){
 				*this = tmp_copy;
 				return false;
@@ -88,14 +98,116 @@ namespace KDL {
     	return true;
     }
 
-    const Segment& Chain::getSegment(unsigned int nr)const
+//    const Segment& Chain::getSegment(unsigned int nr)const
+//    {
+//        return segments[nr];
+//    }
+
+    bool Chain::getSegment(unsigned int nr, Segment& returned_segment) const
     {
-        return segments[nr];
+    	if(nr < 0 || nr >= segments.size()){
+    		return false;
+    	}
+    	returned_segment = segments[nr];
+    	return true;
     }
 
     Chain::~Chain()
     {
     }
 
-}
+//    const Segment& Chain::getSegment(const std::string &segment_name) const
+//    {
+//    	for(int i = 0; i < segments.size(); i++){
+//    		if(segments[i].getName() == segment_name){
+//    			return segments[i];
+//    		}
+//    	}
+//    	return segments[segments.size()-1];
+//    }
 
+    bool Chain::getSegment(const std::string &segment_name, Segment& returned_segment) const
+    {
+    	for(int i = 0; i < segments.size(); i++){
+    		if(segments[i].getName() == segment_name){
+    			returned_segment = segments[i];
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+
+//    const Segment & Chain::getLeafSegment() const{
+//    	return segments[segments.size()-1];
+//    }
+
+    bool Chain::getLeafSegment(Segment& returned_segment) const{
+    	returned_segment = segments[segments.size()-1];
+    	return true;
+    }
+
+    bool Chain::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const{
+
+    	chain = Chain();
+
+    	//When the chain_root is after the chain_tip in the chain, the segments are pushed_back to this vector first.
+    	//At the end, the segments are placed in the new chain in the right order.
+    	vector<Segment> vect;
+
+    	enum Status {none_found, root_found, tip_found};
+
+    	Status stat = none_found;
+
+    	//Go through the list
+    	for(int i = 0; i < segments.size();i++){
+
+    		if(stat == none_found){
+    			if(segments[i].getName() == chain_root){
+    				stat = root_found;
+    				if(chain_root == chain_tip){ //Case start == end
+    					chain.addSegment(segments[i]);
+    					return true;
+    				}
+    				chain.addSegment(segments[i]);
+    			}
+    			else if(segments[i].getName() == chain_tip){
+    				stat = tip_found;
+    				if(chain_root == chain_tip){ //Case start == end
+    					chain.addSegment(segments[i]);
+    					return true;
+    				}
+    				vect.push_back(segments[i]);
+    			}
+    		}
+    		else if(stat == root_found){
+    			if(segments[i].getName() == chain_tip){
+    				chain.addSegment(segments[i]);
+    				return true;
+    			}
+    			else {
+    				if(i == (segments.size()-1)){ //Reached end without finding tip
+    					chain = Chain();
+    					return false;
+    				}
+    				chain.addSegment(segments[i]);
+    			}
+    		}
+    		else { //tip_found
+    			if(segments[i].getName() == chain_root){
+    				vect.push_back(segments[i]);
+    				for(int j = vect.size()-1; j >= 0; j--){
+    					chain.addSegment(vect[j]);
+    				}
+    				return true;
+    			}
+    			else {
+    				if(i == (segments.size()-1)){ //Reached end without finding root
+    					return false;
+    				}
+    				vect.push_back(segments[i]);
+    			}
+    		}
+    	}
+    	return false;
+    }
+}

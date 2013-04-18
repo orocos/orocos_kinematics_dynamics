@@ -66,7 +66,6 @@ void KinFamTest::JointTest()
     CPPUNIT_ASSERT_EQUAL(j.pose(q),Frame(Vector(0,0,q)));
     random(q);
     CPPUNIT_ASSERT_EQUAL(j.twist(q),Twist(Vector(0,0,q),Vector::Zero()));
-
 }
 
 void KinFamTest::SegmentTest()
@@ -185,6 +184,31 @@ void KinFamTest::ChainTest()
     CPPUNIT_ASSERT_EQUAL(exit_code,false);
     CPPUNIT_ASSERT(nrOfJoints==chain2.getNrOfJoints());
     CPPUNIT_ASSERT(nrOfSegments==chain2.getNrOfSegments());
+
+    //Testing getChain()
+    Chain chain5;
+    exit_code = chain1.getChain("Segment 1", "Segment 4",chain5);
+    CPPUNIT_ASSERT_EQUAL(exit_code,true);
+    CPPUNIT_ASSERT(chain5.getNrOfSegments() == 4);
+
+    exit_code = chain1.getChain("Segment 4", "Segment 1",chain5);
+    CPPUNIT_ASSERT_EQUAL(exit_code,true);
+    CPPUNIT_ASSERT(chain5.getNrOfSegments() == 4);
+
+    //Case tip not found
+    exit_code = chain1.getChain("Segment 4", "Segment 100",chain5);
+    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
+
+    //Case head not found
+    exit_code = chain1.getChain("Segment 100", "Segment 4",chain5);
+    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
+
+    //Case head and tip not found
+    exit_code = chain1.getChain("Segment 100", "Segment 150",chain5);
+    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
 }
 
 void KinFamTest::TreeTest()
@@ -206,6 +230,11 @@ void KinFamTest::TreeTest()
     CPPUNIT_ASSERT(tree1.addSegment(segment4,"Segment 3"));
     CPPUNIT_ASSERT(!tree1.addSegment(segment1,"Segment 6"));
     CPPUNIT_ASSERT(!tree1.addSegment(segment1,"Segment 4"));
+
+    //Testing getLeafSegments
+    SegmentMap leafs;
+    tree1.getLeafSegments(leafs);
+    CPPUNIT_ASSERT(leafs.size() == 2);
 
     cout<<tree1<<endl;
 
@@ -230,11 +259,14 @@ void KinFamTest::TreeTest()
     chain1.addSegment(Segment("Segment 13", Joint("Joint 13", Joint::RotZ),
                               Frame(Vector(0.0,0.0,0.4))));
 
-
     CPPUNIT_ASSERT(tree2.addChain(chain1, "Segment 6"));
     cout<<tree2<<endl;
     CPPUNIT_ASSERT(tree1.addTree(tree2, "Segment 2"));
     cout<<tree1<<endl;
+
+    //Testing getLeafSegments
+    tree1.getLeafSegments(leafs);
+    CPPUNIT_ASSERT(leafs.size() == 4);
 
     Chain extract_chain1;
     CPPUNIT_ASSERT(tree1.getChain("Segment 2", "Segment 4", extract_chain1));
@@ -245,7 +277,6 @@ void KinFamTest::TreeTest()
     CPPUNIT_ASSERT(extract_chain1.getNrOfSegments()==extract_chain2.getNrOfSegments());
     ChainFkSolverPos_recursive solver1(extract_chain1);
     ChainFkSolverPos_recursive solver2(extract_chain2);
-
 
     Frame f1, f2;
     JntArray jnt1(extract_chain2.getNrOfJoints());

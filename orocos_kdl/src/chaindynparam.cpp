@@ -54,8 +54,10 @@ namespace KDL {
         for(unsigned int i=0;i<ns;i++)
 	{
 	  //Collect RigidBodyInertia
-          Ic[i]=chain.getSegment(i).getInertia();
-          if(chain.getSegment(i).getJoint().getType()!=Joint::None)
+          Segment segm;
+          chain.getSegment(i,segm);
+          Ic[i]=segm.getInertia();
+          if(segm.getJoint().getType()!=Joint::None)
 	  {
 	      q_=q(k);
 	      k++;
@@ -64,15 +66,15 @@ namespace KDL {
 	  {
 	    q_=0.0;
 	  }
-	  X[i]=chain.getSegment(i).pose(q_);//Remark this is the inverse of the frame for transformations from the parent to the current coord frame
-	  S[i]=X[i].M.Inverse(chain.getSegment(i).twist(q_,1.0));  
+	  X[i]=segm.pose(q_);//Remark this is the inverse of the frame for transformations from the parent to the current coord frame
+	  S[i]=X[i].M.Inverse(segm.twist(q_,1.0));
         }
 	//Sweep from leaf to root
         int j,l;
 	k=nj-1; //reset k
         for(int i=ns-1;i>=0;i--)
 	{
-	  
+
 	  if(i!=0)
 	    {
 	      //assumption that previous segment is parent
@@ -80,7 +82,10 @@ namespace KDL {
 	    } 
 
 	  F=Ic[i]*S[i];
-	  if(chain.getSegment(i).getJoint().getType()!=Joint::None)
+
+      Segment segm;
+      chain.getSegment(i,segm);
+	  if(segm.getJoint().getType()!=Joint::None)
 	  {
 	      H(k,k)=dot(S[i],F);
 	      j=k; //countervariable for the joints
@@ -91,7 +96,9 @@ namespace KDL {
 		  F=X[l]*F; //calculate the unit force (cfr S) for every segment: F[l-1]=X[l]*F[l]
 		  l--; //go down a segment
 		  
-		  if(chain.getSegment(l).getJoint().getType()!=Joint::None) //if the joint connected to segment is not a fixed joint
+	      Segment segm;
+	      chain.getSegment(l,segm);
+		  if(segm.getJoint().getType()!=Joint::None) //if the joint connected to segment is not a fixed joint
 		  {    
 		    j--;
 		    H(k,j)=dot(F,S[l]); //here you actually match a certain not fixed joint with a segment 

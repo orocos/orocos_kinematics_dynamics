@@ -32,12 +32,14 @@ namespace KDL {
 
     int TreeFkSolverPos_recursive::JntToCart(const JntArray& q_in, Frame& p_out, std::string segmentName)
     {      
-		SegmentMap::const_iterator it = tree.getSegment(segmentName); 
+		SegmentMap::const_iterator it;
+		tree.getSegment(segmentName,it);
        
-        
+        SegmentMap segments;
+        tree.getSegments(segments);
         if(q_in.rows() != tree.getNrOfJoints())
     	    	return -1;
-        else if(it == tree.getSegments().end()) //if the segment name is not found
+        else if(it == segments.end()) //if the segment name is not found
          	return -2;
         else{
         	const TreeElement& currentElement = it->second;
@@ -52,7 +54,8 @@ namespace KDL {
 		const TreeElement& currentElement = it->second;
 		Frame currentFrame = currentElement.segment.pose(q_in(currentElement.q_nr));
 		
-		SegmentMap::const_iterator rootIterator = tree.getRootSegment();
+		SegmentMap::const_iterator rootIterator;
+		tree.getRootSegment(rootIterator);
 		if(it == rootIterator){
 			return currentFrame;	
 		}

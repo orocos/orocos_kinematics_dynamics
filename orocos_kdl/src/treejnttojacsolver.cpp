@@ -24,16 +24,19 @@ int TreeJntToJacSolver::JntToJac(const JntArray& q_in, Jacobian& jac, const std:
         return -1;
     
     //Lets search the tree-element
-    SegmentMap::const_iterator it = tree.getSegments().find(segmentname);
+    SegmentMap segments;
+    tree.getSegments(segments);
+    SegmentMap::const_iterator it = segments.find(segmentname);
 
     //If segmentname is not inside the tree, back out:
-    if (it == tree.getSegments().end())
+    if (it == segments.end())
         return -2;
     
     //Let's make the jacobian zero:
     SetToZero(jac);
     
-    SegmentMap::const_iterator root = tree.getRootSegment();
+    SegmentMap::const_iterator root;
+    tree.getRootSegment(root);
 
     Frame T_total = Frame::Identity();
     //Lets recursively iterate until we are in the root segment

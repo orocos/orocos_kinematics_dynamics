@@ -66,6 +66,7 @@ namespace KDL
     {
     private:
         SegmentMap segments;
+        SegmentMap leafSegments;
         int nrOfJoints;
         int nrOfSegments;
 
@@ -133,26 +134,60 @@ namespace KDL
          */
         unsigned int getNrOfSegments()const {return nrOfSegments;};
 
+//        /**
+//         * Request the segment of the tree with name segment_name.
+//         *
+//         * @param segment_name the name of the requested segment
+//         *
+//         * @return constant iterator pointing to the requested segment
+//         */
+//        SegmentMap::const_iterator getSegment(const std::string& segment_name)const
+//        {
+//            return segments.find(segment_name);
+//        };
+
         /**
          * Request the segment of the tree with name segment_name.
          *
          * @param segment_name the name of the requested segment
+         * @param returned_it: The return value. A constant iterator pointing to the requested segment.
          *
-         * @return constant iterator pointing to the requested segment
+         * @return success or failure (not found)
          */
-        SegmentMap::const_iterator getSegment(const std::string& segment_name)const
+        bool getSegment(const std::string& segment_name, SegmentMap::const_iterator& returned_it)const
         {
-            return segments.find(segment_name);
+            returned_it = segments.find(segment_name);
+            if(returned_it == segments.end())
+            	return false;
+            else
+            	return true;
         };
+
+//        /**
+//         * Request the root segment of the tree
+//         *
+//         * @return constant iterator pointing to the root segment
+//         */
+//        SegmentMap::const_iterator getRootSegment()const
+//        {
+//          return segments.find(root_name);
+//        };
 
         /**
          * Request the root segment of the tree
          *
-         * @return constant iterator pointing to the root segment
+         * @param returned_it: The return value; Constant iterator pointing to the root segment
+         *
+         * @return: success or failure (not found)
+         *
          */
-        SegmentMap::const_iterator getRootSegment()const
+        bool getRootSegment(SegmentMap::const_iterator& returned_it) const
         {
-          return segments.find(root_name);
+          returned_it = segments.find(root_name);
+          if(returned_it == segments.end())
+        	  return false;
+          else
+        	  return true;
         };
 
         /**
@@ -168,13 +203,40 @@ namespace KDL
          */
       bool getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const;
 
+//      /**
+//       * Request the leaf segments of the tree.
+//       *
+//       * @return A map of the leaf segments
+//       */
+//      const SegmentMap& getLeafSegments() const
+//      {
+//    	  return leafSegments;
+//      }
 
-        const SegmentMap& getSegments()const
-        {
-            return segments;
-        }
+      /**
+       * Request the leaf segments of the tree.
+       *
+       * @param returned_map: The return value. The leaf segments of the tree.
+       *
+       * @return true
+       */
+      bool getLeafSegments(SegmentMap& returned_map) const
+      {
+    	  returned_map = leafSegments;
+    	  return true;
+      }
 
-        virtual ~Tree(){};
+//      const SegmentMap& getSegments()const
+//      {
+//          return segments;
+//      }
+      bool getSegments(SegmentMap& returned_map) const
+      {
+          returned_map = segments;
+          return true;
+      }
+
+      virtual ~Tree(){};
 
     };
 }

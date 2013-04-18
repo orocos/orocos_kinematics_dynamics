@@ -43,8 +43,11 @@ std::istream& operator >>(std::istream& is, Segment& segment) {
 
 std::ostream& operator <<(std::ostream& os, const Chain& chain) {
 	os << "[";
-	for (unsigned int i = 0; i < chain.getNrOfSegments(); i++)
-		os << chain.getSegment(i) << "\n";
+	for (unsigned int i = 0; i < chain.getNrOfSegments(); i++){
+		Segment segm;
+		chain.getSegment(i,segm);
+		os << segm << "\n";
+	}
 	os << "]";
 	return os;
 }
@@ -54,7 +57,8 @@ std::istream& operator >>(std::istream& is, Chain& chain) {
 }
 
 std::ostream& operator <<(std::ostream& os, const Tree& tree) {
-	SegmentMap::const_iterator root = tree.getRootSegment();
+	SegmentMap::const_iterator root;
+	tree.getSegment("root",root);
 	return os << root;
 }
 

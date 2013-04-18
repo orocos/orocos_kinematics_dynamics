@@ -74,7 +74,8 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
         //which is at the segments tip, i.e. where the next joint is attached.
 
         //Calculate segment properties: X,S,vj,cj
-        const Segment& segment = chain.getSegment(i);
+    	Segment segment;
+    	chain.getSegment(i,segment);
         segment_info& s = results[i + 1];
         //The pose between the joint root and the segment tip (tip expressed in joint root coordinates)
         s.F = segment.pose(q(j)); //X pose of each link in link coord system
@@ -230,8 +231,9 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             Vector6d vZ;
             vZ << Vector3d::Map(s.Z.rot.data), Vector3d::Map(s.Z.vel.data);
             s.EZ = (s.E.transpose() * vZ).lazy();
-
-            if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
+            Segment segm;
+            chain.getSegment(i - 1,segm);
+            if (segm.getJoint().getType() != Joint::None)
                 j--;
         }
     }
@@ -316,7 +318,9 @@ void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
         // nullspace forces.
         q_dotdot(j) = (s.nullspaceAccComp + parentAccComp + s.constAccComp);
         s.acc = s.F.Inverse(a_p + s.Z * q_dotdot(j) + s.C);//returns acceleration in link distal tip coordinates. For use needs to be transformed
-        if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
+        Segment segm;
+        chain.getSegment(i - 1,segm);
+        if (segm.getJoint().getType() != Joint::None)
             j++;
     }
 }
