@@ -38,13 +38,6 @@ IF(ENABLE_TESTS)
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(jacobiantest jacobiantest)
 
- ADD_EXECUTABLE(velocityprofiletest velocityprofiletest.cpp test-runner.cpp)
- SET(TESTNAME "velocityprofiletest")
- TARGET_LINK_LIBRARIES(velocityprofiletest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( velocityprofiletest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(velocityprofiletest velocityprofiletest)
-
 #  ADD_EXECUTABLE(rframestest  rframestest.cpp)
 #  TARGET_LINK_LIBRARIES(rframestest orocos-kdl)
 #  ADD_TEST(rframestest rframestest)
