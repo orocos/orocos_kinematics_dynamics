@@ -11,7 +11,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #                                                 #
 ###################################################
 
-PROJECT(Orocos-KDL)
+PROJECT(orocos_kdl)
 
 SET( KDL_VERSION 1.1.99 CACHE STRING "Version of Orocos KDL" )
 STRING( REGEX MATCHALL "[0-9]+" KDL_VERSIONS ${KDL_VERSION} )
@@ -22,8 +22,8 @@ LIST( GET KDL_VERSIONS 2 KDL_VERSION_PATCH)
 SET(KDL_VERSION_PATCH "${KDL_VERSION_PATCH}")
 MESSAGE( "Orocos KDL version ${VERSION} (${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}.${KDL_VERSION_PATCH})" )
 
-SET( PROJ_SOURCE_DIR ${Orocos-KDL_SOURCE_DIR} )
-SET( PROJ_BINARY_DIR ${Orocos-KDL_BINARY_DIR} )
+SET( PROJ_SOURCE_DIR ${orocos_kdl_SOURCE_DIR} )
+SET( PROJ_BINARY_DIR ${orocos_kdl_BINARY_DIR} )
 
 
 IF(NOT CMAKE_INSTALL_PREFIX)
@@ -86,10 +86,10 @@ CONFIGURE_FILE(
   IMMEDIATE @ONLY)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/KDLConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake @ONLY)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake DESTINATION share/orocos-kdl)
+  ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl)
 
-INSTALL(FILES package.xml DESTINATION share/orocos-kdl)
+INSTALL(FILES package.xml DESTINATION share/orocos_kdl)
 
 ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
