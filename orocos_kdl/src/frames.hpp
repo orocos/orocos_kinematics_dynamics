@@ -760,8 +760,12 @@ public:
      //! the new point.
      //!
      //! Complexity : 6M+6A
-     inline Twist RefPoint(const Vector& v_base_AB) const;
+     //! @deprecated Renamed to Twist ChangeRefPoint(const Vector& v_base_AB) const;
+     inline Twist RefPoint(const Vector& v_base_AB) const __attribute__ ((deprecated));
 
+     inline Twist ChangeRefPoint(const Vector& v_base_AB) const;
+     inline Twist ChangeCoordinateFrame(const Rotation& r) const;
+     inline Twist Inverse() const;
 
      //! do not use operator == because the definition of Equal(.,.) is slightly
      //! different.  It compares whether the 2 arguments are equal in an eps-interval

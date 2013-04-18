@@ -58,7 +58,7 @@ std::istream& operator >>(std::istream& is, Chain& chain) {
 
 std::ostream& operator <<(std::ostream& os, const Tree& tree) {
 	SegmentMap::const_iterator root;
-	tree.getSegment("root",root);
+	tree.getRootSegment(root);
 	return os << root;
 }
 

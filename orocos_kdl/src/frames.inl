@@ -309,6 +309,23 @@ Twist Twist::RefPoint(const Vector& v_base_AB) const
     return Twist(this->vel+this->rot*v_base_AB,this->rot);
 }
 
+Twist Twist::ChangeRefPoint(const Vector& v_base_AB) const
+{
+	return Twist(this->vel+this->rot*v_base_AB,this->rot);
+}
+
+Twist Twist::ChangeCoordinateFrame(const Rotation& r) const
+{
+    return r * (*this);
+}
+
+Twist Twist::Inverse() const
+{
+	Twist coordinatesInv(*this);
+    coordinatesInv.ReverseSign();
+    return coordinatesInv;
+}
+
 Twist& Twist::operator-=(const Twist& arg)
 {
     vel-=arg.vel;

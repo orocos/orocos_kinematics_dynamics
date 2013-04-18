@@ -84,7 +84,7 @@ namespace KDL
 
     void Jacobian::changeRefPoint(const Vector& base_AB){
         for(unsigned int i=0;i<data.cols();i++)
-            this->setColumn(i,this->getColumn(i).RefPoint(base_AB));
+            this->setColumn(i,this->getColumn(i).ChangeRefPoint(base_AB));
     }
 
     bool changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest)
@@ -92,7 +92,7 @@ namespace KDL
         if(src1.columns()!=dest.columns())
             return false;
         for(unsigned int i=0;i<src1.columns();i++)
-            dest.setColumn(i,src1.getColumn(i).RefPoint(base_AB));
+            dest.setColumn(i,src1.getColumn(i).ChangeRefPoint(base_AB));
         return true;
     }
     

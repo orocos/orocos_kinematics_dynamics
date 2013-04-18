@@ -39,14 +39,11 @@
  * (KDL::Segment). A KDL::Chain is a <strong>serial</strong> connection of
  * these segments; a KDL:Tree is a <strong>tree-structured</strong>
  * interconnection; and a KDL:Graph is a kinematic structure with a
- * <strong>general graph</strong> topology. (The current implementation
- * supports only KDL::Chain.)
+ * <strong>general graph</strong> topology.
  *
  * A KDL::Segment contains a KDL::Joint and an offset frame ("link length",
  * defined by a KDL::Frame), that represents the geometric pose
  * between the KDL::Joint on the previous segment and its own KDL::Joint.
  *
  * A list of all the classes is available on the modules page: \ref KinFam
- *
- *
  */

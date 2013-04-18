@@ -1,4 +1,5 @@
 // Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// History: 08/2012: Wouter Bancken <wouter dot bancken at gmail dot com>
 
 // Version: 1.0
 // Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
@@ -54,14 +55,6 @@ namespace KDL {
         return *this;
     }
 
-//    void Chain::addSegment(const Segment& segment)
-//    {
-//        segments.push_back(segment);
-//        nrOfSegments++;
-//        if(segment.getJoint().getType()!=Joint::None)
-//            nrOfJoints++;
-//    }
-
     bool Chain::addSegment(const Segment& segment)
     {
     	if (segment.getName() != "NoName") {
@@ -76,12 +69,6 @@ namespace KDL {
     		nrOfJoints++;
     	return true;
     }
-
-//    void Chain::addChain(const Chain& chain)
-//    {
-//        for(unsigned int i=0;i<chain.getNrOfSegments();i++)
-//            this->addSegment(chain.getSegment(i));
-//    }
 
     bool Chain::addChain(const Chain& chain)
     {
@@ -98,10 +85,10 @@ namespace KDL {
     	return true;
     }
 
-//    const Segment& Chain::getSegment(unsigned int nr)const
-//    {
-//        return segments[nr];
-//    }
+    const Segment& Chain::getSegment(unsigned int nr)const
+    {
+        return segments[nr];
+    }
 
     bool Chain::getSegment(unsigned int nr, Segment& returned_segment) const
     {
@@ -111,20 +98,6 @@ namespace KDL {
     	returned_segment = segments[nr];
     	return true;
     }
-
-    Chain::~Chain()
-    {
-    }
-
-//    const Segment& Chain::getSegment(const std::string &segment_name) const
-//    {
-//    	for(int i = 0; i < segments.size(); i++){
-//    		if(segments[i].getName() == segment_name){
-//    			return segments[i];
-//    		}
-//    	}
-//    	return segments[segments.size()-1];
-//    }
 
     bool Chain::getSegment(const std::string &segment_name, Segment& returned_segment) const
     {
@@ -137,9 +110,15 @@ namespace KDL {
     	return false;
     }
 
-//    const Segment & Chain::getLeafSegment() const{
-//    	return segments[segments.size()-1];
-//    }
+    const Segment & Chain::getRootSegment() const
+    {
+        return getSegment(0);
+    }
+
+    const std::vector<Segment> & Chain::getSegments() const
+    {
+    	return segments;
+    }
 
     bool Chain::getLeafSegment(Segment& returned_segment) const{
     	returned_segment = segments[segments.size()-1];
@@ -157,6 +136,7 @@ namespace KDL {
     	enum Status {none_found, root_found, tip_found};
 
     	Status stat = none_found;
+    	bool exit_value;
 
     	//Go through the list
     	for(int i = 0; i < segments.size();i++){
@@ -164,16 +144,23 @@ namespace KDL {
     		if(stat == none_found){
     			if(segments[i].getName() == chain_root){
     				stat = root_found;
+    				exit_value = chain.addSegment(segments[i]);
+        			if(!exit_value){
+        		    	chain = Chain();
+        				return false;
+        			}
     				if(chain_root == chain_tip){ //Case start == end
-    					chain.addSegment(segments[i]);
     					return true;
     				}
-    				chain.addSegment(segments[i]);
     			}
     			else if(segments[i].getName() == chain_tip){
     				stat = tip_found;
     				if(chain_root == chain_tip){ //Case start == end
-    					chain.addSegment(segments[i]);
+    					exit_value = chain.addSegment(segments[i]);
+    	    			if(!exit_value){
+    	    		    	chain = Chain();
+    	    				return false;
+    	    			}
     					return true;
     				}
     				vect.push_back(segments[i]);
@@ -181,7 +168,11 @@ namespace KDL {
     		}
     		else if(stat == root_found){
     			if(segments[i].getName() == chain_tip){
-    				chain.addSegment(segments[i]);
+    				exit_value = chain.addSegment(segments[i]);
+        			if(!exit_value){
+        		    	chain = Chain();
+        				return false;
+        			}
     				return true;
     			}
     			else {
@@ -189,19 +180,28 @@ namespace KDL {
     					chain = Chain();
     					return false;
     				}
-    				chain.addSegment(segments[i]);
+    				exit_value = chain.addSegment(segments[i]);
+        			if(!exit_value){
+        		    	chain = Chain();
+        				return false;
+        			}
     			}
     		}
     		else { //tip_found
     			if(segments[i].getName() == chain_root){
     				vect.push_back(segments[i]);
     				for(int j = vect.size()-1; j >= 0; j--){
-    					chain.addSegment(vect[j]);
+    					exit_value = chain.addSegment(vect[j]);
+    	    			if(!exit_value){
+    	    		    	chain = Chain();
+    	    				return false;
+    	    			}
     				}
     				return true;
     			}
     			else {
     				if(i == (segments.size()-1)){ //Reached end without finding root
+       					chain = Chain();
     					return false;
     				}
     				vect.push_back(segments[i]);
@@ -209,5 +209,86 @@ namespace KDL {
     		}
     	}
     	return false;
+    }
+
+    bool Chain::getChain(unsigned int nr_root, unsigned int nr_tip, Chain& chain)const{
+
+    	chain = Chain();
+
+    	if( nr_root < 0 || nr_root >= segments.size())
+    		return false;
+    	if( nr_tip < 0 || nr_tip >= segments.size())
+    		return false;
+
+    	bool exit_value;
+
+    	if(nr_root < nr_tip){
+    		for(int i = nr_root; i <= nr_tip; i++){
+    			exit_value = chain.addSegment(segments[i]);
+    			if(!exit_value){
+    		    	chain = Chain();
+    				return false;
+    			}
+    		}
+    	}
+    	else {
+    		for(int i = nr_root; i >= nr_tip;i--){
+    			exit_value = chain.addSegment(segments[i]);
+    			if(!exit_value){
+    		    	chain = Chain();
+    				return false;
+    			}
+    		}
+    	}
+		return true;
+    }
+
+    bool Chain::copy(unsigned int nr,Chain& returned_chain) const
+    {
+    	bool exit_code;
+    	returned_chain = Chain();
+    	if(nr < 0 || nr > getNrOfSegments())
+    		return false;
+        for(unsigned int i=0;i<nr;i++){
+        	Segment segm;
+        	exit_code = getSegment(i,segm);
+        	if(!exit_code){
+        		returned_chain = Chain();
+        		return false;
+        	}
+            exit_code = returned_chain.addSegment(segm);
+        	if(!exit_code){
+        		returned_chain = Chain();
+        		return false;
+        	}
+        }
+    	return true;
+    }
+
+    bool Chain::copy(const std::string& segment, Chain& returned_chain) const
+    {
+    	bool exit_code;
+    	returned_chain = Chain();
+    	for(unsigned int i=0;i<getNrOfSegments() && segments[i].getName() != segment;i++)
+    	{
+    	    Segment segm;
+    	    exit_code = getSegment(i,segm);
+    	    if(!exit_code)
+    	    {
+    	    	returned_chain = Chain();
+    	        return false;
+    	    }
+    	    exit_code = returned_chain.addSegment(segm);
+    	    if(!exit_code)
+    	    {
+    	        returned_chain = Chain();
+    	        return false;
+    	   	}
+    	}
+  	    return true;
+    }
+
+    Chain::~Chain()
+    {
     }
 }

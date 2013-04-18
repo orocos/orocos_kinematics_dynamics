@@ -63,6 +63,10 @@ void FramesTest::TestTwist() {
 	TestTwist2(t2);	
 	Twist    t3(Vector(0,-9,-3),Vector(1,-2,-4));
 	TestTwist2(t3);	
+
+	Twist    t4(Vector(6,3,5),Vector(4,-2,7));
+	Twist t5 = t4.ChangeCoordinateFrame(Rotation(Vector(1,0,0),Vector(0,1,0),Vector(0,0,1)));
+	Twist t6 = t4.Inverse();
 }
 
 void FramesTest::TestWrench2(Wrench& w) {

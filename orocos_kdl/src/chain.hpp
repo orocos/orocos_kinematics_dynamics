@@ -1,4 +1,5 @@
 // Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// History: 08/2012: Wouter Bancken <wouter dot bancken at gmail dot com>
 
 // Version: 1.0
 // Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
@@ -52,10 +53,9 @@ namespace KDL {
          * @param segment The segment to add
          * @return  false: 	when there is already a segment with the same name in the chain.
          * 					"NoName" is ignored in this test (so it will return true even when there are multiple "NoName" segments in the chain).
-         * 					In this case the segment will not be added.
+         * 					In this case the segment will not be added. \n
          * 			true: 	in the other cases
          */
-        //void addSegment(const Segment& segment);
         bool addSegment(const Segment& segment);
 
         /**
@@ -65,10 +65,9 @@ namespace KDL {
          * @param chain The chain to add
          * @return 	false: 	when the chain already contains at least one segment of the given chain.
          * 					"NoName" is ignored in this test (so it will return true even when there are multiple "NoName" segments in the new chain).
-         * 					In this case the chain will not be added.
+         * 					In this case the chain will not be added. \n
          *			true:	in the other cases
          */
-        //void addChain(const Chain& chain);
         bool addChain(const Chain& chain);
 
         /**
@@ -80,21 +79,24 @@ namespace KDL {
          * @return total nr of joints
          */
         unsigned int getNrOfJoints()const {return nrOfJoints;};
+
         /**
          * Request the total number of segments in the chain.
          * @return total number of segments
          */
         unsigned int getNrOfSegments()const {return nrOfSegments;};
 
-//        /**
-//         * Request the nr'd segment of the chain. There is no boundary
-//         * checking.
-//         *
-//         * @param nr the nr of the segment starting from 0
-//         *
-//         * @return a constant reference to the nr'd segment
-//         */
-//        const Segment& getSegment(unsigned int nr)const;
+        /**
+         * Request the nr'd segment of the chain. There is no boundary
+         * checking.
+         *
+         * @param nr the nr of the segment starting from 0
+         *
+         * @return a constant reference to the nr'd segment
+         *
+         * @deprecated use bool getSegment(unsigned int nr, Segment& returned_segment) const instead!
+         */
+        const Segment& getSegment(unsigned int nr) const  __attribute__ ((deprecated));
 
 		/**
 		 * Request the nr'd segment of the chain.
@@ -106,73 +108,54 @@ namespace KDL {
 		 */
 		 bool getSegment(unsigned int nr, Segment& returned_segment) const;
 
-//        /**
-//         * Request the root segment of the chain
-//         * @return The root segment.
-//         */
-//        const Segment & getRootSegment() const
-//        {
-//            return getSegment(0);
-//        }
-
-		/**
-		 * Request the root segment of the chain
-		 * @param returned_segment: the return value. The root segment.
-		 * @return true
-		 */
-		bool getRootSegment(Segment& returned_segment) const {
-			getSegment(0,returned_segment); //Returns true
-			return true;
-		}
-
-//        /**
-//         * Request the segments of the tree.
-//         */
-//        const std::vector<Segment> & getSegments() const{
-//        	return segments;
-//        }
-
-        /**
-         * Request the segments of the tree.
-         */
-        bool getSegments(std::vector<Segment>& returned_segments) const{
-        	returned_segments = segments;
-        	return true;
-        }
-
-//        /**
-//         * Request the segment with the given name in the chain.
-//         * In case of "NoName", it will return the first "NoName"-segment.
-//         *
-//         * @param segment_name: the name of the segment that should be returned.
-//         *
-//         * @return: a constant reference to the first segment with the given name.
-//         * 			If there is no segment with the given name in the chain,
-//         * 			the last element will be returned.
-//         */
-//        const Segment & getSegment(const std::string &segment_name) const;
-
 		/**
 		 * Request the segment with the given name in the chain.
 		 * In case of "NoName", it will return the first "NoName"-segment.
 		 *
-		 * @param segment_name: the name of the segment that should be returned.
-		 * @param returned_segment: the return value. A constant reference to the first segment with the given name.
+		 * @param segment_name the name of the segment that should be returned.
+		 * @param returned_segment the return value. A constant reference to the first segment with the given name.
 		 *
-		 * @return: success or failure (not found)
+		 * @return success or failure (not found)
 		 */
 		bool getSegment(const std::string &segment_name, Segment& returned_segment) const;
 
-//        /**
-//         * Request the last element in the chain.
-//         * @return: the last element in the chain.
-//         */
-//        const Segment & getLeafSegment() const;
+		/**
+		 * Request the root segment of the chain
+		 * @param returned_segment the return value. The root segment.
+		 * @return true
+		 */
+		bool getRootSegment(Segment& returned_segment) const
+		{
+			getSegment(0,returned_segment); //Returns true
+			return true;
+		}
+
+        /**
+         * Request the root segment of the chain
+         * @return The root segment.
+         * @deprecated use bool getRootSegment(Segment& returned_segment) const instead!
+         */
+        const Segment & getRootSegment() const __attribute__ ((deprecated));
+
+        /**
+         * Request the segments of the tree.
+         * @deprecated use bool getSegments(std::vector<Segment>& returned_segments) const instead!
+         */
+        const std::vector<Segment> & getSegments() const __attribute__ ((deprecated));
+
+        /**
+         * Request the segments of the tree.
+         */
+        bool getSegments(std::vector<Segment>& returned_segments) const
+        {
+        	returned_segments = segments;
+        	return true;
+        }
 
         /**
          * Request the last element in the chain.
-         * @param returned_segment: the return value. The last element in the chain.
-         * @return: success or failure
+         * @param returned_segment the return value. The last element in the chain.
+         * @return success or failure
          */
         bool getLeafSegment(Segment& returned_segment) const;
 
@@ -187,6 +170,38 @@ namespace KDL {
          * @return success or failure
          */
         bool getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain) const;
+
+        /**
+         * Request the subchain of the chain between chain_root and chain_tip. The chain_root can be
+         * after chain_tip in the original chain, or vice versa.
+         *
+         * @param nr_root the nr of the root segment of the chain
+         * @param nr_tip the nr of the tip segment of the chain
+         * @param chain the resulting chain
+         *
+         * @return success or failure
+         */
+        bool getChain(unsigned int nr_root, unsigned int nr_tip, Chain& chain) const;
+
+        /**
+         * Copies the chain up to the given segment_nr
+         *
+         * @param nr The smallest segment nr that should not be included in the copy.
+         *
+         * @return  false: 	When the nr is out of bounds or if an error occurs while adding segments. \n
+         * 			true:	In the other cases.
+         */
+        bool copy(unsigned int nr, Chain& returned_chain) const;
+
+        /**
+         * Copies the chain up to the given segment
+         *
+         * @param segment_name The name of the first segment that should not be included in the copy.
+         *
+         * @return false: If an error occurs while adding segments. \n
+         * 			true:  In the other cases.
+         */
+        bool copy(const std::string& segment, Chain& returned_chain) const;
 
         virtual ~Chain();
     };
