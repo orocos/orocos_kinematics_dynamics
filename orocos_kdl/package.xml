@@ -10,7 +10,11 @@
 
   <buildtool_depend>cmake</buildtool_depend>
   <build_depend>eigen</build_depend>
+
   <run_depend>catkin</run_depend>
+  <run_depend>eigen</run_depend>
+  <run_depend>pkg-config</run_depend>
+
   <test_depend>cppunit</test_depend>
   <export>
     <build_type>cmake</build_type>
