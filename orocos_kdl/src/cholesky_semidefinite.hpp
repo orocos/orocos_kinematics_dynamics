@@ -40,8 +40,8 @@
  *******************************************************************************/
 
 //Based on the cholesky_semidefinite function in matriw_wrapper of Orocos BFL by Tinne De Laet and Klaas Gadeyne
-#ifndef KDL_CHOLESKI_SEMIDEFINITE_HPP
-#define KDL_CHOLESKI_SEMIDEFINITE_HPP
+#ifndef KDL_CHOLESKY_SEMIDEFINITE_HPP
+#define KDL_CHOLESKY_SEMIDEFINITE_HPP
 
 #include <Eigen/Core>
 #include <math.h>
@@ -56,9 +56,12 @@ namespace KDL
      * @param input matrix<double>(mxm), should be a symmetric, semi-definite matrix
      * @param output matrix<double>(mxm)=L for which LL.transpose()=input
      *
-     * @return true if succeeded, false otherwise
+     * @return 0: OK \n
+     * 		   161: Error: matrix of which cholesky decomposition is asked, is not square! A zero matrix is returned. \n
+     * 		   162: Error: matrix of which cholesky decomposition is asked, is not symmetric!  A zero matrix is returned. \n
+     * 		   163: Error: Cholesky: matrix is negative definite.  A zero matrix is returned.
      */
-bool cholesky_semidefinite(const Eigen::MatrixXd& input, Eigen::MatrixXd& output);
+int cholesky_semidefinite(const Eigen::MatrixXd& input, Eigen::MatrixXd& output);
 }
 
 #endif

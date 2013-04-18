@@ -38,10 +38,10 @@
  *       POSSIBILITY OF SUCH DAMAGE.                                           *
  *                                                                             *
  *******************************************************************************/
-#include "choleski_semidefinite.hpp"
+#include "cholesky_semidefinite.hpp"
 
 namespace KDL{
-bool cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
+int cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
 {
     // apply cholesky to input, which should be a symmetric, semi-definite matrix
     // put result in output=L with LL.transpose()=input
@@ -56,9 +56,8 @@ bool cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
     // check if input is square
     if(sz!=output.cols())
     {
-        std::cout<< "Error: matrix of which cholesky decomposition is asked, is not square!: returning zero matrix" << std::endl;
         output.setZero(sz,output.cols());
-        return false;
+        return 161;
     }
     //check if input is a symmetric matrix
     for (l=0; l<sz; l++)
@@ -67,9 +66,8 @@ bool cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
         {
             if(output(l,m)!=output(m,l))
             {
-                std::cout <<" Error: matrix of which cholesky decomposition is asked, is not symmetric!: returning zero matrix" << std::endl;
                 output.setZero(sz,sz);
-                return false;
+                return 162;
             }else if(l==m)
             {
             	// check if close to zero => put to zero
@@ -77,9 +75,8 @@ bool cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
             	    output(l,l) = 0.0; //set to zero, matrix is semidefinite
             	}else if(output(l,l)<0.0)
             	{
-            		std::cout << "Error: matrix is negative definite: : returning zero matrix" << std::endl;
             		output.setZero(sz,sz);
-            		return false;
+            		return 163;
             	}
             }else
             {
@@ -90,29 +87,6 @@ bool cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
             }
         }
     }
-
-//todo: check this algorithm and compare with the current version
-//    for (int k=0; k<sz; k++) {
-//       // check if close to zero => put to zero
-//       if (output(k,k)< std::numeric_limits<double>::epsilon() && output(k,k)> -std::numeric_limits<double>::epsilon()){
-//             output(k,k) = 0.0; //set to zero, matrix is semidefinite
-//       }
-//       if (output(k,k) < 0.0) {
-//             std::cout<< "Warning: matrix of which cholesky decomposition is asked, is negative definite!: returning zero matrix" << std::endl;
-//             std::cout<< "output(" << k << "," << k << ")=" << output(k,k)  << std::endl;
-//             output.setZero(sz,output.cols()); return false;//matrix is negative definite
-//       }
-//       else  output(k,k)=sqrt(output(k,k));
-//       for (int i=k; i<sz; i++) {
-//           if (output(k,k)< std::numeric_limits<double>::epsilon()){
-//               output(i,k) = 0.0; //set to zero, matrix is semidefinite
-//           }
-//           else output(i,k)/=output(k,k);
-//       }
-//       for (int j=k; j<sz; j++) {
-//         for (int i=j; i<sz; i++)  output(i,j)-=output(i,k)*output(j,k);
-//       }
-//    }
 
     //the algorithm
     //if output is a diagonal matrix, we can calculate this easily
@@ -137,10 +111,8 @@ bool cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
 			//make sure this value on the diagonal is >0
 			if (output(k,k)< std::numeric_limits<double>::epsilon())
 			{
-				std::cout <<" Error: matrix of which cholesky decomposition is asked, is negative definite!: returning zero matrix" << std::endl;
-				std::cout<< "output(" << k << "," << k << ")=" << output(k,k)  << std::endl;
 				output.setZero(sz,output.cols());
-				return false;
+				return 163;
 			}
 			//invert diagonal element
 			double DiagElmntInv = 1/output(r,r);
@@ -165,6 +137,6 @@ bool cholesky_semidefinite(const Eigen::MatrixXd& input,Eigen::MatrixXd& output)
 			}
 		}
     }
-    return true;
+    return 0;
 }//end of function
 }//end of namespace KDL

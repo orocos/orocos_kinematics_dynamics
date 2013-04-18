@@ -160,8 +160,9 @@ namespace KDL {
         bool getLeafSegment(Segment& returned_segment) const;
 
         /**
-         * Request the subchain of the chain between chain_root and chain_tip. The chain_root can be
-         * after chain_tip in the original chain, or vice versa.
+         * Request the subchain of the chain between chain_root and chain_tip.
+         * The chain_root and the chain_tip are included in the new chain.
+         * The chain_root can be after chain_tip in the original chain, or vice versa.
          *
          * @param chain_root the name of the root segment of the chain
          * @param chain_tip the name of the tip segment of the chain
@@ -169,11 +170,25 @@ namespace KDL {
          *
          * @return success or failure
          */
-        bool getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain) const;
+        bool getChain_Including(const std::string& chain_root, const std::string& chain_tip, Chain& chain) const;
 
         /**
-         * Request the subchain of the chain between chain_root and chain_tip. The chain_root can be
-         * after chain_tip in the original chain, or vice versa.
+         * Request the subchain of the chain between chain_root and chain_tip.
+         * The chain_tip is included in the new chain, the chain_root is not included in the new chain.
+         * The chain_root can be after chain_tip in the original chain, or vice versa.
+         *
+         * @param chain_root the name of the root segment of the chain
+         * @param chain_tip the name of the tip segment of the chain
+         * @param chain the resulting chain
+         *
+         * @return success or failure
+         */
+        bool getChain_Excluding(const std::string& chain_root, const std::string& chain_tip, Chain& chain) const;
+
+        /**
+         * Request the subchain of the chain between chain_root and chain_tip.
+         * The chain_root and the chain_tip are included in the new chain.
+         * The chain_root can be after chain_tip in the original chain, or vice versa.
          *
          * @param nr_root the nr of the root segment of the chain
          * @param nr_tip the nr of the tip segment of the chain
@@ -181,7 +196,20 @@ namespace KDL {
          *
          * @return success or failure
          */
-        bool getChain(unsigned int nr_root, unsigned int nr_tip, Chain& chain) const;
+        bool getChain_Including(unsigned int nr_root, unsigned int nr_tip, Chain& chain) const;
+
+        /**
+         * Request the subchain of the chain between chain_root and chain_tip.
+         * The chain_tip is included in the new chain, the chain_root is not included in the new chain.
+         * The chain_root can be after chain_tip in the original chain, or vice versa.
+         *
+         * @param nr_root the nr of the root segment of the chain
+         * @param nr_tip the nr of the tip segment of the chain
+         * @param chain the resulting chain
+         *
+         * @return success or failure
+         */
+        bool getChain_Excluding(unsigned int nr_root, unsigned int nr_tip, Chain& chain) const;
 
         /**
          * Copies the chain up to the given segment_nr. \n

@@ -187,50 +187,60 @@ void KinFamTest::ChainTest()
                               Frame(Vector(0.0,0.0,0.0)))));
     int nrOfJoints = chain2.getNrOfJoints();
     int nrOfSegments = chain2.getNrOfSegments();
-    bool exit_code = chain2.addChain(chain4);
-    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(!chain2.addChain(chain4));
     CPPUNIT_ASSERT(nrOfJoints==chain2.getNrOfJoints());
     CPPUNIT_ASSERT(nrOfSegments==chain2.getNrOfSegments());
 
     //Testing getChain()
     Chain chain5;
-    exit_code = chain1.getChain("Segment 1", "Segment 4",chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,true);
+    Chain chain8;
+    CPPUNIT_ASSERT(chain1.getChain_Including("Segment 1", "Segment 4",chain5));
+    CPPUNIT_ASSERT(chain1.getChain_Excluding("Segment 1", "Segment 4",chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 4);
-    exit_code = chain1.getChain(1, 4,chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,true);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 3);
+    CPPUNIT_ASSERT(chain1.getChain_Including(1, 4,chain5));
+    CPPUNIT_ASSERT(chain1.getChain_Excluding(1, 4,chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 4);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 3);
 
-    exit_code = chain1.getChain("Segment 4", "Segment 1",chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,true);
+    CPPUNIT_ASSERT(chain1.getChain_Including("Segment 4", "Segment 1",chain5));
+    CPPUNIT_ASSERT(chain1.getChain_Excluding("Segment 4", "Segment 1",chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 4);
-    exit_code = chain1.getChain(4, 1,chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,true);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 3);
+    CPPUNIT_ASSERT(chain1.getChain_Including(4, 1,chain5));
+    CPPUNIT_ASSERT(chain1.getChain_Excluding(4, 1,chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 4);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 3);
 
     //Case tip not found
-    exit_code = chain1.getChain("Segment 4", "Segment 100",chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(!chain1.getChain_Including("Segment 4", "Segment 100",chain5));
+    CPPUNIT_ASSERT(!chain1.getChain_Excluding("Segment 4", "Segment 100",chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
-    exit_code = chain1.getChain(4, 100,chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 0);
+    CPPUNIT_ASSERT(!chain1.getChain_Including(4, 100,chain5));
+    CPPUNIT_ASSERT(!chain1.getChain_Excluding(4, 100,chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 0);
 
     //Case head not found
-    exit_code = chain1.getChain("Segment 100", "Segment 4",chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(!chain1.getChain_Including("Segment 100", "Segment 4",chain5));
+    CPPUNIT_ASSERT(!chain1.getChain_Excluding("Segment 100", "Segment 4",chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
-    exit_code = chain1.getChain(100, 4,chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 0);
+    CPPUNIT_ASSERT(!chain1.getChain_Including(100, 4,chain5));
+    CPPUNIT_ASSERT(!chain1.getChain_Excluding(100, 4,chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 0);
 
     //Case head and tip not found
-    exit_code = chain1.getChain("Segment 100", "Segment 150",chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(!chain1.getChain_Including("Segment 100", "Segment 150",chain5));
+    CPPUNIT_ASSERT(!chain1.getChain_Excluding("Segment 100", "Segment 150",chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
-    exit_code = chain1.getChain(100, 150,chain5);
-    CPPUNIT_ASSERT_EQUAL(exit_code,false);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 0);
+    CPPUNIT_ASSERT(!chain1.getChain_Including(100, 150,chain5));
+    CPPUNIT_ASSERT(!chain1.getChain_Excluding(100, 150,chain8));
     CPPUNIT_ASSERT(chain5.getNrOfSegments() == 0);
+    CPPUNIT_ASSERT(chain8.getNrOfSegments() == 0);
 
     //Testing copy(name)
     Chain chain6;

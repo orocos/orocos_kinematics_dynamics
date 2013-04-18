@@ -125,7 +125,7 @@ namespace KDL {
     	return true;
     }
 
-    bool Chain::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const
+    bool Chain::getChain_Including(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const
     {
     	chain = Chain();
 
@@ -211,7 +211,82 @@ namespace KDL {
     	return false;
     }
 
-    bool Chain::getChain(unsigned int nr_root, unsigned int nr_tip, Chain& chain)const
+    bool Chain::getChain_Excluding(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const
+    {
+    	chain = Chain();
+
+    	//When the chain_root is after the chain_tip in the chain, the segments are pushed_back to this vector first.
+    	//At the end, the segments are placed in the new chain in the right order.
+    	vector<Segment> vect;
+
+    	enum Status {none_found, root_found, tip_found};
+
+    	Status stat = none_found;
+    	bool exit_value;
+
+    	//Go through the list
+    	for(int i = 0; i < segments.size();i++){
+
+    		if(stat == none_found){
+    			if(segments[i].getName() == chain_root){
+    				stat = root_found;
+    				if(chain_root == chain_tip){ //Case start == end
+    					return true;
+    				}
+    			}
+    			else if(segments[i].getName() == chain_tip){
+    				stat = tip_found;
+    				if(chain_root == chain_tip){ //Case start == end
+    					return true;
+    				}
+    				vect.push_back(segments[i]);
+    			}
+    		}
+    		else if(stat == root_found){
+    			if(segments[i].getName() == chain_tip){
+    				exit_value = chain.addSegment(segments[i]);
+        			if(!exit_value){
+        		    	chain = Chain();
+        				return false;
+        			}
+    				return true;
+    			}
+    			else {
+    				if(i == (segments.size()-1)){ //Reached end without finding tip
+    					chain = Chain();
+    					return false;
+    				}
+    				exit_value = chain.addSegment(segments[i]);
+        			if(!exit_value){
+        		    	chain = Chain();
+        				return false;
+        			}
+    			}
+    		}
+    		else { //tip_found
+    			if(segments[i].getName() == chain_root){
+    				for(int j = vect.size()-1; j >= 0; j--){
+    					exit_value = chain.addSegment(vect[j]);
+    	    			if(!exit_value){
+    	    		    	chain = Chain();
+    	    				return false;
+    	    			}
+    				}
+    				return true;
+    			}
+    			else {
+    				if(i == (segments.size()-1)){ //Reached end without finding root
+       					chain = Chain();
+    					return false;
+    				}
+    				vect.push_back(segments[i]);
+    			}
+    		}
+    	}
+    	return false;
+    }
+
+    bool Chain::getChain_Including(unsigned int nr_root, unsigned int nr_tip, Chain& chain)const
     {
     	chain = Chain();
 
@@ -241,6 +316,38 @@ namespace KDL {
     		}
     	}
 		return true;
+    }
+
+    bool Chain::getChain_Excluding(unsigned int nr_root, unsigned int nr_tip, Chain& chain)const
+    {
+       	chain = Chain();
+
+       	if( nr_root < 0 || nr_root >= segments.size())
+       		return false;
+       	if( nr_tip < 0 || nr_tip >= segments.size())
+        	return false;
+
+        bool exit_value;
+
+        if(nr_root < nr_tip){
+        	for(int i = nr_root+1; i <= nr_tip; i++){
+        		exit_value = chain.addSegment(segments[i]);
+        		if(!exit_value){
+        	    	chain = Chain();
+        			return false;
+        		}
+        	}
+        }
+        else {
+        	for(int i = nr_root-1; i >= nr_tip;i--){
+        		exit_value = chain.addSegment(segments[i]);
+        		if(!exit_value){
+        	    	chain = Chain();
+        			return false;
+        		}
+        	}
+        }
+    	return true;
     }
 
     bool Chain::copy(unsigned int nr,Chain& returned_chain) const
@@ -287,6 +394,8 @@ namespace KDL {
     	}
   	    return true;
     }
+
+
 
     Chain::~Chain()
     {
