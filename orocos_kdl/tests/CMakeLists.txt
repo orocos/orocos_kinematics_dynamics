@@ -38,6 +38,13 @@ IF(ENABLE_TESTS)
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(jacobiantest jacobiantest)
 
+ ADD_EXECUTABLE(choleski_semidefinite_test choleski_semidefinite_test.cpp test-runner.cpp)
+ SET(TESTNAME "choleski_semidefinite_test")
+ TARGET_LINK_LIBRARIES(choleski_semidefinite_test orocos-kdl ${CPPUNIT})
+ SET_TARGET_PROPERTIES(choleski_semidefinite_test PROPERTIES
+  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+ ADD_TEST(choleski_semidefinite_test choleski_semidefinite_test)
+
 #  ADD_EXECUTABLE(rframestest  rframestest.cpp)
 #  TARGET_LINK_LIBRARIES(rframestest orocos-kdl)
 #  ADD_TEST(rframestest rframestest)

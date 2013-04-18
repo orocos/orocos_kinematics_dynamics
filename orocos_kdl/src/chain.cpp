@@ -1,5 +1,5 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// History: 08/2012: Wouter Bancken <wouter dot bancken at gmail dot com>
+// 	Copyright	 (C)  2012  Wouter Bancken <wouter dot bancken at gmail dot com>
+//   			 (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 // Version: 1.0
 // Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
@@ -125,8 +125,8 @@ namespace KDL {
     	return true;
     }
 
-    bool Chain::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const{
-
+    bool Chain::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const
+    {
     	chain = Chain();
 
     	//When the chain_root is after the chain_tip in the chain, the segments are pushed_back to this vector first.
@@ -211,8 +211,8 @@ namespace KDL {
     	return false;
     }
 
-    bool Chain::getChain(unsigned int nr_root, unsigned int nr_tip, Chain& chain)const{
-
+    bool Chain::getChain(unsigned int nr_root, unsigned int nr_tip, Chain& chain)const
+    {
     	chain = Chain();
 
     	if( nr_root < 0 || nr_root >= segments.size())

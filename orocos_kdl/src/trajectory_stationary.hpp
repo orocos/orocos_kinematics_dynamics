@@ -7,7 +7,6 @@
  *
  *	\par History
  *		- $log$
- *		- Wouter Bancken (08/2012) - Refactored
  *
  *	\par Release
  *		$Id: trajectory_stationary.h 22 2004-09-21 08:58:54Z eaertbellocal $

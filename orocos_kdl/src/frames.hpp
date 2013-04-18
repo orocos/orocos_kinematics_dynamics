@@ -760,7 +760,7 @@ public:
      //! the new point.
      //!
      //! Complexity : 6M+6A
-     //! @deprecated Renamed to Twist ChangeRefPoint(const Vector& v_base_AB) const;
+     //! @deprecated Renamed to Twist ChangeRefPoint(const Vector& v_base_AB) const.
      inline Twist RefPoint(const Vector& v_base_AB) const __attribute__ ((deprecated));
 
      inline Twist ChangeRefPoint(const Vector& v_base_AB) const;
@@ -927,7 +927,12 @@ public:
      //! the new point.
      //!
      //! Complexity : 6M+6A
-     inline Wrench RefPoint(const Vector& v_base_AB) const;
+     //! @deprecated Renamed to Wrench ChangeRefPoint(const Vector& v_base_AB) const.
+     inline Wrench RefPoint(const Vector& v_base_AB) const __attribute__ ((deprecated));
+
+     inline Wrench ChangeRefPoint(const Vector& v_base_AB) const;
+     inline Wrench ChangeCoordinateFrame(const Rotation& r) const;
+     inline Wrench Inverse() const;
 
 
      //! do not use operator == because the definition of Equal(.,.) is slightly

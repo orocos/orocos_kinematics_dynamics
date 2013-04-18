@@ -1,5 +1,5 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// History: 08/2012: Wouter Bancken <wouter dot bancken at gmail dot com>
+// 	Copyright	 (C)  2012  Wouter Bancken <wouter dot bancken at gmail dot com>
+//   			 (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 // Version: 1.0
 // Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
@@ -199,67 +199,69 @@ namespace KDL
          *
          * @return success or failure
          */
-      bool getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const;
+		  bool getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const;
 
-      /**
-       * Request the chain of the tree between chain_root and chain_tip as a tree. The chain_root
-       * and chain_tip can be in different branches of the tree, the chain_root can be
-       * an ancestor of chain_tip, and chain_tip can be an ancestor of chain_root.
-       *
-       * @param chain_root the name of the root segment of the chain
-       * @param chain_tip the name of the tip segment of the chain
-       * @param tree the resulting tree
-       *
-       * @return success or failure
-       */
-      bool getChain(const std::string& chain_root,const std::string& chain_tip,Tree& tree, const std::string& rootname = "root") const;
+		  /**
+		   * Request the chain of the tree between chain_root and chain_tip as a tree. The chain_root
+		   * and chain_tip can be in different branches of the tree, the chain_root can be
+		   * an ancestor of chain_tip, and chain_tip can be an ancestor of chain_root.
+		   *
+		   * @param chain_root the name of the root segment of the chain
+		   * @param chain_tip the name of the tip segment of the chain
+		   * @param tree the resulting tree
+		   *
+		   * @return success or failure
+		   */
+		  bool getChain(const std::string& chain_root,const std::string& chain_tip,Tree& tree, const std::string& rootname = "root") const;
 
-      /**
-       * Request the leaf segments of the tree.
-       *
-       * @param returned_map The return value. The leaf segments of the tree.
-       *
-       * @return true
-       */
-      bool getLeafSegments(SegmentMap& returned_map) const
-      {
-    	  returned_map.clear();
-    	  returned_map = leafSegments;
-    	  return true;
-      }
+		  /**
+		   * Request the leaf segments of the tree.
+		   *
+		   * @param returned_map The return value. The leaf segments of the tree.
+		   *
+		   * @return true
+		   */
+		  bool getLeafSegments(SegmentMap& returned_map) const
+		  {
+			  returned_map.clear();
+			  returned_map = leafSegments;
+			  return true;
+		  }
 
-      const SegmentMap& getSegments() const __attribute__ ((deprecated));
+		  const SegmentMap& getSegments() const __attribute__ ((deprecated));
 
-      bool getSegments(SegmentMap& returned_map) const
-      {
-    	  returned_map.clear();
-          returned_map = segments;
-          return true;
-      }
+		  bool getSegments(SegmentMap& returned_map) const
+		  {
+			  returned_map.clear();
+			  returned_map = segments;
+			  return true;
+		  }
 
-      /**
-       * Create a copy excluding the given segment and all its decendants.
-       *
-       * @param segm The segment that should be excluded with its decendants.
-       * @param returned_tree The resulting tree.
-       *
-       * @return 	false: if an error occurs while adding segments to the copy. \n
-       * 			true: 	In the other cases.
-       */
-      bool copy(const std::string& segm, Tree& returned_tree) const;
+		  /**
+		   * Create a copy excluding the given segment and all its descendants.
+		   * This corresponds to creating a new Tree in which the given segment and all its descendants are \b deleted.
+		   *
+		   * @param segm The segment that should be excluded with its descendants.
+		   * @param returned_tree The resulting tree.
+		   *
+		   * @return 	false: if an error occurs while adding segments to the copy. \n
+		   * 			true:  in the other cases.
+		   */
+		  bool copy(const std::string& segm, Tree& returned_tree) const;
 
-      /**
-       * Create a copy excluding the given segments and all their decendants.
-       *
-       * @param list_of_segments The segments that should be excluded with their decendants.
-       * @param returned_tree The resulting tree.
-       *
-       * @return 	false: if an error occurs while adding the segments to the copy.\n
-       * 			true: 	In the other cases.
-       */
-      bool copy(std::vector<std::string> list_of_segments, Tree& returned_tree) const;
+		  /**
+		   * Create a copy excluding the given segments and all their descendants.
+		   * This corresponds to creating a new Tree in which the given segments and all their descendants are \b deleted.
+		   *
+		   * @param list_of_segments The segments that should be excluded in the copy.
+		   * @param returned_tree The resulting tree.
+		   *
+		   * @return 	false: if an error occurs while adding the segments to the copy.\n
+		   * 			true:  in the other cases.
+		   */
+		  bool copy(std::vector<std::string> list_of_segments, Tree& returned_tree) const;
 
-      virtual ~Tree(){};
+		  virtual ~Tree(){};
 
     };
 }

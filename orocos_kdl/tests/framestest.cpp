@@ -92,6 +92,10 @@ void FramesTest::TestWrench() {
 	TestWrench2(w2);
 	Wrench   w3(Vector(2,1,4),Vector(5,3,1));
 	TestWrench2(w3);		
+
+	Wrench w4(Vector(7,-1,3),Vector(2,-3,3));
+	Wrench w5 = w4.ChangeCoordinateFrame(Rotation(Vector(1,0,0),Vector(0,1,0),Vector(0,0,1)));
+	Wrench w6 = w4.Inverse();
 }
 
 void FramesTest::TestRotation2(const Vector& v,double a,double b,double c) {

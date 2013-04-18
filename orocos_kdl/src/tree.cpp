@@ -1,5 +1,5 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// History: 08/2012: Wouter Bancken <wouter dot bancken at gmail dot com>
+// 	Copyright	 (C)  2012  Wouter Bancken <wouter dot bancken at gmail dot com>
+//   			 (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 // Version: 1.0
 // Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
@@ -32,7 +32,8 @@ Tree::Tree(const std::string& _root_name) :
     segments.insert(make_pair(root_name, TreeElement::Root(root_name)));
 }
 
-Tree::Tree(const Tree& in) {
+Tree::Tree(const Tree& in)
+{
     segments.clear();
     leafSegments.clear();
     nrOfSegments = 0;
@@ -43,7 +44,8 @@ Tree::Tree(const Tree& in) {
     this->addTree(in, root_name);
 }
 
-Tree& Tree::operator=(const Tree& in) {
+Tree& Tree::operator=(const Tree& in)
+{
     segments.clear();
     leafSegments.clear();
     nrOfSegments = 0;
@@ -55,7 +57,8 @@ Tree& Tree::operator=(const Tree& in) {
     return *this;
 }
 
-bool Tree::addSegment(const Segment& segment, const std::string& hook_name) {
+bool Tree::addSegment(const Segment& segment, const std::string& hook_name)
+{
     SegmentMap::iterator parent = segments.find(hook_name);
     //check if parent exists
     if (parent == segments.end())
@@ -84,7 +87,8 @@ bool Tree::addSegment(const Segment& segment, const std::string& hook_name) {
     return true;
 }
 
-bool Tree::addChain(const Chain& chain, const std::string& hook_name) {
+bool Tree::addChain(const Chain& chain, const std::string& hook_name)
+{
     string parent_name = hook_name;
     for (unsigned int i = 0; i < chain.getNrOfSegments(); i++) {
     	Segment segm;
@@ -97,7 +101,8 @@ bool Tree::addChain(const Chain& chain, const std::string& hook_name) {
     return true;
 }
 
-bool Tree::addTree(const Tree& tree, const std::string& hook_name) {
+bool Tree::addTree(const Tree& tree, const std::string& hook_name)
+{
 	SegmentMap::const_iterator it;
 	bool exit_code = tree.getRootSegment(it);
 	if(exit_code == false){
@@ -106,7 +111,8 @@ bool Tree::addTree(const Tree& tree, const std::string& hook_name) {
     return this->addTreeRecursive(it, hook_name);
 }
 
-bool Tree::addTreeRecursive(SegmentMap::const_iterator root, const std::string& hook_name) {
+bool Tree::addTreeRecursive(SegmentMap::const_iterator root, const std::string& hook_name)
+{
     //get iterator for root-segment
     SegmentMap::const_iterator child;
     //try to add all of root's children
@@ -149,8 +155,8 @@ const SegmentMap& Tree::getSegments() const
     return segments;
 }
 
-    bool Tree::getChain(const std::string& chain_root, const std::string& chain_tip,
-		Chain& chain) const {
+bool Tree::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain) const
+{
 	// clear chain
 	chain = Chain();
 
@@ -222,144 +228,142 @@ const SegmentMap& Tree::getSegments() const
 	return true;
 }
 
-    bool Tree::getChain(const std::string& chain_root,const std::string& chain_tip,Tree& tree, const std::string& rootname) const
-    {
-    	// clear tree
-    	tree = Tree(rootname);
-    	std::string hook = rootname;
+bool Tree::getChain(const std::string& chain_root,const std::string& chain_tip,Tree& tree, const std::string& rootname) const
+{
+ 	// clear tree
+   	tree = Tree(rootname);
+   	std::string hook = rootname;
 
-    	// walk down from chain_root and chain_tip to the root of the tree
-    	vector<SegmentMap::key_type> parents_chain_root, parents_chain_tip;
+   	// walk down from chain_root and chain_tip to the root of the tree
+   	vector<SegmentMap::key_type> parents_chain_root, parents_chain_tip;
 
-    	SegmentMap::const_iterator s;
-    	getSegment(chain_root, s);
-    	for (; s != segments.end(); s = s->second.parent) {
-    		parents_chain_root.push_back(s->first);
-    		if (s->first == root_name)
-    			break;
-    	}
+   	SegmentMap::const_iterator s;
+   	getSegment(chain_root, s);
+   	for (; s != segments.end(); s = s->second.parent) {
+   		parents_chain_root.push_back(s->first);
+  		if (s->first == root_name)
+   			break;
+   	}
 
-    	if (parents_chain_root.empty() || parents_chain_root.back() != root_name)
+   	if (parents_chain_root.empty() || parents_chain_root.back() != root_name)
+   		return false;
+
+   	getSegment(chain_tip, s);
+   	for (; s != segments.end(); s = s->second.parent) {
+   		parents_chain_tip.push_back(s->first);
+   		if (s->first == root_name)
+   			break;
+   	}
+
+   	if (parents_chain_tip.empty() || parents_chain_tip.back() != root_name)
+   		return false;
+
+   	// remove common part of segment lists
+    SegmentMap::key_type last_segment = root_name;
+    while (!parents_chain_root.empty() && !parents_chain_tip.empty()
+    		&& parents_chain_root.back() == parents_chain_tip.back()) {
+    	last_segment = parents_chain_root.back();
+    	parents_chain_root.pop_back();
+    	parents_chain_tip.pop_back();
+    }
+    parents_chain_root.push_back(last_segment);
+
+    // add the segments from the root to the common frame
+    for (unsigned int s = 0; s < parents_chain_root.size() - 1; s++) {
+    	SegmentMap::const_iterator arg_segm;
+    	getSegment(parents_chain_root[s], arg_segm);
+    	Segment seg = arg_segm->second.segment;
+    	Frame f_tip = seg.pose(0.0).Inverse();
+    	Joint jnt = seg.getJoint();
+    	if (jnt.getType() == Joint::RotX || jnt.getType() == Joint::RotY
+    			|| jnt.getType() == Joint::RotZ
+    			|| jnt.getType() == Joint::RotAxis)
+    		jnt = Joint(jnt.getName(), f_tip * jnt.JointOrigin(),
+    				f_tip.M * (-jnt.JointAxis()), Joint::RotAxis);
+    	else if (jnt.getType() == Joint::TransX
+    			|| jnt.getType() == Joint::TransY
+    			|| jnt.getType() == Joint::TransZ
+    			|| jnt.getType() == Joint::TransAxis)
+    		jnt = Joint(jnt.getName(), f_tip * jnt.JointOrigin(),
+    				f_tip.M * (-jnt.JointAxis()), Joint::TransAxis);
+
+    	getSegment(parents_chain_root[s + 1], arg_segm);
+    	bool exit_code = tree.addSegment(
+    			Segment(arg_segm->second.segment.getName(), jnt, f_tip,
+    					arg_segm->second.segment.getInertia()),
+    					hook);
+    	if(!exit_code){ // If the segment could not be added (segment with the same name already exists)...
+    		tree = Tree();
     		return false;
-
-    	getSegment(chain_tip, s);
-    	for (; s != segments.end(); s = s->second.parent) {
-    		parents_chain_tip.push_back(s->first);
-    		if (s->first == root_name)
-    			break;
     	}
+    	hook = arg_segm->second.segment.getName();
+    }
 
-    	if (parents_chain_tip.empty() || parents_chain_tip.back() != root_name)
+    // add the segments from the common frame to the tip frame
+    for (int s = parents_chain_tip.size() - 1; s > -1; s--) {
+    	SegmentMap::const_iterator seg;
+    	getSegment(parents_chain_tip[s], seg);
+    	bool exit_code = tree.addSegment(seg->second.segment,hook);
+    	if(!exit_code){ // If the segment could not be added (segment with the same name already exists)...
+    		tree = Tree();
     		return false;
-
-    	// remove common part of segment lists
-    	SegmentMap::key_type last_segment = root_name;
-    	while (!parents_chain_root.empty() && !parents_chain_tip.empty()
-    			&& parents_chain_root.back() == parents_chain_tip.back()) {
-    		last_segment = parents_chain_root.back();
-    		parents_chain_root.pop_back();
-    		parents_chain_tip.pop_back();
     	}
-    	parents_chain_root.push_back(last_segment);
-
-    	// add the segments from the root to the common frame
-    	for (unsigned int s = 0; s < parents_chain_root.size() - 1; s++) {
-    		SegmentMap::const_iterator arg_segm;
-    		getSegment(parents_chain_root[s], arg_segm);
-    		Segment seg = arg_segm->second.segment;
-    		Frame f_tip = seg.pose(0.0).Inverse();
-    		Joint jnt = seg.getJoint();
-    		if (jnt.getType() == Joint::RotX || jnt.getType() == Joint::RotY
-    				|| jnt.getType() == Joint::RotZ
-    				|| jnt.getType() == Joint::RotAxis)
-    			jnt = Joint(jnt.getName(), f_tip * jnt.JointOrigin(),
-    					f_tip.M * (-jnt.JointAxis()), Joint::RotAxis);
-    		else if (jnt.getType() == Joint::TransX
-    				|| jnt.getType() == Joint::TransY
-    				|| jnt.getType() == Joint::TransZ
-    				|| jnt.getType() == Joint::TransAxis)
-    			jnt = Joint(jnt.getName(), f_tip * jnt.JointOrigin(),
-    					f_tip.M * (-jnt.JointAxis()), Joint::TransAxis);
-
-    		getSegment(parents_chain_root[s + 1], arg_segm);
-    		bool exit_code = tree.addSegment(
-    				Segment(arg_segm->second.segment.getName(), jnt, f_tip,
-    						arg_segm->second.segment.getInertia()),
-    				hook);
-    		if(!exit_code){ // If the segment could not be added (segment with the same name already exists)...
-    			tree = Tree();
-    			return false;
-    		}
-    		hook = arg_segm->second.segment.getName();
-    	}
-
-    	// add the segments from the common frame to the tip frame
-    	for (int s = parents_chain_tip.size() - 1; s > -1; s--) {
-    		SegmentMap::const_iterator seg;
-    		getSegment(parents_chain_tip[s], seg);
-    		bool exit_code = tree.addSegment(seg->second.segment,hook);
-    		if(!exit_code){ // If the segment could not be added (segment with the same name already exists)...
-    			tree = Tree();
-    			return false;
-    		}
-    		hook = seg->second.segment.getName();
-    	}
-    	return true;
+    	hook = seg->second.segment.getName();
     }
+    return true;
+}
 
-    bool Tree::copy(const std::string& segm, Tree& returned_tree) const
-    {
-    	std::vector<string> vect;
-    	vect.push_back(segm);
-    	return copy(vect,returned_tree);
-    }
+bool Tree::copy(const std::string& segm, Tree& returned_tree) const
+{
+   	std::vector<string> vect;
+   	vect.push_back(segm);
+   	return copy(vect,returned_tree);
+}
 
-    bool Tree::copy(std::vector<std::string> list_of_segments, Tree& returned_tree) const
-    {
-    	bool exit_code;
-    	returned_tree = Tree();
-    	SegmentMap::const_iterator root;
-    	exit_code = getRootSegment(root);
-    	if(!exit_code){
-        	returned_tree = Tree();
-    		return exit_code;
-    	}
-    	returned_tree = Tree(root->first);
-    	for(int i = 0; i < root->second.children.size();i++)
-    	{
-    		std::vector<std::string>::iterator it = find(list_of_segments.begin(),list_of_segments.end(),root->second.children[i]->first);
-    		if(it == list_of_segments.end()){
-				exit_code = copyAid(list_of_segments, root, root->second.children[i], returned_tree);
-				if(!exit_code){
-					returned_tree = Tree();
-					return exit_code;
-				}
-    		}
-    	}
-    	return true;
-    }
+bool Tree::copy(std::vector<std::string> list_of_segments, Tree& returned_tree) const
+{
+   	bool exit_code;
+   	returned_tree = Tree();
+   	SegmentMap::const_iterator root;
+   	exit_code = getRootSegment(root);
+   	if(!exit_code){
+       	returned_tree = Tree();
+   		return exit_code;
+   	}
+   	returned_tree = Tree(root->first);
+   	for(int i = 0; i < root->second.children.size();i++)
+   	{
+   		std::vector<std::string>::iterator it = find(list_of_segments.begin(),list_of_segments.end(),root->second.children[i]->first);
+   		if(it == list_of_segments.end()){
+			exit_code = copyAid(list_of_segments, root, root->second.children[i], returned_tree);
+			if(!exit_code){
+				returned_tree = Tree();
+				return exit_code;
+			}
+   		}
+   	}
+   	return true;
+}
 
-    bool Tree::copyAid(	std::vector<std::string> list_of_segments,
-    					SegmentMap::const_iterator parent,
-    					SegmentMap::const_iterator child,
-    					Tree& returned_tree) const
-	{
-    	bool exit_code;
-    	exit_code = returned_tree.addSegment(child->second.segment,parent->first);
-		if(!exit_code)
-		   return exit_code;
-    	for(int i = 0; i < child->second.children.size();i++)
-    	{
-    		std::vector<std::string>::iterator it = find(list_of_segments.begin(),list_of_segments.end(),child->second.children[i]->first);
-    		if(it == list_of_segments.end()){
-				exit_code = copyAid(list_of_segments, child, child->second.children[i], returned_tree);
-				if(!exit_code)
-				   return exit_code;
-    		}
-    	}
-    	return true;
-	}
+bool Tree::copyAid(	std::vector<std::string> list_of_segments,
+   					SegmentMap::const_iterator parent,
+   					SegmentMap::const_iterator child,
+   					Tree& returned_tree) const
+{
+   	bool exit_code;
+   	exit_code = returned_tree.addSegment(child->second.segment,parent->first);
+	if(!exit_code)
+	   return exit_code;
+   	for(int i = 0; i < child->second.children.size();i++)
+   	{
+   		std::vector<std::string>::iterator it = find(list_of_segments.begin(),list_of_segments.end(),child->second.children[i]->first);
+   		if(it == list_of_segments.end()){
+			exit_code = copyAid(list_of_segments, child, child->second.children[i], returned_tree);
+			if(!exit_code)
+			   return exit_code;
+   		}
+   	}
+   	return true;
+}
 
 }//end of namespace
-
-

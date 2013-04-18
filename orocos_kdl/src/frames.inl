@@ -205,6 +205,24 @@ Wrench Wrench::RefPoint(const Vector& v_base_AB) const
                   );
 }
 
+Wrench Wrench::ChangeRefPoint(const Vector& v_base_AB) const
+{
+    return Wrench(this->force,
+                  this->torque+this->force*v_base_AB
+                  );
+}
+
+Wrench Wrench::ChangeCoordinateFrame(const Rotation& r) const
+{
+	return r * (*this);
+}
+
+Wrench Wrench::Inverse() const
+{
+	Wrench coordinatesInv(*this);
+	coordinatesInv.ReverseSign();
+	return coordinatesInv;
+}
 
 Wrench& Wrench::operator-=(const Wrench& arg)
 {

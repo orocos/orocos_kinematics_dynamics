@@ -4,9 +4,9 @@
                         velocityprofile_traphalf.h -  description
                            -------------------
     begin                : Mon January 10 2005
-    copyright            : (C) 2005 Erwin Aertbelien
+    copyright            : (C) 2012 Wouter Bancken
+    					   (C) 2005 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
-    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *

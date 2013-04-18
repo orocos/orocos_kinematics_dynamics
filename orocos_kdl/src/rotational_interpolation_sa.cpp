@@ -4,9 +4,9 @@
                         rotational_interpolation_sa.cxx -  description
                            -------------------
     begin                : Mon May 10 2004
-    copyright            : (C) 2004 Erwin Aertbelien
+    copyright            : (C) 2012 Wouter Bancken
+    					   (C) 2004 Erwin Aertbelien
     email                : erwin.aertbelien@mech.kuleuven.ac.be
-    History				 : Wouter Bancken (08/2012) - Refactored
 
  ***************************************************************************
  *   This library is free software; you can redistribute it and/or         *

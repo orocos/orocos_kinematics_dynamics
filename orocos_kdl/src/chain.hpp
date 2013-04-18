@@ -1,5 +1,5 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// History: 08/2012: Wouter Bancken <wouter dot bancken at gmail dot com>
+// 	Copyright	 (C)  2012  Wouter Bancken <wouter dot bancken at gmail dot com>
+//   			 (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 // Version: 1.0
 // Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
@@ -184,7 +184,8 @@ namespace KDL {
         bool getChain(unsigned int nr_root, unsigned int nr_tip, Chain& chain) const;
 
         /**
-         * Copies the chain up to the given segment_nr
+         * Copies the chain up to the given segment_nr. \n
+         * This corresponds to creating a new Chain in which the segment with the given segment_nr and all following segments are \b deleted.
          *
          * @param nr The smallest segment nr that should not be included in the copy.
          *
@@ -194,7 +195,8 @@ namespace KDL {
         bool copy(unsigned int nr, Chain& returned_chain) const;
 
         /**
-         * Copies the chain up to the given segment
+         * Copies the chain up to the given segment.
+         * This corresponds to creating a new Chain in which the given segment and all following segments are \b deleted.
          *
          * @param segment_name The name of the first segment that should not be included in the copy.
          *
