@@ -2,7 +2,7 @@
 #define CHOLESKY_SEMIDEFINITE_TEST_HPP_
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <cholesky_semidefinite.hpp>
+#include "utilities/cholesky_semidefinite.hpp"
 #include <iostream>
 
 using namespace KDL;

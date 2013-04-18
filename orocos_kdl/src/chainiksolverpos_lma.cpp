@@ -138,7 +138,7 @@ void ChainIkSolverPos_LMA::compute_jacobian(const VectorXq& q) {
     	chain.getSegment(i,segment);
 		if (segment.getJoint().getType()!=Joint::None) {
 			// compute twist of the end effector motion caused by joint [jointndx]; expressed in base frame, with vel. ref. point equal to the end effector
-			KDL::Twist t = ( T_base_jointroot[jointndx].M * segment.twist(q(jointndx),1.0) ).RefPoint( T_base_head.p - T_base_jointtip[jointndx].p);
+			KDL::Twist t = ( T_base_jointroot[jointndx].M * segment.twist(q(jointndx),1.0) ).ChangeRefPoint( T_base_head.p - T_base_jointtip[jointndx].p);
 			jac(0,jointndx)=t[0];
 			jac(1,jointndx)=t[1];
 			jac(2,jointndx)=t[2];

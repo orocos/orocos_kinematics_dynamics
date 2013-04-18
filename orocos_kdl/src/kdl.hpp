@@ -33,7 +33,27 @@
  * - \ref KinematicFamily : functionality to build kinematic chains and access their kinematic and dynamic properties, such as e.g. Forward and Inverse kinematics and dynamics.
  * - \ref Motion : functionality to specify motion trajectories of frames and kinematic chains, such as e.g. Trapezoidal Velocity profiles.
  * - \ref KDLTK : the interface code to integrate KDL into the Orocos <a href="http://www.orocos.org/rtt/">Real-Time Toolkit</a> (RTT).
- *
+ * 
+ * Throughout KDL, several exit codes are used: \n
+ * - <b>0:</b> OK \n
+ * \n
+ * - <b>141:</b> Error: Motion Planning: not feasible: the eq. radius <= 0 \n
+ * - <b>142:</b> Error: Motion Planning: not feasible: the first segment in a rounding has zero length \n
+ * - <b>143:</b> Error: Motion Planning: not feasible: the second segment in a rounding has zero length \n
+ * - <b>144:</b> Error: Motion Planning: not feasible: the angle between the first and the second segment is close to M_PI (meaning that the segments are on top of each other) \n
+ * - <b>145:</b> Error: Motion Planning: not feasible: the distance needed for the rounding is larger then the first segment \n
+ * - <b>146:</b> Error: Motion Planning: not feasible: the distance needed for the rounding is larger then the second segment\n
+ * - <b>147:</b> Error: Motion Planning: MotionIO unexpected trajectory \n
+ * - <b>148:</b> Error: Call to an operation that hasn't been implemented. \n
+ * - <b>149:</b> Error: Motion Planning: circle too small \n 
+ * - <b>150:</b> Error: Motion Planning: circle no plane \n
+ * - <b>151:</b> Error: MotionIO unexpected motion profile \n
+ * - <b>152:</b> Error: Motion Planning: not applicable \n
+ * - <b>153:</b> Error: Motion Planning: incompatible \n
+ * \n
+ * - <b>161:</b> Error: Cholesky: matrix of which cholesky decomposition is asked, is not square! \n
+ * - <b>162:</b> Error: Cholesky: matrix of which cholesky decomposition is asked, is not symmetric! \n
+ * - <b>163:</b> Error: Cholesky: matrix is negative definite. \n
  *
 **/
 /**
