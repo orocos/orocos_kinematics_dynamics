@@ -65,6 +65,37 @@ class FrameVelTestFunctions(unittest.TestCase):
 	self.assert_(Equal( F.Inverse()*F,Frame.Identity()))
 	self.assert_(Equal( F.Inverse()*vt,F.Inverse(vt)))
 
+
+    def testPickle(self):
+        rot = Rotation.RotX(1.3)
+        import pickle
+        data = {}
+        data['vv'] = VectorVel(Vector(1,2,3), Vector(4,5,6))
+        data['rv'] = RotationVel(rot, Vector(4.1,5.1,6.1))
+        data['fv'] = FrameVel(data['rv'], data['vv'])
+        data['tv'] = TwistVel(data['vv'], data['vv'])
+        
+        f = open('/tmp/pickle_test_kdl_framevel', 'w')
+        pickle.dump(data, f)
+        f.close()
+        
+        f = open('/tmp/pickle_test_kdl_framevel', 'r')
+        data1 = pickle.load(f)
+        f.close()
+       
+        self.assertEqual(data['vv'].p, data1['vv'].p)
+        self.assertEqual(data['vv'].v, data1['vv'].v)
+        self.assertEqual(data['rv'].R, data1['rv'].R)
+        self.assertEqual(data['rv'].w, data1['rv'].w)
+        self.assertEqual(data['fv'].M.R, data1['fv'].M.R)
+        self.assertEqual(data['fv'].M.w, data1['fv'].M.w)
+        self.assertEqual(data['fv'].p.p, data1['fv'].p.p)
+        self.assertEqual(data['fv'].p.v, data1['fv'].p.v)
+        self.assertEqual(data['tv'].vel.p, data1['tv'].vel.p)
+        self.assertEqual(data['tv'].vel.v, data1['tv'].vel.v)
+        self.assertEqual(data['tv'].rot.p, data1['tv'].rot.p)
+        self.assertEqual(data['tv'].rot.v, data1['tv'].rot.v)
+
 #void TestTwistVel() {
 #    KDL_CTX;
 #	// Twist
@@ -162,6 +193,7 @@ def suite():
     suite.addTest(FrameVelTestFunctions('testVectorVel'))
     suite.addTest(FrameVelTestFunctions('testRotationVel'))
     suite.addTest(FrameVelTestFunctions('testFrameVel'))
+    suite.addTest(FrameVelTestFunctions('testPickle'))
     return suite
 
 #suite = suite()

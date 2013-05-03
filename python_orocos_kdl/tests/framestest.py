@@ -159,6 +159,25 @@ class FramesTestFunctions(unittest.TestCase):
 	self.assertEqual(F.Inverse()*F,Frame.Identity())
 	self.assertEqual(F.Inverse()*v,F.Inverse(v))
 
+    def testPickle(self):
+        import pickle
+        data = {}
+        data['v'] = Vector(1,2,3)
+        data['rot'] = Rotation.RotX(1.3)
+        data['fr'] = Frame(data['rot'], data['v'])
+        data['tw'] = Twist(data['v'], Vector(4,5,6))
+        data['wr'] = Wrench(Vector(0.1,0.2,0.3), data['v'])
+        
+        f = open('/tmp/pickle_test', 'w')
+        pickle.dump(data, f)
+        f.close()
+        
+        f = open('/tmp/pickle_test', 'r')
+        data1 = pickle.load(f)
+        f.close()
+       
+        self.assertEqual(data, data1)
+
 
 def suite():
     suite=unittest.TestSuite()
@@ -167,6 +186,7 @@ def suite():
     suite.addTest(FramesTestFunctions('testWrench'))
     suite.addTest(FramesTestFunctions('testRotation'))
     suite.addTest(FramesTestFunctions('testFrame'))
+    suite.addTest(FramesTestFunctions('testPickle'))
     return suite
     
 #suite = suite()

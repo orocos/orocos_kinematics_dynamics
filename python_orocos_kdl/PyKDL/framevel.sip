@@ -59,6 +59,12 @@ public:
     static VectorVel Zero();
     void ReverseSign();
     doubleVel Norm() const;
+
+%PickleCode
+    const sipTypeDef *vector_type = sipFindType("Vector");
+    sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->p), vector_type, Py_None),
+                                 sipConvertFromType(&(sipCpp->v), vector_type, Py_None));
+%End
 };
 
 VectorVel operator + (const VectorVel& r1,const VectorVel& r2);
@@ -129,6 +135,12 @@ public:
     TwistVel operator * (const TwistVel& arg) const;
     TwistVel operator * (const Twist& arg) const;
 
+%PickleCode
+    const sipTypeDef *vector_type = sipFindType("Vector");
+    const sipTypeDef *rotation_type = sipFindType("Rotation");
+    sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->R), rotation_type, Py_None),
+                                 sipConvertFromType(&(sipCpp->w), vector_type, Py_None));
+%End
 };
 RotationVel operator* (const RotationVel& r1,const RotationVel& r2);
 RotationVel operator* (const Rotation& r1,const RotationVel& r2);
@@ -175,7 +187,12 @@ public:
     TwistVel operator * (const TwistVel& arg) const;
     TwistVel operator * (const Twist& arg) const;
 
-
+%PickleCode
+    const sipTypeDef *vectorvel_type = sipFindType("VectorVel");
+    const sipTypeDef *rotationvel_type = sipFindType("RotationVel");
+    sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->M), rotationvel_type, Py_None),
+                                 sipConvertFromType(&(sipCpp->p), vectorvel_type, Py_None));
+%End
 };
 FrameVel operator * (const FrameVel& f1,const FrameVel& f2);
 FrameVel operator * (const Frame& f1,const FrameVel& f2);
@@ -192,6 +209,9 @@ using namespace KDL;
 %End    
 
 public:
+    VectorVel vel;
+    VectorVel rot;
+
     TwistVel();
     TwistVel(const VectorVel& _vel,const VectorVel& _rot);
     TwistVel(const Twist& p,const Twist& v);
@@ -209,7 +229,11 @@ public:
     TwistVel RefPoint(const VectorVel& v_base_AB);
     Twist GetTwist() const;
     Twist GetTwistDot() const;
-     
+%PickleCode
+    const sipTypeDef *vectorvel_type = sipFindType("VectorVel");
+    sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->vel), vectorvel_type, Py_None),
+                                 sipConvertFromType(&(sipCpp->rot), vectorvel_type, Py_None));
+%End
 };
 TwistVel operator*(const TwistVel& lhs,double rhs);
 TwistVel operator*(double lhs,const TwistVel& rhs);
