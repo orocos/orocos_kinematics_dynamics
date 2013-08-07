@@ -3,8 +3,8 @@ Orocos Kinematics and Dynamics Library (KDL)
 
 ## Building KDL
 
-KDL and the Python KDL bindings can either be built normally with CMake, or it
-can be built in an isolated catkin workspace.
+KDL and the Python KDL bindings can either be built normally with CMake, or they
+can be built in an isolated [catkin](http://www.ros.org/wiki/catkin) workspace.
 
 ## Using KDL
 
