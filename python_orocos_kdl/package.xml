@@ -1,0 +1,31 @@
+<package>
+  <name>python_orocos_kdl</name>
+  <version>0.3.0</version>
+  <description>python_orocos_kdl</description>
+  <maintainer email="orocos-dev@lists.mech.kuleuven.be">Orocos Developers</maintainer>
+
+  <license>LGPL</license>
+
+  <url type="website">http://ros.org/wiki/python_orocos_kdl</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Ruben Smits</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>orocos_kdl</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>orocos_kdl</run_depend>
+
+  <!-- Dependencies needed only for running tests. -->
+  <!-- <test_depend>orocos_kdl</test_depend> -->
+
+  <export>
+    <build_type>cmake</build_type>
+    <python path="${prefix}/lib"/>
+    <rosdoc config="rosdoc.yaml"/>
+  </export>
+</package>
