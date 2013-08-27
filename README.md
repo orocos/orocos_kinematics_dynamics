@@ -19,5 +19,5 @@ link_directories(${Orocos-KDL_LIBRARY_DIRS})
 # add your target ...
 
 # Link against KDL
-target_link_libraries(my_target orocos-kdl)
+target_link_libraries(my_target ${orocos_kdl_LIBRARIES})
 ```
