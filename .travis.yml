@@ -13,6 +13,7 @@ before_install:
   - sudo rosdep init
   - rosdep update
   - rosdep install --from-paths . --ignore-src --rosdistro hydro -y > /dev/null
+  - export CMAKE_ARGS="-DENABLE_TESTS:BOOL=True"
 install:
   # Set up non-catkin build
   - pushd .
@@ -21,13 +22,15 @@ install:
   - mkdir -p orocos_kdl python_orocos_kdl
 
   # First build without catkin
-  - pushd . && cd orocos_kdl && cmake ../../orocos_kdl && sudo make all install && popd
+  - pushd . && cd orocos_kdl && cmake ../../orocos_kdl $CMAKE_ARGS && sudo make all install && popd
   - pushd . && cd python_orocos_kdl && cmake ../../python_orocos_kdl && sudo make all install && popd
   # Uninstall without catkin
 
   # Second, build with catkin
   - popd
   - source /opt/ros/hydro/setup.bash
-  - catkin_make_isolated --install --source . -j1
+  - catkin_make_isolated --install --source . -j1 --cmake-args $CMAKE_ARGS 
 
-
+script:
+  # Run tests
+  - pushd . && cd build_isolated/orocos_kdl && make check && popd
