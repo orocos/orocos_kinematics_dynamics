@@ -16,18 +16,19 @@ before_install:
   - export CMAKE_ARGS="-DENABLE_TESTS:BOOL=True"
 install:
   # Set up non-catkin build
-  - pushd .
-  - mkdir build_non_catkin
-  - cd build_non_catkin
-  - mkdir -p orocos_kdl python_orocos_kdl
+  #- pushd .
+  #- mkdir build_non_catkin
+  #- cd build_non_catkin
+  #- mkdir -p orocos_kdl python_orocos_kdl
 
   # First build without catkin
-  - pushd . && cd orocos_kdl && cmake ../../orocos_kdl $CMAKE_ARGS && sudo make all install && popd
-  - pushd . && cd python_orocos_kdl && cmake ../../python_orocos_kdl && sudo make all install && popd
+  #- pushd . && cd orocos_kdl && cmake ../../orocos_kdl $CMAKE_ARGS && sudo make all install && popd
+  #- pushd . && cd python_orocos_kdl && cmake ../../python_orocos_kdl && sudo make all install && popd
+  
   # Uninstall without catkin
+  #- popd
 
   # Second, build with catkin
-  - popd
   - source /opt/ros/hydro/setup.bash
   - catkin_make_isolated --install --source . -j1 --cmake-args $CMAKE_ARGS 
 
