@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.8.3)
+
 # Locate KDL install directory
 
 # This module defines
@@ -11,7 +13,7 @@ IF ( PKG_CONFIG_FOUND )
   # set flag for whether items are required or not
   SET(IS_REQUIRED)
   IF (Orocos-KDL_FIND_REQUIRED)
-	SET(IS_REQUIRED "REQUIRED")
+    SET(IS_REQUIRED "REQUIRED")
   ENDIF (Orocos-KDL_FIND_REQUIRED)
 
   # find KDL itself
