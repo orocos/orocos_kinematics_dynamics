@@ -85,15 +85,15 @@ CONFIGURE_FILE(
   IMMEDIATE @ONLY)
 
 CONFIGURE_FILE(
-  ${CMAKE_CURRENT_SOURCE_DIR}/KDLConfig.cmake.in
+  ${CMAKE_CURRENT_SOURCE_DIR}/orocos-kdl-config.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake @ONLY)
-# Deprecated config file
 INSTALL(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake 
   DESTINATION share/orocos-kdl)
+
 INSTALL(
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake 
-  DESTINATION share/orocos-kdl/Orocos-KDLConfig.cmake)
+  FILES ${CMAKE_CURRENT_SOURCE_DIR}/package.xml
+  DESTINATION share/orocos-kdl)
 
 ADD_CUSTOM_TARGET(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
