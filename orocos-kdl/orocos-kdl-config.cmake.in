@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8.3)
 # Locate KDL install directory
 
 # This module defines
-# orocos_kdl_INSTALL where to find include, lib, bin, etc.
-# orocos_kdl_FOUND, is set to true
+# orocos-kdl_INSTALL where to find include, lib, bin, etc.
+# orocos-kdl_FOUND, is set to true
 
 INCLUDE (FindPkgConfig)
 
