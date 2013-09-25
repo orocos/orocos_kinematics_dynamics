@@ -1,7 +1,9 @@
 <package>
-  <name>python_orocos_kdl</name>
+  <name>python-orocos-kdl</name>
   <version>0.3.0</version>
-  <description>python_orocos_kdl</description>
+  <description>
+    Python bindings for the Orocos Kinematics and Dynamics Library (KDL).
+  </description>
   <maintainer email="orocos-dev@lists.mech.kuleuven.be">Orocos Developers</maintainer>
 
   <license>LGPL</license>
@@ -15,10 +17,10 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <!-- Dependencies needed to compile this package. -->
-  <build_depend>orocos_kdl</build_depend>
+  <build_depend>orocos-kdl</build_depend>
 
   <!-- Dependencies needed after this package is compiled. -->
-  <run_depend>orocos_kdl</run_depend>
+  <run_depend>orocos-kdl</run_depend>
 
   <!-- Dependencies needed only for running tests. -->
   <!-- <test_depend>orocos_kdl</test_depend> -->

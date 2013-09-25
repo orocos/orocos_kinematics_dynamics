@@ -2,7 +2,7 @@ prefix=@CMAKE_INSTALL_PREFIX@
 libdir=${prefix}/lib
 includedir=${prefix}/include
 
-Name: @PC_NAME@
+Name: orocos-kdl
 Description: The Orocos Kinematics and Dynamics Library 
 Requires: 
 Version: @KDL_VERSION@

@@ -24,7 +24,7 @@ INSTALL(
   DESTINATION include/kdl/utilities)
 
 # Orocos convention:
-CONFIGURE_FILE( orocos-kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/${PC_NAME}.pc @ONLY)
+CONFIGURE_FILE( orocos-kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
 
 INSTALL(
   FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc
