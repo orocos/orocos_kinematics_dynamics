@@ -6,32 +6,25 @@ python:
 compiler:
   - gcc
 before_install:
-  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list'
-  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq -y python-catkin-pkg python-rosdep ros-hydro-catkin
-  - sudo rosdep init
-  - rosdep update
-  - rosdep install --from-paths . --ignore-src --rosdistro hydro -y > /dev/null
-  - export CMAKE_ARGS="-DENABLE_TESTS:BOOL=True"
+  # Define some config vars
+  - export ROS_DISTRO=hydro
+  - export CI_SOURCE_PATH=$(pwd)
+  # Bootstrap a minimal ROS installation
+  - git clone https://raw.github.com/jhu-lcsr/ros_ci_tools /tmp/ros_ci_tools && export PATH=/tmp/ros_ci_tools:$PATH
+  - ros_ci_bootstrap
+  # Create isolated workspace based on the ros distro
+  - source /opt/ros/$ROS_DISTRO/setup.bash
+  - mkdir -p ~/ws_isolated/src
+  - cd ~/ws_isolated
+  - ln -s $CI_SOURCE_PATH src/
+  # Install dependencies for source repos
+  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y > /dev/null
+
 install:
-  # Set up non-catkin build
-  #- pushd .
-  #- mkdir build_non_catkin
-  #- cd build_non_catkin
-  #- mkdir -p orocos_kdl python_orocos_kdl
-
-  # First build without catkin
-  #- pushd . && cd orocos_kdl && cmake ../../orocos_kdl $CMAKE_ARGS && sudo make all install && popd
-  #- pushd . && cd python_orocos_kdl && cmake ../../python_orocos_kdl && sudo make all install && popd
-  
-  # Uninstall without catkin
-  #- popd
-
   # Second, build with catkin
-  - source /opt/ros/hydro/setup.bash
+  - export CMAKE_ARGS="-DENABLE_TESTS:BOOL=True"
   - catkin_make_isolated --install --source . -j1 --cmake-args $CMAKE_ARGS 
 
 script:
   # Run tests
-  - pushd . && cd build_isolated/orocos_kdl && make check && popd
+  - pushd build_isolated/orocos_kdl && make check && popd
