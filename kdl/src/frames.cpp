@@ -197,32 +197,33 @@ namespace KDL {
     */
     void Rotation::GetQuaternion(double& x,double& y,double& z, double& w) const
     {
-        double trace = (*this)(0,0) + (*this)(1,1) + (*this)(2,2) + 1.0f;
+        double trace = (*this)(0,0) + (*this)(1,1) + (*this)(2,2) + 1.0;
+	double epsilon=1E-12;
         if( trace > epsilon ){
-            double s = 0.5f / sqrt(trace);
-            w = 0.25f / s;
+            double s = 0.5 / sqrt(trace);
+            w = 0.25 / s;
             x = ( (*this)(2,1) - (*this)(1,2) ) * s;
             y = ( (*this)(0,2) - (*this)(2,0) ) * s;
             z = ( (*this)(1,0) - (*this)(0,1) ) * s;
         }else{
             if ( (*this)(0,0) > (*this)(1,1) && (*this)(0,0) > (*this)(2,2) ){
-                float s = 2.0f * sqrtf( 1.0f + (*this)(0,0) - (*this)(1,1) - (*this)(2,2));
+                double s = 2.0 * sqrt( 1.0 + (*this)(0,0) - (*this)(1,1) - (*this)(2,2));
                 w = ((*this)(2,1) - (*this)(1,2) ) / s;
-                x = 0.25f * s;
+                x = 0.25 * s;
                 y = ((*this)(0,1) + (*this)(1,0) ) / s;
                 z = ((*this)(0,2) + (*this)(2,0) ) / s;
             } else if ((*this)(1,1) > (*this)(2,2)) {
-                float s = 2.0f * sqrtf( 1.0f + (*this)(1,1) - (*this)(0,0) - (*this)(2,2));
+                double s = 2.0 * sqrt( 1.0 + (*this)(1,1) - (*this)(0,0) - (*this)(2,2));
                 w = ((*this)(0,2) - (*this)(2,0) ) / s;
                 x = ((*this)(0,1) + (*this)(1,0) ) / s;
-                y = 0.25f * s;
+                y = 0.25 * s;
                 z = ((*this)(1,2) + (*this)(2,1) ) / s;
             }else {
-                float s = 2.0f * sqrtf( 1.0f + (*this)(2,2) - (*this)(0,0) - (*this)(1,1) );
+                double s = 2.0 * sqrt( 1.0 + (*this)(2,2) - (*this)(0,0) - (*this)(1,1) );
                 w = ((*this)(1,0) - (*this)(0,1) ) / s;
                 x = ((*this)(0,2) + (*this)(2,0) ) / s;
                 y = ((*this)(1,2) + (*this)(2,1) ) / s;
-                z = 0.25f * s;
+                z = 0.25 * s;
             }
         }    
     }
@@ -339,43 +340,33 @@ Vector Rotation::GetRot() const
 
 
 /** Returns the rotation angle around the equiv. axis
+ * Taken from Wikipedia http://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation
+ *
  * @param axis the rotation axis is returned in this variable
  * @param eps :  in the case of angle == 0 : rot axis is undefined and choosen
  *                                         to be the Z-axis
  *               in the case of angle == PI : 2 solutions, positive Z-component
  *                                            of the axis is choosen.
- * @result returns the rotation angle (between [0..PI] )
+ *
+ * @result returns the rotation angle (between [0 .. PI] )
  * /todo :
  *   Check corresponding routines in rframes and rrframes
  */
 double Rotation::GetRotAngle(Vector& axis,double eps) const {
-	double ca    = (data[0]+data[4]+data[8]-1)/2.0;
-	double t= eps*eps/2.0;
-	if (ca>1-t) {
-		// undefined choose the Z-axis, and angle 0
-		axis = Vector(0,0,1);
-		return 0;
-	}
-	if (ca < -1+t) {
-		// The case of angles consisting of multiples of M_PI:
-		// two solutions, choose a positive Z-component of the axis
-		double x = sqrt( (data[0]+1.0)/2);
-		double y = sqrt( (data[4]+1.0)/2);
-		double z = sqrt( (data[8]+1.0)/2);
-		if ( data[2] < 0) x=-x;
-		if ( data[7] < 0) y=-y;
-		if ( x*y*data[1] < 0) x=-x;  // this last line can be necessary when z is 0
-		// z always >= 0 
-		// if z equal to zero 
-		axis = Vector( x,y,z  );
-		return PI;
-	}
-	double angle = acos(ca);
-	double sa    = sin(angle);
-	axis  = Vector((data[7]-data[5])/2/sa,
-                       (data[2]-data[6])/2/sa,
-                       (data[3]-data[1])/2/sa  );
-	return angle;
+  double x,y,z,w;
+  this->GetQuaternion(x,y,z,w);
+  double norm = sqrt(x*x+y*y+z*z);
+  double angle = 2*atan2(norm,w);
+  axis.x(x);
+  axis.y(y);
+  axis.z(z);
+  if (norm>eps)
+    axis = axis/norm;
+  else{
+    axis = Vector(0,0,1);
+    angle = 0.0;
+  }
+  return angle;
 }
 
 bool operator==(const Rotation& a,const Rotation& b) {

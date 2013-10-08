@@ -47,10 +47,12 @@ find_package(Eigen 3.0 QUIET)
 if(NOT Eigen_DIR)
 include(${PROJ_SOURCE_DIR}/config/FindEigen3.cmake)
 include_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
+SET( KDL_CFLAGS "${KDL_CFLAGS}:${EIGEN3_INCLUDE_DIR}" )
 endif()
 INCLUDE_DIRECTORIES(${EIGEN_INCLUDE_DIRS})
 
 INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
+SET( KDL_CFLAGS "${KDL_CFLAGS}:${EIGEN3_INCLUDE_DIR}" )
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
 IF( ENABLE_TESTS )
@@ -68,8 +70,6 @@ IF( ENABLE_TESTS )
 ENDIF(ENABLE_TESTS )
 
 OPTION(ENABLE_EXAMPLES OFF "Enable building of examples")
-
-#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 add_definitions(-DEIGEN2_SUPPORT)
 
