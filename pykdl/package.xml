@@ -8,7 +8,7 @@
 
   <license>LGPL</license>
 
-  <url type="website">http://ros.org/wiki/python_orocos-kdl</url>
+  <url type="website">http://ros.org/wiki/pykdl</url>
   <!-- <url type="bugtracker"></url> -->
 
   <author>Ruben Smits</author>
@@ -23,11 +23,9 @@
   <run_depend>kdl</run_depend>
 
   <!-- Dependencies needed only for running tests. -->
-  <!-- <test_depend>orocos-kdl</test_depend> -->
 
   <export>
     <build_type>cmake</build_type>
-    <python path="${prefix}/lib"/>
     <rosdoc config="rosdoc.yaml"/>
   </export>
 </package>
