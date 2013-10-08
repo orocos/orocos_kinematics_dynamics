@@ -416,7 +416,7 @@ void SolverTest::VereshchaginTest()
     //desired is given by an interpolator
     //error is the difference between desired-actual
     //in this test only the actual values are printed.
-    int k = 1;
+    const int k = 1;
     JntArray jointPoses[k];
     JntArray jointRates[k];
     JntArray jointAccelerations[k];
