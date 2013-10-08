@@ -27,4 +27,4 @@ install:
 
 script:
   # Run tests
-  - pushd build_isolated/orocos-kdl && make check && popd
+  - pushd build_isolated/kdl && make check && popd
