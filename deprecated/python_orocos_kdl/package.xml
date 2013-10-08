@@ -2,8 +2,8 @@
   <name>python_orocos_kdl</name>
   <version>0.3.0</version>
   <description>
-    The "python_orocos_kdl" package is deprecated and is being replaced by
-    the "pykdl" package starting in ROS Hydromedusa. The only
+    The 'python_orocos_kdl' package is deprecated and is being replaced by
+    the 'pykdl' package starting in ROS Hydromedusa. The only
     difference between these two packages is the name.
 
     Python bindings for the Orocos Kinematics
@@ -24,8 +24,8 @@
 
   <export>
     <deprecated>
-      The "python_orocos_kdl" package is deprecated and is being replaced by
-      the "pykdl" package starting in ROS Hydromedusa. The only
+      The 'python_orocos_kdl' package is deprecated and is being replaced by
+      the 'pykdl' package starting in ROS Hydromedusa. The only
       difference between these two packages is the name.
     </deprecated>
   </export>
