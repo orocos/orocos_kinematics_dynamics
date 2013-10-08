@@ -1,4 +1,4 @@
-FIND_PATH(EIGEN3_INCLUDE_DIR Eigen/Core /usr/include /usr/include/eigen3 /usr/local/include /usr/local/include/eigen3)
+FIND_PATH(EIGEN3_INCLUDE_DIR Eigen/Core /usr/include /usr/include/eigen3 /usr/local/include /usr/local/include/eigen3 /opt/local/include/eigen3)
 IF ( EIGEN3_INCLUDE_DIR )
     MESSAGE(STATUS "-- Looking for Eigen3 - found")
 ELSE ( EIGEN3_INCLUDE_DIR )
