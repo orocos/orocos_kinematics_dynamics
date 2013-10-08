@@ -1,5 +1,5 @@
 <package>
-  <name>python-orocos-kdl</name>
+  <name>pykdl</name>
   <version>0.3.0</version>
   <description>
     Python bindings for the Orocos Kinematics and Dynamics Library (KDL).
