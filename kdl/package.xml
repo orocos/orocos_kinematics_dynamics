@@ -1,19 +1,25 @@
 <package>
   <name>kdl</name>
-  <version>2.6.0</version>
+  <version>0.3.0</version>
   <description>
-    This package depends on a recent version of the Kinematics and Dynamics
-    Library (KDL), distributed by the Orocos Project. It is a meta-package that
-    depends on orocos-kdl which contains the c++ version and python_orocos-kdl
-    which contains the generated python bindings.
+    This is the Kinematics and Dynamics Library (KDL), distributed by the
+    Orocos Project.
   </description>
   <maintainer email="orocos-dev@lists.mech.kuleuven.be">Orocos Developers</maintainer>
+
   <license>LGPL</license>
 
+  <url type="website">http://www.orocos.org/kdl</url>
+  <!-- <url type="bugtracker"></url> -->
+
+  <author>Ruben Smits</author>
+  <author>Erwin Aertbelien</author>
+
+  <!-- Dependencies which this package needs to build itself. -->
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>orocos-kdl</run_depend>
-  <run_depend>python-orocos-kdl</run_depend>
-
+  <export>
+    <build_type>cmake</build_type>
+    <doxymaker external="http://www.orocos.org/kdl"/>
+  </export>
 </package>
-

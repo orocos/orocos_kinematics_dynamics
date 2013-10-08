@@ -1,5 +1,5 @@
 <package>
-  <name>python-orocos-kdl</name>
+  <name>pykdl</name>
   <version>0.3.0</version>
   <description>
     Python bindings for the Orocos Kinematics and Dynamics Library (KDL).
@@ -8,7 +8,7 @@
 
   <license>LGPL</license>
 
-  <url type="website">http://ros.org/wiki/python_orocos-kdl</url>
+  <url type="website">http://ros.org/wiki/pykdl</url>
   <!-- <url type="bugtracker"></url> -->
 
   <author>Ruben Smits</author>
@@ -17,17 +17,15 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <!-- Dependencies needed to compile this package. -->
-  <build_depend>orocos-kdl</build_depend>
+  <build_depend>kdl</build_depend>
 
   <!-- Dependencies needed after this package is compiled. -->
-  <run_depend>orocos-kdl</run_depend>
+  <run_depend>kdl</run_depend>
 
   <!-- Dependencies needed only for running tests. -->
-  <!-- <test_depend>orocos-kdl</test_depend> -->
 
   <export>
     <build_type>cmake</build_type>
-    <python path="${prefix}/lib"/>
     <rosdoc config="rosdoc.yaml"/>
   </export>
 </package>
