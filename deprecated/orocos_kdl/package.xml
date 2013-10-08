@@ -2,8 +2,8 @@
   <name>orocos_kdl</name>
   <version>0.3.0</version>
   <description>
-    The "orocos_kdl" package is deprecated and is being replaced by
-    the "kdl" package starting in ROS Hydromedusa. The only
+    The 'orocos_kdl' package is deprecated and is being replaced by
+    the 'kdl' package starting in ROS Hydromedusa. The only
     difference between these two packages is the name.
 
     This is the Kinematics and Dynamics Library (KDL), distributed by
@@ -25,8 +25,8 @@
 
   <export>
     <deprecated>
-      The "orocos_kdl" package is deprecated and is being replaced by
-      the "kdl" package starting in ROS Hydromedusa. The only
+      The 'orocos_kdl' package is deprecated and is being replaced by
+      the 'kdl' package starting in ROS Hydromedusa. The only
       difference between these two packages is the name.
     </deprecated>
     <doxymaker external="http://www.orocos.org/kdl"/>
