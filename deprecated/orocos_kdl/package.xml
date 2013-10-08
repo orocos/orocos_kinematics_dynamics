@@ -24,11 +24,7 @@
   <run_depend>kdl</run_depend>
 
   <export>
-    <deprecated>
-      The 'orocos_kdl' package is deprecated and is being replaced by
-      the 'kdl' package starting in ROS Hydromedusa. The only
-      difference between these two packages is the name.
-    </deprecated>
+    <deprecated>The 'orocos_kdl' package is deprecated and is being replaced by the 'kdl' package starting in ROS Hydromedusa. The only difference between these two packages is the name.</deprecated>
     <doxymaker external="http://www.orocos.org/kdl"/>
   </export>
 </package>
