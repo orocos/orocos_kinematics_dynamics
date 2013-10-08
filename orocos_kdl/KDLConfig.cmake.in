@@ -15,7 +15,7 @@ IF ( PKG_CONFIG_FOUND )
   ENDIF (Orocos-KDL_FIND_REQUIRED)
 
   # find KDL itself
-  set(ENV{PKG_CONFIG_PATH} "@CMAKE_INSTALL_PREFIX@/lib/pkgconfig/")
+  set(ENV{PKG_CONFIG_PATH} "@CMAKE_INSTALL_PREFIX@/lib/pkgconfig/:$ENV{PKG_CONFIG_PATH}")
   message( "Looking for KDL in: @CMAKE_INSTALL_PREFIX@")
   pkg_search_module(Orocos-KDL ${IS_REQUIRED} orocos-kdl)
   
