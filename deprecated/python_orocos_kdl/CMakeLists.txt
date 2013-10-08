@@ -4,5 +4,4 @@ project(python_orocos_kdl)
 
 find_package(catkin REQUIRED)
 
-catkin_package(
-  DEPENDS pykdl)
+catkin_package(DEPENDS pykdl)

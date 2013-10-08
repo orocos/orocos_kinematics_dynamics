@@ -18,6 +18,9 @@
   <!-- Dependencies which this package needs to build itself. -->
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>eigen</build_depend>
+  <run_depend>eigen</run_depend>
+
   <export>
     <build_type>cmake</build_type>
     <doxymaker external="http://www.orocos.org/kdl"/>
