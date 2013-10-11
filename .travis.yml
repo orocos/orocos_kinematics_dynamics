@@ -27,6 +27,6 @@ install:
 
 script:
   # Run tests
-  - pushd build_isolated/kdl && make check && popd
+  - catkin_make_isolated --install --pkg kdl --make-args check
   - source install_isolated/setup.bash
   - src/orocos_kinematics_dynamics/pykdl/tests/PyKDLtest.py
