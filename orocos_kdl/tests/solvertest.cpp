@@ -376,6 +376,70 @@ void SolverTest::IkSingularValueTest()
                          ikvelsolver1.getNrZeroSigmas());
 }
 
+
+void SolverTest::IkVelSolverWDLSTest()
+{
+	int rc ;
+	int maxiter = 30;
+	double	eps = 0.1 ;
+	double lambda = 0.1 ;
+	double sigma_min ;
+
+	std::cout<<"KDL-IK WDLS Vel Solver Tests for Near Zero SVs"<<std::endl;
+
+	KDL::ChainIkSolverVel_wdls ikvelsolver(motomansia10,eps,maxiter) ;
+	ikvelsolver.setLambda(lambda) ;
+	unsigned int nj = motomansia10.getNrOfJoints();
+    JntArray q(nj), dq(nj) ;
+
+	KDL::Vector	v05(0.05,0.05,0.05) ;
+	KDL::Twist dx(v05,v05) ;
+
+	std::cout<<"smallest singular value is above threshold (no WDLS)"<<std::endl;
+
+	q(0) = 0. ;
+	q(1) = 0.5 ;
+	q(2) = 0.4 ;
+	q(3) = -M_PI_2 ;
+	q(4) = 0. ;
+	q(5) = 0. ;
+	q(6) = 0. ;
+
+	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
+                         ikvelsolver.CartToJnt(q, dx, dq)) ;	// wdls mode
+	CPPUNIT_ASSERT(1==ikvelsolver.getNrZeroSigmas()) ;		//	1 singular value
+
+
+	std::cout<<"smallest singular value is below threshold (lambda is scaled)"<<std::endl;
+
+	q(1) = 0.2 ;
+
+	CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_wdls::E_CONVERGE_PINV_SINGULAR,
+                         ikvelsolver.CartToJnt(q, dx, dq)) ;	// wdls mode
+	CPPUNIT_ASSERT_EQUAL((unsigned int)2,ikvelsolver.getNrZeroSigmas()) ;		//	2 singular values
+	CPPUNIT_ASSERT_EQUAL(ikvelsolver.getLambdaScaled(),
+                         sqrt(1.0-(ikvelsolver.getSigmaMin()/eps)*(ikvelsolver.getSigmaMin()/eps))*lambda) ;
+
+	std::cout<<"smallest singular value is zero (lambda_scaled=lambda)"<<std::endl;
+
+	q(1) = 0.0 ;
+
+    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_wdls::E_CONVERGE_PINV_SINGULAR,
+                         ikvelsolver.CartToJnt(q, dx, dq)) ;	// wdls mode
+	CPPUNIT_ASSERT_EQUAL((unsigned int)2,ikvelsolver.getNrZeroSigmas()) ;		//	2 singular values
+	CPPUNIT_ASSERT_EQUAL(ikvelsolver.getLambdaScaled(),lambda) ;	// full value
+
+	// fully singular
+	q(2) = 0.0 ;
+	q(3) = 0.0 ;
+
+    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_wdls::E_CONVERGE_PINV_SINGULAR,
+                         ikvelsolver.CartToJnt(q, dx, dq)) ;	// wdls mode
+	CPPUNIT_ASSERT_EQUAL(4,(int)ikvelsolver.getNrZeroSigmas()) ;
+	CPPUNIT_ASSERT_EQUAL(ikvelsolver.getLambdaScaled(),lambda) ;	// full value
+}
+
+
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
 {
     double deltaq = 1E-4;

@@ -8,6 +8,7 @@
 #include <chainfksolvervel_recursive.hpp>
 #include <chainiksolvervel_pinv.hpp>
 #include <chainiksolvervel_pinv_givens.hpp>
+#include <chainiksolvervel_wdls.hpp>
 #include <chainiksolverpos_nr.hpp>
 #include <chainjnttojacsolver.hpp>
 #include <chainidsolver_vereshchagin.hpp>
@@ -23,6 +24,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(FkPosAndIkPosTest );
     CPPUNIT_TEST(VereshchaginTest );
     CPPUNIT_TEST(IkSingularValueTest );
+    CPPUNIT_TEST(IkVelSolverWDLSTest );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -35,6 +37,7 @@ public:
     void FkPosAndIkPosTest();
     void VereshchaginTest();
     void IkSingularValueTest() ;
+    void IkVelSolverWDLSTest();
 
 private:
 
