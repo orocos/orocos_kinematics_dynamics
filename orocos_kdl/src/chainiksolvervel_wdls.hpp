@@ -64,6 +64,8 @@ namespace KDL
     {
     public:
         static const int E_SVD_FAILED = -100; //! SVD solver failed
+        /// solution converged but (pseudo)inverse is singular
+        static const int E_CONVERGE_PINV_SINGULAR = +100;
 
         /**
          * Constructor of the solver
@@ -88,6 +90,10 @@ namespace KDL
          * @return
          *  E_NOERROR=svd solution converged in maxiter
          *  E_SVD_FAILED=svd solution failed
+         *  E_CONVERGE_PINV_SINGULAR=svd solution converged but (pseudo)inverse singular
+         *
+         * @note if E_CONVERGE_PINV_SINGULAR returned then converged and can
+         * continue motion, but have degraded solution
          *
          * @note If E_SVD_FAILED returned, then getSvdResult() returns the error
          * code from the SVD algorithm.
@@ -151,6 +157,13 @@ namespace KDL
         void setLambda(const double& lambda);
 
         /**
+         * Request the number of singular values of the jacobian that are < eps;
+         * if the number of near zero singular values is > jac.col()-jac.row(),
+         * then the jacobian pseudoinverse is singular
+         */
+        unsigned int getNrZeroSigmas()const {return nrZeroSigmas;};
+
+        /**
          * Retrieve the latest return code from the SVD algorithm
          * @return 0 if CartToJnt() not yet called, otherwise latest SVD result code.
          */
@@ -177,6 +190,7 @@ namespace KDL
         Eigen::MatrixXd weight_ts;
         Eigen::MatrixXd weight_js;
         double lambda;
+		unsigned int nrZeroSigmas ;
 		int svdResult;
     };
 }

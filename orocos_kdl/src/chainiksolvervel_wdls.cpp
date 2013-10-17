@@ -43,6 +43,7 @@ namespace KDL
         weight_ts(MatrixXd::Identity(6,6)),
         weight_js(MatrixXd::Identity(chain.getNrOfJoints(),chain.getNrOfJoints())),
         lambda(0.0),
+        nrZeroSigmas(0),
         svdResult(0)
     {
     }
@@ -71,6 +72,9 @@ namespace KDL
         double sum;
         unsigned int i,j;
         
+		// Initialize near zero singular value counter
+		nrZeroSigmas = 0 ;
+
         /*
         for (i=0;i<jac.rows();i++) {
             for (j=0;j<jac.columns();j++)
@@ -103,11 +107,17 @@ namespace KDL
                 else
                     sum+=0.0;
             }
-            if(S(i)==0||S(i)<eps)
+            // If the singular value is too small (<eps), use the weighted damped
+            // least squares inverse; otherwise, use the reciprocal inverse
+			if(fabs(S(i))<eps) {
                 tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda*lambda)));   
-            else
+				++nrZeroSigmas;
+			}
+			else {
                 tmp(i) = sum/S(i);
+			}
         }
+
         /*
         // x = Lx^-1*V*tmp + x
         for (i=0;i<jac.columns();i++) {
@@ -119,7 +129,14 @@ namespace KDL
         }
         */
         qdot_out.data=tmp_js.lazyProduct(tmp);
-        return (error = E_NOERROR);
+
+        // If number of near zero singular values is greater than the full rank
+        // of jac, then wdls is active
+        if ( nrZeroSigmas > (jac.columns()-jac.rows()) )	{
+            return (error = E_CONVERGE_PINV_SINGULAR);  // converged but pinv singular
+        } else {
+            return (error = E_NOERROR);                 // have converged
+        }
     }
 
     const char* ChainIkSolverVel_wdls::strError(const int error) const
