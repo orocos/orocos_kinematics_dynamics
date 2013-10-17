@@ -63,6 +63,8 @@ namespace KDL
     class ChainIkSolverVel_wdls : public ChainIkSolverVel
     {
     public:
+        static const int E_SVD_FAILED = -100; //! SVD solver failed
+
         /**
          * Constructor of the solver
          *
@@ -79,6 +81,17 @@ namespace KDL
         //=ublas::identity_matrix<double>
         ~ChainIkSolverVel_wdls();
 
+        /**
+         * Find an output joint velocity \a qdot_out, given a starting joint pose
+         * \a q_init and a desired cartesian velocity \a v_in
+         *
+         * @return
+         *  E_NOERROR=svd solution converged in maxiter
+         *  E_SVD_FAILED=svd solution failed
+         *
+         * @note If E_SVD_FAILED returned, then getSvdResult() returns the error
+         * code from the SVD algorithm.
+		 */
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
         /**
          * not (yet) implemented.
@@ -137,6 +150,15 @@ namespace KDL
 
         void setLambda(const double& lambda);
 
+        /**
+         * Retrieve the latest return code from the SVD algorithm
+         * @return 0 if CartToJnt() not yet called, otherwise latest SVD result code.
+         */
+        int getSVDResult()const {return svdResult;};
+
+        /// @copydoc KDL::SolverI::strError()
+        virtual const char* strError(const int error) const;
+
     private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
@@ -155,6 +177,7 @@ namespace KDL
         Eigen::MatrixXd weight_ts;
         Eigen::MatrixXd weight_js;
         double lambda;
+		int svdResult;
     };
 }
 #endif

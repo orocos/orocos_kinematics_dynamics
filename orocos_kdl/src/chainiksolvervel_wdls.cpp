@@ -42,7 +42,8 @@ namespace KDL
         tmp_js(MatrixXd::Zero(chain.getNrOfJoints(),chain.getNrOfJoints())),
         weight_ts(MatrixXd::Identity(6,6)),
         weight_js(MatrixXd::Identity(chain.getNrOfJoints(),chain.getNrOfJoints())),
-        lambda(0.0)
+        lambda(0.0),
+        svdResult(0)
     {
     }
     
@@ -82,8 +83,13 @@ namespace KDL
         tmp_jac_weight2 = weight_ts.lazyProduct(tmp_jac_weight1);
    
         // Compute the SVD of the weighted jacobian
-        int ret = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
-                
+        svdResult = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
+        if (0 != svdResult)
+        {
+            qdot_out.data.setZero() ;
+            return (error = E_SVD_FAILED);
+        }
+
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
         tmp_ts = weight_ts.lazyProduct(U.topLeftCorner(6,6));
         tmp_js = weight_js.lazyProduct(V);
@@ -113,7 +119,13 @@ namespace KDL
         }
         */
         qdot_out.data=tmp_js.lazyProduct(tmp);
-        return ret;
+        return (error = E_NOERROR);
     }
-    
+
+    const char* ChainIkSolverVel_wdls::strError(const int error) const
+    {
+        if (E_SVD_FAILED == error) return "SVD failed";
+        else return SolverI::strError(error);
+    }
+
 }
