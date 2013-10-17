@@ -351,6 +351,29 @@ void SolverTest::IkSingularValueTest()
                         ikvelsolver1.getError());
 	CPPUNIT_ASSERT_EQUAL((unsigned int)1,
                          ikvelsolver1.getNrZeroSigmas()) ;		//	1 singular value (jac pseudoinverse exists)
+
+	std::cout<<"nonconvergence:  fully singular"<<std::endl;
+
+    q(0) = 0. ;
+    q(1) = 0. ;
+    q(2) = 0. ;
+    q(3) = 0. ;
+    q(4) = 0. ;
+    q(5) = 0. ;
+    q(6) = 0. ;
+
+    dF.M = KDL::Rotation::RPY(0.1, 0.1, 0.1) ;
+    dF.p = KDL::Vector(0.01,0.01,0.01) ;
+
+    CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
+    F_des = F * dF ;
+
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+                         iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
+    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
+                         ikvelsolver1.getError());        	// truncated SV solution
+    CPPUNIT_ASSERT_EQUAL((unsigned int)3,
+                         ikvelsolver1.getNrZeroSigmas());
 }
 
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
