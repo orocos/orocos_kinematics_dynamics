@@ -290,7 +290,13 @@ void SolverTest::IkSingularValueTest()
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
 	F_des = F * dF ;
 
-	CPPUNIT_ASSERT_EQUAL(0, iksolver1.CartToJnt(q, F_des, q_solved));	// converges
+	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
+                         iksolver1.CartToJnt(q, F_des, q_solved));	// converges
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
+                         ikvelsolver1.getError());
+	CPPUNIT_ASSERT_EQUAL((unsigned int)1,
+                         ikvelsolver1.getNrZeroSigmas()) ;		//	1 singular value
+
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q_solved,F_solved));
 	F_error = KDL::diff(F_solved,F_des);
 	CPPUNIT_ASSERT_EQUAL(F_des,F_solved);
@@ -311,9 +317,12 @@ void SolverTest::IkSingularValueTest()
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
 	F_des = F * dF ;
 
-	CPPUNIT_ASSERT_EQUAL(-1,iksolver1.CartToJnt(q,F_des,q_solved));	//  truncated SV solution
-	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q_solved,F_solved));
-
+	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+                         iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
+	CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
+                         ikvelsolver1.getError());        	// truncated SV solution
+	CPPUNIT_ASSERT_EQUAL((unsigned int)2,
+                         ikvelsolver1.getNrZeroSigmas()) ;		//	2 singular values (jac pseudoinverse singular)
 
 	std::cout<<"nonconvergence:  large displacement, low iterations"<<std::endl;
 
@@ -336,8 +345,12 @@ void SolverTest::IkSingularValueTest()
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
 	F_des = F * dF ;
 
-    CPPUNIT_ASSERT_EQUAL(-1, iksolver2.CartToJnt(q,F_des,q_solved));	//  does not converge
-	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q_solved,F_solved));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+                         iksolver2.CartToJnt(q,F_des,q_solved));	//  does not converge
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
+                        ikvelsolver1.getError());
+	CPPUNIT_ASSERT_EQUAL((unsigned int)1,
+                         ikvelsolver1.getNrZeroSigmas()) ;		//	1 singular value (jac pseudoinverse exists)
 }
 
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
