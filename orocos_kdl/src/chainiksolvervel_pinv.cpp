@@ -33,7 +33,8 @@ namespace KDL
         V(chain.getNrOfJoints(),JntArray(chain.getNrOfJoints())),
         tmp(chain.getNrOfJoints()),
         eps(_eps),
-        maxiter(_maxiter)
+        maxiter(_maxiter),
+        svdResult(0)
     {
     }
 
@@ -48,13 +49,18 @@ namespace KDL
         //the current joint positions "q_in" 
         jnt2jac.JntToJac(q_in,jac);
 
+        double sum;
+        unsigned int i,j;
+
         //Do a singular value decomposition of "jac" with maximum
         //iterations "maxiter", put the results in "U", "S" and "V"
         //jac = U*S*Vt
-        int ret = svd.calculate(jac,U,S,V,maxiter);
-
-        double sum;
-        unsigned int i,j;
+        svdResult = svd.calculate(jac,U,S,V,maxiter);
+        if (0 != svdResult)
+        {
+            qdot_out.data.setZero();
+            return (error = E_SVD_FAILED);
+        }
 
         // We have to calculate qdot_out = jac_pinv*v_in
         // Using the svd decomposition this becomes(jac_pinv=V*S_pinv*Ut):
@@ -81,7 +87,12 @@ namespace KDL
             qdot_out(i)=sum;
         }
         //return the return value of the svd decomposition
-        return ret;
+        return (error = E_NOERROR);         // have converged
     }
 
+    const char* ChainIkSolverVel_pinv::strError(const int error) const
+    {
+        if (E_SVD_FAILED == error) return "SVD failed";
+        else return SolverI::strError(error);
+    }
 }
