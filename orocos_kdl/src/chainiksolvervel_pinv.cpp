@@ -34,6 +34,7 @@ namespace KDL
         tmp(chain.getNrOfJoints()),
         eps(_eps),
         maxiter(_maxiter),
+        nrZeroSigmas(0),
         svdResult(0)
     {
     }
@@ -51,6 +52,9 @@ namespace KDL
 
         double sum;
         unsigned int i,j;
+
+        // Initialize near zero singular value counter
+        nrZeroSigmas = 0 ;
 
         //Do a singular value decomposition of "jac" with maximum
         //iterations "maxiter", put the results in "U", "S" and "V"
@@ -74,7 +78,14 @@ namespace KDL
             }
             //If the singular value is too small (<eps), don't invert it but
             //set the inverted singular value to zero (truncated svd)
-            tmp(i) = sum*(fabs(S(i))<eps?0.0:1.0/S(i));
+            if ( fabs(S(i))<eps ) {
+                tmp(i) = 0.0 ;
+                //  Count number of singular values near zero
+                ++nrZeroSigmas ;
+            }
+            else {
+                tmp(i) = sum/S(i) ;
+            }
         }
         //tmp is now: tmp=S_pinv*Ut*v_in, we still have to premultiply
         //it with V to get qdot_out
@@ -86,8 +97,14 @@ namespace KDL
             //Put the result in qdot_out
             qdot_out(i)=sum;
         }
-        //return the return value of the svd decomposition
-        return (error = E_NOERROR);         // have converged
+
+        // Note if the solution is singular, i.e. if number of near zero
+        // singular values is greater than the full rank of jac
+        if ( nrZeroSigmas > (jac.columns()-jac.rows()) ) {
+            return (error = E_CONVERGE_PINV_SINGULAR);   // converged but pinv singular
+        } else {
+            return (error = E_NOERROR);                 // have converged
+        }
     }
 
     const char* ChainIkSolverVel_pinv::strError(const int error) const

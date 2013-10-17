@@ -41,6 +41,8 @@ namespace KDL
     {
     public:
         static const int E_SVD_FAILED = -100; //! Child SVD failed
+        /// solution converged but (pseudo)inverse is singular
+        static const int E_CONVERGE_PINV_SINGULAR = +100;
 
         /**
          * Constructor of the solver
@@ -63,6 +65,10 @@ namespace KDL
          * @return
          *  E_NOERROR=solution converged to <eps in maxiter
          *  E_SVD_FAILED=SVD computation failed
+         *  E_CONVERGE_PINV_SINGULAR=solution converged but (pseudo)inverse is singular
+         *
+         * @note if E_CONVERGE_PINV_SINGULAR returned then converged and can
+         * continue motion, but have degraded solution
          *
          * @note If E_SVD_FAILED returned, then getSvdResult() returns the error code
          * from the SVD algorithm.
@@ -73,6 +79,13 @@ namespace KDL
          *
          */
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
+
+        /**
+         * Retrieve the number of singular values of the jacobian that are < eps;
+         * if the number of near zero singular values is > jac.col()-jac.row(),
+         * then the jacobian pseudoinverse is singular
+         */
+        unsigned int getNrZeroSigmas()const {return nrZeroSigmas;};
 
         /**
          * Retrieve the latest return code from the SVD algorithm
@@ -94,6 +107,7 @@ namespace KDL
         JntArray tmp;
         double eps;
         int maxiter;
+        unsigned int nrZeroSigmas;
         int svdResult;
 
     };
