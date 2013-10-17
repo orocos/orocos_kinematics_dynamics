@@ -43,8 +43,10 @@ namespace KDL
         weight_ts(MatrixXd::Identity(6,6)),
         weight_js(MatrixXd::Identity(chain.getNrOfJoints(),chain.getNrOfJoints())),
         lambda(0.0),
+        lambda_scaled(0.0),
         nrZeroSigmas(0),
-        svdResult(0)
+        svdResult(0),
+        sigmaMin(0)
     {
     }
     
@@ -72,8 +74,10 @@ namespace KDL
         double sum;
         unsigned int i,j;
         
-		// Initialize near zero singular value counter
-		nrZeroSigmas = 0 ;
+        // Initialize (internal) return values
+        nrZeroSigmas = 0 ;
+        sigmaMin = 0.;
+        lambda_scaled = 0.;
 
         /*
         for (i=0;i<jac.rows();i++) {
@@ -97,8 +101,16 @@ namespace KDL
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
         tmp_ts = weight_ts.lazyProduct(U.topLeftCorner(6,6));
         tmp_js = weight_js.lazyProduct(V);
-        
-        // tmp = (Si*U'*Ly*y), 
+
+        // Minimum of six largest singular values of J is S(5) if number of joints >=6 and 0 for <6
+        if ( jac.columns() >= 6 ) {
+            sigmaMin = S(5);
+        }
+        else {
+            sigmaMin = 0.;
+        }
+
+        // tmp = (Si*U'*Ly*y),
         for (i=0;i<jac.columns();i++) {
             sum = 0.0;
             for (j=0;j<jac.rows();j++) {
@@ -107,11 +119,19 @@ namespace KDL
                 else
                     sum+=0.0;
             }
-            // If the singular value is too small (<eps), use the weighted damped
-            // least squares inverse; otherwise, use the reciprocal inverse
+            // If the minimum singular value falls below eps, use the weighted
+            // damped least squares inverse; otherwise, use the reciprocal inverse
+			lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
 			if(fabs(S(i))<eps) {
-                tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda*lambda)));   
-				++nrZeroSigmas;
+				if (i<6) {
+					// Scale lambda to size of singular value sigmaMin
+					tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda_scaled*lambda_scaled)));
+				}
+				else {
+					tmp(i)=0.0;  // S(i)=0 for i>=6 due to cols>rows
+				}
+				//  Count number of singular values near zero
+				++nrZeroSigmas ;
 			}
 			else {
                 tmp(i) = sum/S(i);

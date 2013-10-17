@@ -164,6 +164,22 @@ namespace KDL
         unsigned int getNrZeroSigmas()const {return nrZeroSigmas;};
 
         /**
+         * Request the minimum of the first six singular values
+         */
+        double getSigmaMin()const {return sigmaMin;};
+
+        /**
+         * Request the value of lambda for the minimum
+         */
+        double getLambda()const {return lambda;};
+
+        /**
+         * Request the scaled value of lambda for the minimum
+         * singular value 1-6
+         */
+        double getLambdaScaled()const {return lambda_scaled;};
+
+        /**
          * Retrieve the latest return code from the SVD algorithm
          * @return 0 if CartToJnt() not yet called, otherwise latest SVD result code.
          */
@@ -190,8 +206,10 @@ namespace KDL
         Eigen::MatrixXd weight_ts;
         Eigen::MatrixXd weight_js;
         double lambda;
+		double lambda_scaled;
 		unsigned int nrZeroSigmas ;
 		int svdResult;
+		double sigmaMin;
     };
 }
 #endif
