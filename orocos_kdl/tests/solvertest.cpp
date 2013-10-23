@@ -102,6 +102,23 @@ void SolverTest::setUp()
     chaindyn.addSegment(segment1);
     chaindyn.addSegment(segment2);
 
+	// Motoman SIA10 Chain (for IK singular value tests)
+	motomansia10.addSegment(Segment(Joint(Joint::None),
+									Frame::DH_Craig1989(0.0, 0.0, 0.36, 0.0)));
+	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
+									Frame::DH_Craig1989(0.0, M_PI_2, 0.0, 0.0)));
+	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
+									Frame::DH_Craig1989(0.0, -M_PI_2, 0.36, 0.0)));
+	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
+									Frame::DH_Craig1989(0.0, M_PI_2, 0.0, 0.0)));
+	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
+									Frame::DH_Craig1989(0.0, -M_PI_2, 0.36, 0.0)));
+	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
+									Frame::DH_Craig1989(0.0, M_PI_2, 0.0, 0.0)));
+	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
+									Frame::DH_Craig1989(0.0, -M_PI_2, 0.0, 0.0)));
+	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
+									Frame(Rotation::Identity(),Vector(0.0,0.0,0.155))));
 }
 
 void SolverTest::tearDown()
@@ -239,6 +256,125 @@ void SolverTest::FkPosAndIkPosTest()
     FkPosAndIkPosLocal(chain4,fksolver4,iksolver4_givens);
 }
 
+void SolverTest::IkSingularValueTest()
+{
+	unsigned int maxiter = 30;
+	double	eps = 1e-6 ;
+	int maxiter_vel = 30;
+	double	eps_vel = 0.1 ;
+    Frame F, dF, F_des,F_solved;
+	KDL::Twist F_error ;
+
+	std::cout<<"KDL-IK Solver Tests for Near Zero SVs"<<std::endl;
+
+    ChainFkSolverPos_recursive fksolver(motomansia10);
+    ChainIkSolverVel_pinv ikvelsolver1(motomansia10,eps_vel,maxiter_vel);
+    ChainIkSolverPos_NR iksolver1(motomansia10,fksolver,ikvelsolver1,maxiter,eps);
+	unsigned int nj = motomansia10.getNrOfJoints();
+    JntArray q(nj), q_solved(nj) ;
+
+
+	std::cout<<"norminal case:  convergence"<<std::endl;
+
+	q(0) = 0. ;
+	q(1) = 0.5 ;
+	q(2) = 0.4 ;
+	q(3) = -M_PI_2 ;
+	q(4) = 0. ;
+	q(5) = 0. ;
+	q(6) = 0. ;
+
+	dF.M = KDL::Rotation::RPY(0.1, 0.1, 0.1) ;
+	dF.p = KDL::Vector(0.01,0.01,0.01) ;
+
+	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
+	F_des = F * dF ;
+
+	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
+                         iksolver1.CartToJnt(q, F_des, q_solved));	// converges
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
+                         ikvelsolver1.getError());
+	CPPUNIT_ASSERT_EQUAL((unsigned int)1,
+                         ikvelsolver1.getNrZeroSigmas()) ;		//	1 singular value
+
+	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q_solved,F_solved));
+	F_error = KDL::diff(F_solved,F_des);
+	CPPUNIT_ASSERT_EQUAL(F_des,F_solved);
+
+	std::cout<<"nonconvergence:  pseudoinverse singular"<<std::endl;
+
+	q(0) = 0. ;
+	q(1) = 0.2 ;
+	q(2) = 0.4 ;
+	q(3) = -M_PI_2 ;
+	q(4) = 0. ;
+	q(5) = 0. ;
+	q(6) = 0. ;
+
+	dF.M = KDL::Rotation::RPY(0.1, 0.1, 0.1) ;
+	dF.p = KDL::Vector(0.01,0.01,0.01) ;
+
+	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
+	F_des = F * dF ;
+
+	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+                         iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
+	CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
+                         ikvelsolver1.getError());        	// truncated SV solution
+	CPPUNIT_ASSERT_EQUAL((unsigned int)2,
+                         ikvelsolver1.getNrZeroSigmas()) ;		//	2 singular values (jac pseudoinverse singular)
+
+	std::cout<<"nonconvergence:  large displacement, low iterations"<<std::endl;
+
+	q(0) = 0. ;
+	q(1) = 0.5 ;
+	q(2) = 0.4 ;
+	q(3) = -M_PI_2 ;
+	q(4) = 0. ;
+	q(5) = 0. ;
+	q(6) = 0. ;
+
+	// big displacement
+	dF.M = KDL::Rotation::RPY(0.2, 0.2, 0.2) ;
+	dF.p = KDL::Vector(-0.2,-0.2, -0.2) ;
+
+	// low iterations
+	maxiter = 5 ;
+    ChainIkSolverPos_NR iksolver2(motomansia10,fksolver,ikvelsolver1,maxiter,eps);
+
+	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
+	F_des = F * dF ;
+
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+                         iksolver2.CartToJnt(q,F_des,q_solved));	//  does not converge
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
+                        ikvelsolver1.getError());
+	CPPUNIT_ASSERT_EQUAL((unsigned int)1,
+                         ikvelsolver1.getNrZeroSigmas()) ;		//	1 singular value (jac pseudoinverse exists)
+
+	std::cout<<"nonconvergence:  fully singular"<<std::endl;
+
+    q(0) = 0. ;
+    q(1) = 0. ;
+    q(2) = 0. ;
+    q(3) = 0. ;
+    q(4) = 0. ;
+    q(5) = 0. ;
+    q(6) = 0. ;
+
+    dF.M = KDL::Rotation::RPY(0.1, 0.1, 0.1) ;
+    dF.p = KDL::Vector(0.01,0.01,0.01) ;
+
+    CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
+    F_des = F * dF ;
+
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+                         iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
+    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
+                         ikvelsolver1.getError());        	// truncated SV solution
+    CPPUNIT_ASSERT_EQUAL((unsigned int)3,
+                         ikvelsolver1.getNrZeroSigmas());
+}
 
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
 {
