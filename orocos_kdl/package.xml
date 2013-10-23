@@ -1,0 +1,23 @@
+<package>
+  <name>orocos_kdl</name>
+  <version>1.1.102</version>
+  <description>
+    This package contains a recent version of the Kinematics and Dynamics
+    Library (KDL), distributed by the Orocos Project. 
+  </description>
+  <maintainer email="ruben@intermodalics.eu">Ruben Smits</maintainer>
+  <license>LGPL</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+  <build_depend>eigen</build_depend>
+
+  <run_depend>catkin</run_depend>
+  <run_depend>eigen</run_depend>
+  <run_depend>pkg-config</run_depend>
+
+  <test_depend>cppunit</test_depend>
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+
+</package>
