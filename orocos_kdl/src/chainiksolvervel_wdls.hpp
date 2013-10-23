@@ -63,6 +63,10 @@ namespace KDL
     class ChainIkSolverVel_wdls : public ChainIkSolverVel
     {
     public:
+        static const int E_SVD_FAILED = -100; //! SVD solver failed
+        /// solution converged but (pseudo)inverse is singular
+        static const int E_CONVERGE_PINV_SINGULAR = +100;
+
         /**
          * Constructor of the solver
          *
@@ -79,6 +83,21 @@ namespace KDL
         //=ublas::identity_matrix<double>
         ~ChainIkSolverVel_wdls();
 
+        /**
+         * Find an output joint velocity \a qdot_out, given a starting joint pose
+         * \a q_init and a desired cartesian velocity \a v_in
+         *
+         * @return
+         *  E_NOERROR=svd solution converged in maxiter
+         *  E_SVD_FAILED=svd solution failed
+         *  E_CONVERGE_PINV_SINGULAR=svd solution converged but (pseudo)inverse singular
+         *
+         * @note if E_CONVERGE_PINV_SINGULAR returned then converged and can
+         * continue motion, but have degraded solution
+         *
+         * @note If E_SVD_FAILED returned, then getSvdResult() returns the error
+         * code from the SVD algorithm.
+		 */
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
         /**
          * not (yet) implemented.
@@ -137,6 +156,38 @@ namespace KDL
 
         void setLambda(const double& lambda);
 
+        /**
+         * Request the number of singular values of the jacobian that are < eps;
+         * if the number of near zero singular values is > jac.col()-jac.row(),
+         * then the jacobian pseudoinverse is singular
+         */
+        unsigned int getNrZeroSigmas()const {return nrZeroSigmas;};
+
+        /**
+         * Request the minimum of the first six singular values
+         */
+        double getSigmaMin()const {return sigmaMin;};
+
+        /**
+         * Request the value of lambda for the minimum
+         */
+        double getLambda()const {return lambda;};
+
+        /**
+         * Request the scaled value of lambda for the minimum
+         * singular value 1-6
+         */
+        double getLambdaScaled()const {return lambda_scaled;};
+
+        /**
+         * Retrieve the latest return code from the SVD algorithm
+         * @return 0 if CartToJnt() not yet called, otherwise latest SVD result code.
+         */
+        int getSVDResult()const {return svdResult;};
+
+        /// @copydoc KDL::SolverI::strError()
+        virtual const char* strError(const int error) const;
+
     private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
@@ -155,6 +206,10 @@ namespace KDL
         Eigen::MatrixXd weight_ts;
         Eigen::MatrixXd weight_js;
         double lambda;
+		double lambda_scaled;
+		unsigned int nrZeroSigmas ;
+		int svdResult;
+		double sigmaMin;
     };
 }
 #endif
