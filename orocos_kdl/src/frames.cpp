@@ -371,12 +371,18 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
 		axis = Vector( x,y,z  );
 		return PI;
 	}
-	double angle = acos(ca);
-	double sa    = sin(angle);
-	axis  = Vector((data[7]-data[5])/2/sa,
-                       (data[2]-data[6])/2/sa,
-                       (data[3]-data[1])/2/sa  );
-	return angle;
+    double angle;
+    double mod_axis;
+    double axisx, axisy, axisz;
+	axisx = data[7]-data[5];
+    axisy = data[2]-data[6];
+    axisz = data[3]-data[1];
+    mod_axis = sqrt(axisx*axisx+axisy*axisy+axisz*axisz);
+	axis  = Vector(axisx/mod_axis,
+                   axisy/mod_axis,
+                   axisz/mod_axis );
+    angle = atan2(mod_axis/2,ca);
+    return angle;
 }
 
 bool operator==(const Rotation& a,const Rotation& b) {
