@@ -386,8 +386,8 @@ void FramesTest::TestRotation() {
 
 	TestOneRotation("rot([1,1,0],180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 	// opposite of +180
-	TestOneRotation("rot([1,1,0],-180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),-180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
-	TestOneRotation("rot([-1,-1,0],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
+	TestOneRotation("rot([1,1,0],-180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),-180*deg2rad), 180*deg2rad, -Vector(1,1,0)/sqrt(2.0));
+	TestOneRotation("rot([-1,-1,0],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),180*deg2rad), 180*deg2rad, -Vector(1,1,0)/sqrt(2.0));
 	// opposite of +180
 	TestOneRotation("rot([-1,-1,0],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),-180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 
