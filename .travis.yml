@@ -10,7 +10,7 @@ before_install:
   - export ROS_DISTRO=hydro
   - export CI_SOURCE_PATH=$(pwd)
   # Bootstrap a minimal ROS installation
-  - git clone https://raw.github.com/jhu-lcsr/ros_ci_tools /tmp/ros_ci_tools && export PATH=/tmp/ros_ci_tools:$PATH
+  - git clone https://github.com/jhu-lcsr/ros_ci_tools /tmp/ros_ci_tools && export PATH=/tmp/ros_ci_tools:$PATH
   - ros_ci_bootstrap
   # Create isolated workspace based on the ros distro
   - source /opt/ros/$ROS_DISTRO/setup.bash
