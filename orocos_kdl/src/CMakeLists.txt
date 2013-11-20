@@ -1,8 +1,8 @@
-FILE( GLOB_RECURSE KDL_SRCS [^.]*.cpp )
+FILE( GLOB_RECURSE KDL_SRCS [^.]*.cpp [^.]*.cxx)
 FILE( GLOB KDL_HPPS [^.]*.hpp [^.]*.inl)
 
 FILE( GLOB UTIL_HPPS utilities/[^.]*.h utilities/[^.]*.hpp)
-ADD_LIBRARY(orocos-kdl SHARED ${KDL_SRCS})# ${UTIL_SRCS})
+ADD_LIBRARY(orocos-kdl SHARED ${KDL_SRCS})
 SET_TARGET_PROPERTIES( orocos-kdl PROPERTIES
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
   VERSION "${KDL_VERSION}"
