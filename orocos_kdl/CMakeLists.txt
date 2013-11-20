@@ -78,54 +78,20 @@ ADD_SUBDIRECTORY( tests )
 ADD_SUBDIRECTORY( examples )
 ADD_SUBDIRECTORY( models )
 
-CONFIGURE_FILE(
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-  IMMEDIATE @ONLY)
+export(TARGETS orocos-kdl
+  FILE "${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake")
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/KDLConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl)
+export(PACKAGE orocos_kdl)
+
+set(KDL_INCLUDE_DIRS ${Eigen_INCLUDE_DIR})
+
+CONFIGURE_FILE(KDLConfig.cmake.in
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
+CONFIGURE_FILE(KDLConfigVersion.cmake.in
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
+
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl)
+INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl)
 
 INSTALL(FILES package.xml DESTINATION share/orocos_kdl)
-
-ADD_CUSTOM_TARGET(uninstall
-  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
-
-############################################################
-##                                                         #
-## Setup PACKAGING                                         #
-##                                                         #
-############################################################
-
-OPTION( CPACK_PACKAGES "Set to ON to build the packages. Requires cmake >2.4" OFF )
-IF (CPACK_PACKAGES)
-
-INCLUDE(InstallRequiredSystemLibraries)
-
-# ATTENTION: There is sometimes a _SOURCE_ version of an
-# option as well, set both if necessary !
-
-# Create .tar.gz and .tar.tbz2 files:
-SET(CPACK_GENERATOR "TBZ2")
-SET(CPACK_SOURCE_GENERATOR "TBZ2")
-
-# The plain 'package' target works correctly.
-SET(CPACK_IGNORE_FILES        "/CVS/;/.svn/;.swp$;.#;/#;/build/")
-# Since the 'package_source' target does a bold copy, define a list of
-# files which should be excluded. Note that 'subpattern' matching is used,
-# thus to exclude a directory use /mydir/
-SET(CPACK_SOURCE_IGNORE_FILES "/CVS/;/.svn/;.swp$;.#;/#;/build/;~")
-
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Orocos KDL")
-SET(CPACK_PACKAGE_VENDOR "The Orocos Community")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README")
-SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING")
-SET(CPACK_PACKAGE_VERSION_MAJOR "${KDL_VERSION_MAJOR}")
-SET(CPACK_PACKAGE_VERSION_MINOR "${KDL_VERSION_MINOR}")
-SET(CPACK_PACKAGE_VERSION_PATCH "${KDL_VERSION_PATCH}")
-SET(CPACK_PACKAGE_INSTALL_DIRECTORY "CMAKE ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}")
-SET(CPACK_STRIP_FILES "bin/cmake")
-#SET(CPACK_PACKAGE_EXECUTABLES "OrocosExec" "Orocos Executable")
-INCLUDE(CPack)
-ENDIF (CPACK_PACKAGES)
