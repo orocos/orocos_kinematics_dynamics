@@ -33,9 +33,7 @@ namespace KDL
         V(chain.getNrOfJoints(),JntArray(chain.getNrOfJoints())),
         tmp(chain.getNrOfJoints()),
         eps(_eps),
-        maxiter(_maxiter),
-        nrZeroSigmas(0),
-        svdResult(0)
+        maxiter(_maxiter)
     {
     }
 
@@ -50,21 +48,13 @@ namespace KDL
         //the current joint positions "q_in" 
         jnt2jac.JntToJac(q_in,jac);
 
-        double sum;
-        unsigned int i,j;
-
-        // Initialize near zero singular value counter
-        nrZeroSigmas = 0 ;
-
         //Do a singular value decomposition of "jac" with maximum
         //iterations "maxiter", put the results in "U", "S" and "V"
         //jac = U*S*Vt
-        svdResult = svd.calculate(jac,U,S,V,maxiter);
-        if (0 != svdResult)
-        {
-            qdot_out.data.setZero();
-            return (error = E_SVD_FAILED);
-        }
+        int ret = svd.calculate(jac,U,S,V,maxiter);
+
+        double sum;
+        unsigned int i,j;
 
         // We have to calculate qdot_out = jac_pinv*v_in
         // Using the svd decomposition this becomes(jac_pinv=V*S_pinv*Ut):
@@ -78,14 +68,7 @@ namespace KDL
             }
             //If the singular value is too small (<eps), don't invert it but
             //set the inverted singular value to zero (truncated svd)
-            if ( fabs(S(i))<eps ) {
-                tmp(i) = 0.0 ;
-                //  Count number of singular values near zero
-                ++nrZeroSigmas ;
-            }
-            else {
-                tmp(i) = sum/S(i) ;
-            }
+            tmp(i) = sum*(fabs(S(i))<eps?0.0:1.0/S(i));
         }
         //tmp is now: tmp=S_pinv*Ut*v_in, we still have to premultiply
         //it with V to get qdot_out
@@ -97,19 +80,8 @@ namespace KDL
             //Put the result in qdot_out
             qdot_out(i)=sum;
         }
-
-        // Note if the solution is singular, i.e. if number of near zero
-        // singular values is greater than the full rank of jac
-        if ( nrZeroSigmas > (jac.columns()-jac.rows()) ) {
-            return (error = E_CONVERGE_PINV_SINGULAR);   // converged but pinv singular
-        } else {
-            return (error = E_NOERROR);                 // have converged
-        }
+        //return the return value of the svd decomposition
+        return ret;
     }
 
-    const char* ChainIkSolverVel_pinv::strError(const int error) const
-    {
-        if (E_SVD_FAILED == error) return "SVD failed";
-        else return SolverI::strError(error);
-    }
 }

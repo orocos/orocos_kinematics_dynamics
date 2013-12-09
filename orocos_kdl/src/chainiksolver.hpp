@@ -29,7 +29,6 @@
 #include "jntarray.hpp"
 #include "jntarrayvel.hpp"
 #include "jntarrayacc.hpp"
-#include "solveri.hpp"
 
 namespace KDL {
 
@@ -39,7 +38,7 @@ namespace KDL {
      *
      * @ingroup KinematicFamily
      */
-    class ChainIkSolverPos : public KDL::SolverI {
+    class ChainIkSolverPos {
     public:
         /**
          * Calculate inverse position kinematics, from cartesian
@@ -62,7 +61,7 @@ namespace KDL {
      *
      * @ingroup KinematicFamily
      */
-    class ChainIkSolverVel : public KDL::SolverI {
+    class ChainIkSolverVel {
     public:
         /**
          * Calculate inverse velocity kinematics, from joint positions
@@ -98,7 +97,7 @@ namespace KDL {
      * @ingroup KinematicFamily
      */
 
-    class ChainIkSolverAcc : public KDL::SolverI {
+    class ChainIkSolverAcc {
     public:
         /**
          * Calculate inverse acceleration kinematics from joint

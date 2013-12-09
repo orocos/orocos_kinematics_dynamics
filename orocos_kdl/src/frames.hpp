@@ -405,7 +405,7 @@ public:
 	 */
     void GetEulerZYZ(double& alpha,double& beta,double& gamma) const;
 
-    //! Gives back a rotation matrix specified with Quaternion convention
+    //! Sets the value of this object to a rotation specified with Quaternion convention
     //! the norm of (x,y,z,w) should be equal to 1
     static Rotation Quaternion(double x,double y,double z, double w);
     
@@ -415,7 +415,7 @@ public:
 
     /**
      *
-     * Gives back a rotation matrix specified with RPY convention:
+     * Sets the value of this object to a rotation specified with RPY convention:
      * first rotate around X with roll, then around the
      *              old Y with pitch, then around old Z with yaw
      *
