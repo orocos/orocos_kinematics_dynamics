@@ -28,7 +28,6 @@
 #include "jntarray.hpp"
 #include "jntarrayvel.hpp"
 #include "jntarrayacc.hpp"
-#include "solveri.hpp"
 
 namespace KDL {
 
@@ -40,7 +39,7 @@ namespace KDL {
      */
 
     //Forward definition
-    class ChainFkSolverPos : public KDL::SolverI {
+    class ChainFkSolverPos {
     public:
         /**
          * Calculate forward position kinematics for a KDL::Chain,
@@ -61,7 +60,7 @@ namespace KDL {
      *
      * @ingroup KinematicFamily
      */
-    class ChainFkSolverVel : public KDL::SolverI {
+    class ChainFkSolverVel {
     public:
         /**
          * Calculate forward position and velocity kinematics, from
@@ -84,7 +83,7 @@ namespace KDL {
      * @ingroup KinematicFamily
      */
 
-    class ChainFkSolverAcc : public KDL::SolverI {
+    class ChainFkSolverAcc {
     public:
         /**
          * Calculate forward position, velocity and accelaration

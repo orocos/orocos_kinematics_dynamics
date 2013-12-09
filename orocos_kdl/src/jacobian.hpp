@@ -30,8 +30,6 @@ namespace KDL
     class Jacobian
     {
     public:
-
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         Eigen::Matrix<double,6,Eigen::Dynamic> data;
         Jacobian();
         explicit Jacobian(unsigned int nr_of_columns);

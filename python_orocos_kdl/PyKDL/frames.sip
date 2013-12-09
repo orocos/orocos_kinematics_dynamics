@@ -78,9 +78,6 @@ public:
     double Norm();
     double Normalize(double eps=epsilon);
 
-%PickleCode
-    sipRes = Py_BuildValue("ddd", sipCpp->x(), sipCpp->y(), sipCpp->z());
-%End
 };
 
 void SetToZero(Vector& v);
@@ -184,11 +181,7 @@ public:
     void UnitY(const Vector& X);
     void UnitZ(const Vector& X);
 
-%PickleCode
-    sipRes = Py_BuildValue("ddddddddd", (*sipCpp)(0,0), (*sipCpp)(0,1), (*sipCpp)(0,2),
-                                        (*sipCpp)(1,0), (*sipCpp)(1,1), (*sipCpp)(1,2),
-                                        (*sipCpp)(2,0), (*sipCpp)(2,1), (*sipCpp)(2,2));
-%End
+    
 };
 bool Equal(const Rotation& a,const Rotation& b,double eps=epsilon);
 bool operator==(const Rotation& a,const Rotation& b);
@@ -260,13 +253,6 @@ public:
     static Frame Identity() /Factory/;
     
     void Integrate(const Twist& t_this,double frequency);
-
-%PickleCode
-    const sipTypeDef *vector_type = sipFindType("Vector");
-    const sipTypeDef *rotation_type = sipFindType("Rotation");
-    sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->M), rotation_type, Py_None),
-                                 sipConvertFromType(&(sipCpp->p), vector_type, Py_None));
-%End
 };
 Frame operator *(const Frame& lhs,const Frame& rhs)/Factory/;
 
@@ -324,11 +310,7 @@ public:
     
     Twist RefPoint(const Vector& v_base_AB) const /Factory/;
     
-%PickleCode
-    const sipTypeDef *vector_type = sipFindType("Vector");
-    sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->vel), vector_type, Py_None),
-                                 sipConvertFromType(&(sipCpp->rot), vector_type, Py_None));
-%End
+    
 };
 
 Twist operator*(const Twist& lhs,double rhs)/Factory/;
@@ -395,12 +377,6 @@ public:
     static Wrench Zero() /Factory/;
     void ReverseSign();
     Wrench RefPoint(const Vector& v_base_AB) const /Factory/;
-
-%PickleCode
-    const sipTypeDef *vector_type = sipFindType("Vector");
-    sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->force), vector_type, Py_None),
-                                 sipConvertFromType(&(sipCpp->torque), vector_type, Py_None));
-%End
 };
 
 Wrench operator*(const Wrench& lhs,double rhs) /Factory/;
