@@ -1,8 +1,0 @@
-Kinematics and Dynamics Library:
-
-Orocos project to supply RealTime usable kinematics and dynamics code,
-it contains code for rigid body kinematics calculations and
-representations for kinematic structures and their inverse and forward
-kinematic solvers.
-
-
