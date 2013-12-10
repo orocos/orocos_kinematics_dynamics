@@ -12,7 +12,7 @@ set(Orocos-KDL_INCLUDE_DIRS "@KDL_INCLUDE_DIRS@;@CMAKE_INSTALL_PREFIX@/include")
 
 # Include the exported CMake targets if necessary
 if(NOT TARGET orocos-kdl)
-  include("${SELF_DIR}/Orocos-KDL_Targets.cmake")
+  include("${SELF_DIR}/orocos-kdl-targets.cmake")
 endif()
 
 # Set the libraries
