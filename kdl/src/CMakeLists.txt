@@ -12,7 +12,7 @@ SET_TARGET_PROPERTIES( orocos-kdl PROPERTIES
   )
 
 INSTALL(TARGETS orocos-kdl
-  EXPORT OrocosKDLTargets
+  EXPORT orocos-kdl-targets
   LIBRARY DESTINATION lib
   PUBLIC_HEADER DESTINATION include/kdl
 )
@@ -22,8 +22,8 @@ INSTALL(TARGETS orocos-kdl
 INSTALL(FILES ${UTIL_HPPS} DESTINATION include/kdl/utilities)
 
 # Orocos convention:
-CONFIGURE_FILE( kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
-CONFIGURE_FILE( kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
+CONFIGURE_FILE( orocos-kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
+CONFIGURE_FILE( orocos-kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
 
 INSTALL_FILES( /lib/pkgconfig FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc)
 INSTALL_FILES( /lib/pkgconfig FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc)

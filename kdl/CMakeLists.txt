@@ -79,7 +79,7 @@ ADD_SUBDIRECTORY( examples )
 ADD_SUBDIRECTORY( models )
 
 export(TARGETS orocos-kdl
-  FILE "${PROJECT_BINARY_DIR}/Orocos-KDL_Targets.cmake")
+  FILE "${PROJECT_BINARY_DIR}/orocos-kdl-targets.cmake")
 
 export(PACKAGE kdl)
 
@@ -95,6 +95,6 @@ CONFIGURE_FILE(
 
 INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos-kdl-config.cmake DESTINATION share/orocos-kdl)
 INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos-kdl-config-version.cmake DESTINATION share/orocos-kdl)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos-kdl)
+INSTALL(EXPORT orocos-kdl-targets DESTINATION share/orocos-kdl)
 
 INSTALL(FILES package.xml DESTINATION share/kdl)
