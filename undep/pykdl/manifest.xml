@@ -1,0 +1,22 @@
+<package>
+  <description brief="pykdl">
+
+     python orocos kdl bindings
+
+  </description>
+  <author>Ruben Smits</author>
+  <license>LGPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pykdl</url>
+
+  <depend package="kdl"/>
+  <rosdep name="python-sip"/>
+
+  <export>
+    <python path="${prefix}/lib"  />
+    <rosdoc config="rosdoc.yaml"/>
+  </export>
+
+</package>
+
+
