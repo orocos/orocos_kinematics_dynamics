@@ -1,0 +1,32 @@
+language:
+  - cpp
+  - python
+python:
+  - "2.7"
+compiler:
+  - gcc
+before_install:
+  # Define some config vars
+  - export ROS_DISTRO=hydro
+  - export CI_SOURCE_PATH=$(pwd)
+  # Bootstrap a minimal ROS installation
+  - git clone https://github.com/jhu-lcsr/ros_ci_tools /tmp/ros_ci_tools && export PATH=/tmp/ros_ci_tools:$PATH
+  - ros_ci_bootstrap
+  # Create isolated workspace based on the ros distro
+  - source /opt/ros/$ROS_DISTRO/setup.bash
+  - mkdir -p ~/ws_isolated/src
+  - cd ~/ws_isolated
+  - ln -s $CI_SOURCE_PATH src/
+  # Install dependencies for source repos
+  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y > /dev/null
+
+install:
+  # Second, build with catkin
+  - export CMAKE_ARGS="-DENABLE_TESTS:BOOL=True"
+  - catkin_make_isolated --install --source . -j1 --cmake-args $CMAKE_ARGS 
+
+script:
+  # Run tests
+  - catkin_make_isolated -j1 --install --pkg kdl --make-args check
+  - source install_isolated/setup.bash
+  - src/orocos_kinematics_dynamics/pykdl/tests/PyKDLtest.py

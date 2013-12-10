@@ -1,0 +1,31 @@
+<package>
+  <name>orocos_kdl</name>
+  <version>1.2.2</version>
+  <description>
+    The 'orocos_kdl' package is deprecated and is being replaced by
+    the 'kdl' package starting in ROS Hydromedusa. The only
+    difference between these two packages is the name.
+
+    This is the Kinematics and Dynamics Library (KDL), distributed by
+    the Orocos Project.
+  </description>
+  <maintainer email="orocos-dev@lists.mech.kuleuven.be">Orocos Developers</maintainer>
+
+  <url type="website">http://www.orocos.org/kdl</url>
+
+  <author>Ruben Smits</author>
+  <author>Erwin Aertbelien</author>
+
+  <license>LGPL</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>kdl</build_depend>
+  <run_depend>kdl</run_depend>
+
+  <export>
+    <deprecated>The 'orocos_kdl' package is deprecated and is being replaced by the 'kdl' package starting in ROS Hydromedusa. The only difference between these two packages is the name.</deprecated>
+    <doxymaker external="http://www.orocos.org/kdl"/>
+  </export>
+</package>
+
