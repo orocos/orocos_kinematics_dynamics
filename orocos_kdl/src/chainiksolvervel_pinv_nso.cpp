@@ -23,7 +23,7 @@
 
 namespace KDL
 {
-    ChainIkSolverVel_pinv_nso::ChainIkSolverVel_pinv_nso(const Chain& _chain, JntArray _opt_pos, JntArray _weights, double _eps, int _maxiter, int _alpha):
+    ChainIkSolverVel_pinv_nso::ChainIkSolverVel_pinv_nso(const Chain& _chain, JntArray _opt_pos, JntArray _weights, double _eps, int _maxiter, double _alpha):
         chain(_chain),
         jnt2jac(chain),
         jac(chain.getNrOfJoints()),
@@ -41,7 +41,7 @@ namespace KDL
     {
     }
 
-        ChainIkSolverVel_pinv_nso::ChainIkSolverVel_pinv_nso(const Chain& _chain, double _eps, int _maxiter, int _alpha):
+        ChainIkSolverVel_pinv_nso::ChainIkSolverVel_pinv_nso(const Chain& _chain, double _eps, int _maxiter, double _alpha):
         chain(_chain),
         jnt2jac(chain),
         jac(chain.getNrOfJoints()),
@@ -136,7 +136,7 @@ namespace KDL
 		opt_pos = _opt_pos;
 		return 0;
 	}
-	int ChainIkSolverVel_pinv_nso::setAlpha(const int _alpha)
+	int ChainIkSolverVel_pinv_nso::setAlpha(const double _alpha)
 	{
 		alpha = _alpha;
 		return 0;
