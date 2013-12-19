@@ -490,14 +490,26 @@ public:
 };
 
 
-class ChainIkSolverPos_LMA : ChainIkSolverPos
+// class ChainIkSolverPos_LMA : ChainIkSolverPos
+// {
+// %TypeHeaderCode
+// #include <kdl/chainiksolverpos_lma.hpp>
+// using namespace KDL;
+// %End
+// public:
+//     ChainIkSolverPos_LMA(const Chain& chain, double eps=1E-5, int _maxiter=500, double _eps_joints=1E-15);
+
+//     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+// };
+
+class ChainIkSolverPos_LMA_JL : ChainIkSolverPos
 {
 %TypeHeaderCode
-#include <kdl/chainiksolverpos_lma.hpp>
+#include <kdl/chainiksolverpos_lma_jl.hpp>
 using namespace KDL;
 %End
 public:
-    ChainIkSolverPos_LMA(const Chain& chain, double eps=1E-5, int _maxiter=500, double _eps_joints=1E-15);
+    ChainIkSolverPos_LMA_JL(const Chain& chain, const JntArray& _q_min, const JntArray& _q_max, double eps=1E-5, int _maxiter=500, double _eps_joints=1E-15);
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
 };

@@ -251,6 +251,21 @@ int ChainIkSolverPos_LMA_JL::CartToJnt(const KDL::JntArray& q_init, const KDL::F
 		}
 
 		q_new = q+diffq;
+		
+        // clip the joint values to their limits
+        for(unsigned int j=0; j<q_min.rows(); j++) {
+          if(q_new(j) < q_min(j))
+             q_new(j) = q_min(j);
+        }
+
+
+        for(unsigned int j=0; j<q_max.rows(); j++) {
+            if(q_new(j) > q_max(j))
+               q_new(j) = q_max(j);
+        }
+
+
+		
 		compute_fwdpos(q_new);
 		Twist_to_Eigen( diff( T_base_head, T_base_goal), delta_pos_new );
 		delta_pos_new             = L.asDiagonal()*delta_pos_new;
@@ -282,20 +297,6 @@ int ChainIkSolverPos_LMA_JL::CartToJnt(const KDL::JntArray& q_init, const KDL::F
 			lambda = lambda*v;
 			v      = 2*v;
 		}
-
-		// clip the joint values to their limits
-
-        for(unsigned int j=0; j<q_min.rows(); j++) {
-          if(q(j) < q_min(j))
-             q(j) = q_min(j);
-        }
-
-
-        for(unsigned int j=0; j<q_max.rows(); j++) {
-            if(q(j) > q_max(j))
-               q(j) = q_max(j);
-        }
-
 
 
 	}
