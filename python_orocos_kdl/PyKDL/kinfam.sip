@@ -23,6 +23,7 @@ class Joint{
 
 %TypeHeaderCode
 #include <kdl/joint.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 
