@@ -49,13 +49,13 @@ public:
     JointType getType() const;
     std::string getTypeName() const;
     const char* __repr__();
-// %MethodCode
-//     std::ostringstream oss;
-//     oss<<(*sipCpp);
-//     std::string s(oss.str());
-//     sipRes=s.c_str();
-// %End
-// };
+    %MethodCode
+        std::ostringstream oss;
+        oss<<(*sipCpp);
+        std::string s(oss.str());
+        sipRes=s.c_str();
+    %End
+};
 
 class RotationalInertia
 {
