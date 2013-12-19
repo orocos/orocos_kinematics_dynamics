@@ -42,7 +42,11 @@ namespace KDL
         tmp_js(MatrixXd::Zero(chain.getNrOfJoints(),chain.getNrOfJoints())),
         weight_ts(MatrixXd::Identity(6,6)),
         weight_js(MatrixXd::Identity(chain.getNrOfJoints(),chain.getNrOfJoints())),
-        lambda(0.0)
+        lambda(0.0),
+        lambda_scaled(0.0),
+        nrZeroSigmas(0),
+        svdResult(0),
+        sigmaMin(0)
     {
     }
     
@@ -70,6 +74,11 @@ namespace KDL
         double sum;
         unsigned int i,j;
         
+        // Initialize (internal) return values
+        nrZeroSigmas = 0 ;
+        sigmaMin = 0.;
+        lambda_scaled = 0.;
+
         /*
         for (i=0;i<jac.rows();i++) {
             for (j=0;j<jac.columns();j++)
@@ -82,13 +91,26 @@ namespace KDL
         tmp_jac_weight2 = weight_ts.lazyProduct(tmp_jac_weight1);
    
         // Compute the SVD of the weighted jacobian
-        int ret = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
-                
+        svdResult = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
+        if (0 != svdResult)
+        {
+            qdot_out.data.setZero() ;
+            return (error = E_SVD_FAILED);
+        }
+
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
         tmp_ts = weight_ts.lazyProduct(U.topLeftCorner(6,6));
         tmp_js = weight_js.lazyProduct(V);
-        
-        // tmp = (Si*U'*Ly*y), 
+
+        // Minimum of six largest singular values of J is S(5) if number of joints >=6 and 0 for <6
+        if ( jac.columns() >= 6 ) {
+            sigmaMin = S(5);
+        }
+        else {
+            sigmaMin = 0.;
+        }
+
+        // tmp = (Si*U'*Ly*y),
         for (i=0;i<jac.columns();i++) {
             sum = 0.0;
             for (j=0;j<jac.rows();j++) {
@@ -97,11 +119,25 @@ namespace KDL
                 else
                     sum+=0.0;
             }
-            if(S(i)==0||S(i)<eps)
-                tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda*lambda)));   
-            else
+            // If the minimum singular value falls below eps, use the weighted
+            // damped least squares inverse; otherwise, use the reciprocal inverse
+			lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
+			if(fabs(S(i))<eps) {
+				if (i<6) {
+					// Scale lambda to size of singular value sigmaMin
+					tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda_scaled*lambda_scaled)));
+				}
+				else {
+					tmp(i)=0.0;  // S(i)=0 for i>=6 due to cols>rows
+				}
+				//  Count number of singular values near zero
+				++nrZeroSigmas ;
+			}
+			else {
                 tmp(i) = sum/S(i);
+			}
         }
+
         /*
         // x = Lx^-1*V*tmp + x
         for (i=0;i<jac.columns();i++) {
@@ -113,7 +149,20 @@ namespace KDL
         }
         */
         qdot_out.data=tmp_js.lazyProduct(tmp);
-        return ret;
+
+        // If number of near zero singular values is greater than the full rank
+        // of jac, then wdls is active
+        if ( nrZeroSigmas > (jac.columns()-jac.rows()) )	{
+            return (error = E_CONVERGE_PINV_SINGULAR);  // converged but pinv singular
+        } else {
+            return (error = E_NOERROR);                 // have converged
+        }
     }
-    
+
+    const char* ChainIkSolverVel_wdls::strError(const int error) const
+    {
+        if (E_SVD_FAILED == error) return "SVD failed";
+        else return SolverI::strError(error);
+    }
+
 }

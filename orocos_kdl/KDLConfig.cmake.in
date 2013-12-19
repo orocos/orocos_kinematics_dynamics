@@ -1,41 +1,15 @@
-# Locate KDL install directory
+# - Config file for the FooBar package
+# It defines the following variables
+#  FOOBAR_INCLUDE_DIRS - include directories for FooBar
+#  FOOBAR_LIBRARIES    - libraries to link against
+#  FOOBAR_EXECUTABLE   - the bar executable
+ 
+# Compute paths
+get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(orocos_kdl_INCLUDE_DIRS "@KDL_INCLUDE_DIRS@;@CMAKE_INSTALL_PREFIX@/include")
 
-# This module defines
-# orocos_kdl_INSTALL where to find include, lib, bin, etc.
-# orocos_kdl_FOUND, is set to true
+if(NOT TARGET orocos-kdl)
+  include("${SELF_DIR}/OrocosKDLTargets.cmake")
+endif()
 
-INCLUDE (FindPkgConfig)
-
-IF ( PKG_CONFIG_FOUND )
-
-  # set flag for whether items are required or not
-  SET(IS_REQUIRED)
-  IF (orocos_kdl_FIND_REQUIRED)
-	SET(IS_REQUIRED "REQUIRED")
-  ENDIF (orocos_kdl_FIND_REQUIRED)
-
-  # find KDL itself
-  set(ENV{PKG_CONFIG_PATH} "@CMAKE_INSTALL_PREFIX@/lib/pkgconfig/")
-  message( "Looking for KDL in: @CMAKE_INSTALL_PREFIX@")
-  pkg_search_module(orocos_kdl ${IS_REQUIRED} orocos_kdl)
-  
-  IF( orocos_kdl_FOUND )
-    IF(NOT orocos_kdl_FIND_QUIETLY)
-      message("   Includes in: ${orocos_kdl_INCLUDE_DIRS}")
-      message(    "Compiler flags: ${orocos_kdl_CFLAGS}")  
-      message("   Libraries: ${orocos_kdl_LIBRARIES}")
-      message("   Libraries in: ${orocos_kdl_LIBRARY_DIRS}")
-      message("   Linker flags : ${orocos_kdl_LD_FLAGS}")
-      message("   Defines: ${orocos_kdl_DEFINES}")
-    ENDIF(NOT orocos_kdl_FIND_QUIETLY)
-
-  ELSE(orocos_kdl_FOUND)  
-    IF(orocos_kdl_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR "Could not find KDL")
-    ENDIF(orocos_kdl_FIND_REQUIRED)
-  ENDIF ( orocos_kdl_FOUND )
-ELSE  ( PKG_CONFIG_FOUND )
-
-  MESSAGE( FATAL_ERROR "Can't find KDL without pkgconfig !")
-
-ENDIF ( PKG_CONFIG_FOUND )
+set(orocos_kdl_LIBRARIES orocos-kdl)

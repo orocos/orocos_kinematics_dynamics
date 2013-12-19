@@ -197,32 +197,33 @@ namespace KDL {
     */
     void Rotation::GetQuaternion(double& x,double& y,double& z, double& w) const
     {
-        double trace = (*this)(0,0) + (*this)(1,1) + (*this)(2,2) + 1.0f;
+        double trace = (*this)(0,0) + (*this)(1,1) + (*this)(2,2) + 1.0;
+	double epsilon=1E-12;
         if( trace > epsilon ){
-            double s = 0.5f / sqrt(trace);
-            w = 0.25f / s;
+            double s = 0.5 / sqrt(trace);
+            w = 0.25 / s;
             x = ( (*this)(2,1) - (*this)(1,2) ) * s;
             y = ( (*this)(0,2) - (*this)(2,0) ) * s;
             z = ( (*this)(1,0) - (*this)(0,1) ) * s;
         }else{
             if ( (*this)(0,0) > (*this)(1,1) && (*this)(0,0) > (*this)(2,2) ){
-                float s = 2.0f * sqrtf( 1.0f + (*this)(0,0) - (*this)(1,1) - (*this)(2,2));
+                double s = 2.0 * sqrt( 1.0 + (*this)(0,0) - (*this)(1,1) - (*this)(2,2));
                 w = ((*this)(2,1) - (*this)(1,2) ) / s;
-                x = 0.25f * s;
+                x = 0.25 * s;
                 y = ((*this)(0,1) + (*this)(1,0) ) / s;
                 z = ((*this)(0,2) + (*this)(2,0) ) / s;
             } else if ((*this)(1,1) > (*this)(2,2)) {
-                float s = 2.0f * sqrtf( 1.0f + (*this)(1,1) - (*this)(0,0) - (*this)(2,2));
+                double s = 2.0 * sqrt( 1.0 + (*this)(1,1) - (*this)(0,0) - (*this)(2,2));
                 w = ((*this)(0,2) - (*this)(2,0) ) / s;
                 x = ((*this)(0,1) + (*this)(1,0) ) / s;
-                y = 0.25f * s;
+                y = 0.25 * s;
                 z = ((*this)(1,2) + (*this)(2,1) ) / s;
             }else {
-                float s = 2.0f * sqrtf( 1.0f + (*this)(2,2) - (*this)(0,0) - (*this)(1,1) );
+                double s = 2.0 * sqrt( 1.0 + (*this)(2,2) - (*this)(0,0) - (*this)(1,1) );
                 w = ((*this)(1,0) - (*this)(0,1) ) / s;
                 x = ((*this)(0,2) + (*this)(2,0) ) / s;
                 y = ((*this)(1,2) + (*this)(2,1) ) / s;
-                z = 0.25f * s;
+                z = 0.25 * s;
             }
         }    
     }
@@ -370,12 +371,18 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
 		axis = Vector( x,y,z  );
 		return PI;
 	}
-	double angle = acos(ca);
-	double sa    = sin(angle);
-	axis  = Vector((data[7]-data[5])/2/sa,
-                       (data[2]-data[6])/2/sa,
-                       (data[3]-data[1])/2/sa  );
-	return angle;
+    double angle;
+    double mod_axis;
+    double axisx, axisy, axisz;
+	axisx = data[7]-data[5];
+    axisy = data[2]-data[6];
+    axisz = data[3]-data[1];
+    mod_axis = sqrt(axisx*axisx+axisy*axisy+axisz*axisz);
+	axis  = Vector(axisx/mod_axis,
+                   axisy/mod_axis,
+                   axisz/mod_axis );
+    angle = atan2(mod_axis/2,ca);
+    return angle;
 }
 
 bool operator==(const Rotation& a,const Rotation& b) {

@@ -1,21 +1,25 @@
-FILE( GLOB KDL_SRCS [^.]*.cpp )
+FILE( GLOB_RECURSE KDL_SRCS [^.]*.cpp [^.]*.cxx)
 FILE( GLOB KDL_HPPS [^.]*.hpp [^.]*.inl)
 
-FILE( GLOB UTIL_SRCS utilities/[^.]*.cpp utilities/[^.]*.cxx)
 FILE( GLOB UTIL_HPPS utilities/[^.]*.h utilities/[^.]*.hpp)
-
-ADD_LIBRARY(orocos-kdl SHARED ${KDL_SRCS} ${UTIL_SRCS})
+ADD_LIBRARY(orocos-kdl SHARED ${KDL_SRCS})
 SET_TARGET_PROPERTIES( orocos-kdl PROPERTIES
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
   VERSION "${KDL_VERSION}"
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}"
-  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+  PUBLIC_HEADER "${KDL_HPPS}"
+  )
 
-INSTALL_TARGETS( /lib orocos-kdl)
+INSTALL(TARGETS orocos-kdl
+  EXPORT OrocosKDLTargets
+  LIBRARY DESTINATION lib
+  PUBLIC_HEADER DESTINATION include/kdl
+)
 
 # CMake 2.2:
-INSTALL_FILES( /include/kdl FILES ${KDL_HPPS})
-INSTALL_FILES( /include/kdl/utilities FILES ${UTIL_HPPS})
+#INSTALL_FILES( /include/kdl FILES ${KDL_HPPS})
+INSTALL(FILES ${UTIL_HPPS} DESTINATION include/kdl/utilities)
 
 # Orocos convention:
 CONFIGURE_FILE( kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
