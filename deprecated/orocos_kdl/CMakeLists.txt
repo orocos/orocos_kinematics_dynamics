@@ -8,4 +8,5 @@ find_package(Orocos-KDL REQUIRED)
 catkin_package(
   DEPENDS Orocos-KDL
   CFG_EXTRAS orocos_kdl_extras.cmake
+  SKIP_PKG_CONFIG_GENERATION
   )
