@@ -19,8 +19,8 @@
 
   <run_depend>pkg-config</run_depend>
 
+  <!-- cppunit needs to be here to be installed with rosdep -->
   <build_depend>cppunit</build_depend>
-  <test_depend>cppunit</test_depend>
 
   <export>
     <build_type>cmake</build_type>
