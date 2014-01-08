@@ -12,7 +12,7 @@
   <license>LGPL</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <buildtool_depend>cmake</buildtool_depend>
+
   <build_depend>eigen</build_depend>
 
   <run_depend>pkg-config</run_depend>

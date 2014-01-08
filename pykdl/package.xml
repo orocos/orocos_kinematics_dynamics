@@ -8,12 +8,11 @@
   <maintainer email="ruben@intermodalics.eu">Ruben Smits</maintainer>
   <license>LGPL</license>
 
-  <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>orocos_kdl</build_depend>
   <build_depend>python-sip</build_depend>
 
-  <run_depend>catkin</run_depend>
   <run_depend>orocos_kdl</run_depend>
   <run_depend>python-sip</run_depend>
 
