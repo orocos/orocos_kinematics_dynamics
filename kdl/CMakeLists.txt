@@ -11,9 +11,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #                                                 #
 ###################################################
 
-PROJECT(orocos_kdl)
+PROJECT(Orocos-KDL)
 
-SET( KDL_VERSION 1.2.1 CACHE STRING "Version of Orocos KDL" )
+SET( KDL_VERSION 1.2.2 CACHE STRING "Version of Orocos KDL" )
 STRING( REGEX MATCHALL "[0-9]+" KDL_VERSIONS ${KDL_VERSION} )
 LIST( GET KDL_VERSIONS 0 KDL_VERSION_MAJOR)
 LIST( GET KDL_VERSIONS 1 KDL_VERSION_MINOR)
@@ -22,8 +22,8 @@ LIST( GET KDL_VERSIONS 2 KDL_VERSION_PATCH)
 SET(KDL_VERSION_PATCH "${KDL_VERSION_PATCH}")
 MESSAGE( "Orocos KDL version ${VERSION} (${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}.${KDL_VERSION_PATCH})" )
 
-SET( PROJ_SOURCE_DIR ${orocos_kdl_SOURCE_DIR} )
-SET( PROJ_BINARY_DIR ${orocos_kdl_BINARY_DIR} )
+SET( PROJ_SOURCE_DIR ${Orocos-KDL_SOURCE_DIR} )
+SET( PROJ_BINARY_DIR ${Orocos-KDL_BINARY_DIR} )
 
 
 IF(NOT CMAKE_INSTALL_PREFIX)
@@ -79,19 +79,22 @@ ADD_SUBDIRECTORY( examples )
 ADD_SUBDIRECTORY( models )
 
 export(TARGETS orocos-kdl
-  FILE "${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake")
+  FILE "${PROJECT_BINARY_DIR}/orocos-kdl-targets.cmake")
 
-export(PACKAGE orocos_kdl)
+export(PACKAGE kdl)
 
 set(KDL_INCLUDE_DIRS ${Eigen_INCLUDE_DIR})
 
-CONFIGURE_FILE(KDLConfig.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(KDLConfigVersion.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/orocos-kdl-config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config.cmake @ONLY)
 
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl)
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_SOURCE_DIR}/orocos-kdl-config-version.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl-config-version.cmake @ONLY)
 
-INSTALL(FILES package.xml DESTINATION share/orocos_kdl)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos-kdl-config.cmake DESTINATION share/orocos-kdl)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos-kdl-config-version.cmake DESTINATION share/orocos-kdl)
+INSTALL(EXPORT orocos-kdl-targets DESTINATION share/orocos-kdl)
+
+INSTALL(FILES package.xml DESTINATION share/kdl)

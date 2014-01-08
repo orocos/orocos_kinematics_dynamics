@@ -1,0 +1,29 @@
+<package>
+  <name>kdl</name>
+  <version>1.2.2</version>
+  <description>
+    This is the Kinematics and Dynamics Library (KDL), distributed by the
+    Orocos Project.
+  </description>
+  <maintainer email="ruben@intermodalics.eu">Ruben Smits</maintainer>
+  <author>Ruben Smits</author>
+  <author>Erwin Aertbelien</author>
+  <url type="website">http://www.orocos.org/kdl</url>
+  <url type="website">http://wiki.ros.org/kdl</url>
+
+  <license>LGPL</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>eigen</build_depend>
+
+  <run_depend>pkg-config</run_depend>
+
+  <!-- cppunit needs to be here to be installed with rosdep -->
+  <build_depend>cppunit</build_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+
+</package>

@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 2.8.3)
+
+# - Config file for the Orocos-KDL package
+# It defines the following variables
+#  Orocos-KDL_INCLUDE_DIRS - include directories for KDL
+#  Orocos-KDL_LIBRARIES    - libraries to link against
+#  Orocos-KDL_FOUND        - is set to true
+ 
+# Set the include dirs
+get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(Orocos-KDL_INCLUDE_DIRS "@KDL_INCLUDE_DIRS@;@CMAKE_INSTALL_PREFIX@/include")
+
+# Include the exported CMake targets if necessary
+if(NOT TARGET orocos-kdl)
+  include("${SELF_DIR}/orocos-kdl-targets.cmake")
+endif()
+
+# Set the libraries
+set(Orocos-KDL_LIBRARIES orocos-kdl)
