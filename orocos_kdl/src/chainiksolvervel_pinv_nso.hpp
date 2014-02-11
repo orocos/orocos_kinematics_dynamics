@@ -60,8 +60,8 @@ namespace KDL
          * @param alpha the null-space velocity gain
          *
          */
-        ChainIkSolverVel_pinv_nso(const Chain& chain, JntArray opt_pos, JntArray weights, double eps=0.00001,int maxiter=150, int alpha = 0.25);
-        explicit ChainIkSolverVel_pinv_nso(const Chain& chain, double eps=0.00001,int maxiter=150, int alpha = 0.25);
+        ChainIkSolverVel_pinv_nso(const Chain& chain, JntArray opt_pos, JntArray weights, double eps=0.00001,int maxiter=150, double alpha = 0.25);
+        explicit ChainIkSolverVel_pinv_nso(const Chain& chain, double eps=0.00001,int maxiter=150, double alpha = 0.25);
         ~ChainIkSolverVel_pinv_nso();
 
         virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
@@ -94,7 +94,7 @@ namespace KDL
 	 *@param alpha NUllspace velocity cgain
 	 *
 	 */
-	virtual int setAlpha(const int alpha);
+	virtual int setAlpha(const double alpha);
 
     private:
         const Chain chain;
@@ -109,7 +109,7 @@ namespace KDL
         double eps;
         int maxiter;
 
-	int alpha;
+	double alpha;
 	JntArray weights;
 	JntArray opt_pos;
 	
