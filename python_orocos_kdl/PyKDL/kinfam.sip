@@ -497,7 +497,7 @@ class ChainIkSolverPos_LMA : ChainIkSolverPos
 using namespace KDL;
 %End
 public:
-    ChainIkSolverPos_LMA(const Chain& chain, double eps=1E-5, int _maxiter=500, double _eps_joints=1E-15);
+    ChainIkSolverPos_LMA(const Chain& chain, double eps=0.00001, int _maxiter=500, double _eps_joints=0.000000000000001);
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
 };
