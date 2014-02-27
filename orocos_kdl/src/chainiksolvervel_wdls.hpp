@@ -154,7 +154,18 @@ namespace KDL
          */
         void setWeightTS(const Eigen::MatrixXd& Mx);
 
-        void setLambda(const double& lambda);
+        /**
+         * Set lambda
+         */
+        void setLambda(const double lambda);
+        /**
+         * Set eps
+         */
+        void setEps(const double eps_in);
+        /**
+         * Set maxIter
+         */
+        void setMaxIter(const int maxiter_in);
 
         /**
          * Request the number of singular values of the jacobian that are < eps;
