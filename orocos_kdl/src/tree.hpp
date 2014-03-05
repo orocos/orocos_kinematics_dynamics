@@ -22,38 +22,72 @@
 #ifndef KDL_TREE_HPP
 #define KDL_TREE_HPP
 
+#include "config.h"
+
 #include "segment.hpp"
 #include "chain.hpp"
 
 #include <string>
 #include <map>
 
+#ifdef KDL_USE_NEW_TREE_INTERFACE
+#include <boost/shared_ptr.hpp>
+#endif //#ifdef KDL_USE_NEW_TREE_INTERFACE
+
 namespace KDL
 {
-    //Forward declaration
     class TreeElement;
+
+#ifdef KDL_USE_NEW_TREE_INTERFACE
+    //We use smart pointers for managing tree nodes for now becuase
+    //c++11 and unique_ptr support is not ubiquitous
+    typedef boost::shared_ptr<TreeElement> TreeElementPtr;
+    typedef boost::shared_ptr<const TreeElement> TreeElementConstPtr;
+    typedef std::map<std::string, TreeElementPtr> SegmentMap;
+    typedef TreeElementPtr TreeElementType;
+
+#define GetTreeElementChildren(tree_element) (tree_element)->children
+#define GetTreeElementParent(tree_element) (tree_element)->parent
+#define GetTreeElementQNr(tree_element) (tree_element)->q_nr
+#define GetTreeElementSegment(tree_element) (tree_element)->segment
+
+#else //#ifdef KDL_USE_NEW_TREE_INTERFACE
+    //Forward declaration
     typedef std::map<std::string,TreeElement> SegmentMap;
+    typedef TreeElement TreeElementType;
+
+#define GetTreeElementChildren(tree_element) (tree_element).children
+#define GetTreeElementParent(tree_element) (tree_element).parent
+#define GetTreeElementQNr(tree_element) (tree_element).q_nr
+#define GetTreeElementSegment(tree_element) (tree_element).segment
+
+#endif //#ifdef KDL_USE_NEW_TREE_INTERFACE
 
     class TreeElement
     {
-    private:
-        TreeElement(const std::string& name):segment(name), q_nr(0)
-        {};
     public:
+        TreeElement(const Segment& segment_in,const SegmentMap::const_iterator& parent_in,unsigned int q_nr_in):
+            segment(segment_in),
+            q_nr(q_nr_in),
+            parent(parent_in)
+        {}
+
+        static TreeElementType Root(const std::string& root_name)
+        {
+#ifdef KDL_USE_NEW_TREE_INTERFACE
+            return TreeElementType(new TreeElement(root_name));
+#else //#define KDL_USE_NEW_TREE_INTERFACE
+            return TreeElementType(root_name);
+#endif
+        }
+
         Segment segment;
         unsigned int q_nr;
         SegmentMap::const_iterator  parent;
         std::vector<SegmentMap::const_iterator > children;
-        TreeElement(const Segment& segment_in,const SegmentMap::const_iterator& parent_in,unsigned int q_nr_in)
-        {
-			q_nr=q_nr_in;
-            segment=segment_in;
-            parent=parent_in;
-        };
-        static TreeElement Root(const std::string& root_name)
-        {
-            return TreeElement(root_name);
-        };
+
+    private:
+        TreeElement(const std::string& name):segment(name), q_nr(0) {}
     };
 
     /**
