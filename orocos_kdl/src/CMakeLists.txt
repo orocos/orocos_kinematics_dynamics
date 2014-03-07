@@ -61,7 +61,7 @@ ENDIF(MSVC)
 
 CONFIGURE_FILE(config.h.in config.h @ONLY)
 
-ADD_LIBRARY(orocos-kdl ${LIB_TYPE} ${KDL_SRCS} config.h.in)
+ADD_LIBRARY(orocos-kdl ${LIB_TYPE} ${KDL_SRCS} config.h)
  
 SET_TARGET_PROPERTIES( orocos-kdl PROPERTIES
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"

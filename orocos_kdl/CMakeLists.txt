@@ -95,8 +95,9 @@ add_definitions(-DEIGEN2_SUPPORT)
 ADD_SUBDIRECTORY( doc )
 ADD_SUBDIRECTORY( src )
 ADD_SUBDIRECTORY( tests )
-ADD_SUBDIRECTORY( examples )
 ADD_SUBDIRECTORY( models )
+ADD_SUBDIRECTORY( examples )
+
 
 export(TARGETS orocos-kdl
   FILE "${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake")
