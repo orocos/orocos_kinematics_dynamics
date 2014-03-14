@@ -29,6 +29,10 @@
 
 namespace KDL
 {
+    // Equal is friend function, but default arguments for friends are forbidden (§8.3.6.4)
+    class JntArrayAcc;
+    bool Equal(const JntArrayAcc& src1,const JntArrayAcc& src2,double eps=epsilon);
+
     class JntArrayAcc
     {
     public:
@@ -61,7 +65,7 @@ namespace KDL
         friend void Divide(const JntArrayAcc& src,const doubleVel& factor,JntArrayAcc& dest);
         friend void Divide(const JntArrayAcc& src,const doubleAcc& factor,JntArrayAcc& dest);
         friend void SetToZero(JntArrayAcc& array);
-        friend bool Equal(const JntArrayAcc& src1,const JntArrayAcc& src2,double eps=epsilon);
+        friend bool Equal(const JntArrayAcc& src1,const JntArrayAcc& src2,double eps);
 
     };
 }

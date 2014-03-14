@@ -30,6 +30,10 @@
 
 namespace KDL
 {
+    // Equal is friend function, but default arguments for friends are forbidden (§8.3.6.4)
+    class JntSpaceInertiaMatrix;
+    bool Equal(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,double eps=epsilon);
+
     /**
      * @brief This class represents an fixed size matrix containing
      * the Joint-Space Inertia Matrix of a KDL::Chain.
@@ -65,7 +69,7 @@ class MyTask : public RTT::TaskContext
 };
 /endcode
 
-     */	
+     */
 
     class JntSpaceInertiaMatrix
     {
@@ -203,7 +207,7 @@ class MyTask : public RTT::TaskContext
          * @return true if each element of src1 is within eps of the same
 		 * element in src2, or if both src1 and src2 have no data (ie 0==rows())
          */
-        friend bool Equal(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,double eps=epsilon);
+        friend bool Equal(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,double eps);
 
         friend bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
         //friend bool operator!=(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
