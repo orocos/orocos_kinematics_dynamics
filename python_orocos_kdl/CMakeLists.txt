@@ -20,8 +20,7 @@ set(SIP_EXTRA_OPTIONS "-o")
 set(PYTHON_PACKAGES_DIR_NAME "")
 set(PYTHON_PACKAGES_DIR_NAME "dist-packages")
 set(PYTHON_SITE_PACKAGES_INSTALL_DIR
-${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/${PYTHON_PACKAGES_DIR_NAME}
- CACHE PATH "The directory where python modules will be installed to.")
+${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/${PYTHON_PACKAGES_DIR_NAME})
 add_sip_python_module(PyKDL PyKDL/PyKDL.sip ${orocos_kdl_LIBRARIES})
 
 install(FILES package.xml DESTINATION share/python_orocos_kdl)
