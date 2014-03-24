@@ -69,6 +69,7 @@ if(KDL_USE_NEW_TREE_INTERFACE)
     # We need shared_ptr from boost since not all compilers are c++11 capable
     find_package(Boost REQUIRED)
     include_directories(${Boost_INCLUDE_DIRS})
+    set(KDL_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
 
 INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
@@ -104,7 +105,7 @@ export(TARGETS orocos-kdl
 
 export(PACKAGE orocos_kdl)
 
-set(KDL_INCLUDE_DIRS ${Eigen_INCLUDE_DIR})
+set(KDL_INCLUDE_DIRS ${KDL_INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
 
 CONFIGURE_FILE(KDLConfig.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
