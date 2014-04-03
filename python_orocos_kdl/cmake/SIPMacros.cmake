@@ -110,7 +110,7 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
         DEPENDS ${_abs_module_sip} ${SIP_EXTRA_FILES_DEPEND}
     )
     # not sure if type MODULE could be uses anywhere, limit to cygwin for now
-    IF (CYGWIN)
+    IF (CYGWIN OR APPLE)
         ADD_LIBRARY(${_logical_name} MODULE ${_sip_output_files} )
     ELSE (CYGWIN)
         ADD_LIBRARY(${_logical_name} SHARED ${_sip_output_files} )
