@@ -52,7 +52,7 @@ namespace KDL
 
     int ChainIkSolverVel_pinv_givens::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
-        toggle!=toggle;
+        toggle=!toggle;
 
         jnt2jac.JntToJac(q_in,jac);
 
