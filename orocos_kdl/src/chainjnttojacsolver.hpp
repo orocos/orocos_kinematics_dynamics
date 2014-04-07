@@ -53,7 +53,7 @@ namespace KDL
          *
          * @return always returns 0
          */
-        int JntToJac(const JntArray& q_in,Jacobian& jac);
+        virtual int JntToJac(const JntArray& q_in, Jacobian& jac, int segmentNR=-1);
         
         int setLockedJoints(const std::vector<bool> locked_joints);
     private:

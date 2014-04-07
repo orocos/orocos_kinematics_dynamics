@@ -48,6 +48,8 @@ if(NOT Eigen_FOUND)
   set(Eigen_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR})
 endif()
 include_directories(${Eigen_INCLUDE_DIR})
+# keep Eigen >= 3.2.0 quiet about Eigen2 deprecated features
+ADD_DEFINITIONS(-DEIGEN_NO_EIGEN2_DEPRECATED_WARNING)
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I${Eigen_INCLUDE_DIR}")
 
 # Check the platform STL containers capabilities

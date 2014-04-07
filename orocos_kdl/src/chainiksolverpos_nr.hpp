@@ -65,6 +65,8 @@ namespace KDL {
          *
          * @return:
          *  E_NOERROR=solution converged to <eps in maxiter
+         *  E_DEGRADED=solution converged to <eps in maxiter, but solution is
+         *  degraded in quality (e.g. pseudo-inverse in iksolver is singular)
          *  E_IKSOLVER_FAILED=velocity solver failed
          *  E_NO_CONVERGE=solution did not converge (e.g. large displacement, low iterations)
          */

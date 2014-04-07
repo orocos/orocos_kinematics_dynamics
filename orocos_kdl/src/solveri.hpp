@@ -22,6 +22,14 @@ namespace KDL {
 /**
  * Solver interface supporting storage and description of the latest error.
  *
+ * Error codes: Zero (0) indicates no error, positive error codes indicate more
+ * of a warning (e.g. a degraded solution, but motion can continue), and
+ * negative error codes indicate failure (e.g. a singularity, and motion
+ * can not continue).
+ *
+ * Error codes between -99 and +99 (inclusive) are reserved for system-wide
+ * error codes. Derived classes should use values > +100, and < -100.
+ *
  * Example use
  *
  * \code
@@ -76,13 +84,14 @@ namespace KDL {
 class SolverI
 {
 public:
-	/* Zero (0) indicates no error, positive error codes indicate more of a
-	   warning (e.g. a degraded solution, but motion can continue), and
-	   negative error codes indicate failure (e.g. a singularity, and motion
-	   can not continue).
-	*/
-	static const int E_NOERROR			= 0;	//! No error
-	static const int E_NO_CONVERGE		= -1;	//! Failed to converge
+	/// Converged but degraded solution (e.g. WDLS with psuedo-inverse singular)
+    static const int E_DEGRADED         = +1;
+    //! No error
+    static const int E_NOERROR          =  0;
+    //! Failed to converge
+    static const int E_NO_CONVERGE      = -1;
+    //! Undefined value (e.g. computed a NAN, or tan(90 degrees) )
+    static const int E_UNDEFINED        = -2;
 
 	/// Initialize latest error to E_NOERROR
 	SolverI() :

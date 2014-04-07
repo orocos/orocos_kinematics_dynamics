@@ -62,11 +62,21 @@ namespace KDL
         weight_ts = Mx;
     }
 
-    void ChainIkSolverVel_wdls::setLambda(const double& lambda_in)
+    void ChainIkSolverVel_wdls::setLambda(const double lambda_in)
     {
         lambda=lambda_in;
     }
-    
+
+    void ChainIkSolverVel_wdls::setEps(const double eps_in)
+    {
+        eps=eps_in;
+    }
+
+    void ChainIkSolverVel_wdls::setMaxIter(const int maxiter_in)
+    {
+        maxiter=maxiter_in;
+    }
+
     int ChainIkSolverVel_wdls::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
         jnt2jac.JntToJac(q_in,jac);
