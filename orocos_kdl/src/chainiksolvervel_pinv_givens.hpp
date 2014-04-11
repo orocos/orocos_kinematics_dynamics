@@ -49,7 +49,7 @@ namespace KDL
         ChainJntToJacSolver jnt2jac;
         Jacobian jac;
         bool transpose,toggle;
-        int m,n;
+        unsigned int m,n;
         MatrixXd jac_eigen,U,V,B;
         VectorXd S,tempi,tempj,UY,SUY,qdot_eigen,v_in_eigen;
     };

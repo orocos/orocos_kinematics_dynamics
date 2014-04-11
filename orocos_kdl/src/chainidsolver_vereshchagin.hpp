@@ -34,14 +34,15 @@ namespace KDL
  * The solver calculates total joint space accelerations in a chain when a constraint force(s) is applied
  * to the chain's end-effector (task space/cartesian space).
  */
-typedef std::vector<Twist> Twists;
-typedef std::vector<Frame> Frames;
-typedef Eigen::Matrix<double, 6, 1 > Vector6d;
-typedef Eigen::Matrix<double, 6, 6 > Matrix6d;
-typedef Eigen::Matrix<double, 6, Eigen::Dynamic> Matrix6Xd;
 
 class ChainIdSolver_Vereshchagin
 {
+    typedef std::vector<Twist> Twists;
+    typedef std::vector<Frame> Frames;
+    typedef Eigen::Matrix<double, 6, 1 > Vector6d;
+    typedef Eigen::Matrix<double, 6, 6 > Matrix6d;
+    typedef Eigen::Matrix<double, 6, Eigen::Dynamic> Matrix6Xd;
+
 public:
     /**
      * Constructor for the solver, it will allocate all the necessary memory
@@ -162,7 +163,8 @@ private:
         double totalBias; //Azamat: R+PC (centrepital+coriolis) in joint subspace
         double u; //vector u[i] = torques(i) - S[i]^T*(p_A[i] + I_A[i]*C[i]) in joint subspace. Azamat: In code u[i] = torques(i) - s[i].totalBias
 
-        segment_info(unsigned int nc)
+        segment_info(unsigned int nc):
+            D(0),nullspaceAccComp(0),constAccComp(0),biasAccComp(0),totalBias(0),u(0)
         {
             E.resize(6, nc);
             E_tilde.resize(6, nc);

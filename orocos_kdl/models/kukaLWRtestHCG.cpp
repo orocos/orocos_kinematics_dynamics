@@ -33,7 +33,7 @@ int main(int argc , char** argv){
     
     int linenum; //number of experiment= number of line 
     //read out inputs from files
-    int errorInputs = getInputs(q, qdot,qdotdot,linenum);
+    getInputs(q, qdot,qdotdot,linenum);
     
     //calculation of torques with kukaLWRDH_new.cpp (dynamic model)
     ChainFkSolverPos_recursive fksolver(kLWR);

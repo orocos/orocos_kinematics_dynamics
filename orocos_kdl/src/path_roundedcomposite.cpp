@@ -54,7 +54,7 @@ namespace KDL {
 Path_RoundedComposite::Path_RoundedComposite(Path_Composite* _comp,
 		double _radius, double _eqradius, RotationalInterpolation* _orient,
 		bool _aggregate,int _nrofpoints):
-		comp(_comp), radius(_radius), eqradius(_eqradius), orient(_orient), aggregate(_aggregate), nrofpoints(_nrofpoints) {
+		comp(_comp), radius(_radius), eqradius(_eqradius), orient(_orient), nrofpoints(_nrofpoints), aggregate(_aggregate) {
 }
 
 Path_RoundedComposite::Path_RoundedComposite(double _radius,double _eqradius,RotationalInterpolation* _orient, bool _aggregate) :

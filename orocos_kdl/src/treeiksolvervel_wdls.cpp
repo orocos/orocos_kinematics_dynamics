@@ -22,7 +22,8 @@ namespace KDL {
         Wy_U(J.rows(),J.rows()),Wq_V(J.cols(),J.cols()),
         t(VectorXd::Zero(J.rows())), Wy_t(VectorXd::Zero(J.rows())),
         qdot(VectorXd::Zero(J.cols())),
-        tmp(VectorXd::Zero(J.cols())),S(VectorXd::Zero(J.cols()))
+        tmp(VectorXd::Zero(J.cols())),S(VectorXd::Zero(J.cols())),
+        lambda(0)
     {
         
         for (size_t i = 0; i < endpoints.size(); ++i) {

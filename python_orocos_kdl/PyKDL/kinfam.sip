@@ -182,7 +182,7 @@ public:
 
     double __getitem__ (int index);
 %MethodCode
-    if (a0 < 0 || a0 >= sipCpp->rows()) {
+    if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
         return 0;
     }
@@ -191,7 +191,7 @@ public:
     
     void __setitem__(int index, double value);
 %MethodCode
-    if (a0 < 0 || a0 >= sipCpp->rows()) {
+    if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
         return 0;
     }
@@ -264,7 +264,7 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
-    if (i < 0 || j < 0 || i > 5 || j >= sipCpp->columns()) {
+    if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
         return 0;
     }
@@ -275,7 +275,7 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
-    if (i < 0 || j < 0 || i > 5 || j >= sipCpp->columns()) {
+    if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
         return 0;
     }

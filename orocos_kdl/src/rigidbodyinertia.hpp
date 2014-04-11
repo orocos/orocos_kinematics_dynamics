@@ -111,8 +111,8 @@ namespace KDL {
     private:
         RigidBodyInertia(double m,const Vector& h,const RotationalInertia& I,bool mhi);
         double m;
-        RotationalInertia I;
         Vector h;
+        RotationalInertia I;
 
         friend class ArticulatedBodyInertia;
         

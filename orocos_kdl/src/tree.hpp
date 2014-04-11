@@ -100,8 +100,8 @@ namespace KDL
     {
     private:
         SegmentMap segments;
-        int nrOfJoints;
-        int nrOfSegments;
+        unsigned int nrOfJoints;
+        unsigned int nrOfSegments;
 
         std::string root_name;
 

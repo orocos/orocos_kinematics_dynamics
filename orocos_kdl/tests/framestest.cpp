@@ -180,17 +180,6 @@ void FramesTest::TestArbitraryRotation(const std::string& msg,
 }
 
 
-//std::cout << "-----\n" << R(0,0) << std::endl;\
-//std::cout << R(0,1) << std::endl;\
-//std::cout << R(0,2) << std::endl;\
-//std::cout << R(1,0) << std::endl;\
-//std::cout << R(1,1) << std::endl;\
-//std::cout << R(1,2) << std::endl;\
-//std::cout << R(2,0) << std::endl;\
-//std::cout << R(2,1) << std::endl;\
-//std::cout << R(2,2) << std::endl;\
-
-
 #define TESTEULERZYX(a,b,g) \
 		{\
 			double eps=1E-14;\

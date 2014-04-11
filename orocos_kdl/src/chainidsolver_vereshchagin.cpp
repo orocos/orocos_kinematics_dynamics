@@ -84,7 +84,7 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
 
         //The velocity due to the joint motion of the segment expressed in the segments reference frame (tip)
         Twist vj = s.F.M.Inverse(segment.twist(q(j), qdot(j))); //XDot of each link
-        Twist aj = s.F.M.Inverse(segment.twist(q(j), qdotdot(j))); //XDotDot of each link
+        //Twist aj = s.F.M.Inverse(segment.twist(q(j), qdotdot(j))); //XDotDot of each link
 
         //The unit velocity due to the joint motion of the segment expressed in the segments reference frame (tip)
         s.Z = s.F.M.Inverse(segment.twist(q(j), 1.0));
@@ -124,7 +124,7 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
 
 void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const JntArray &torques)
 {
-    unsigned int j = nj - 1;
+    int j = nj - 1;
     for (int i = ns; i >= 0; i--)
     {
         //Get a handle for the segment we are working on.
@@ -137,7 +137,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
         //M is the (unit) acceleration energy already generated at link i
         //G is the (unit) magnitude of the constraint forces at link i
         //E are the (unit) constraint forces due to the constraints
-        if (i == ns)
+        if (i == (int)ns)
         {
             s.P_tilde = s.H;
             s.R_tilde = s.U;

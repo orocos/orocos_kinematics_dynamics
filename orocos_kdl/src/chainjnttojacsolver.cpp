@@ -47,10 +47,13 @@ namespace KDL
 		return 0;
     }
 
-    int ChainJntToJacSolver::JntToJac(const JntArray& q_in, Jacobian& jac, int segmentNr)
+    int ChainJntToJacSolver::JntToJac(const JntArray& q_in, Jacobian& jac, int seg_nr)
     {
-        if(segmentNr<0)
+        unsigned int segmentNr;
+        if(seg_nr<0)
             segmentNr=chain.getNrOfSegments();
+        else
+            segmentNr = seg_nr;
 
         //Initialize Jacobian to zero since only segmentNr colunns are computed
         SetToZero(jac) ;
