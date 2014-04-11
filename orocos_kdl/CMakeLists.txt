@@ -42,14 +42,12 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
 
 SET( KDL_CFLAGS "")
 
-find_package(Eigen 3.0 QUIET)
+find_package(Eigen 3 QUIET)
 if(NOT Eigen_FOUND)
   include(${PROJ_SOURCE_DIR}/config/FindEigen3.cmake)
   set(Eigen_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR})
 endif()
 include_directories(${Eigen_INCLUDE_DIR})
-# keep Eigen >= 3.2.0 quiet about Eigen2 deprecated features
-ADD_DEFINITIONS(-DEIGEN_NO_EIGEN2_DEPRECATED_WARNING)
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I${Eigen_INCLUDE_DIR}")
 
 # Check the platform STL containers capabilities
@@ -92,8 +90,6 @@ IF( ENABLE_TESTS )
 ENDIF(ENABLE_TESTS )
 
 OPTION(ENABLE_EXAMPLES OFF "Enable building of examples")
-
-add_definitions(-DEIGEN2_SUPPORT)
 
 ADD_SUBDIRECTORY( doc )
 ADD_SUBDIRECTORY( src )

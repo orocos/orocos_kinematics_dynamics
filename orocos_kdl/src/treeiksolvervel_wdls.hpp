@@ -18,6 +18,8 @@ namespace KDL {
 
     class TreeIkSolverVel_wdls: public TreeIkSolverVel {
     public:
+        static const int E_SVD_FAILED = -100; //! Child SVD failed
+
         TreeIkSolverVel_wdls(const Tree& tree, const std::vector<std::string>& endpoints);
         virtual ~TreeIkSolverVel_wdls();
         

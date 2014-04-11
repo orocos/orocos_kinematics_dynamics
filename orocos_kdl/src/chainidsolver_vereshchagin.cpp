@@ -170,12 +170,13 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             //Copy PZ into a vector so we can do matrix manipulations, put torques above forces
             Vector6d vPZ;
             vPZ << Vector3d::Map(child.PZ.torque.data), Vector3d::Map(child.PZ.force.data);
-            Matrix6d PZDPZt = (vPZ * vPZ.transpose()).lazy();
+            Matrix6d PZDPZt;
+            PZDPZt.noalias() = vPZ * vPZ.transpose();
             PZDPZt /= child.D;
 
             //equation a) (see Vereshchagin89) PZDPZt=[I,H;H',M]
             //Azamat:articulated body inertia as in Featherstone (7.19)
-            s.P_tilde = s.H + child.P - ArticulatedBodyInertia(PZDPZt.corner < 3, 3 > (BottomRight), PZDPZt.corner < 3, 3 > (TopRight), PZDPZt.corner < 3, 3 > (TopLeft));
+            s.P_tilde = s.H + child.P - ArticulatedBodyInertia(PZDPZt.bottomRightCorner<3,3>(), PZDPZt.topRightCorner<3,3>(), PZDPZt.topLeftCorner<3,3>());
             //equation b) (see Vereshchagin89)
             //Azamat: bias force as in Featherstone (7.20)
             s.R_tilde = s.U + child.R + child.PC + (child.PZ / child.D) * child.u;
@@ -183,19 +184,19 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             s.E_tilde = child.E;
 
             //Azamat: equation (c) right side term
-            s.E_tilde -= (vPZ * child.EZ.transpose()).lazy() / child.D;
+            s.E_tilde.noalias() -= (vPZ * child.EZ.transpose()) / child.D;
 
             //equation d) (see Vereshchagin89)
             s.M = child.M;
             //Azamat: equation (d) right side term
-            s.M -= (child.EZ * child.EZ.transpose()).lazy() / child.D;
+            s.M.noalias() -= (child.EZ * child.EZ.transpose()) / child.D;
 
             //equation e) (see Vereshchagin89)
             s.G = child.G;
             Twist CiZDu = child.C + (child.Z / child.D) * child.u;
             Vector6d vCiZDu;
             vCiZDu << Vector3d::Map(CiZDu.rot.data), Vector3d::Map(CiZDu.vel.data);
-            s.G += (child.E.transpose() * vCiZDu).lazy();
+            s.G.noalias() += child.E.transpose() * vCiZDu;
         }
         if (i != 0)
         {
@@ -229,7 +230,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             //Matrix form of Z, put rotations above translations
             Vector6d vZ;
             vZ << Vector3d::Map(s.Z.rot.data), Vector3d::Map(s.Z.vel.data);
-            s.EZ = (s.E.transpose() * vZ).lazy();
+            s.EZ.noalias() = s.E.transpose() * vZ;
 
             if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
                 j--;
@@ -257,19 +258,19 @@ void ChainIdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
         else
             Sm(i) = 1 / Sm(i);
 
-    results[0].M = (Vm * Sm.asDiagonal()).lazy();
-    M_0_inverse = (results[0].M * Um.transpose()).lazy();
+    results[0].M.noalias() = Vm * Sm.asDiagonal();
+    M_0_inverse.noalias() = results[0].M * Um.transpose();
     //results[0].M.ldlt().solve(MatrixXd::Identity(nc,nc),&M_0_inverse);
     //results[0].M.computeInverse(&M_0_inverse);
     Vector6d acc;
     acc << Vector3d::Map(acc_root.rot.data), Vector3d::Map(acc_root.vel.data);
-    nu_sum = -(results[0].E_tilde.transpose() * acc).lazy();
+    nu_sum.noalias() = -(results[0].E_tilde.transpose() * acc);
     //nu_sum.setZero();
     nu_sum += beta.data;
     nu_sum -= results[0].G;
 
     //equation f) nu = M_0_inverse*(beta_N - E0_tilde`*acc0 - G0)
-    nu = (M_0_inverse * nu_sum).lazy();
+    nu.noalias() = M_0_inverse * nu_sum;
 }
 
 void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArray &torques)
