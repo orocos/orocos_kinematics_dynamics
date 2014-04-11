@@ -84,14 +84,16 @@ namespace KDL {
 class SolverI
 {
 public:
+    enum {
 	/// Converged but degraded solution (e.g. WDLS with psuedo-inverse singular)
-    static const int E_DEGRADED         = +1;
+        E_DEGRADED         = +1,
     //! No error
-    static const int E_NOERROR          =  0;
+        E_NOERROR          =  0,
     //! Failed to converge
-    static const int E_NO_CONVERGE      = -1;
+        E_NO_CONVERGE      = -1,
     //! Undefined value (e.g. computed a NAN, or tan(90 degrees) )
-    static const int E_UNDEFINED        = -2;
+        E_UNDEFINED        = -2
+    };
 
 	/// Initialize latest error to E_NOERROR
 	SolverI() :
