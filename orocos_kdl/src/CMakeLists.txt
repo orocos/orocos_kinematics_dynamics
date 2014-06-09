@@ -3,6 +3,52 @@ FILE( GLOB KDL_HPPS [^.]*.hpp [^.]*.inl)
 
 FILE( GLOB UTIL_HPPS utilities/[^.]*.h utilities/[^.]*.hpp)
 
+INCLUDE(CheckCXXSourceCompiles)
+SET(CMAKE_REQUIRED_FLAGS)
+CHECK_CXX_SOURCE_COMPILES("
+    #include <string>
+    #include <map>
+    #include <vector.hpp>
+
+    class TreeElement;
+    typedef std::map<std::string, TreeElement> SegmentMap;
+
+    class TreeElement
+    {
+        TreeElement(const std::string& name): number(0) {}
+
+    public:
+        int number;
+        SegmentMap::const_iterator parent;
+        std::vector<SegmentMap::const_iterator> children;
+
+        static TreeElement Root(std::string& name)
+        {
+            return TreeElement(name);
+        }
+    };
+
+    int main()
+    {
+        return 0;
+    }
+    "
+    HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
+
+if(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
+    SET(KDL_USE_NEW_TREE_INTERFACE_DEFAULT Off)
+ELSE(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
+    SET(KDL_USE_NEW_TREE_INTERFACE_DEFAULT On)
+ENDIF(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
+
+SET(KDL_USE_NEW_TREE_INTERFACE ${KDL_USE_NEW_TREE_INTERFACE_DEFAULT} CACHE BOOL "Use the new KDL Tree interface")
+
+#Sanity check, inform the user
+IF(NOT HAVE_STL_CONTAINER_INCOMPLETE_TYPES AND NOT KDL_USE_NEW_TREE_INTERFACE)
+    MESSAGE(WARNING "You have chosen to use the current Tree Interface, but your platform doesn't support containers of "
+        "incomplete types, this configuration is likely invalid")
+ENDIF()
+
 #In Windows (Visual Studio) it is necessary to specify the postfix
 #of the debug library name and no symbols are exported by kdl, 
 #so it is necessary to compile it as a static library
@@ -13,30 +59,34 @@ ELSE(MSVC)
     SET(LIB_TYPE SHARED)
 ENDIF(MSVC)
 
-ADD_LIBRARY(orocos-kdl ${LIB_TYPE} ${KDL_SRCS})
+CONFIGURE_FILE(config.h.in config.h @ONLY)
+
+ADD_LIBRARY(orocos-kdl ${LIB_TYPE} ${KDL_SRCS} config.h)
  
 SET_TARGET_PROPERTIES( orocos-kdl PROPERTIES
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
   VERSION "${KDL_VERSION}"
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}"
-  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
-  PUBLIC_HEADER "${KDL_HPPS}"
+  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}"
+  PUBLIC_HEADER "${KDL_HPPS};${CMAKE_CURRENT_BINARY_DIR}/config.h"
   )
+
+# Needed so that the generated config.h can be used
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+TARGET_LINK_LIBRARIES(orocos-kdl ${Boost_LIBRARIES})
 
 INSTALL(TARGETS orocos-kdl
   EXPORT OrocosKDLTargets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib${LIB_SUFFIX}
+  LIBRARY DESTINATION lib${LIB_SUFFIX}
   PUBLIC_HEADER DESTINATION include/kdl
 )
 
-# CMake 2.2:
-#INSTALL_FILES( /include/kdl FILES ${KDL_HPPS})
 INSTALL(FILES ${UTIL_HPPS} DESTINATION include/kdl/utilities)
 
 # Orocos convention:
 CONFIGURE_FILE( kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
 CONFIGURE_FILE( kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
 
-INSTALL_FILES( /lib/pkgconfig FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc)
-INSTALL_FILES( /lib/pkgconfig FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)

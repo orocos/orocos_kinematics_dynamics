@@ -60,9 +60,9 @@ std::ostream& operator <<(std::ostream& os, const Tree& tree) {
 
 std::ostream& operator <<(std::ostream& os, SegmentMap::const_iterator root) {
 	//os<<root->first<<": "<<root->second.segment<<"\n";
-	os << root->first<<"(q_nr: "<<root->second.q_nr<<")"<<"\n \t";
-	for (unsigned int i = 0; i < root->second.children.size(); i++) {
-		os <<(root->second.children[i])<<"\t";
+    os << root->first<<"(q_nr: "<< GetTreeElementQNr(root->second) << ")" << "\n \t";
+    for (unsigned int i = 0; i < GetTreeElementChildren(root->second).size(); i++) {
+        os << ( GetTreeElementChildren(root->second)[i] ) << "\t";
 	}
 	return os << "\n";
 }

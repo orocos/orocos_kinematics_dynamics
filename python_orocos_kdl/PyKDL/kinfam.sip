@@ -50,12 +50,12 @@ public:
     JointType getType() const;
     std::string getTypeName() const;
     const char* __repr__();
-%MethodCode
-    std::ostringstream oss;
-    oss<<(*sipCpp);
-    std::string s(oss.str());
-    sipRes=s.c_str();
-%End
+    %MethodCode
+        std::ostringstream oss;
+        oss<<(*sipCpp);
+        std::string s(oss.str());
+        sipRes=s.c_str();
+    %End
 };
 
 class RotationalInertia
@@ -182,7 +182,7 @@ public:
 
     double __getitem__ (int index);
 %MethodCode
-    if (a0 < 0 || a0 >= sipCpp->rows()) {
+    if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
         return 0;
     }
@@ -191,7 +191,7 @@ public:
     
     void __setitem__(int index, double value);
 %MethodCode
-    if (a0 < 0 || a0 >= sipCpp->rows()) {
+    if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
         return 0;
     }
@@ -264,7 +264,7 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
-    if (i < 0 || j < 0 || i > 5 || j >= sipCpp->columns()) {
+    if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
         return 0;
     }
@@ -275,7 +275,7 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
-    if (i < 0 || j < 0 || i > 5 || j >= sipCpp->columns()) {
+    if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
         return 0;
     }
@@ -488,6 +488,47 @@ public:
     void setLambda(const double& lambda);
 
 };
+
+
+class ChainIkSolverPos_LMA : ChainIkSolverPos
+{
+%TypeHeaderCode
+#include <kdl/chainiksolverpos_lma.hpp>
+using namespace KDL;
+%End
+public:
+    ChainIkSolverPos_LMA(const Chain& chain, double eps=0.00001, int _maxiter=500, double _eps_joints=0.000000000000001);
+
+    virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+};
+
+
+class ChainIkSolverVel_pinv_nso : ChainIkSolverVel
+{
+%TypeHeaderCode
+#include <kdl/chainiksolvervel_pinv_nso.hpp>
+using namespace KDL;
+%End
+public:
+    ChainIkSolverVel_pinv_nso(const Chain& chain,double eps=0.00001,int maxiter=150, double alpha=0.25);
+        
+    virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+};
+
+class ChainIkSolverVel_pinv_givens : ChainIkSolverVel
+{
+%TypeHeaderCode
+#include <kdl/chainiksolvervel_pinv_givens.hpp>
+using namespace KDL;
+%End
+public:
+    ChainIkSolverVel_pinv_givens(const Chain& chain);
+        
+    virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+
+};
+
+
 
 class ChainJntToJacSolver
 {

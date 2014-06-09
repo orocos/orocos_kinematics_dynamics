@@ -46,7 +46,7 @@ int main(int argc , char** argv){
     //#include <time.h>
     //time_t before,after;
     //time(&before);
-    unsigned int k=0;
+    //unsigned int k=0;
     //for(k=0;k<1e7;k++)
         fksolver.JntToCart(q,T);
     //time(&after);

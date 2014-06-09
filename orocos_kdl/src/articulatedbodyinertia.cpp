@@ -27,8 +27,7 @@ using namespace Eigen;
 
 namespace KDL{
     
-  ArticulatedBodyInertia::ArticulatedBodyInertia(const RigidBodyInertia& rbi):
-    M(Matrix3d::Zero()),I(Matrix3d::Zero()),H(Matrix3d::Zero())
+  ArticulatedBodyInertia::ArticulatedBodyInertia(const RigidBodyInertia& rbi)
     {
         this->M=Matrix3d::Identity()*rbi.m;
         this->I=Map<const Matrix3d>(rbi.I.data);
@@ -42,8 +41,7 @@ namespace KDL{
         *this = RigidBodyInertia(m,c,Ic);
     }
 
-  ArticulatedBodyInertia::ArticulatedBodyInertia(const Matrix3d& M, const Matrix3d& H, const Matrix3d& I):
-    M(Matrix3d::Zero()),I(Matrix3d::Zero()),H(Matrix3d::Zero())
+  ArticulatedBodyInertia::ArticulatedBodyInertia(const Matrix3d& M, const Matrix3d& H, const Matrix3d& I)
     {
         this->M=M;
         this->I=I;

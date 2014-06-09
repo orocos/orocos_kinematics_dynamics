@@ -69,11 +69,12 @@ namespace KDL {
         ChainIkSolverVel& iksolver;
         ChainFkSolverPos& fksolver;
         JntArray delta_q;
+        unsigned int maxiter;
+        double eps;
+
         Frame f;
         Twist delta_twist;
 
-        unsigned int maxiter;
-        double eps;
     };
 
 }

@@ -379,11 +379,9 @@ void SolverTest::IkSingularValueTest()
 
 void SolverTest::IkVelSolverWDLSTest()
 {
-	int rc ;
 	int maxiter = 30;
 	double	eps = 0.1 ;
 	double lambda = 0.1 ;
-	double sigma_min ;
 
 	std::cout<<"KDL-IK WDLS Vel Solver Tests for Near Zero SVs"<<std::endl;
 
@@ -443,7 +441,6 @@ void SolverTest::IkVelSolverWDLSTest()
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
 {
     double deltaq = 1E-4;
-    double epsJ   = 1E-4;
 
     Frame F1,F2;
 
@@ -457,7 +454,7 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
 
     jacsolver.JntToJac(q,jac);
 
-    for (int i=0; i< q.rows() ; i++)
+    for (unsigned int i=0; i< q.rows() ; i++)
     {
         // test the derivative of J towards qi
         double oldqi = q(i);
@@ -478,9 +475,6 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
 
 void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver)
 {
-    double deltaq = 1E-4;
-    double epsJ   = 1E-4;
-
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
 
@@ -503,7 +497,6 @@ void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, C
 
 void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainIkSolverVel& iksolvervel)
 {
-    double epsJ   = 1E-7;
 
     JntArray q(chain.getNrOfJoints());
     JntArray qdot(chain.getNrOfJoints());
@@ -555,7 +548,7 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
     Frame F1,F2;
 
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F1));
-    CPPUNIT_ASSERT(0==iksolverpos.CartToJnt(q_init,F1,q_solved));
+    CPPUNIT_ASSERT(0 <= iksolverpos.CartToJnt(q_init,F1,q_solved));
     CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q_solved,F2));
 
     CPPUNIT_ASSERT_EQUAL(F1,F2);

@@ -22,7 +22,8 @@ namespace KDL {
         Wy_U(J.rows(),J.rows()),Wq_V(J.cols(),J.cols()),
         t(VectorXd::Zero(J.rows())), Wy_t(VectorXd::Zero(J.rows())),
         qdot(VectorXd::Zero(J.cols())),
-        tmp(VectorXd::Zero(J.cols())),S(VectorXd::Zero(J.cols()))
+        tmp(VectorXd::Zero(J.cols())),S(VectorXd::Zero(J.cols())),
+        lambda(0)
     {
         
         for (size_t i = 0; i < endpoints.size(); ++i) {
@@ -76,21 +77,22 @@ namespace KDL {
         
         //Lets use the wdls algorithm to find the qdot:
         // Create the Weighted jacobian
-        J_Wq = J.lazyProduct(Wq);
-        Wy_J_Wq = Wy.lazyProduct(J_Wq);
+        J_Wq.noalias() = J * Wq;
+        Wy_J_Wq.noalias() = Wy * J_Wq;
         
         // Compute the SVD of the weighted jacobian
         int ret = svd_eigen_HH(Wy_J_Wq, U, S, V, tmp);
-        
+        if (ret < 0 )
+            return E_SVD_FAILED;
         //Pre-multiply U and V by the task space and joint space weighting matrix respectively
-        Wy_t = Wy.lazyProduct(t);
-        Wq_V = Wq.lazyProduct(V);
+        Wy_t.noalias() = Wy * t;
+        Wq_V.noalias() = Wq * V;
         
         // tmp = (Si*Wy*U'*y),
         for (unsigned int i = 0; i < J.cols(); i++) {
             double sum = 0.0;
             for (unsigned int j = 0; j < J.rows(); j++) {
-                if (i < Wy_t.size())
+                if (i < Wy_t.rows())
                     sum += U(j, i) * Wy_t(j);
                 else
                     sum += 0.0;
@@ -99,7 +101,7 @@ namespace KDL {
         }
         
         // x = Lx^-1*V*tmp + x
-        qdot_out.data = Wq_V.lazyProduct(tmp);
+        qdot_out.data.noalias() = Wq_V * tmp;
         
         return Wy_t.norm();
     }

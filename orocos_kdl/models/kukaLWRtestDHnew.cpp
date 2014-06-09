@@ -22,7 +22,7 @@ int main(int argc , char** argv){
     JntArray tau(kLWR.getNrOfJoints());
     Wrenches f(kLWR.getNrOfSegments());
     int linenum; //number of experiment= number of line       
-    int errorInputs = getInputs(q, qdot,qdotdot,linenum);
+    getInputs(q, qdot,qdotdot,linenum);
     
     ChainFkSolverPos_recursive fksolver(kLWR);
     Frame T;

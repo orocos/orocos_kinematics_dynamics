@@ -203,7 +203,7 @@ namespace KDL {
         double damping;
         double stiffness;
 
-        // varibles for RotAxis joint
+        // variables for RotAxis joint
         Vector axis, origin;
         mutable Frame  joint_pose;
         mutable double q_previous;
