@@ -22,6 +22,7 @@
 #ifndef KDL_CHAINJNTTOJACSOLVER_HPP
 #define KDL_CHAINJNTTOJACSOLVER_HPP
 
+#include "solveri.hpp"
 #include "frames.hpp"
 #include "jacobian.hpp"
 #include "jntarray.hpp"
@@ -37,9 +38,11 @@ namespace KDL
      *
      */
 
-    class ChainJntToJacSolver
+    class ChainJntToJacSolver : public SolverI
     {
     public:
+        static const int E_JAC_FAILED = -100; //! Jac solver failed
+
         explicit ChainJntToJacSolver(const Chain& chain);
         virtual ~ChainJntToJacSolver();
         /**
@@ -56,6 +59,10 @@ namespace KDL
         virtual int JntToJac(const JntArray& q_in, Jacobian& jac, int segmentNR=-1);
         
         int setLockedJoints(const std::vector<bool> locked_joints);
+
+        /// @copydoc KDL::SolverI::strError()
+        virtual const char* strError(const int error) const;
+
     private:
         const Chain chain;
         Twist t_tmp;

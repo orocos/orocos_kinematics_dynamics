@@ -59,9 +59,9 @@ namespace KDL
         SetToZero(jac) ;
 
         if(q_in.rows()!=chain.getNrOfJoints()||nr_of_unlocked_joints_!=jac.columns())
-            return -1;
+            return (error = E_JAC_FAILED);
         else if(segmentNr>chain.getNrOfSegments())
-            return -1;
+            return (error = E_JAC_FAILED);
 
         T_tmp = Frame::Identity();
         SetToZero(t_tmp);
@@ -95,7 +95,13 @@ namespace KDL
 
             T_tmp = total;
         }
-        return 0;
+        return (error = E_NOERROR);
+    }
+
+    const char* ChainJntToJacSolver::strError(const int error) const
+    {
+        if (E_JAC_FAILED == error) return "Jac Failed";
+        else return SolverI::strError(error);
     }
 }
 
