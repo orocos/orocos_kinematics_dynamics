@@ -129,9 +129,13 @@ namespace KDL
                 else
                     sum+=0.0;
             }
-            // If the minimum singular value falls below eps, use the weighted
-            // damped least squares inverse; otherwise, use the reciprocal inverse
-			lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
+            // If sigmaMin > eps, then wdls is not active and lambda_scaled = 0 (default value)
+            // If sigmaMin < eps, then wdls is active and lambda_scaled is scaled from 0 to lambda
+            // Note:  singular values are always positive so sigmaMin >=0
+            if ( sigmaMin < eps )
+            {
+			    lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
+            }
 			if(fabs(S(i))<eps) {
 				if (i<6) {
 					// Scale lambda to size of singular value sigmaMin
