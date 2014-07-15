@@ -43,7 +43,7 @@ namespace KDL {
         for (i=0;i<3;i++) {
             for (j=0;j<3;j++)
                 d[i*4+j]=M(i,j);
-            d[i*4+3] = p(i)/1000;
+            d[i*4+3] = p(i);
         }
         for (j=0;j<3;j++)
             d[12+j] = 0.;
