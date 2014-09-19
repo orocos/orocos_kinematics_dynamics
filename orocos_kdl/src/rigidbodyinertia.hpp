@@ -53,31 +53,10 @@ namespace KDL {
         
         ~RigidBodyInertia(){};
         
-        /**
-         * Scalar product: I_new = double * I_old
-         */
         friend RigidBodyInertia operator*(double a,const RigidBodyInertia& I);
-        /**
-         * addition I: I_new = I_old1 + I_old2, make sure that I_old1
-         * and I_old2 are expressed in the same reference frame/point,
-         * otherwise the result is worth nothing
-         */
         friend RigidBodyInertia operator+(const RigidBodyInertia& Ia,const RigidBodyInertia& Ib);
-
-        /**
-         * calculate spatial momentum: h = I*v
-         * make sure that the twist v and the inertia are expressed in the same reference frame/point
-         */
         friend Wrench operator*(const RigidBodyInertia& I,const Twist& t);
-
-        /**
-         * Coordinate system transform Ia = T_a_b*Ib with T_a_b the frame from a to b.
-         */
         friend RigidBodyInertia operator*(const Frame& T,const RigidBodyInertia& I);
-        /**
-         * Reference frame orientation change Ia = R_a_b*Ib with R_a_b
-         * the rotation of b expressed in a
-         */
         friend RigidBodyInertia operator*(const Rotation& R,const RigidBodyInertia& I);
 
         /**
@@ -117,6 +96,36 @@ namespace KDL {
         friend class ArticulatedBodyInertia;
         
     };
+
+    /**
+     * Scalar product: I_new = double * I_old
+     */
+    RigidBodyInertia operator*(double a,const RigidBodyInertia& I);
+    /**
+     * addition I: I_new = I_old1 + I_old2, make sure that I_old1
+     * and I_old2 are expressed in the same reference frame/point,
+     * otherwise the result is worth nothing
+     */
+    RigidBodyInertia operator+(const RigidBodyInertia& Ia,const RigidBodyInertia& Ib);
+
+    /**
+     * calculate spatial momentum: h = I*v
+     * make sure that the twist v and the inertia are expressed in the same reference frame/point
+     */
+    Wrench operator*(const RigidBodyInertia& I,const Twist& t);
+
+    /**
+     * Coordinate system transform Ia = T_a_b*Ib with T_a_b the frame from a to b.
+     */
+    RigidBodyInertia operator*(const Frame& T,const RigidBodyInertia& I);
+    /**
+     * Reference frame orientation change Ia = R_a_b*Ib with R_a_b
+     * the rotation of b expressed in a
+     */
+    RigidBodyInertia operator*(const Rotation& R,const RigidBodyInertia& I);
+
+
+
 }//namespace
 
 

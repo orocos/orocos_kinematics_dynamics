@@ -30,10 +30,6 @@
 
 namespace KDL
 {
-    // Equal is friend function, but default arguments for friends are forbidden (§8.3.6.4)
-    class JntSpaceInertiaMatrix;
-    bool Equal(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,double eps=epsilon);
-
     /**
      * @brief This class represents an fixed size matrix containing
      * the Joint-Space Inertia Matrix of a KDL::Chain.
@@ -138,83 +134,98 @@ class MyTask : public RTT::TaskContext
          */
         unsigned int columns()const;
 
-        /**
-         * Function to add two joint matrix, all the arguments must
-         * have the same size: A + B = C. This function is
-         * aliasing-safe, A or B can be the same array as C.
-         *
-         * @param src1 A
-         * @param src2 B
-         * @param dest C
-         */
         friend void Add(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,JntSpaceInertiaMatrix& dest);
-        /**
-         * Function to subtract two joint matrix, all the arguments must
-         * have the same size: A - B = C. This function is
-         * aliasing-safe, A or B can be the same array as C.
-         *
-         * @param src1 A
-         * @param src2 B
-         * @param dest C
-         */
         friend void Subtract(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,JntSpaceInertiaMatrix& dest);
-        /**
-         * Function to multiply all the array values with a scalar
-         * factor: A*b=C. This function is aliasing-safe, A can be the
-         * same array as C.
-         *
-         * @param src A
-         * @param factor b
-         * @param dest C
-         */
         friend void Multiply(const JntSpaceInertiaMatrix& src,const double& factor,JntSpaceInertiaMatrix& dest);
-        /**
-         * Function to divide all the array values with a scalar
-         * factor: A/b=C. This function is aliasing-safe, A can be the
-         * same array as C.
-         *
-         * @param src A
-         * @param factor b
-         * @param dest C
-         */
         friend void Divide(const JntSpaceInertiaMatrix& src,const double& factor,JntSpaceInertiaMatrix& dest);
-        /**
-         * Function to multiply a KDL::Jacobian with a KDL::JntSpaceInertiaMatrix
-         * to get a KDL::Twist, it should not be used to calculate the
-         * forward velocity kinematics, the solver classes are built
-         * for this purpose.
-         * J*q = t
-         *
-         * @param jac J
-         * @param src q
-         * @param dest t
-         * @post dest==Twist::Zero() if 0==src.rows() (ie src is empty)
-         */
         friend void Multiply(const JntSpaceInertiaMatrix& src, const JntArray& vec, JntArray& dest);
-        /**
-         * Function to set all the values of the array to 0
-         *
-         * @param array
-         */
         friend void SetToZero(JntSpaceInertiaMatrix& matrix);
-        /**
-         * Function to check if two matrices are the same with a
-         *precision of eps
-         *
-         * @param src1
-         * @param src2
-         * @param eps default: epsilon
-         * @return true if each element of src1 is within eps of the same
-		 * element in src2, or if both src1 and src2 have no data (ie 0==rows())
-         */
         friend bool Equal(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,double eps);
-
         friend bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
         //friend bool operator!=(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
-        };
+    };
 
     bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
     //bool operator!=(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
+
+    /**
+     * Function to add two joint matrix, all the arguments must
+     * have the same size: A + B = C. This function is
+     * aliasing-safe, A or B can be the same array as C.
+     *
+     * @param src1 A
+     * @param src2 B
+     * @param dest C
+     */
+    void Add(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,JntSpaceInertiaMatrix& dest);
+
+    /**
+     * Function to subtract two joint matrix, all the arguments must
+     * have the same size: A - B = C. This function is
+     * aliasing-safe, A or B can be the same array as C.
+     *
+     * @param src1 A
+     * @param src2 B
+     * @param dest C
+     */
+    void Subtract(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,JntSpaceInertiaMatrix& dest);
+
+    /**
+     * Function to multiply all the array values with a scalar
+     * factor: A*b=C. This function is aliasing-safe, A can be the
+     * same array as C.
+     *
+     * @param src A
+     * @param factor b
+     * @param dest C
+     */
+    void Multiply(const JntSpaceInertiaMatrix& src,const double& factor,JntSpaceInertiaMatrix& dest);
+
+    /**
+     * Function to divide all the array values with a scalar
+     * factor: A/b=C. This function is aliasing-safe, A can be the
+     * same array as C.
+     *
+     * @param src A
+     * @param factor b
+     * @param dest C
+     */
+    void Divide(const JntSpaceInertiaMatrix& src,const double& factor,JntSpaceInertiaMatrix& dest);
+
+    /**
+     * Function to multiply a KDL::Jacobian with a KDL::JntSpaceInertiaMatrix
+     * to get a KDL::Twist, it should not be used to calculate the
+     * forward velocity kinematics, the solver classes are built
+     * for this purpose.
+     * J*q = t
+     *
+     * @param jac J
+     * @param src q
+     * @param dest t
+     * @post dest==Twist::Zero() if 0==src.rows() (ie src is empty)
+     */
+    void Multiply(const JntSpaceInertiaMatrix& src, const JntArray& vec, JntArray& dest);
+
+    /**
+     * Function to set all the values of the array to 0
+     *
+     * @param array
+     */
+    void SetToZero(JntSpaceInertiaMatrix& matrix);
+
+    /**
+     * Function to check if two matrices are the same with a
+     *precision of eps
+     *
+     * @param src1
+     * @param src2
+     * @param eps default: epsilon
+     * @return true if each element of src1 is within eps of the same
+     * element in src2, or if both src1 and src2 have no data (ie 0==rows())
+     */
+    bool Equal(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,double eps=epsilon);
+
+    bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
 
 }
 
