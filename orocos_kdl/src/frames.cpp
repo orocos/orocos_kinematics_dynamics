@@ -197,10 +197,10 @@ namespace KDL {
     */
     void Rotation::GetQuaternion(double& x,double& y,double& z, double& w) const
     {
-        double trace = (*this)(0,0) + (*this)(1,1) + (*this)(2,2) + 1.0;
-	double epsilon=1E-12;
+        double trace = (*this)(0,0) + (*this)(1,1) + (*this)(2,2);
+        double epsilon=1E-12;
         if( trace > epsilon ){
-            double s = 0.5 / sqrt(trace);
+            double s = 0.5 / sqrt(trace + 1.0);
             w = 0.25 / s;
             x = ( (*this)(2,1) - (*this)(1,2) ) * s;
             y = ( (*this)(0,2) - (*this)(2,0) ) * s;
