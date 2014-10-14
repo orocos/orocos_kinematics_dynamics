@@ -46,8 +46,8 @@ namespace KDL {
          * kinematics solver for that chain.
          *
          * @param chain the chain to calculate the inverse position for
-         * @param q_max the maximum joint positions
          * @param q_min the minimum joint positions
+         * @param q_max the maximum joint positions
          * @param fksolver a forward position kinematics solver
          * @param iksolver an inverse velocity kinematics solver
          * @param maxiter the maximum Newton-Raphson iterations,

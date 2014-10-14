@@ -62,7 +62,7 @@ class MyTask : public RTT::TaskContext
    ** use j here
    }
 };
-/endcode
+\endcode
 
      */	
 
