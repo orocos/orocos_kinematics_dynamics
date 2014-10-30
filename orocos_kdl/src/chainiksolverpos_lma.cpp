@@ -73,7 +73,8 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 	svd(6, _chain.getNrOfJoints(),Eigen::ComputeThinU | Eigen::ComputeThinV),
 	diffq(_chain.getNrOfJoints()),
 	q_new(_chain.getNrOfJoints()),
-	original_Aii(_chain.getNrOfJoints())
+    original_Aii(_chain.getNrOfJoints()),
+    use_joint_limits(false)
 {}
 
 ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
@@ -99,7 +100,8 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 	svd(6, _chain.getNrOfJoints(),Eigen::ComputeThinU | Eigen::ComputeThinV),
 	diffq(_chain.getNrOfJoints()),
 	q_new(_chain.getNrOfJoints()),
-	original_Aii(_chain.getNrOfJoints())
+    original_Aii(_chain.getNrOfJoints()),
+    use_joint_limits(false)
 {
 	L(0)=1;
 	L(1)=1;
@@ -127,6 +129,12 @@ void ChainIkSolverPos_LMA::compute_fwdpos(const VectorXq& q) {
 		}
 	}
 }
+
+void ChainIkSolverPos_LMA::set_joint_limits(const JntArray &_qmin, const JntArray &_qmax){
+    q_min =  _qmin.data;
+    q_max =  _qmax.data;
+}
+
 
 void ChainIkSolverPos_LMA::compute_jacobian(const VectorXq& q) {
 	using namespace KDL;
@@ -203,6 +211,16 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 		tmp = original_Aii.cwiseProduct(tmp);
 		diffq = svd.matrixV()*tmp;
 		grad = jac.transpose()*delta_pos;
+
+        q_new = q+diffq;
+        if( use_joint_limits ){
+            for (int j=0; j<q_new.rows(); j++ ){
+                if( q_new(j) < q_min(j) ) q_new(j) = q_min(j);
+                if( q_new(j) > q_max(j) ) q_new(j) = q_max(j);
+            }
+            diffq = q_new - q;
+        }
+
 		if (display_information) {
 			std::cout << "------- iteration " << i << " ----------------\n"
 					  << "  q              = " << q.transpose() << "\n"
@@ -240,7 +258,6 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 			return -1;
 		}
 
-		q_new = q+diffq;
 		compute_fwdpos(q_new);
 		Twist_to_Eigen( diff( T_base_head, T_base_goal), delta_pos_new );
 		delta_pos_new             = L.asDiagonal()*delta_pos_new;
