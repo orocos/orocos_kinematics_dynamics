@@ -74,7 +74,7 @@ IF(NOT (CMAKE_VERSION VERSION_LESS 2.8.12))
 
     IF(OROCOSKDL_ENABLE_RPATH)
         #Configure RPATH
-        SET(CMAKE_MACOSX_RPATH 1) #enable RPATH on OSX. This also suppress warnings on CMake >= 3.0
+        SET(CMAKE_MACOSX_RPATH TRUE) #enable RPATH on OSX. This also suppress warnings on CMake >= 3.0
         # when building, don't use the install RPATH already
         # (but later on when installing)
         SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
@@ -85,19 +85,15 @@ IF(NOT (CMAKE_VERSION VERSION_LESS 2.8.12))
         #I assume that the directory is
         # - install_dir/something for binaries
         # - install_dir/lib for libraries
-        FILE(RELATIVE_PATH _rel_path "${CMAKE_INSTALL_PREFIX}/bin" "${CMAKE_INSTALL_PREFIX}/lib")
-        IF (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-            SET(CMAKE_INSTALL_RPATH "@loader_path/${_rel_path}")
-        ELSE()
-            SET(CMAKE_INSTALL_RPATH "\$ORIGIN/${_rel_path}")
-        ENDIF()
-
-        # the RPATH to be used when installing, but only if it's not a system directory (copied form CMake File. To be tested)
         LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
         IF("${isSystemDir}" STREQUAL "-1")
-           SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+            FILE(RELATIVE_PATH _rel_path "${CMAKE_INSTALL_PREFIX}/bin" "${CMAKE_INSTALL_PREFIX}/lib")
+            IF (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+                SET(CMAKE_INSTALL_RPATH "@loader_path/${_rel_path}")
+            ELSE()
+                SET(CMAKE_INSTALL_RPATH "\$ORIGIN/${_rel_path}")
+            ENDIF()
         ENDIF("${isSystemDir}" STREQUAL "-1")
-
         # add the automatically determined parts of the RPATH
         # which point to directories outside the build tree to the install RPATH
         SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE) #very important!
