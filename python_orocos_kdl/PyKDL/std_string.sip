@@ -27,7 +27,7 @@
     newstring = PyUnicode_DecodeUTF8(sipCpp->c_str(), sipCpp->length(), NULL);
     if(newstring == NULL) {
         PyErr_Clear();
-        newstring = PyString_FromString(sipCpp->c_str());
+        newstring = PyUnicode_FromString(sipCpp->c_str());
     }
     return newstring;
 %End
@@ -38,21 +38,27 @@
     // If argument is a Unicode string, just decode it to UTF-8
     // If argument is a Python string, assume it's UTF-8
      if (sipIsErr == NULL)
+#if PY_MAJOR_VERSION < 3
         return (PyString_Check(sipPy) || PyUnicode_Check(sipPy));
+#else
+        return PyUnicode_Check(sipPy);
+#endif
      if (sipPy == Py_None) {
         *sipCppPtr = new std::string;
          return 1;
      }
      if (PyUnicode_Check(sipPy)) {
         PyObject* s = PyUnicode_AsEncodedString(sipPy, "UTF-8", "");
-        *sipCppPtr = new std::string(PyString_AS_STRING(s));
+        *sipCppPtr = new std::string(PyUnicode_AS_DATA(s));
         Py_DECREF(s);
         return 1;
      }
+#if PY_MAJOR_VERSION < 3
      if (PyString_Check(sipPy)) {
         *sipCppPtr = new std::string(PyString_AS_STRING(sipPy));
         return 1;
      }
+#endif
 
      return 0;
 %End
