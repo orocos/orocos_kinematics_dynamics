@@ -180,6 +180,11 @@ namespace KDL
         double getSigmaMin()const {return sigmaMin;};
 
         /**
+         * Request the value of eps
+         */
+        double getEps()const {return eps;};
+
+        /**
          * Request the value of lambda for the minimum
          */
         double getLambda()const {return lambda;};
