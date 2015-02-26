@@ -25,6 +25,7 @@
 #include "chain.hpp"
 #include "frames.hpp"
 #include "jntarray.hpp"
+#include "solveri.hpp"
 
 namespace KDL
 {
@@ -36,7 +37,7 @@ namespace KDL
 	 * dynamics solver for a KDL::Chain.
 	 *
 	 */
-	class ChainIdSolver
+	class ChainIdSolver : public KDL::SolverI
 	{
 		public:
 			/** 
