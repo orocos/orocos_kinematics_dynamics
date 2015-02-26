@@ -114,6 +114,8 @@ public:
 	{
 		if (E_NOERROR == error) return "No error";
 		else if (E_NO_CONVERGE == error) return "Failed to converge";
+		else if (E_UNDEFINED == error) return "Undefined value";
+		else if (E_DEGRADED == error) return "Converged but degraded solution";
 		else return "UNKNOWN ERROR";
 	}
 
