@@ -89,9 +89,16 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		 */
 		VelocityProfile_TrapHalf(double _maxvel=0,double _maxacc=0,bool _starting=true);
 
-        void SetMax(double _maxvel,double _maxacc, bool _starting );
+		void SetMax(double _maxvel,double _maxacc,bool _starting);
 
 		/**
+		 * Plans a 'Half' Trapezoidal VelocityProfile between pos1 and pos2.
+		 * If the distance is too short betweeen pos1 and pos2,
+		 * only the acceleration phase is set and the max velocity is not reached.
+		 *
+		 * \param pos1 Starting position
+		 * \param pos2 Ending position
+		 *
 		 * Can throw a Error_MotionPlanning_Not_Feasible
 		 */
 		virtual void SetProfile(double pos1,double pos2);
