@@ -24,7 +24,7 @@
 
 #include "chainiksolver.hpp"
 #include "chainjnttojacsolver.hpp"
-#include "utilities/svd_HH.hpp"
+#include <Eigen/Core>
 
 namespace KDL
 {
@@ -71,48 +71,47 @@ namespace KDL
          */
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
 
+        /**
+         *Set joint weights for optimization criterion
+         *
+         *@param weights the joint weights
+         *
+         */
+        virtual int setWeights(const JntArray &weights);
 
-	/**
-	 *Set joint weights for optimization criterion
-	 *
-	 *@param weights the joint weights
-	 *
-	 */
-	virtual int setWeights(const JntArray &weights);
+        /**
+         *Set optimal joint positions
+         *
+         *@param opt_pos optimal joint positions
+         *
+         */
+        virtual int setOptPos(const JntArray &opt_pos);
 
-	/**
-	 *Set optimal joint positions
-	 *
-	 *@param opt_pos optimal joint positions
-	 *
-	 */
-	virtual int setOptPos(const JntArray &opt_pos);
-
-	/**
-	 *Set null psace velocity gain
-	 *
-	 *@param alpha NUllspace velocity cgain
-	 *
-	 */
-	virtual int setAlpha(const double alpha);
+        /**
+         *Set null psace velocity gain
+         *
+         *@param alpha NUllspace velocity cgain
+         *
+         */
+        virtual int setAlpha(const double alpha);
 
     private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
+        unsigned int nj;
         Jacobian jac;
-        SVD_HH svd;
-        std::vector<JntArray> U;
-        JntArray S;
-        std::vector<JntArray> V;
-        JntArray tmp;
-        JntArray tmp2;
+        Eigen::MatrixXd U;
+        Eigen::VectorXd S;
+        Eigen::VectorXd Sinv;
+        Eigen::MatrixXd V;
+        Eigen::VectorXd tmp;
+        Eigen::VectorXd tmp2;
         double eps;
         int maxiter;
 
-	double alpha;
-	JntArray weights;
-	JntArray opt_pos;
-	
+        double alpha;
+        JntArray weights;
+        JntArray opt_pos;
     };
 }
 #endif
