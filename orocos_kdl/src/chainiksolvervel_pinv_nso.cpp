@@ -22,8 +22,6 @@
 #include "chainiksolvervel_pinv_nso.hpp"
 #include "utilities/svd_eigen_HH.hpp"
 
-#include <iostream>
-
 namespace KDL
 {
     ChainIkSolverVel_pinv_nso::ChainIkSolverVel_pinv_nso(const Chain& _chain, JntArray _opt_pos, JntArray _weights, double _eps, int _maxiter, double _alpha):
