@@ -22,6 +22,8 @@
 #include "chainiksolvervel_pinv_nso.hpp"
 #include "utilities/svd_eigen_HH.hpp"
 
+#include <iostream>
+
 namespace KDL
 {
     ChainIkSolverVel_pinv_nso::ChainIkSolverVel_pinv_nso(const Chain& _chain, JntArray _opt_pos, JntArray _weights, double _eps, int _maxiter, double _alpha):
@@ -121,18 +123,20 @@ namespace KDL
             A += qd*qd * weights(i)*weights(i);
         }
 
-        // Calculate inverse Jacobian Jc^-1
-        for (i = 0; i < nj; ++i) {
-            tmp(i) = weights(i)*(q_in(i) - opt_pos(i)) / A;
+        if (A > 1e-9) {
+          // Calculate inverse Jacobian Jc^-1
+          for (i = 0; i < nj; ++i) {
+              tmp(i) = weights(i)*(q_in(i) - opt_pos(i)) / A;
+          }
+
+          // Calcualte J^-1 * J * Jc^-1 = V*S^-1*U' * U*S*V' * tmp
+          tmp2 = V * Sinv.asDiagonal() * U.transpose() * U * S.asDiagonal() * V.transpose() * tmp;
+
+          for (i = 0; i < nj; ++i) {
+              //std::cerr << i <<": "<< qdot_out(i) <<", "<< -2*alpha*g * (tmp(i) - tmp2(i)) << std::endl;
+              qdot_out(i) += -2*alpha*g * (tmp(i) - tmp2(i));
+          }
         }
-
-        // Calcualte J^-1 * J * Jc^-1 = V*S^-1*U' * U*S*V' * tmp
-        tmp2 = V * Sinv.asDiagonal() * U.transpose() * U * S.asDiagonal() * V.transpose() * tmp;
-
-        for (i = 0; i < nj; ++i) {
-            qdot_out(i) += -2*alpha*g * (tmp(i) - tmp2(i));
-        }
-
         //return the return value of the svd decomposition
         return svdResult;
     }
