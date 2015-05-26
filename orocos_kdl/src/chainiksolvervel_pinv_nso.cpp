@@ -90,11 +90,13 @@ namespace KDL
         // S^-1
         for (i = 0; i < nj; ++i) {
             Sinv(i) = fabs(S(i))<eps ? 0.0 : 1.0/S(i);
+        }
+        for (i = 0; i < 6; ++i) {
             tmp(i) = v_in(i);
         }
 
-        qdot_out.data = V * Sinv.asDiagonal() * U.transpose() * tmp;
-        
+        qdot_out.data = V * Sinv.asDiagonal() * U.transpose() * tmp.head(6);
+
         // Now onto NULL space
         // Given the cost function g, and the current joints q, desired joints qd, and weights w:
         // t = g(q) = 1/2 * Sum( w_i * (q_i - qd_i)^2 )
