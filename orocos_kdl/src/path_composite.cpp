@@ -53,8 +53,8 @@ namespace KDL {
 // you propably want to use the cached_index variable
 double Path_Composite::Lookup(double s) const
 {
-	assert(s>=0);
-	assert(s<=pathlength);
+	assert(s>=-1e-12);
+	assert(s<=pathlength+1e-12);
 	if ( (cached_starts <=s) && ( s <= cached_ends) ) {
 		return s - cached_starts;
 	}
