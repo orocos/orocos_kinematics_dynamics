@@ -142,21 +142,32 @@ void SolverTest::UpdateChainTest()
     ChainIkSolverPos_NR iksolverpos(chain2,fksolverpos,iksolver2);
     ChainIkSolverPos_NR_JL iksolverpos2(chain2,fksolverpos,iksolver2);
     ChainIkSolverPos_LMA iksolverpos3(chain2);
+    ChainDynParam dynparam(chain2, Vector::Zero());
+    ChainIdSolver_RNE idsolver1(chain2, Vector::Zero());
+    unsigned int nr_of_constraints = 4;
+    ChainIdSolver_Vereshchagin idsolver2(chain2,Twist::Zero(),4);
 
     JntArray q_in(chain2.getNrOfJoints());
-    JntArrayVel qvel_in(chain2.getNrOfJoints());
+    JntArray q_in2(chain2.getNrOfJoints());
+    JntArrayVel q_in3(chain2.getNrOfJoints());
     for(unsigned int i=0; i<chain2.getNrOfJoints(); i++)
     {
         random(q_in(i));
+        random(q_in2(i));
     }
     JntArray q_out(chain2.getNrOfJoints());
+    JntArray q_out2(chain2.getNrOfJoints());
     Jacobian jac(chain2.getNrOfJoints());
     Frame T;
     Twist t;
     FrameVel T2;
+    Wrenches wrenches(chain2.getNrOfSegments());
+    JntSpaceInertiaMatrix m(chain2.getNrOfJoints());
 
+    Jacobian alpha(nr_of_constraints - 1);
+    JntArray beta(nr_of_constraints - 1);
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()+1));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE,fksolvervel.JntToCart(qvel_in, T2, chain2.getNrOfSegments()+1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()+1));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()+1));
     chain2.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotX),
             Frame(Vector(0.0,0.0,0.1))));
@@ -168,6 +179,11 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToMass(q_in, m));
 
     jacsolver1.updateInternalDataStructures();
     iksolver2.updateInternalDataStructures();
@@ -177,9 +193,12 @@ void SolverTest::UpdateChainTest()
     iksolverpos.updateInternalDataStructures();
     iksolverpos2.updateInternalDataStructures();
     iksolverpos3.updateInternalDataStructures();
+    idsolver1.updateInternalDataStructures();
+    idsolver2.updateInternalDataStructures();
+    dynparam.updateInternalDataStructures();
 
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolvervel.JntToCart(qvel_in, T2, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
@@ -188,6 +207,11 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
 
     q_in.resize(chain2.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
@@ -200,12 +224,31 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
-
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
+    q_in2.resize(chain2.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    wrenches.resize(chain2.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    q_out2.resize(chain2.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    alpha.resize(nr_of_constraints);
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    beta.resize(nr_of_constraints);
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
     jac.resize(chain2.getNrOfJoints());
     q_out.resize(chain2.getNrOfJoints());
-    qvel_in.resize(chain2.getNrOfJoints());
+    q_in3.resize(chain2.getNrOfJoints());
+    m.resize(chain2.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolvervel.JntToCart(qvel_in, T2, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
@@ -216,7 +259,11 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos3.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos3.CartToJnt(q_in,T,q_out));
-
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToMass(q_in, m));
 }
 void SolverTest::FkPosAndJacTest()
 {
