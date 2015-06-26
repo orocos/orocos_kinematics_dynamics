@@ -107,6 +107,7 @@ void VelocityProfile_Spline::SetProfileDuration(double pos1, double vel1, double
 void VelocityProfile_Spline::SetProfileDuration(double pos1, double vel1, double acc1, double pos2, double vel2, double acc2, double duration)
 {
   double T[6];
+  duration_ = duration;
   generatePowers(5, duration, T);
 
   if (duration <= std::numeric_limits<double>::epsilon() )
