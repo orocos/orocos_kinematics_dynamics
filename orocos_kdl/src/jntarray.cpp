@@ -54,7 +54,7 @@ namespace KDL
 
     void JntArray::resize(unsigned int newSize)
     {
-        data.resize(newSize);
+        data.conservativeResizeLike(VectorXd::Zero(newSize));
     }
 
     double JntArray::operator()(unsigned int i,unsigned int j)const
