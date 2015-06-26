@@ -54,7 +54,7 @@ namespace KDL
 
     void Jacobian::resize(unsigned int new_nr_of_columns)
     {
-        data.resize(6,new_nr_of_columns);
+        data.conservativeResize(Eigen::NoChange,new_nr_of_columns);
     }
 
     double Jacobian::operator()(unsigned int i,unsigned int j)const
