@@ -26,6 +26,8 @@
 #include "frames.hpp"
 #include "articulatedbodyinertia.hpp"
 
+#include<Eigen/StdVector>
+
 namespace KDL
 {
 /**
@@ -179,7 +181,7 @@ private:
         };
     };
 
-    std::vector<segment_info> results;
+    std::vector<segment_info, Eigen::aligned_allocator<segment_info> > results;
 
 };
 }

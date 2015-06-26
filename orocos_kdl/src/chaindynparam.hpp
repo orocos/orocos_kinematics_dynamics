@@ -25,6 +25,7 @@
 #include "chainidsolver_recursive_newton_euler.hpp"
 #include "articulatedbodyinertia.hpp"
 #include "jntspaceinertiamatrix.hpp"
+#include <Eigen/StdVector>
 
 namespace KDL {
 
@@ -67,7 +68,7 @@ namespace KDL {
         std::vector<Frame> X;
         std::vector<Twist> S;
         //std::vector<RigidBodyInertia> I;
-        std::vector<ArticulatedBodyInertia> Ic;
+        std::vector<ArticulatedBodyInertia, Eigen::aligned_allocator<ArticulatedBodyInertia> > Ic;
         Wrench F;
         Twist ag;
 	
