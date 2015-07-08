@@ -31,14 +31,12 @@
 #include "solveri.hpp"
 
 namespace KDL {
-
     /**
 	  * \brief This <strong>abstract</strong> class encapsulates a
 	  * solver for the forward position kinematics for a KDL::Chain.
      *
      * @ingroup KinematicFamily
      */
-
     //Forward definition
     class ChainFkSolverPos : public KDL::SolverI {
     public:
@@ -52,6 +50,16 @@ namespace KDL {
          * @return if < 0 something went wrong
          */
         virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1)=0;
+        /**
+         * Calculate forward position kinematics for a KDL::Chain,
+         * from joint coordinates to cartesian pose.
+         *
+         * @param q_in input joint coordinates
+         * @param p_out reference to a vector of output cartesian poses for all segments
+         *
+         * @return if < 0 something went wrong
+         */
+        virtual int JntToCart(const JntArray& q_in, std::vector<KDL::Frame>& p_out,int segmentNr=-1)=0;
         virtual ~ChainFkSolverPos(){};
     };
 
@@ -73,7 +81,16 @@ namespace KDL {
          * @return if < 0 something went wrong
          */
         virtual int JntToCart(const JntArrayVel& q_in, FrameVel& out,int segmentNr=-1)=0;
-
+        /**
+         * Calculate forward position and velocity kinematics, from
+         * joint coordinates to cartesian coordinates.
+         *
+         * @param q_in input joint coordinates (position and velocity)
+         * @param out output cartesian coordinates for all segments (position and velocity)
+         *
+         * @return if < 0 something went wrong
+         */
+        virtual int JntToCart(const JntArrayVel& q_in, std::vector<KDL::FrameVel>& out,int segmentNr=-1)=0;
         virtual ~ChainFkSolverVel(){};
     };
 
@@ -98,7 +115,19 @@ namespace KDL {
          * @return if < 0 something went wrong
          */
     virtual int JntToCart(const JntArrayAcc& q_in, FrameAcc& out,int segmentNr=-1)=0;
-
+        /**
+         * Calculate forward position, velocity and accelaration
+         * kinematics, from joint coordinates to cartesian coordinates
+         *
+         * @param q_in input joint coordinates (position, velocity and
+         * acceleration
+         @param out output cartesian coordinates (position, velocity
+         * and acceleration for all segments
+         *
+         * @return if < 0 something went wrong
+         */
+    virtual int JntToCart(const JntArrayAcc& q_in, std::vector<FrameAcc>& out,int segmentNr=-1)=0;
+    
         virtual ~ChainFkSolverAcc()=0;
     };
 

@@ -41,6 +41,7 @@ namespace KDL
         ~ChainFkSolverVel_recursive();
 
         virtual int JntToCart(const JntArrayVel& q_in,FrameVel& out,int segmentNr=-1);
+        virtual int JntToCart(const JntArrayVel& q_in,std::vector<FrameVel>& out,int segmentNr=-1);
     private:
         const Chain chain;
     };
