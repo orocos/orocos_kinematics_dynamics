@@ -63,7 +63,7 @@ namespace KDL
             return 0;
         }
     }
-    
+
     int ChainFkSolverVel_recursive::JntToCart(const JntArrayVel& in,std::vector<FrameVel>& out,int seg_nr)
     {
         unsigned int segmentNr;
@@ -72,7 +72,7 @@ namespace KDL
         else
             segmentNr = seg_nr;
 
-        std::fill(out.begin(),out.end(),FrameVel::Identity());
+
 
         if(!(in.q.rows()==chain.getNrOfJoints()&&in.qdot.rows()==chain.getNrOfJoints()))
             return -1;
@@ -81,6 +81,7 @@ namespace KDL
         else if(out.size()!=chain.getNrOfSegments())
             return -1;
         else{
+          std::fill(out.begin(),out.end(),FrameVel::Identity());
             int j=0;
             for (unsigned int i=0;i<segmentNr;i++) {
                 //Calculate new Frame_base_ee
@@ -97,4 +98,3 @@ namespace KDL
         }
     }
 }
-

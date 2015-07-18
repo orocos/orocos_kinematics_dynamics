@@ -63,8 +63,6 @@ namespace KDL {
         else
             segmentNr = seg_nr;
 
-        std::fill(p_out.begin(),p_out.end(),Frame::Identity());
-
         if(q_in.rows()!=chain.getNrOfJoints())
             return -1;
         else if(segmentNr>chain.getNrOfSegments())
@@ -72,6 +70,7 @@ namespace KDL {
         else if(p_out.size() != chain.getNrOfSegments())
             return -1;
         else{
+            std::fill(p_out.begin(),p_out.end(),Frame::Identity());
             int j=0;
             for(unsigned int i=0;i<segmentNr;i++){
                 if(chain.getSegment(i).getJoint().getType()!=Joint::None){
