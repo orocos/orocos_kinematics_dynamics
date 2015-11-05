@@ -67,7 +67,7 @@ namespace KDL {
             return -1;
         else if(segmentNr>chain.getNrOfSegments())
             return -1;
-        else if(p_out.size() != chain.getNrOfSegments())
+        else if(p_out.size() != segmentNr)
             return -1;
         else{
             std::fill(p_out.begin(),p_out.end(),Frame::Identity());
