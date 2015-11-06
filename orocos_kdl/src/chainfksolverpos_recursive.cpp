@@ -56,7 +56,33 @@ namespace KDL {
             return 0;
         }
     }
+    int ChainFkSolverPos_recursive::JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int seg_nr)    {
+        unsigned int segmentNr;
+        if(seg_nr<0)
+            segmentNr=chain.getNrOfSegments();
+        else
+            segmentNr = seg_nr;
 
+        if(q_in.rows()!=chain.getNrOfJoints())
+            return -1;
+        else if(segmentNr>chain.getNrOfSegments())
+            return -1;
+        else if(p_out.size() != segmentNr)
+            return -1;
+        else{
+            std::fill(p_out.begin(),p_out.end(),Frame::Identity());
+            int j=0;
+            for(unsigned int i=0;i<segmentNr;i++){
+                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                    p_out[i] = p_out[i]*chain.getSegment(i).pose(q_in(j));
+                    j++;
+                }else{
+                    p_out[i] = p_out[i]*chain.getSegment(i).pose(0.0);
+                }
+            }
+            return 0;
+        }
+    }
 
     ChainFkSolverPos_recursive::~ChainFkSolverPos_recursive()
     {
