@@ -670,3 +670,44 @@ void SolverTest::VereshchaginTest()
         }
     }
 }
+
+void SolverTest::FkPosVectTest()
+{
+    ChainFkSolverPos_recursive fksolver1(chain1);
+    std::vector<Frame> v_out(chain1.getNrOfSegments());
+    
+    JntArray q(chain1.getNrOfJoints());
+    JntArray qdot(chain1.getNrOfJoints());
+
+    for(unsigned int i=0; i<chain1.getNrOfJoints(); i++)
+    {
+        random(q(i));
+        random(qdot(i));
+    }
+    Frame f_out;
+    fksolver1.JntToCart(q,v_out);
+    fksolver1.JntToCart(q,f_out);
+     
+    CPPUNIT_ASSERT(Equal(v_out[chain1.getNrOfSegments()-1],f_out,1e-5));
+}
+
+void SolverTest::FkVelVectTest()
+{
+    ChainFkSolverVel_recursive fksolver1(chain1);
+    std::vector<FrameVel> v_out(chain1.getNrOfSegments());
+    
+    JntArray q(chain1.getNrOfJoints());
+    JntArray qdot(chain1.getNrOfJoints());
+
+    for(unsigned int i=0; i<chain1.getNrOfJoints(); i++)
+    {
+        random(q(i));
+        random(qdot(i));
+    }
+    JntArrayVel qvel(q,qdot);
+    FrameVel f_out;
+    fksolver1.JntToCart(qvel,v_out);
+    fksolver1.JntToCart(qvel,f_out);
+    
+    CPPUNIT_ASSERT(Equal(v_out[chain1.getNrOfSegments()-1],f_out,1e-5));
+}

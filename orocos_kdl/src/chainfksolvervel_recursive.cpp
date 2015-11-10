@@ -78,19 +78,29 @@ namespace KDL
             return -1;
         else if(segmentNr>chain.getNrOfSegments())
             return -1;
-        else if(out.size()!=chain.getNrOfSegments())
+        else if(out.size()!=segmentNr)
+            return -1;
+        else if(segmentNr == 0)
             return -1;
         else{
-          std::fill(out.begin(),out.end(),FrameVel::Identity());
             int j=0;
-            for (unsigned int i=0;i<segmentNr;i++) {
+            // Initialization
+            if(chain.getSegment(0).getJoint().getType()!=Joint::None){
+                out[0] = FrameVel(chain.getSegment(0).pose(in.q(0)),
+                                     chain.getSegment(0).twist(in.q(0),in.qdot(0)));
+                j++;
+            }else
+                out[0] = FrameVel(chain.getSegment(0).pose(0.0),
+                                     chain.getSegment(0).twist(0.0,0.0));
+            
+            for (unsigned int i=1;i<segmentNr;i++) {
                 //Calculate new Frame_base_ee
                 if(chain.getSegment(i).getJoint().getType()!=Joint::None){
-                    out[i]=out[i]*FrameVel(chain.getSegment(i).pose(in.q(j)),
-                                     chain.getSegment(i).twist(in.q(j),in.qdot(j)));
+                    out[i]=out[i-1]*FrameVel(chain.getSegment(i).pose(in.q(j)),
+                                    chain.getSegment(i).twist(in.q(j),in.qdot(j)));
                     j++;//Only increase jointnr if the segment has a joint
                 }else{
-                    out[i]=out[i]*FrameVel(chain.getSegment(i).pose(0.0),
+                    out[i]=out[i-1]*FrameVel(chain.getSegment(i).pose(0.0),
                                      chain.getSegment(i).twist(0.0,0.0));
                 }
             }

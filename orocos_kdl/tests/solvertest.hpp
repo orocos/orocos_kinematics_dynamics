@@ -25,6 +25,8 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(VereshchaginTest );
     CPPUNIT_TEST(IkSingularValueTest );
     CPPUNIT_TEST(IkVelSolverWDLSTest );
+    CPPUNIT_TEST(FkPosVectTest );
+    CPPUNIT_TEST(FkVelVectTest );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -38,6 +40,8 @@ public:
     void VereshchaginTest();
     void IkSingularValueTest() ;
     void IkVelSolverWDLSTest();
+    void FkPosVectTest();
+    void FkVelVectTest();
 
 private:
 

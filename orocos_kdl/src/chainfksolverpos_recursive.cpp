@@ -69,15 +69,23 @@ namespace KDL {
             return -1;
         else if(p_out.size() != segmentNr)
             return -1;
+        else if(segmentNr == 0)
+            return -1;
         else{
-            std::fill(p_out.begin(),p_out.end(),Frame::Identity());
             int j=0;
-            for(unsigned int i=0;i<segmentNr;i++){
+            // Initialization
+            if(chain.getSegment(0).getJoint().getType()!=Joint::None){
+                p_out[0] = chain.getSegment(0).pose(q_in(j));
+                j++;
+            }else
+                p_out[0] = chain.getSegment(0).pose(0.0);
+            
+            for(unsigned int i=1;i<segmentNr;i++){
                 if(chain.getSegment(i).getJoint().getType()!=Joint::None){
-                    p_out[i] = p_out[i]*chain.getSegment(i).pose(q_in(j));
+                    p_out[i] = p_out[i-1]*chain.getSegment(i).pose(q_in(j));
                     j++;
                 }else{
-                    p_out[i] = p_out[i]*chain.getSegment(i).pose(0.0);
+                    p_out[i] = p_out[i-1]*chain.getSegment(i).pose(0.0);
                 }
             }
             return 0;
