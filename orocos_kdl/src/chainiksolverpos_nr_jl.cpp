@@ -50,8 +50,19 @@ namespace KDL
         q_max.data.setConstant(std::numeric_limits<double>::max());
     }
 
+    void ChainIkSolverPos_NR_JL::updateInternalDataStructures() {
+       nj = chain.getNrOfJoints();
+       q_min.data.conservativeResizeLike(Eigen::VectorXd::Constant(nj,std::numeric_limits<double>::min()));
+       q_max.data.conservativeResizeLike(Eigen::VectorXd::Constant(nj,std::numeric_limits<double>::max()));
+       iksolver.updateInternalDataStructures();
+       fksolver.updateInternalDataStructures();
+       delta_q.resize(nj);
+    }
+
     int ChainIkSolverPos_NR_JL::CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)
     {
+        if(nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
         if(nj != q_init.rows() || nj != q_out.rows())
             return (error = E_SIZE_MISMATCH);
 

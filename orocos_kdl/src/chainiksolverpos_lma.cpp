@@ -119,6 +119,23 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 	L(5)=0.01;
 }
 
+void ChainIkSolverPos_LMA::updateInternalDataStructures() {
+    nj = chain.getNrOfJoints();
+    ns = chain.getNrOfSegments();
+    lastSV.conservativeResize(nj>6?6:nj);
+    jac.conservativeResize(Eigen::NoChange, nj);
+    grad.conservativeResize(nj);
+    T_base_jointroot.resize(nj);
+    T_base_jointtip.resize(nj);
+    q.conservativeResize(nj);
+    A.conservativeResize(nj, nj);
+    ldlt = Eigen::LDLT<MatrixXq>(nj);
+    svd = Eigen::JacobiSVD<MatrixXq>(6, nj,Eigen::ComputeThinU | Eigen::ComputeThinV);
+    diffq.conservativeResize(nj);
+    q_new.conservativeResize(nj);
+    original_Aii.conservativeResize(nj);
+}
+
 ChainIkSolverPos_LMA::~ChainIkSolverPos_LMA() {}
 
 void ChainIkSolverPos_LMA::compute_fwdpos(const VectorXq& q) {
@@ -168,6 +185,10 @@ void ChainIkSolverPos_LMA::display_jac(const KDL::JntArray& jval) {
 
 
 int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& T_base_goal, KDL::JntArray& q_out) {
+
+    if(nj != chain.getNrOfJoints())
+        return (error = E_NOT_UP_TO_DATE);
+
     if(nj != q_init.rows() || nj != q_out.rows())
         return (error = E_SIZE_MISMATCH);
 

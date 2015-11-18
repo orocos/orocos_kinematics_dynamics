@@ -106,6 +106,9 @@ namespace KDL
 
     int ChainIkSolverVel_wdls::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
+        if(nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
+
         if(nj != q_in.rows() || nj != qdot_out.rows())
             return (error = E_SIZE_MISMATCH);
         error = jnt2jac.JntToJac(q_in,jac);

@@ -95,8 +95,10 @@ namespace KDL
         /// @copydoc KDL::SolverI::strError()
         virtual const char* strError(const int error) const;
 
+        /// @copydoc KDL::SolverI::updateInternalDataStructures
+        virtual void updateInternalDataStructures();
     private:
-        const Chain chain;
+        const Chain& chain;
         ChainJntToJacSolver jnt2jac;
         unsigned int nj;
         Jacobian jac;

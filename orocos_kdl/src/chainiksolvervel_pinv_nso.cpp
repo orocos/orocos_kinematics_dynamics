@@ -62,6 +62,20 @@ namespace KDL
     {
     }
 
+    void ChainIkSolverVel_pinv_nso::updateInternalDataStructures() {
+        jnt2jac.updateInternalDataStructures();
+        nj = chain.getNrOfJoints();
+        jac.resize(nj);
+        U.conservativeResizeLike(MatrixXd::Zero(6,nj));
+        S.conservativeResizeLike(VectorXd::Zero(nj));
+        Sinv.conservativeResizeLike(VectorXd::Zero(nj));
+        V.conservativeResizeLike(MatrixXd::Zero(nj,nj));
+        tmp.conservativeResizeLike(VectorXd::Zero(nj));
+        tmp2.conservativeResizeLike(VectorXd::Zero(nj));
+        opt_pos.data.conservativeResizeLike(VectorXd::Zero(nj));
+        weights.data.conservativeResizeLike(VectorXd::Ones(nj));
+    }
+
     ChainIkSolverVel_pinv_nso::~ChainIkSolverVel_pinv_nso()
     {
     }
@@ -69,6 +83,8 @@ namespace KDL
 
     int ChainIkSolverVel_pinv_nso::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
+        if (nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
         if (nj != q_in.rows() || nj != qdot_out.rows() || nj != opt_pos.rows() || nj != weights.rows())
             return (error = E_SIZE_MISMATCH);
         //Let the ChainJntToJacSolver calculate the jacobian "jac" for

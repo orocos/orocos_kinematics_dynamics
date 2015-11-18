@@ -33,6 +33,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(IkVelSolverWDLSTest );
     CPPUNIT_TEST(FkPosVectTest );
     CPPUNIT_TEST(FkVelVectTest );
+    CPPUNIT_TEST(UpdateChainTest );
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -48,6 +49,7 @@ public:
     void IkVelSolverWDLSTest();
     void FkPosVectTest();
     void FkVelVectTest();
+    void UpdateChainTest();
 
 private:
 

@@ -46,6 +46,24 @@ namespace KDL
     {
     }
 
+    void ChainIkSolverVel_pinv_givens::updateInternalDataStructures() {
+        nj = chain.getNrOfJoints();
+        jnt2jac.updateInternalDataStructures();
+        jac.resize(nj);
+        transpose = (nj > 6);
+        m = max(6,nj);
+        n = min(6,nj);
+        jac_eigen.conservativeResize(m,n);
+        U.conservativeResizeLike(MatrixXd::Identity(m,m));
+        V.conservativeResizeLike(MatrixXd::Identity(n,n));
+        B.conservativeResize(m,n);
+        S.conservativeResize(n);
+        tempi.conservativeResize(m);
+        tempj.conservativeResize(n);
+        SUY.conservativeResizeLike(VectorXd::Zero(nj));
+        qdot_eigen.conservativeResize(nj);
+    }
+
     ChainIkSolverVel_pinv_givens::~ChainIkSolverVel_pinv_givens()
     {
     }
@@ -53,6 +71,8 @@ namespace KDL
 
     int ChainIkSolverVel_pinv_givens::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
+        if (nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
         if (nj != q_in.rows() || nj != qdot_out.rows())
             return (error = E_SIZE_MISMATCH);
 

@@ -73,6 +73,8 @@ public:
      */
     int CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, JntArray &torques);
 
+    /// @copydoc KDL::SolverI::updateInternalDataStructures
+    virtual void updateInternalDataStructures();
     /*
     //Returns cartesian positions of links in base coordinates
     void getLinkCartesianPose(Frames& x_base);
@@ -120,7 +122,7 @@ private:
     void final_upwards_sweep(JntArray &q_dotdot, JntArray &torques);
 
 private:
-    Chain chain;
+    const Chain& chain;
     unsigned int nj;
     unsigned int ns;
     unsigned int nc;
