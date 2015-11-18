@@ -317,7 +317,7 @@ void SolverTest::IkSingularValueTest()
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
 	F_des = F * dF ;
 
-	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_MAX_ITERATIONS_EXCEEDED,
                          iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
 	CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
                          ikvelsolver1.getError());        	// truncated SV solution
@@ -345,7 +345,7 @@ void SolverTest::IkSingularValueTest()
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
 	F_des = F * dF ;
 
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_MAX_ITERATIONS_EXCEEDED,
                          iksolver2.CartToJnt(q,F_des,q_solved));	//  does not converge
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
                         ikvelsolver1.getError());
@@ -365,10 +365,10 @@ void SolverTest::IkSingularValueTest()
     dF.M = KDL::Rotation::RPY(0.1, 0.1, 0.1) ;
     dF.p = KDL::Vector(0.01,0.01,0.01) ;
 
-    CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolver.JntToCart(q,F));
     F_des = F * dF ;
 
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NO_CONVERGE,
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_MAX_ITERATIONS_EXCEEDED,
                          iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
     CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
                          ikvelsolver1.getError());        	// truncated SV solution
@@ -459,9 +459,9 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
         // test the derivative of J towards qi
         double oldqi = q(i);
         q(i) = oldqi+deltaq;
-        CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F2));
+        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q,F2));
         q(i) = oldqi-deltaq;
-        CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F1));
+        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q,F1));
         q(i) = oldqi;
         // check Jacobian :
         Twist Jcol1 = diff(F1,F2,2*deltaq);
@@ -490,7 +490,7 @@ void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, C
     Twist t;
 
     jacsolver.JntToJac(qvel.q,jac);
-    CPPUNIT_ASSERT(fksolvervel.JntToCart(qvel,cart)==0);
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolvervel.JntToCart(qvel,cart));
     MultiplyJacobian(jac,qvel.qdot,t);
     CPPUNIT_ASSERT_EQUAL(cart.deriv(),t);
 }
@@ -511,10 +511,9 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
 
     FrameVel cart;
 
-    CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolvervel.JntToCart(qvel,cart));
 
-    int ret = iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved);
-    CPPUNIT_ASSERT(0<=ret);
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved));
 
     qvel.deriv()=qdot_solved;
 
@@ -523,7 +522,7 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
     else
     {
         FrameVel cart_solved;
-        CPPUNIT_ASSERT(0==fksolvervel.JntToCart(qvel,cart_solved));
+        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolvervel.JntToCart(qvel,cart_solved));
         CPPUNIT_ASSERT(Equal(cart.deriv(),cart_solved.deriv(),1e-5));
     }
 }
@@ -547,9 +546,9 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
 
     Frame F1,F2;
 
-    CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q,F1));
-    CPPUNIT_ASSERT(0 <= iksolverpos.CartToJnt(q_init,F1,q_solved));
-    CPPUNIT_ASSERT(0==fksolverpos.JntToCart(q_solved,F2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q,F1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, iksolverpos.CartToJnt(q_init,F1,q_solved));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q_solved,F2));
 
     CPPUNIT_ASSERT_EQUAL(F1,F2);
     //CPPUNIT_ASSERT_EQUAL(q,q_solved);
@@ -650,24 +649,15 @@ void SolverTest::VereshchaginTest()
 
     for (double t = 0.0; t <=simulationTime; t = t + timeDelta)
     {
-        status = constraintSolver.CartToJnt(jointPoses[0], jointRates[0], jointAccelerations[0], alpha, betha, externalNetForce, jointTorques[0]);
+        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, constraintSolver.CartToJnt(jointPoses[0], jointRates[0], jointAccelerations[0], alpha, betha, externalNetForce, jointTorques[0]));
 
-        CPPUNIT_ASSERT((status == 0));
-        if (status != 0)
-        {
-            std::cout << "Check matrix and array sizes. Something does not match " << std::endl;
-            exit(1);
-        }
-        else
-        {
-            //Integration(robot joint values for rates and poses; actual) at the given "instanteneous" interval for joint position and velocity.
-            jointRates[0](0) = jointRates[0](0) + jointAccelerations[0](0) * timeDelta; //Euler Forward
-            jointPoses[0](0) = jointPoses[0](0) + (jointRates[0](0) - jointAccelerations[0](0) * timeDelta / 2.0) * timeDelta; //Trapezoidal rule
-            jointRates[0](1) = jointRates[0](1) + jointAccelerations[0](1) * timeDelta; //Euler Forward
-            jointPoses[0](1) = jointPoses[0](1) + (jointRates[0](1) - jointAccelerations[0](1) * timeDelta / 2.0) * timeDelta;
-            //printf("time, j0_pose, j1_pose, j0_rate, j1_rate, j0_acc, j1_acc, j0_constraintTau, j1_constraintTau \n");
-            printf("%f          %f      %f       %f     %f       %f      %f     %f      %f\n", t, jointPoses[0](0), jointPoses[0](1), jointRates[0](0), jointRates[0](1), jointAccelerations[0](0), jointAccelerations[0](1), jointTorques[0](0), jointTorques[0](1));
-        }
+        //Integration(robot joint values for rates and poses; actual) at the given "instanteneous" interval for joint position and velocity.
+        jointRates[0](0) = jointRates[0](0) + jointAccelerations[0](0) * timeDelta; //Euler Forward
+        jointPoses[0](0) = jointPoses[0](0) + (jointRates[0](0) - jointAccelerations[0](0) * timeDelta / 2.0) * timeDelta; //Trapezoidal rule
+        jointRates[0](1) = jointRates[0](1) + jointAccelerations[0](1) * timeDelta; //Euler Forward
+        jointPoses[0](1) = jointPoses[0](1) + (jointRates[0](1) - jointAccelerations[0](1) * timeDelta / 2.0) * timeDelta;
+        //printf("time, j0_pose, j1_pose, j0_rate, j1_rate, j0_acc, j1_acc, j0_constraintTau, j1_constraintTau \n");
+        printf("%f          %f      %f       %f     %f       %f      %f     %f      %f\n", t, jointPoses[0](0), jointPoses[0](1), jointRates[0](0), jointRates[0](1), jointAccelerations[0](0), jointAccelerations[0](1), jointTorques[0](0), jointTorques[0](1));
     }
 }
 

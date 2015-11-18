@@ -25,18 +25,24 @@ namespace KDL
 {
     ChainIkSolverPos_NR::ChainIkSolverPos_NR(const Chain& _chain,ChainFkSolverPos& _fksolver,ChainIkSolverVel& _iksolver,
                                              unsigned int _maxiter, double _eps):
-        chain(_chain),iksolver(_iksolver),fksolver(_fksolver),delta_q(_chain.getNrOfJoints()),
+        chain(_chain),nj (chain.getNrOfJoints()),
+        iksolver(_iksolver),fksolver(_fksolver),
+        delta_q(_chain.getNrOfJoints()),
         maxiter(_maxiter),eps(_eps)
     {
     }
 
     int ChainIkSolverPos_NR::CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)
     {
+        if(q_init.rows() != nj || q_out.rows() != nj)
+            return (error = E_SIZE_MISMATCH);
+
             q_out = q_init;
 
             unsigned int i;
             for(i=0;i<maxiter;i++){
-                fksolver.JntToCart(q_out,f);
+                if (E_NOERROR > fksolver.JntToCart(q_out,f) )
+                    return (error = E_FKSOLVERPOS_FAILED);
                 delta_twist = diff(f,p_in);
                 const int rc = iksolver.CartToJnt(q_out,delta_twist,delta_q);
                 if (E_NOERROR > rc)
@@ -48,7 +54,7 @@ namespace KDL
                     // converged, but possibly with a degraded solution
                     return (rc > E_NOERROR ? E_DEGRADED : E_NOERROR);
             }
-            return (error = E_NO_CONVERGE);        // failed to converge
+            return (error = E_MAX_ITERATIONS_EXCEEDED);        // failed to converge
     }
 
     ChainIkSolverPos_NR::~ChainIkSolverPos_NR()
@@ -58,6 +64,7 @@ namespace KDL
     const char* ChainIkSolverPos_NR::strError(const int error) const
     {
         if (E_IKSOLVER_FAILED == error) return "Child IK solver failed";
+        else if (E_FKSOLVERPOS_FAILED == error) return "Child FK solver failed";
         else return SolverI::strError(error);
     }
 }

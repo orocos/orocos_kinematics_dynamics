@@ -44,7 +44,7 @@ namespace KDL {
      * (expressed in the segments reference frame) and the dynamical
      * parameters of the segments.
      */
-    class ChainDynParam
+    class ChainDynParam : SolverI
     {
     public:
         ChainDynParam(const Chain& chain, Vector _grav);

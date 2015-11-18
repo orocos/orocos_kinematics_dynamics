@@ -54,26 +54,31 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 		int _maxiter,
 		double _eps_joints
 ) :
+    chain(_chain),
+	nj(chain.getNrOfJoints()),
+	ns(chain.getNrOfSegments()),
 	lastNrOfIter(0),
-	lastSV(_chain.getNrOfJoints()),
-	jac(6, _chain.getNrOfJoints()),
-	grad(_chain.getNrOfJoints()),
+	lastDifference(0),
+	lastTransDiff(0),
+	lastRotDiff(0),
+	lastSV(nj),
+	jac(6, nj),
+	grad(nj),
 	display_information(false),
 	maxiter(_maxiter),
 	eps(_eps),
 	eps_joints(_eps_joints),
 	L(_L.cast<ScalarType>()),
-	chain(_chain),
-	T_base_jointroot(_chain.getNrOfJoints()),
-	T_base_jointtip(_chain.getNrOfJoints()),
-	q(_chain.getNrOfJoints()),
-	A(_chain.getNrOfJoints(), _chain.getNrOfJoints()),
-	tmp(_chain.getNrOfJoints()),
-	ldlt(_chain.getNrOfJoints()),
-	svd(6, _chain.getNrOfJoints(),Eigen::ComputeThinU | Eigen::ComputeThinV),
-	diffq(_chain.getNrOfJoints()),
-	q_new(_chain.getNrOfJoints()),
-	original_Aii(_chain.getNrOfJoints())
+	T_base_jointroot(nj),
+	T_base_jointtip(nj),
+	q(nj),
+	A(nj, nj),
+	tmp(nj),
+	ldlt(nj),
+	svd(6, nj,Eigen::ComputeThinU | Eigen::ComputeThinV),
+	diffq(nj),
+	q_new(nj),
+	original_Aii(nj)
 {}
 
 ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
@@ -82,24 +87,29 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 		int _maxiter,
 		double _eps_joints
 ) :
+    chain(_chain),
+    nj(chain.getNrOfJoints()),
+    ns(chain.getNrOfSegments()),
 	lastNrOfIter(0),
-	lastSV(_chain.getNrOfJoints()>6?6:_chain.getNrOfJoints()),
-	jac(6, _chain.getNrOfJoints()),
-	grad(_chain.getNrOfJoints()),
+	lastDifference(0),
+    lastTransDiff(0),
+	lastRotDiff(0),
+	lastSV(nj>6?6:nj),
+	jac(6, nj),
+	grad(nj),
 	display_information(false),
 	maxiter(_maxiter),
 	eps(_eps),
 	eps_joints(_eps_joints),
-	chain(_chain),
-	T_base_jointroot(_chain.getNrOfJoints()),
-	T_base_jointtip(_chain.getNrOfJoints()),
-	q(_chain.getNrOfJoints()),
-	A(_chain.getNrOfJoints(), _chain.getNrOfJoints()),
-	ldlt(_chain.getNrOfJoints()),
-	svd(6, _chain.getNrOfJoints(),Eigen::ComputeThinU | Eigen::ComputeThinV),
-	diffq(_chain.getNrOfJoints()),
-	q_new(_chain.getNrOfJoints()),
-	original_Aii(_chain.getNrOfJoints())
+	T_base_jointroot(nj),
+	T_base_jointtip(nj),
+	q(nj),
+	A(nj, nj),
+	ldlt(nj),
+	svd(6, nj,Eigen::ComputeThinU | Eigen::ComputeThinV),
+	diffq(nj),
+	q_new(nj),
+	original_Aii(nj)
 {
 	L(0)=1;
 	L(1)=1;
@@ -158,6 +168,9 @@ void ChainIkSolverPos_LMA::display_jac(const KDL::JntArray& jval) {
 
 
 int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& T_base_goal, KDL::JntArray& q_out) {
+    if(nj != q_init.rows() || nj != q_out.rows())
+        return (error = E_SIZE_MISMATCH);
+
 	using namespace KDL;
 	double v      = 2;
 	double tau    = 10;
@@ -184,7 +197,7 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 		original_Aii    = svd.singularValues();
 		lastSV          = svd.singularValues();
 		q_out.data      = q.cast<double>();
-		return 0;
+		return (error = E_NOERROR);
 	}
 	compute_jacobian(q);
 	jac = L.asDiagonal()*jac;
@@ -224,7 +237,7 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 				Twist_to_Eigen( diff( T_base_head, T_base_goal), delta_pos );
 				lastTransDiff  = delta_pos.topRows(3).norm();
 				lastRotDiff    = delta_pos.bottomRows(3).norm();
-				return -2;
+				return (error = E_INCREMENT_JOINTS_TOO_SMALL);
 		}
 
 
@@ -237,7 +250,7 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 			lastSV        = svd.singularValues();
 			lastNrOfIter  = i;
 			q_out.data    = q.cast<double>();
-			return -1;
+			return (error = E_GRADIENT_JOINTS_TOO_SMALL);
 		}
 
 		q_new = q+diffq;
@@ -259,7 +272,7 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 				lastSV         = svd.singularValues();
 				lastNrOfIter   = i;
 				q_out.data     = q.cast<double>();
-				return 0;
+				return (error = E_NOERROR);
 			}
 			compute_jacobian(q_new);
 			jac = L.asDiagonal()*jac;
@@ -277,10 +290,15 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 	lastSV         = svd.singularValues();
 	lastNrOfIter   = maxiter;
 	q_out.data     = q.cast<double>();
-	return -3;
+	return (error = E_MAX_ITERATIONS_EXCEEDED);
 
 }
 
-
+const char* ChainIkSolverPos_LMA::strError(const int error) const
+    {
+        if (E_GRADIENT_JOINTS_TOO_SMALL == error) return "The gradient of E towards the joints is to small";
+        else if (E_INCREMENT_JOINTS_TOO_SMALL == error) return "The joint position increments are to small";
+        else return SolverI::strError(error);
+    }
 
 };//namespace KDL

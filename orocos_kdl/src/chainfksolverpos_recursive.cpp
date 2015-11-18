@@ -40,9 +40,9 @@ namespace KDL {
         p_out = Frame::Identity();
 
         if(q_in.rows()!=chain.getNrOfJoints())
-            return -1;
+            return (error = E_SIZE_MISMATCH);
         else if(segmentNr>chain.getNrOfSegments())
-            return -1;
+            return (error = E_OUT_OF_RANGE);
         else{
             int j=0;
             for(unsigned int i=0;i<segmentNr;i++){
@@ -53,7 +53,7 @@ namespace KDL {
                     p_out = p_out*chain.getSegment(i).pose(0.0);
                 }
             }
-            return 0;
+            return (error = E_NOERROR);
         }
     }
     int ChainFkSolverPos_recursive::JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int seg_nr)    {

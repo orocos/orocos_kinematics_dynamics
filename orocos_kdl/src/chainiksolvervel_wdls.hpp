@@ -63,7 +63,6 @@ namespace KDL
     class ChainIkSolverVel_wdls : public ChainIkSolverVel
     {
     public:
-        static const int E_SVD_FAILED = -100; //! SVD solver failed
         /// solution converged but (pseudo)inverse is singular
         static const int E_CONVERGE_PINV_SINGULAR = +100;
 
@@ -126,8 +125,10 @@ namespace KDL
          * motion of the system and this is equivalent to saying that
          * it gets an infinite weight in the norm computation.  For
          * more detailed explanation : vincent.padois@upmc.fr
+         *
+         * @return succes/error code
          */
-        void setWeightJS(const Eigen::MatrixXd& Mq);
+        int setWeightJS(const Eigen::MatrixXd& Mq);
 
         /**
          * Set the task space weighting matrix
@@ -151,8 +152,10 @@ namespace KDL
          * will be reduced). The obtained solution will minimize the
          * weighted norm sqrt(|x_dot-Jq_dot|'*(M_x^2)*|x_dot-Jq_dot|).
          * For more detailed explanation : vincent.padois@upmc.fr
+         *
+         * @return succes/error code
          */
-        void setWeightTS(const Eigen::MatrixXd& Mx);
+        int setWeightTS(const Eigen::MatrixXd& Mx);
 
         /**
          * Set lambda
@@ -207,6 +210,7 @@ namespace KDL
     private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
+        unsigned int nj;
         Jacobian jac;
         Eigen::MatrixXd U;
         Eigen::VectorXd S;

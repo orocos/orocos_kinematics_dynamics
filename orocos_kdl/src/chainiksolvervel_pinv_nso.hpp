@@ -60,7 +60,7 @@ namespace KDL
          * @param alpha the null-space velocity gain
          *
          */
-        ChainIkSolverVel_pinv_nso(const Chain& chain, JntArray opt_pos, JntArray weights, double eps=0.00001,int maxiter=150, double alpha = 0.25);
+        ChainIkSolverVel_pinv_nso(const Chain& chain, const JntArray& opt_pos, const JntArray& weights, double eps=0.00001,int maxiter=150, double alpha = 0.25);
         explicit ChainIkSolverVel_pinv_nso(const Chain& chain, double eps=0.00001,int maxiter=150, double alpha = 0.25);
         ~ChainIkSolverVel_pinv_nso();
 
@@ -95,6 +95,12 @@ namespace KDL
          */
         virtual int setAlpha(const double alpha);
 
+        /**
+         * Retrieve the latest return code from the SVD algorithm
+         * @return 0 if CartToJnt() not yet called, otherwise latest SVD result code.
+         */
+        int getSVDResult()const {return svdResult;};
+
     private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
@@ -108,7 +114,7 @@ namespace KDL
         Eigen::VectorXd tmp2;
         double eps;
         int maxiter;
-
+        int svdResult;
         double alpha;
         JntArray weights;
         JntArray opt_pos;
