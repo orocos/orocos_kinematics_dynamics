@@ -24,8 +24,7 @@
 namespace KDL
 {
     ChainJntToJacSolver::ChainJntToJacSolver(const Chain& _chain):
-        chain(_chain),locked_joints_(chain.getNrOfJoints(),false),
-        nr_of_unlocked_joints_(chain.getNrOfJoints())
+        chain(_chain),locked_joints_(chain.getNrOfJoints(),false)
     {
     }
 
@@ -36,15 +35,9 @@ namespace KDL
     int ChainJntToJacSolver::setLockedJoints(const std::vector<bool> locked_joints)
     {
         if(locked_joints.size()!=locked_joints_.size())
-            return -1;
+            return (error = E_SIZE_MISMATCH);
         locked_joints_=locked_joints;
-        nr_of_unlocked_joints_=0;
-        for(unsigned int i=0;i<locked_joints_.size();i++){
-            if(!locked_joints_[i])
-                nr_of_unlocked_joints_++;
-        }
-
-        return 0;
+        return (error = E_NOERROR);
     }
 
     int ChainJntToJacSolver::JntToJac(const JntArray& q_in, Jacobian& jac, int seg_nr)
@@ -58,10 +51,10 @@ namespace KDL
         //Initialize Jacobian to zero since only segmentNr colunns are computed
         SetToZero(jac) ;
 
-        if(q_in.rows()!=chain.getNrOfJoints()||nr_of_unlocked_joints_!=jac.columns())
-            return (error = E_JAC_FAILED);
+        if( q_in.rows()!=chain.getNrOfJoints() || jac.columns() != chain.getNrOfJoints())
+            return (error = E_SIZE_MISMATCH);
         else if(segmentNr>chain.getNrOfSegments())
-            return (error = E_JAC_FAILED);
+            return (error = E_OUT_OF_RANGE);
 
         T_tmp = Frame::Identity();
         SetToZero(t_tmp);
@@ -96,12 +89,6 @@ namespace KDL
             T_tmp = total;
         }
         return (error = E_NOERROR);
-    }
-
-    const char* ChainJntToJacSolver::strError(const int error) const
-    {
-        if (E_JAC_FAILED == error) return "Jac Failed";
-        else return SolverI::strError(error);
     }
 }
 

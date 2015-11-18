@@ -35,7 +35,7 @@ namespace KDL{
     {
         //Check sizes when in debug mode
         if(q.rows()!=nj || q_dot.rows()!=nj || q_dotdot.rows()!=nj || torques.rows()!=nj || f_ext.size()!=ns)
-            return (error = -1);
+            return (error = E_SIZE_MISMATCH);
         unsigned int j=0;
 
         //Sweep from root to leaf

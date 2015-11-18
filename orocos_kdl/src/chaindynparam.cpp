@@ -47,7 +47,7 @@ namespace KDL {
     {
 	//Check sizes when in debug mode
         if(q.rows()!=nj || H.rows()!=nj || H.columns()!=nj )
-            return -1;
+            return (error = E_SIZE_MISMATCH);
         unsigned int k=0;
 	double q_;
 	
@@ -103,20 +103,19 @@ namespace KDL {
 	  }
 
 	}
-	return 0;
+	return (error = E_NOERROR);
     }
 
     //calculate coriolis matrix C
     int ChainDynParam::JntToCoriolis(const JntArray &q, const JntArray &q_dot, JntArray &coriolis)
     {
-	//make a null matrix with the size of q_dotdot and a null wrench
+    //make a null matrix with the size of q_dotdot and a null wrench
 	SetToZero(jntarraynull);
 
 	
 	//the calculation of coriolis matrix C
-	chainidsolver_coriolis.CartToJnt(q, q_dot, jntarraynull, wrenchnull, coriolis);
+	return chainidsolver_coriolis.CartToJnt(q, q_dot, jntarraynull, wrenchnull, coriolis);
 	
-	return 0;
     }
 
     //calculate gravity matrix G
@@ -127,8 +126,7 @@ namespace KDL {
 	
 	SetToZero(jntarraynull);
 	//the calculation of coriolis matrix C
-	chainidsolver_gravity.CartToJnt(q, jntarraynull, jntarraynull, wrenchnull, gravity);
-	return 0;
+	return chainidsolver_gravity.CartToJnt(q, jntarraynull, jntarraynull, wrenchnull, gravity);
     }
 
     ChainDynParam::~ChainDynParam()
