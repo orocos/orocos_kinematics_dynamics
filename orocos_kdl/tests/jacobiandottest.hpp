@@ -2,9 +2,9 @@
 #define JACOBIANDOT_TEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <chainjnttojacdotsolver.hpp>
-#include <frames_io.hpp>
-#include <kinfam_io.hpp>
+#include "chainjnttojacdotsolver.hpp"
+#include "frames_io.hpp"
+#include "kinfam_io.hpp"
 
 class JacobianDotTest : public CppUnit::TestFixture
 {
@@ -42,8 +42,6 @@ public:
     void testKukaDiffBodyFixed();
     
     void testD2Symbolic();
-private:
-    bool runTest(const Chain& chain,const unsigned int& representation);
 };
 
 #endif

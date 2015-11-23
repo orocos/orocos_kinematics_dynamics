@@ -124,7 +124,7 @@ int ChainJntToJacDotSolver::JntToJacDot(const JntArrayVel& q_in, Jacobian& jdot,
 const Twist& ChainJntToJacDotSolver::getPartialDerivative(const KDL::Jacobian& J, 
                                                           const unsigned int& joint_idx, 
                                                           const unsigned int& column_idx, 
-                                                          const unsigned int& representation)
+                                                          const int& representation)
 {
     switch(representation)
     {
@@ -203,7 +203,9 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivativeBodyFixed(const Jacobia
 
         return t_djdq_;
 }
-const Twist& ChainJntToJacDotSolver::getPartialDerivativeInertial(const KDL::Jacobian& bs_J_bs, const unsigned int& joint_idx, const unsigned int& column_idx)
+const Twist& ChainJntToJacDotSolver::getPartialDerivativeInertial(const KDL::Jacobian& bs_J_bs, 
+                                                                  const unsigned int& joint_idx, 
+                                                                  const unsigned int& column_idx)
 {
         int j=joint_idx;
         int i=column_idx;
@@ -225,7 +227,7 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivativeInertial(const KDL::Jac
         
         return t_djdq_;
 }
-void ChainJntToJacDotSolver::setRepresentation(const unsigned int& representation)
+void ChainJntToJacDotSolver::setRepresentation(const int& representation)
 {
     if(representation == HYBRID ||
         representation == BODYFIXED ||

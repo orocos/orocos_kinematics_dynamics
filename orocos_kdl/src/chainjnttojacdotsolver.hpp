@@ -105,7 +105,7 @@ public:
      * @param representation The representation for Jdot : HYBRID,BODYFIXED or INTERTIAL
      * @return void
      */
-    void setRepresentation(const unsigned int& representation);
+    void setRepresentation(const int& representation);
     
     /// @copydoc KDL::SolverI::strError()
     virtual const char* strError(const int error) const;
@@ -155,7 +155,7 @@ protected:
     const Twist& getPartialDerivative(const Jacobian& J,
                                const unsigned int& joint_idx,
                                const unsigned int& column_idx,
-                               const unsigned int& representation);
+                               const int& representation);
 private:
     
     const Chain chain;
@@ -164,7 +164,7 @@ private:
     ChainJntToJacSolver jac_solver_;
     Jacobian jac_;
     Jacobian jac_dot_;
-    unsigned int representation_;
+    int representation_;
     ChainFkSolverPos_recursive fk_solver_;
     Frame F_bs_ee_;
     Twist jac_dot_k_;
