@@ -90,7 +90,7 @@ namespace KDL{
 }
 
 
-void changeRepresentation(Jacobian& J,const Frame& F_bs_ee,const unsigned int& representation)
+void changeRepresentation(Jacobian& J,const Frame& F_bs_ee,const int& representation)
 {
     switch(representation)
     {
@@ -157,7 +157,7 @@ void random(JntArray& q)
         random(q(i));
 }
 
-double compare_Jdot_Diff_vs_Solver(const Chain& chain,const double& dt,const unsigned int& representation,bool verbose)
+double compare_Jdot_Diff_vs_Solver(const Chain& chain,const double& dt,const int& representation,bool verbose)
 {
     // This test verifies if the solvers gives approx. the same result as [ J(q+qdot*dot) - J(q) ]/dot
     JntArray q(chain.getNrOfJoints());
@@ -242,12 +242,12 @@ double compare_d2_Jdot_Symbolic_vs_Solver(bool verbose)
     return std::abs(err);    
 }
 
-bool runTest(const Chain& chain,const unsigned int& representation)
+bool runTest(const Chain& chain,const int& representation)
 {
     bool success=true;
     bool verbose = false;
     double err;
-    bool print_err = true;
+    bool print_err = false;
     
     for(double dt=1e-6;dt<0.1;dt*=10)
     {
@@ -275,32 +275,32 @@ bool runTest(const Chain& chain,const unsigned int& representation)
 }
 
 void JacobianDotTest::testD2DiffHybrid(){
-    CPPUNIT_ASSERT(runTest(d2(),ChainJntToJacDotSolver::HYBRID));
+    CPPUNIT_ASSERT(runTest(d2(),0));
 }
 void JacobianDotTest::testD6DiffHybrid(){
-    CPPUNIT_ASSERT(runTest(d6(),ChainJntToJacDotSolver::HYBRID));
+    CPPUNIT_ASSERT(runTest(d6(),0));
 }
 void JacobianDotTest::testKukaDiffHybrid(){
-    CPPUNIT_ASSERT(runTest(KukaLWR_DHnew(),ChainJntToJacDotSolver::HYBRID));
+    CPPUNIT_ASSERT(runTest(KukaLWR_DHnew(),0));
 }
 
 void JacobianDotTest::testD2DiffInertial(){
-    CPPUNIT_ASSERT(runTest(d2(),ChainJntToJacDotSolver::INTERTIAL));
+    CPPUNIT_ASSERT(runTest(d2(),2));
 }
 void JacobianDotTest::testD6DiffInertial(){
-    CPPUNIT_ASSERT(runTest(d6(),ChainJntToJacDotSolver::INTERTIAL));
+    CPPUNIT_ASSERT(runTest(d6(),2));
 }
 void JacobianDotTest::testKukaDiffInertial(){
-    CPPUNIT_ASSERT(runTest(KukaLWR_DHnew(),ChainJntToJacDotSolver::INTERTIAL));
+    CPPUNIT_ASSERT(runTest(KukaLWR_DHnew(),2));
 }
 void JacobianDotTest::testD2DiffBodyFixed(){
-    CPPUNIT_ASSERT(runTest(d2(),ChainJntToJacDotSolver::BODYFIXED));
+    CPPUNIT_ASSERT(runTest(d2(),1));
 }
 void JacobianDotTest::testD6DiffBodyFixed(){
-    CPPUNIT_ASSERT(runTest(d6(),ChainJntToJacDotSolver::BODYFIXED));
+    CPPUNIT_ASSERT(runTest(d6(),1));
 }
 void JacobianDotTest::testKukaDiffBodyFixed(){
-    CPPUNIT_ASSERT(runTest(KukaLWR_DHnew(),ChainJntToJacDotSolver::BODYFIXED));
+    CPPUNIT_ASSERT(runTest(KukaLWR_DHnew(),1));
 }
 
 void JacobianDotTest::testD2Symbolic(){
@@ -308,7 +308,7 @@ void JacobianDotTest::testD2Symbolic(){
     bool success=true;
     bool verbose = false;
     double err_d2_sym;
-    bool print_err = true;
+    bool print_err = false;
     
     double eps_sym_vs_solver = 1e-10;
     
