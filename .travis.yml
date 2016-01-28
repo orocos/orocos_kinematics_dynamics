@@ -6,13 +6,18 @@ language: cpp
 compiler:
   - gcc
   - clang
-
+  
+addons:
+  apt:
+    packages:
+      - libeigen3-dev
+      - libcppunit-dev
+      - python-sip-dev
 env:
   - OROCOS_KDL_BUILD_TYPE=Debug
   - OROCOS_KDL_BUILD_TYPE=Release
 
 before_script:
-  - sudo apt-get install -qq libeigen3-dev libcppunit-dev python-sip-dev
   #build orocos_kdl
   - cd orocos_kdl
   - mkdir build
