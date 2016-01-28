@@ -1,29 +1,16 @@
-sudo: required
-dist: trusty
-
 language: cpp
-
-python:
-  - "2.7_with_system_site_packages"
-  - "3.2_with_system_site_packages"
 
 compiler:
   - gcc
   - clang
   
-addons:
-  apt:
-    packages:
-      - libeigen3-dev
-      - libcppunit-dev
-      - sip-dev
-      - python-sip
-
 env:
   - OROCOS_KDL_BUILD_TYPE=Debug
   - OROCOS_KDL_BUILD_TYPE=Release
 
 before_script:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libeigen3-dev libcppunit-dev python-sip-dev
   #build orocos_kdl
   - cd orocos_kdl
   - mkdir build
