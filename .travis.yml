@@ -3,9 +3,10 @@ dist: trusty
 
 language: cpp
 
-virtualenv:
-  - system_site_packages: true
-  
+python:
+  - "2.7_with_system_site_packages"
+  - "3.2_with_system_site_packages"
+
 compiler:
   - gcc
   - clang
