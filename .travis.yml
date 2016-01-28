@@ -18,13 +18,9 @@ env:
   - OROCOS_KDL_BUILD_TYPE=Release
 
 before_install:
-  - cd ..
-  - curl -O https://downloads.sourceforge.net/project/pyqt/sip/sip-4.17/sip-4.17.tar.gz
-  - tar -xvf sip-4.17.tar.gz
-  - cd sip-4.17
-  - python configure.py
-  - make -j 4
-  - sudo make install
+  - wget https://downloads.sourceforge.net/project/pyqt/sip/sip-4.17/sip-4.17.tar.gz
+  - tar -xzvf sip-4.17.tar.gz
+  - cd sip-4.17 && python configure.py && make -j 4 && sudo make install
 
 before_script:
   #build orocos_kdl
