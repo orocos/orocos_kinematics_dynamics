@@ -12,10 +12,13 @@ addons:
     packages:
       - libeigen3-dev
       - libcppunit-dev
-      - python-sip-dev
+      - sip-dev
 env:
   - OROCOS_KDL_BUILD_TYPE=Debug
   - OROCOS_KDL_BUILD_TYPE=Release
+
+install:
+  - pip install sip
 
 before_script:
   #build orocos_kdl
