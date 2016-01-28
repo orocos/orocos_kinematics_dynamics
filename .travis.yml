@@ -3,13 +3,13 @@ language: cpp
 compiler:
   - gcc
   - clang
-
 env:
   - OROCOS_KDL_BUILD_TYPE=Debug
   - OROCOS_KDL_BUILD_TYPE=Release
 
 before_script:
-  - sudo apt-get install -qq libeigen3-dev libcppunit-dev python-sip-dev
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libeigen3-dev libcppunit-dev python-sip-dev
   #build orocos_kdl
   - cd orocos_kdl
   - mkdir build
@@ -30,7 +30,6 @@ before_script:
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
   - sudo ldconfig
   - cd ../..
-  
 
 script:
   #execute orocos_kdl tests
@@ -39,4 +38,4 @@ script:
   - cd ../..
   #execute python bindings tests
   - cd python_orocos_kdl/build
-  - python ../tests/PyKDLtest.py 
+  - python ../tests/PyKDLtest.py
