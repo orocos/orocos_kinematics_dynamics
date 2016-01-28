@@ -3,6 +3,9 @@ dist: trusty
 
 language: cpp
 
+virtualenv:
+  - system_site_packages: true
+  
 compiler:
   - gcc
   - clang
@@ -13,16 +16,11 @@ addons:
       - libeigen3-dev
       - libcppunit-dev
       - sip-dev
+      - python-sip
+
 env:
   - OROCOS_KDL_BUILD_TYPE=Debug
   - OROCOS_KDL_BUILD_TYPE=Release
-
-before_install:
-  - pushd ..
-  - wget https://downloads.sourceforge.net/project/pyqt/sip/sip-4.17/sip-4.17.tar.gz
-  - tar -xzvf sip-4.17.tar.gz
-  - pushd sip-4.17 && python configure.py && make -j 4 && sudo make install && popd
-  - popd
 
 before_script:
   #build orocos_kdl
