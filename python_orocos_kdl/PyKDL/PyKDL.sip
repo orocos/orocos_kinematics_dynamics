@@ -20,7 +20,7 @@
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-%Module(name = PyKDL,version=0)
+%Module(name = PyKDL,version=0,keyword_arguments="All")
 
 %License(type="LGPL",licensee="Ruben Smits",signature="ruben@intermodalics.eu",timestamp="2014")
 
