@@ -32,30 +32,31 @@
 
 namespace KDL
 {
-    
-class ChainJntToJacDotSolver : public SolverI
-{
-/*
- * Computes the Jacobian time derivative (Jdot) by calculating the partial derivatives
- * regarding to a joint angle, in the Hybrid, Body-fixed or Inertial representation. 
- * This work is based on : 
- * 
+
+/**
+ * @brief Computes the Jacobian time derivative (Jdot) by calculating the
+ * partial derivatives regarding to a joint angle, in the Hybrid, Body-fixed
+ * or Inertial representation.
+ *
+ * This work is based on :
  * Symbolic differentiation of the velocity mapping for a serial kinematic chain
  * H. Bruyninckx, J. De Schutter
  * doi:10.1016/0094-114X(95)00069-B
- * 
+ *
  * url : http://www.sciencedirect.com/science/article/pii/0094114X9500069B
-*/
+ */
+class ChainJntToJacDotSolver : public SolverI
+{
 public:
-    static const int E_JAC_DOT_FAILED= -100;
-    
+    static const int E_JAC_DOT_FAILED = -100;
+
     // Hybrid representation ref Frame: base, ref Point: end-effector
     static const int HYBRID = 0;
     // Body-fixed representation ref Frame: end-effector, ref Point: end-effector
     static const int BODYFIXED = 1;
     // Intertial representation ref Frame: base, ref Point: base
     static const int INTERTIAL = 2;
-    
+
     explicit ChainJntToJacDotSolver(const Chain& chain);
     virtual ~ChainJntToJacDotSolver();
     /**
@@ -71,9 +72,8 @@ public:
      * @brief Computes \f$ {}_{bs}\dot{J}^{ee} \f$ 
      * 
      * @param q_in Current joint positions and velocities
-     * @param jdot The jacobian time derivative in Hybrid representation 
-     *        (i.e. with the base frame as the reference frame and the end effector frame 
-     * as the velocity reference frame 
+     * @param jdot The jacobian time derivative in the configured representation
+     *        (HYBRID, BODYFIXED or INERTIAL)
      * @param seg_nr The final segment to compute
      * @return int 0 if no errors happened
      */
@@ -114,8 +114,8 @@ protected:
      * @brief Computes \f$ \frac{\partial {}_{bs}J^{i,ee}}{\partial q^{j}}.\dot{q}^{j} \f$
      * 
      * @param bs_J_ee The Jacobian expressed in the base frame with the end effector as the reference point (default in KDL Jacobian Solver)
-     * @param joint_idx The indice of the current joint (j in the formula)
-     * @param column_idx The indice of the current column (i in the formula)
+     * @param joint_idx The index of the current joint (j in the formula)
+     * @param column_idx The index of the current column (i in the formula)
      * @return Twist The twist representing dJi/dqj .qdotj
      */
     const Twist& getPartialDerivativeHybrid(const Jacobian& bs_J_ee,
@@ -168,8 +168,7 @@ private:
     ChainFkSolverPos_recursive fk_solver_;
     Frame F_bs_ee_;
     Twist jac_dot_k_;
-    Rotation e_j_skew_,v_j_skew_;
-    Twist jac_j_,jac_i_;
+    Twist jac_j_, jac_i_;
     Twist t_djdq_;
 };
 

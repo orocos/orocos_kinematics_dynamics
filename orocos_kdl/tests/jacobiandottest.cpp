@@ -9,12 +9,12 @@ void JacobianDotTest::tearDown(){}
 
 
 namespace KDL{
-        static const double L0 = 1.0;
-        static const double L1 = 0.5;
-        static const double L2 = 0.4;
-        static const double L3 = 0;
-        static const double L4 = 0;
-        static const double L5 = 0;
+    static const double L0 = 1.0;
+    static const double L1 = 0.5;
+    static const double L2 = 0.4;
+    static const double L3 = 0;
+    static const double L4 = 0;
+    static const double L5 = 0;
     Chain d2(){
         Chain d2;
         d2.addSegment(Segment(Joint(Joint::RotZ),Frame(Vector(L0,0,0))));
@@ -251,24 +251,22 @@ bool runTest(const Chain& chain,const int& representation)
     
     for(double dt=1e-6;dt<0.1;dt*=10)
     {
-            
-            double eps_diff_vs_solver = 3.0*dt; // Apparently :)
+        double eps_diff_vs_solver = 3.0*dt; // Apparently :)
 
-            for(int i=0;i<100;i++)
-            {
-                err = compare_Jdot_Diff_vs_Solver(chain,dt,representation,verbose);
+        for(int i=0;i<100;i++)
+        {
+            err = compare_Jdot_Diff_vs_Solver(chain,dt,representation,verbose);
 
-                success &= err<=eps_diff_vs_solver;
-                
-                if(!success || print_err){
-                    std::cout<<" dt:"<< dt<<" err:"<<err
-                    <<" eps_diff_vs_solver:"<<eps_diff_vs_solver
-                    <<std::endl;
-                    if(!success)
-                        break;
-                }
-                    
+            success &= err<=eps_diff_vs_solver;
+
+            if(!success || print_err){
+                std::cout<<" dt:"<< dt<<" err:"<<err
+                <<" eps_diff_vs_solver:"<<eps_diff_vs_solver
+                <<std::endl;
+                if(!success)
+                    break;
             }
+        }
     }
 
     return success;
