@@ -136,13 +136,11 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivativeHybrid(const KDL::Jacob
     if(j < i)
     {
         // P_{\Delta}({}_{bs}J^{j})  ref (20)
-        //Skew(e_j_skew_,jac_j_.rot);
         t_djdq_.vel = jac_j_.rot * jac_i_.vel;
         t_djdq_.rot = jac_j_.rot * jac_i_.rot;
     }else if(j > i)
     {
         // M_{\Delta}({}_{bs}J^{j})  ref (23)
-        //Skew(v_j_skew_,-jac_j_.vel);
         SetToZero(t_djdq_.rot);
         t_djdq_.vel = -jac_j_.vel * jac_i_.rot;
     }else if(j == i)
@@ -169,9 +167,6 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivativeBodyFixed(const Jacobia
         jac_i_ = ee_J_ee.getColumn(i);
 
         // - S_d_(ee_J^j) * ee_J^ee  ref (23)
-        //Skew(v_j_skew_,jac_j_.vel);
-        //Skew(e_j_skew_,jac_j_.rot);
-
         t_djdq_.vel = jac_j_.rot * jac_i_.vel + jac_j_.vel * jac_i_.rot;
         t_djdq_.rot = jac_j_.rot * jac_i_.rot;
         t_djdq_ = -t_djdq_;
@@ -194,9 +189,6 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivativeInertial(const KDL::Jac
         jac_i_ = bs_J_bs.getColumn(i);
 
         // S_d_(bs_J^j) * bs_J^bs  ref (23)
-        //Skew(v_j_skew_,jac_j_.vel);
-        //Skew(e_j_skew_,jac_j_.rot);
-
         t_djdq_.vel = jac_j_.rot * jac_i_.vel + jac_j_.vel * jac_i_.rot;
         t_djdq_.rot = jac_j_.rot * jac_i_.rot;
     }
