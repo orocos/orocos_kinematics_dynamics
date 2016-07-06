@@ -28,8 +28,8 @@
  * provides Maciejewski's implementation for SVD.
  */
 
-#ifndef SVD_BOOST_MACIE
-#define SVD_BOOST_MACIE
+#ifndef SVD_EIGEN_MACIE
+#define SVD_EIGEN_MACIE
 
 #include <Eigen/Core>
 using namespace Eigen;
