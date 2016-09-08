@@ -44,9 +44,9 @@ namespace KDL
         out=FrameVel::Identity();
 
         if(!(in.q.rows()==chain.getNrOfJoints()&&in.qdot.rows()==chain.getNrOfJoints()))
-            return -1;
+            return (error = E_SIZE_MISMATCH);
         else if(segmentNr>chain.getNrOfSegments())
-            return -1;
+            return (error = E_OUT_OF_RANGE);
         else{
             int j=0;
             for (unsigned int i=0;i<segmentNr;i++) {
@@ -60,7 +60,7 @@ namespace KDL
                                      chain.getSegment(i).twist(0.0,0.0));
                 }
             }
-            return 0;
+            return (error = E_NOERROR);
         }
     }
 

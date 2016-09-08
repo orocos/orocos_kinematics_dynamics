@@ -40,7 +40,6 @@ namespace KDL
     class ChainIkSolverVel_pinv : public ChainIkSolverVel
     {
     public:
-        static const int E_SVD_FAILED = -100; //! Child SVD failed
         /// solution converged but (pseudo)inverse is singular
         static const int E_CONVERGE_PINV_SINGULAR = +100;
 
@@ -99,6 +98,7 @@ namespace KDL
     private:
         const Chain chain;
         ChainJntToJacSolver jnt2jac;
+        unsigned int nj;
         Jacobian jac;
         SVD_HH svd;
         std::vector<JntArray> U;

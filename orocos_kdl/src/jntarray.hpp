@@ -90,6 +90,7 @@ class MyTask : public RTT::TaskContext
          * @post all elements in data have 0 value
          */
         explicit JntArray(unsigned int size);
+
         /** Copy constructor 
          * @note Will correctly copy an empty object
          */
