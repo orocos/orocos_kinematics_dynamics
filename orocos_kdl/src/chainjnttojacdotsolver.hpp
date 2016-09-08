@@ -49,6 +49,8 @@ class ChainJntToJacDotSolver : public SolverI
 {
 public:
     static const int E_JAC_DOT_FAILED = -100;
+    static const int E_JACSOLVER_FAILED = -101;
+    static const int E_FKSOLVERPOS_FAILED = -102;
 
     // Hybrid representation ref Frame: base, ref Point: end-effector
     static const int HYBRID = 0;
@@ -78,7 +80,7 @@ public:
      * @return int 0 if no errors happened
      */
     virtual int JntToJacDot(const KDL::JntArrayVel& q_in, KDL::Jacobian& jdot, int seg_nr = -1);
-    int setLockedJoints(const std::vector<bool> locked_joints);
+    int setLockedJoints(const std::vector<bool>& locked_joints);
     
     /**
      * @brief JntToJacDot() will compute in the Hybrid representation (ref Frame: base, ref Point: end-effector)
@@ -107,8 +109,13 @@ public:
      */
     void setRepresentation(const int& representation);
     
+    /// @copydoc KDL::SolverI::updateInternalDataStructures
+    virtual void updateInternalDataStructures();
+
     /// @copydoc KDL::SolverI::strError()
     virtual const char* strError(const int error) const;
+
+
 protected:
      /**
      * @brief Computes \f$ \frac{\partial {}_{bs}J^{i,ee}}{\partial q^{j}}.\dot{q}^{j} \f$
@@ -158,7 +165,7 @@ protected:
                                const int& representation);
 private:
     
-    const Chain chain;
+    const Chain& chain;
     std::vector<bool> locked_joints_;
     unsigned int nr_of_unlocked_joints_;
     ChainJntToJacSolver jac_solver_;

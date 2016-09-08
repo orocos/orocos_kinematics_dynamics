@@ -135,6 +135,7 @@ void SolverTest::UpdateChainTest()
     ChainFkSolverPos_recursive fksolverpos(chain2);
     ChainFkSolverVel_recursive fksolvervel(chain2);
     ChainJntToJacSolver jacsolver1(chain2);
+    ChainJntToJacDotSolver jacdotsolver1(chain2);
     ChainIkSolverVel_pinv iksolver2(chain2);
     ChainIkSolverVel_pinv_givens iksolver_pinv_givens2(chain2);
     ChainIkSolverVel_pinv_nso  iksolver_pinv_nso(chain2);
@@ -169,9 +170,13 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()+1));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()+1));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()+1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()+1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()+1));
     chain2.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotX),
             Frame(Vector(0.0,0.0,0.1))));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolver2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolver_pinv_nso.CartToJnt(q_in,t,q_out));
@@ -186,6 +191,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToMass(q_in, m));
 
     jacsolver1.updateInternalDataStructures();
+    jacdotsolver1.updateInternalDataStructures();
     iksolver2.updateInternalDataStructures();
     iksolver_pinv_givens2.updateInternalDataStructures();
     iksolver_pinv_nso.updateInternalDataStructures();
@@ -200,6 +206,8 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_pinv_nso.CartToJnt(q_in,t,q_out));
@@ -244,12 +252,15 @@ void SolverTest::UpdateChainTest()
     beta.resize(nr_of_constraints);
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
     jac.resize(chain2.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
     q_out.resize(chain2.getNrOfJoints());
     q_in3.resize(chain2.getNrOfJoints());
     m.resize(chain2.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver_pinv_nso.CartToJnt(q_in,t,q_out));
