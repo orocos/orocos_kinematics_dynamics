@@ -97,12 +97,6 @@ ADD_SUBDIRECTORY( tests )
 ADD_SUBDIRECTORY( models )
 ADD_SUBDIRECTORY( examples )
 
-
-export(TARGETS orocos-kdl
-  FILE "${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake")
-
-export(PACKAGE orocos_kdl)
-
 set(KDL_INCLUDE_DIRS ${KDL_INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
 
 CONFIGURE_FILE(KDLConfig.cmake.in
