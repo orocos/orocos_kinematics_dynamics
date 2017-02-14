@@ -12,21 +12,28 @@ matrix:
   include:
     - os: linux
       dist: trusty
+      env: LIB_EXT=so
     - os: osx
-      osx_image: xcode7
+      osx_image: xcode7.3
+      env: LIB_EXT=dylib
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode8.2
+      env: LIB_EXT=dylib
+
+virtualenv:
+  system_site_packages: true
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cppunit eigen sip ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link python -f ; fi
 
 before_script:
   #build orocos_kdl
   - cd orocos_kdl
   - mkdir build
   - cd build
-  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/install ./..
+  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install ./..
   # compile and install orocos_kdl
   - make
   - make install
@@ -35,11 +42,15 @@ before_script:
   - cd python_orocos_kdl
   - mkdir build
   - cd build
-  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/install ./..
+  - echo $(python -c "import os; from distutils import sysconfig; print(os.path.join(sysconfig.get_config_var('LIBDIR'),'libpython'+sysconfig.get_config_var('VERSION')))").$LIB_EXT
+  - ls $(python -c "import os; from distutils import sysconfig; print(os.path.join(sysconfig.get_config_var('LIBDIR'),'libpython'+sysconfig.get_config_var('VERSION')))").$LIB_EXT
+  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install \
+    -DPYTHON_LIBRARY=$(python -c "import os; from distutils import sysconfig; print(os.path.join(sysconfig.get_config_var('LIBDIR'),'libpython'+sysconfig.get_config_var('VERSION')))").$LIB_EXT
+    -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") ./..
   #compile and install python bindings
   - make
   - make install
-  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${TRAVIS_BUILD_DIR}/install/lib
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRAVIS_BUILD_DIR/install/lib
   - cd ../..
 
 script:
