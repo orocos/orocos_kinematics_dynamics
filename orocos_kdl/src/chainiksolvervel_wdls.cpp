@@ -76,6 +76,7 @@ namespace KDL
     int ChainIkSolverVel_wdls::setWeightJS(const MatrixXd& Mq){
         if(nj != chain.getNrOfJoints())
             return (error = E_NOT_UP_TO_DATE);
+
         if (Mq.size() != weight_js.size())
             return (error = E_SIZE_MISMATCH);
         weight_js = Mq;

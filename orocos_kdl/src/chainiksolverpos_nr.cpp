@@ -41,8 +41,9 @@ namespace KDL
 
     int ChainIkSolverPos_NR::CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)
     {
-        if(nj != chain.getNrOfJoints())
+        if (nj != chain.getNrOfJoints())
             return (error = E_NOT_UP_TO_DATE);
+
         if(q_init.rows() != nj || q_out.rows() != nj)
             return (error = E_SIZE_MISMATCH);
 

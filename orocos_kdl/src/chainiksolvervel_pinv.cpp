@@ -63,6 +63,7 @@ namespace KDL
     {
         if (nj != chain.getNrOfJoints())
             return (error = E_NOT_UP_TO_DATE);
+
         if (nj != q_in.rows() || nj != qdot_out.rows())
             return (error = E_SIZE_MISMATCH);
 

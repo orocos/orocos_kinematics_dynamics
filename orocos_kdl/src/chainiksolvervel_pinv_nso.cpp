@@ -85,6 +85,7 @@ namespace KDL
     {
         if (nj != chain.getNrOfJoints())
             return (error = E_NOT_UP_TO_DATE);
+
         if (nj != q_in.rows() || nj != qdot_out.rows() || nj != opt_pos.rows() || nj != weights.rows())
             return (error = E_SIZE_MISMATCH);
         //Let the ChainJntToJacSolver calculate the jacobian "jac" for

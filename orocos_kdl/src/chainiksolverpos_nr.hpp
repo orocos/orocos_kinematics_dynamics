@@ -80,6 +80,7 @@ namespace KDL {
         virtual void updateInternalDataStructures();
     private:
         const Chain& chain;
+
         unsigned int nj;
         ChainIkSolverVel& iksolver;
         ChainFkSolverPos& fksolver;
