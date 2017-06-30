@@ -127,7 +127,7 @@ ENDIF()
 
 # Needed so that the generated config.h can be used
 TARGET_INCLUDE_DIRECTORIES(orocos-kdl PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> )
-TARGET_LINK_LIBRARIES(orocos-kdl ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(orocos-kdl PUBLIC ${Boost_LIBRARIES} Eigen3::Eigen)
 
 INSTALL(TARGETS orocos-kdl
   EXPORT OrocosKDLTargets
