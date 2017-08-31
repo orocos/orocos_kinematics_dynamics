@@ -85,6 +85,11 @@ namespace KDL
         maxiter=maxiter_in;
     }
 
+    void ChainIkSolverVel_wdls::getSigma(Eigen::VectorXd& Sout)
+    {
+        Sout=S;
+    }
+
     int ChainIkSolverVel_wdls::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
         if(nj != q_in.rows() || nj != qdot_out.rows())
