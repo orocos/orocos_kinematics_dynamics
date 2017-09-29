@@ -74,7 +74,7 @@ endif(KDL_USE_NEW_TREE_INTERFACE)
 
 INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
 
-OPTION(ENABLE_TESTS OFF "Enable building of tests")
+OPTION(ENABLE_TESTS ON "Enable building of tests")
 IF( ENABLE_TESTS )
   # If not in standard paths, set CMAKE_xxx_PATH's in environment, eg.
   # export CMAKE_INCLUDE_PATH=/opt/local/include
