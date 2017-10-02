@@ -370,7 +370,7 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
             && (std::abs(data[0] + data[4] + data[8]-3) < epsilon2))
         {
             // this singularity is identity matrix so angle = 0, axis is arbitrary
-            axis = KDL::Vector(1,0,0);
+            axis = KDL::Vector(0,0,1);
             angle = 0.0;
             return angle;
         }
