@@ -51,7 +51,7 @@ serialchaintest.cpp :
         - TestCartVelAndJac
                 checks whether jnt2cartvel and jnt2jac are consistent.
         - TestCartVelAndInverse
-                checks wether jnt2cartvel and cartvel2jnt are consistent.
+                checks whether jnt2cartvel and cartvel2jnt are consistent.
 
     - These routines are used on :
             - SerialChain 

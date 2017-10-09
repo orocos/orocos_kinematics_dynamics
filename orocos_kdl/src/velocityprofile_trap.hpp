@@ -62,7 +62,7 @@ class VelocityProfile_Trap : public VelocityProfile
 		// For "running" a motion profile :
 		double a1,a2,a3; // coef. from ^0 -> ^2 of first part
 		double b1,b2,b3; // of 2nd part
-		double c1,c2,c3; // of 3th part
+		double c1,c2,c3; // of 3rd part
 		double duration;
 		double t1,t2;
 
