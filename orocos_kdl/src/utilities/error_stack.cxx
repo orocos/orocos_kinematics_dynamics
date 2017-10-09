@@ -48,11 +48,17 @@ void IOTraceOutput(std::ostream& os) {
 
 
 void IOTracePopStr(char* buffer,int size) {
+    if (size <= 0)
+    {
+        // TODO: all sizes everywhere should be of size_t!
+        return;
+    }
     if (errorstack.empty()) {
         *buffer = 0;
         return;
     }
     strncpy(buffer,errorstack.top().c_str(),size);
+    buffer[size - 1] = `\0`;
     errorstack.pop();
 }
 
