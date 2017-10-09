@@ -110,8 +110,8 @@ CONFIGURE_FILE(KDLConfig.cmake.in
 CONFIGURE_FILE(KDLConfigVersion.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
 
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
+INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
 
 INSTALL(FILES package.xml DESTINATION share/orocos_kdl)
