@@ -206,7 +206,7 @@ public:
     }
 
     int test(JointVector& q,JointVector& qdot) {
-        std::cout << "Testing wether Jnt2CartVel and Jnt2Jac are consistent " << std::endl;
+        std::cout << "Testing whether Jnt2CartVel and Jnt2Jac are consistent " << std::endl;
         std::cout << "q[1] = " << q[1] << std::endl;
         double deltaq = 1E-4;
         double epsJ   = 1E-4;
@@ -286,7 +286,7 @@ public:
     }
 
     int test(const JointVector& q,const JointVector& qdot) {
-        std::cout << "Testing wether Jnt2CartVel and CartVel2Jnt are consistent " << std::endl;
+        std::cout << "Testing whether Jnt2CartVel and CartVel2Jnt are consistent " << std::endl;
         double epsJ   = 1E-7;
 		int result;
 

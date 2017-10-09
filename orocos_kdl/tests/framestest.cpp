@@ -228,7 +228,7 @@ void FramesTest::TestEuler() {
 	TESTEULERZYX(0,0,0.3)
 	TESTEULERZYX(0,0,0)
 	TESTEULERZYX(0.3,0.999*M_PI/2,0.1)
-	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be choosen to be zero !
+	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be chosen to be zero !
 	// so we test with gamma==0 !
 	TESTEULERZYX(0.3,0.9999999999*M_PI/2,0)
 	TESTEULERZYX(0.3,0.99999999*M_PI/2,0)
