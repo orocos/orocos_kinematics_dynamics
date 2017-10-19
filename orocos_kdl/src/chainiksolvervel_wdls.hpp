@@ -185,7 +185,7 @@ namespace KDL
         /**
          * Request the six singular values of the Jacobian
          */
-        void getSigma(Eigen::VectorXd& Sout);
+        int getSigma(Eigen::VectorXd& Sout);
 
         /**
          * Request the value of eps
