@@ -416,6 +416,18 @@ void FramesTest::TestGetRotAngle() {
     CPPUNIT_ASSERT(0==isnan(kdlAxis[1]));
     CPPUNIT_ASSERT(0==isnan(kdlAxis[2]));
 
+  // Test GetRotAngle on slightly non-orthogonal rotation matrices
+  {
+    Vector axis;
+    double angle = KDL::Rotation( 1, 0, 0 + 1e-6, 0, 1, 0, 0, 0,  1 + 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, 0)", 0.0, angle, epsilon);
+  }
+
+  {
+    Vector axis;
+    double angle = KDL::Rotation(-1, 0, 0 + 1e-6, 0, 1, 0, 0, 0, -1 - 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, PI)", M_PI, angle, epsilon);
+  }
 }
 
 void FramesTest::TestQuaternion() {
