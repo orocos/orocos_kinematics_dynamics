@@ -393,6 +393,19 @@ void FramesTest::TestRotation() {
 	TestOneRotation("rot([-1,-1,-1],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
 	// same as +180
 	TestOneRotation("rot([-1,-1,-1],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),-180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
+
+  // Test GetRotAngle on slightly non-orthogonal rotation matrices
+  {
+    Vector axis;
+    double angle = KDL::Rotation( 1, 0, 0 + 1e-6, 0, 1, 0, 0, 0,  1 + 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, 0)", 0.0, angle, epsilon);
+  }
+
+  {
+    Vector axis;
+    double angle = KDL::Rotation(-1, 0, 0 + 1e-6, 0, 1, 0, 0, 0, -1 - 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, PI)", M_PI, angle, epsilon);
+  }
 }
 
 void FramesTest::TestQuaternion() {
