@@ -29,6 +29,7 @@
 
 #define _USE_MATH_DEFINES  // For MSVC
 #include <math.h>
+#include <algorithm>
 
 namespace KDL {
 
@@ -439,7 +440,11 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
         return angle; // return 180 deg rotation
     }
 
-    angle = acos(( data[0] + data[4] + data[8] - 1)/2);
+    // If the matrix is slightly non-orthogonal, `f` may be out of the (-1, +1) range.
+    // Therefore, clamp it between those values to avoid NaNs.
+    double f = (data[0] + data[4] + data[8] - 1) / 2;
+    angle = acos(std::max(-1.0, std::min(1.0, f)));
+
     x = (data[7] - data[5]);
     y = (data[2] - data[6]);
     z = (data[3] - data[1]);
