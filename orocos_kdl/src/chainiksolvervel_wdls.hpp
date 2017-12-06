@@ -183,6 +183,11 @@ namespace KDL
         double getSigmaMin()const {return sigmaMin;};
 
         /**
+         * Request the six singular values of the Jacobian
+         */
+        int getSigma(Eigen::VectorXd& Sout);
+
+        /**
          * Request the value of eps
          */
         double getEps()const {return eps;};
