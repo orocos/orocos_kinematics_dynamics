@@ -393,6 +393,29 @@ void FramesTest::TestRotation() {
 	TestOneRotation("rot([-1,-1,-1],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
 	// same as +180
 	TestOneRotation("rot([-1,-1,-1],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),-180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
+
+	TestOneRotation("rot([0.707107, 0, 0.707107", KDL::Rotation::RPY(-2.9811968953315162, -atan(1)*2, -0.1603957582582825), 180*deg2rad, Vector(0.707107,0,0.707107) );
+}
+
+void FramesTest::TestGetRotAngle() {
+    static const double pi = atan(1)*4;
+    double roll = -2.9811968953315162;
+    double pitch = -pi/2;
+    double yaw = -0.1603957582582825;
+
+    // rpy -> rotation
+    KDL::Rotation kdlRotation1 = KDL::Rotation::RPY(roll, pitch, yaw);
+
+    // rotation -> angle-axis (with KDL::GetRotAngle)
+    KDL::Vector kdlAxis;
+    double theta = kdlRotation1.GetRotAngle(kdlAxis);
+
+
+    CPPUNIT_ASSERT(0==isnan(theta));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[0]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[1]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[2]));
+
 }
 
 void FramesTest::TestQuaternion() {
