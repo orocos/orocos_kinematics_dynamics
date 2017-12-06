@@ -11,7 +11,7 @@
 #  EIGEN3_VERSION - eigen version
 #
 # This module reads hints about search locations from 
-# the following enviroment variables:
+# the following environment variables:
 #
 # EIGEN3_ROOT
 # EIGEN3_ROOT_DIR

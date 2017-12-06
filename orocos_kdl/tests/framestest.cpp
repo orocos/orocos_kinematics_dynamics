@@ -228,7 +228,7 @@ void FramesTest::TestEuler() {
 	TESTEULERZYX(0,0,0.3)
 	TESTEULERZYX(0,0,0)
 	TESTEULERZYX(0.3,0.999*M_PI/2,0.1)
-	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be choosen to be zero !
+	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be chosen to be zero !
 	// so we test with gamma==0 !
 	TESTEULERZYX(0.3,0.9999999999*M_PI/2,0)
 	TESTEULERZYX(0.3,0.99999999*M_PI/2,0)
@@ -394,6 +394,8 @@ void FramesTest::TestRotation() {
 	// same as +180
 	TestOneRotation("rot([-1,-1,-1],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),-180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
 
+  TestOneRotation("rot([0.707107, 0, 0.707107", KDL::Rotation::RPY(-2.9811968953315162, -atan(1)*2, -0.1603957582582825), 180*deg2rad, Vector(0.707107,0,0.707107) );
+  
   // Test GetRotAngle on slightly non-orthogonal rotation matrices
   {
     Vector axis;
@@ -406,6 +408,28 @@ void FramesTest::TestRotation() {
     double angle = KDL::Rotation(-1, 0, 0 + 1e-6, 0, 1, 0, 0, 0, -1 - 1e-6).GetRotAngle(axis);
     CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, PI)", M_PI, angle, epsilon);
   }
+  
+}
+
+void FramesTest::TestGetRotAngle() {
+    static const double pi = atan(1)*4;
+    double roll = -2.9811968953315162;
+    double pitch = -pi/2;
+    double yaw = -0.1603957582582825;
+
+    // rpy -> rotation
+    KDL::Rotation kdlRotation1 = KDL::Rotation::RPY(roll, pitch, yaw);
+
+    // rotation -> angle-axis (with KDL::GetRotAngle)
+    KDL::Vector kdlAxis;
+    double theta = kdlRotation1.GetRotAngle(kdlAxis);
+
+
+    CPPUNIT_ASSERT(0==isnan(theta));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[0]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[1]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[2]));
+
 }
 
 void FramesTest::TestQuaternion() {
