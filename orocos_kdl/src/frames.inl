@@ -927,6 +927,11 @@ IMETHOD Frame2 operator *(const Frame2& lhs,const Frame2& rhs)
 
 IMETHOD Vector2 Frame2::operator *(const Vector2 & arg)
 {
+    return static_cast<const Frame2*>(this)->operator *(arg);
+}
+
+IMETHOD Vector2 Frame2::operator *(const Vector2 & arg) const
+{
     return M*arg+p;
 }
 

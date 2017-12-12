@@ -1118,7 +1118,9 @@ public:
      inline Frame2 Inverse() const;
      inline Vector2 Inverse(const Vector2& arg) const;
      inline Frame2& operator = (const Frame2& arg);
+     /// \deprecated Deprecated function in favor of const alternative.
      inline Vector2 operator * (const Vector2& arg);
+     inline Vector2 operator * (const Vector2& arg) const;
      inline friend Frame2 operator *(const Frame2& lhs,const Frame2& rhs);
      inline void SetIdentity();
      inline void Integrate(const Twist& t_this,double frequency);
