@@ -925,7 +925,7 @@ IMETHOD Frame2 operator *(const Frame2& lhs,const Frame2& rhs)
     return Frame2(lhs.M*rhs.M,lhs.M*rhs.p+lhs.p);
 }
 
-IMETHOD Vector2 Frame2::operator *(const Vector2 & arg)
+IMETHOD Vector2 Frame2::operator *(const Vector2 & arg) const
 {
     return M*arg+p;
 }
