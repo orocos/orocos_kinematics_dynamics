@@ -49,12 +49,12 @@ public:
 
     JointType getType() const;
     std::string getTypeName() const;
-    const char* __repr__();
+    const std::string* __repr__();
     %MethodCode
         std::ostringstream oss;
         oss<<(*sipCpp);
         std::string s(oss.str());
-        sipRes=s.c_str();
+        sipRes=&s;
     %End
 };
 
@@ -109,12 +109,12 @@ public:
     Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Segment& in);
 
-    const char* __repr__();
+    const std::string* __repr__();
 %MethodCode
     std::stringstream ss;
     ss<<(*sipCpp);
     std::string s(ss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
     
     const Frame& getFrameToTip()const /Factory/;
@@ -198,12 +198,12 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    const char* __repr__();
+    const std::string* __repr__();
 %MethodCode
     std::stringstream ss;
     ss<<sipCpp->data;
     std::string s(ss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
 };
 
@@ -282,12 +282,12 @@ public:
     (*sipCpp)(i,j)=a1;
 %End
 
-    const char* __repr__();
+    const std::string* __repr__();
 %MethodCode
     std::stringstream ss;
     ss<<sipCpp->data;
     std::string s(ss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
     Twist getColumn(unsigned int i) const /Factory/;
     void setColumn(unsigned int i,const Twist& t);
