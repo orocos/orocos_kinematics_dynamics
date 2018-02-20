@@ -72,6 +72,39 @@ namespace KDL
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
 
         /**
+         * Request the joint weights for optimization criterion
+         *
+         *
+         * @return const reference to the joint weights
+         */
+        const JntArray& getWeights()const
+        {
+            return weights;
+        }
+
+        /**
+         * Request the optimal joint positions
+         *
+         *
+         * @return const reference to the optimal joint positions
+         */
+        const JntArray& getOptPos()const
+        {
+            return opt_pos;
+        }
+
+        /**
+         * Request null space velocity gain
+         *
+         *
+         * @return const reference to the null space velocity gain
+         */
+        const double& getAlpha()const
+        {
+            return alpha;
+        }
+
+        /**
          *Set joint weights for optimization criterion
          *
          *@param weights the joint weights
