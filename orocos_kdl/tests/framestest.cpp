@@ -40,6 +40,16 @@ void FramesTest::TestVector() {
 	CPPUNIT_ASSERT_EQUAL(nu2.Norm(),10.0);
 }
 
+void FramesTest::TestVector2DNorm() {
+    Vector2 nu(0, 0);
+	CPPUNIT_ASSERT_EQUAL(nu.Norm(), 0.0);
+ 	
+	CPPUNIT_ASSERT_EQUAL(Vector2(1, 0).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(0, 1).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(-1, 0).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(0, -1).Norm(), 1.0);
+}
+
 void FramesTest::TestTwist2(Twist& t) {
 	Twist t2(Vector(16,-3,5),Vector(-4,2,1));
 

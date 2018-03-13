@@ -11,6 +11,7 @@ class FramesTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( FramesTest);
     CPPUNIT_TEST(TestVector);
+    CPPUNIT_TEST(TestVector2DNorm);
     CPPUNIT_TEST(TestTwist);
     CPPUNIT_TEST(TestWrench);
     CPPUNIT_TEST(TestRotation);
@@ -27,6 +28,7 @@ public:
     void tearDown();
 
     void TestVector();
+    void TestVector2DNorm();
     void TestTwist();
     void TestWrench();
     void TestRotation();
