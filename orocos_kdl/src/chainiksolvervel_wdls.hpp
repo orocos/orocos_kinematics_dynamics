@@ -107,7 +107,7 @@ namespace KDL
         /**
          * Set the joint space weighting matrix
          *
-         * @param weight_js joint space weighting symetric matrix,
+         * @param weight_js joint space weighting symmetric matrix,
          * default : identity.  M_q : This matrix being used as a
          * weight for the norm of the joint space speed it HAS TO BE
          * symmetric and positive definite. We can actually deal with
@@ -126,14 +126,14 @@ namespace KDL
          * it gets an infinite weight in the norm computation.  For
          * more detailed explanation : vincent.padois@upmc.fr
          *
-         * @return succes/error code
+         * @return success/error code
          */
         int setWeightJS(const Eigen::MatrixXd& Mq);
 
         /**
          * Set the task space weighting matrix
          *
-         * @param weight_ts task space weighting symetric matrix,
+         * @param weight_ts task space weighting symmetric matrix,
          * default: identity M_x : This matrix being used as a weight
          * for the norm of the error (in terms of task space speed) it
          * HAS TO BE symmetric and positive definite. We can actually
@@ -153,7 +153,7 @@ namespace KDL
          * weighted norm sqrt(|x_dot-Jq_dot|'*(M_x^2)*|x_dot-Jq_dot|).
          * For more detailed explanation : vincent.padois@upmc.fr
          *
-         * @return succes/error code
+         * @return success/error code
          */
         int setWeightTS(const Eigen::MatrixXd& Mx);
 
@@ -181,6 +181,11 @@ namespace KDL
          * Request the minimum of the first six singular values
          */
         double getSigmaMin()const {return sigmaMin;};
+
+        /**
+         * Request the six singular values of the Jacobian
+         */
+        int getSigma(Eigen::VectorXd& Sout);
 
         /**
          * Request the value of eps

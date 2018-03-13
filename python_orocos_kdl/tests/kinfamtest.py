@@ -72,9 +72,9 @@ class KinfamTestFunctions(unittest.TestCase):
         for i in range(q.rows()):
             oldqi=q[i];
             q[i]=oldqi+deltaq
-            self.assert_(0==self.fksolverpos.JntToCart(q,F2))
+            self.assertTrue(0==self.fksolverpos.JntToCart(q,F2))
             q[i]=oldqi-deltaq
-            self.assert_(0==self.fksolverpos.JntToCart(q,F1))
+            self.assertTrue(0==self.fksolverpos.JntToCart(q,F1))
             q[i]=oldqi
             Jcol1 = diff(F1,F2,2*deltaq)
             Jcol2 = Twist(Vector(jac[0,i],jac[1,i],jac[2,i]),
@@ -98,7 +98,7 @@ class KinfamTestFunctions(unittest.TestCase):
         t = Twist.Zero();
 
         self.jacsolver.JntToJac(qvel.q,jac)
-        self.assert_(self.fksolvervel.JntToCart(qvel,cart)==0)
+        self.assertTrue(self.fksolvervel.JntToCart(qvel,cart)==0)
         MultiplyJacobian(jac,qvel.qdot,t)
         self.assertEqual(cart.deriv(),t)
 
@@ -116,8 +116,8 @@ class KinfamTestFunctions(unittest.TestCase):
         
         cart = FrameVel()
         
-        self.assert_(0==self.fksolvervel.JntToCart(qvel,cart))
-        self.assert_(0==self.iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved))
+        self.assertTrue(0==self.fksolvervel.JntToCart(qvel,cart))
+        self.assertTrue(0==self.iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved))
         
         self.assertEqual(qvel.qdot,qdot_solved);
         
@@ -136,9 +136,9 @@ class KinfamTestFunctions(unittest.TestCase):
         F1=Frame.Identity()
         F2=Frame.Identity()
     
-        self.assert_(0==self.fksolverpos.JntToCart(q,F1))
-        self.assert_(0==self.iksolverpos.CartToJnt(q_init,F1,q_solved))
-        self.assert_(0==self.fksolverpos.JntToCart(q_solved,F2))
+        self.assertTrue(0==self.fksolverpos.JntToCart(q,F1))
+        self.assertTrue(0==self.iksolverpos.CartToJnt(q_init,F1,q_solved))
+        self.assertTrue(0==self.fksolverpos.JntToCart(q_solved,F2))
         
         self.assertEqual(F1,F2)
         self.assertEqual(q,q_solved)
