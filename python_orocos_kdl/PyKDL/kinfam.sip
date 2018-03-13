@@ -513,6 +513,18 @@ public:
     ChainIkSolverVel_pinv_nso(const Chain& chain,double eps=0.00001,int maxiter=150, double alpha=0.25);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+
+    virtual int setWeights(const JntArray &weights);
+
+    virtual int setOptPos(const JntArray &opt_pos);
+
+    virtual int setAlpha(const double alpha);
+
+    const JntArray& getWeights()const /Factory/;
+
+    const JntArray& getOptPos()const /Factory/;
+
+    const double& getAlpha()const /Factory/;
 };
 
 class ChainIkSolverVel_pinv_givens : ChainIkSolverVel
