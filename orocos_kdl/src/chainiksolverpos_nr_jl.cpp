@@ -52,7 +52,7 @@ namespace KDL
 
     int ChainIkSolverPos_NR_JL::CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)
     {
-        if(nj != q_init.rows() || nj != q_out.rows())
+        if(nj != q_init.rows() || nj != q_out.rows() || nj != q_min.rows() || nj != q_max.rows())
             return (error = E_SIZE_MISMATCH);
 
             q_out = q_init;
