@@ -303,8 +303,18 @@ void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest)
 void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
 void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
 
+class SolverI
+{
+%TypeHeaderCode
+#include <kdl/solveri.hpp>
+using namespace KDL;
+%End
+    virtual int getError() const;
+    virtual const char* strError(const int error) const;
+    virtual void updateInternalDataStructures() = 0;
+};
 
-class ChainFkSolverPos
+class ChainFkSolverPos : SolverI
 {
 %TypeHeaderCode
 #include <kdl/chainfksolver.hpp>
@@ -313,7 +323,7 @@ using namespace KDL;
     virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1)=0;
 };
 
-class ChainFkSolverVel
+class ChainFkSolverVel : SolverI
 {
 %TypeHeaderCode
 #include <kdl/chainfksolver.hpp>
@@ -333,6 +343,7 @@ using namespace KDL;
 public:
     ChainFkSolverPos_recursive(const Chain& chain);
     virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainFkSolverVel_recursive : ChainFkSolverVel
@@ -345,18 +356,20 @@ public:
     ChainFkSolverVel_recursive(const Chain& chain);
     virtual int JntToCart(const JntArrayVel& q_in ,FrameVel& out,int
     segmentNr=-1 );
+    virtual void updateInternalDataStructures();
 };
 
-class ChainIkSolverPos {
+class ChainIkSolverPos : SolverI {
 %TypeHeaderCode
 #include <kdl/chainiksolver.hpp>
 using namespace KDL;
 %End
 public:
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in, JntArray& q_out )=0;
+    virtual void updateInternalDataStructures()=0;
 };
 
-class ChainIkSolverVel {
+class ChainIkSolverVel : SolverI {
 %TypeHeaderCode
 #include <kdl/chainiksolver.hpp>
 using namespace KDL;
@@ -364,6 +377,7 @@ using namespace KDL;
 public:
     virtual int CartToJnt(const JntArray& q_in , const Twist& v_in , JntArray& qdot_out )=0;
     virtual int CartToJnt(const JntArray& q_init , const FrameVel& v_in , JntArrayVel& q_out )=0;
+    virtual void updateInternalDataStructures()=0;
 };
 
 class ChainIkSolverPos_NR : ChainIkSolverPos
@@ -377,6 +391,7 @@ public:
                         unsigned int maxiter=100,double eps=epsilon);
     
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainIkSolverPos_NR_JL : ChainIkSolverPos
@@ -391,6 +406,7 @@ public:
                         unsigned int maxiter=100,double eps=epsilon);
     
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainIkSolverVel_pinv : ChainIkSolverVel
@@ -403,6 +419,7 @@ public:
     ChainIkSolverVel_pinv(const Chain& chain,double eps=0.00001,int maxiter=150);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainIkSolverVel_wdls : ChainIkSolverVel
@@ -415,6 +432,8 @@ public:
     ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+    virtual void updateInternalDataStructures();
+
     void setWeightTS(SIP_PYLIST);
 %MethodCode
     //void setWeightTS(const Eigen::MatrixXd& Mx);
@@ -500,6 +519,7 @@ public:
     ChainIkSolverPos_LMA(const Chain& chain, double eps=0.00001, int _maxiter=500, double _eps_joints=0.000000000000001);
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+    virtual void updateInternalDataStructures();
 };
 
 
@@ -513,6 +533,7 @@ public:
     ChainIkSolverVel_pinv_nso(const Chain& chain,double eps=0.00001,int maxiter=150, double alpha=0.25);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+    virtual void updateInternalDataStructures();
 
     virtual int setWeights(const JntArray &weights);
 
@@ -537,12 +558,10 @@ public:
     ChainIkSolverVel_pinv_givens(const Chain& chain);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
-
+    virtual void updateInternalDataStructures();
 };
 
-
-
-class ChainJntToJacSolver
+class ChainJntToJacSolver : SolverI
 {
 %TypeHeaderCode
 #include <kdl/chainjnttojacsolver.hpp>
@@ -551,6 +570,5 @@ using namespace KDL;
 public:
     ChainJntToJacSolver(const Chain& chain);
     int JntToJac(const JntArray& q_in,Jacobian& jac);
+    virtual void updateInternalDataStructures();
 };
-
-
