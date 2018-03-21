@@ -150,6 +150,8 @@ public:
      */
     void display_jac(const KDL::JntArray& jval);
 
+    /// @copydoc KDL::SolverI::updateInternalDataStructures
+    void updateInternalDataStructures();
 
     /// @copydoc KDL::SolverI::strError()
     virtual const char* strError(const int error) const;

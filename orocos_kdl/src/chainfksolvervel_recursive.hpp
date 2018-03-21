@@ -42,8 +42,9 @@ namespace KDL
 
         virtual int JntToCart(const JntArrayVel& q_in,FrameVel& out,int segmentNr=-1);
         virtual int JntToCart(const JntArrayVel& q_in,std::vector<FrameVel>& out,int segmentNr=-1);
+        virtual void updateInternalDataStructures() {};
     private:
-        const Chain chain;
+        const Chain& chain;
     };
 }
 

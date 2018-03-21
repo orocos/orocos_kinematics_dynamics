@@ -51,12 +51,32 @@ namespace KDL
     {
     }
     
+    void ChainIkSolverVel_wdls::updateInternalDataStructures() {
+        jnt2jac.updateInternalDataStructures();
+        nj = chain.getNrOfJoints();
+        jac.resize(nj);
+        MatrixXd z6nj = MatrixXd::Zero(6,nj);
+        VectorXd znj = VectorXd::Zero(nj);
+        MatrixXd znjnj = MatrixXd::Zero(nj,nj);
+        U.conservativeResizeLike(z6nj);
+        S.conservativeResizeLike(znj);
+        V.conservativeResizeLike(znjnj);
+        tmp.conservativeResizeLike(znj);
+        tmp_jac.conservativeResizeLike(z6nj);
+        tmp_jac_weight1.conservativeResizeLike(z6nj);
+        tmp_jac_weight2.conservativeResizeLike(z6nj);
+        tmp_js.conservativeResizeLike(znjnj);
+        weight_js.conservativeResizeLike(MatrixXd::Identity(nj,nj));
+    }
 
     ChainIkSolverVel_wdls::~ChainIkSolverVel_wdls()
     {
     }
     
     int ChainIkSolverVel_wdls::setWeightJS(const MatrixXd& Mq){
+        if(nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
+
         if (Mq.size() != weight_js.size())
             return (error = E_SIZE_MISMATCH);
         weight_js = Mq;
@@ -95,6 +115,9 @@ namespace KDL
 
     int ChainIkSolverVel_wdls::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
+        if(nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
+
         if(nj != q_in.rows() || nj != qdot_out.rows())
             return (error = E_SIZE_MISMATCH);
         error = jnt2jac.JntToJac(q_in,jac);

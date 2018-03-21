@@ -42,9 +42,24 @@ namespace KDL {
         ag=-Twist(grav,Vector::Zero());
     }
 
+    void ChainDynParam::updateInternalDataStructures() {
+        nj = chain.getNrOfJoints();
+        ns = chain.getNrOfSegments();
+        jntarraynull.resize(nj);
+        chainidsolver_coriolis.updateInternalDataStructures();
+        chainidsolver_gravity.updateInternalDataStructures();
+        wrenchnull.resize(ns,Wrench::Zero());
+        X.resize(ns);
+        S.resize(ns);
+        Ic.resize(ns);
+    }
+
+
     //calculate inertia matrix H
     int ChainDynParam::JntToMass(const JntArray &q, JntSpaceInertiaMatrix& H)
     {
+        if(nj != chain.getNrOfJoints() || ns != chain.getNrOfSegments())
+            return (error = E_NOT_UP_TO_DATE);
 	//Check sizes when in debug mode
         if(q.rows()!=nj || H.rows()!=nj || H.columns()!=nj )
             return (error = E_SIZE_MISMATCH);

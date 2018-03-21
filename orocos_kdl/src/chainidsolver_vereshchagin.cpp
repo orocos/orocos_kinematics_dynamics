@@ -43,8 +43,16 @@ ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twis
     tmpm = VectorXd::Ones(nc);
 }
 
+void ChainIdSolver_Vereshchagin::updateInternalDataStructures() {
+    ns = chain.getNrOfSegments();
+    results.resize(ns+1,segment_info(nc));
+}
+
 int ChainIdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, JntArray &torques)
 {
+    nj = chain.getNrOfJoints();
+    if(ns != chain.getNrOfSegments())
+        return (error = E_NOT_UP_TO_DATE);
     //Check sizes always
     if (q.rows() != nj || q_dot.rows() != nj || q_dotdot.rows() != nj || torques.rows() != nj || f_ext.size() != ns)
         return (error = E_SIZE_MISMATCH);
