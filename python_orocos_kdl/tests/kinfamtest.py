@@ -24,30 +24,17 @@ import unittest
 from PyKDL import *
 from math import *
 import random
+import sys
+
+if sys.version_info.major < 3:
+    from buildchain_py2 import buildChain
+else:
+    from buildchain_py3 import buildChain
 
 class KinfamTestFunctions(unittest.TestCase):
-    
-    def setUp(self):
-        self.chain = Chain()
-        self.chain.addSegment(Segment(Joint(Joint.RotZ),
-                                 Frame(Vector(0.0,0.0,0.0))))
-        self.chain.addSegment(Segment(Joint(Joint.RotX),
-                                 Frame(Vector(0.0,0.0,0.9))))
-        self.chain.addSegment(Segment(Joint(Joint.None),
-                                 Frame(Vector(-0.4,0.0,0.0))))
-        self.chain.addSegment(Segment(Joint(Joint.RotY),
-                             Frame(Vector(0.0,0.0,1.2))))
-        self.chain.addSegment(Segment(Joint(Joint.None),
-                                 Frame(Vector(0.4,0.0,0.0))))
-        self.chain.addSegment(Segment(Joint(Joint.TransZ),
-                                 Frame(Vector(0.0,0.0,1.4))))
-        self.chain.addSegment(Segment(Joint(Joint.TransX),
-                                 Frame(Vector(0.0,0.0,0.0))))
-        self.chain.addSegment(Segment(Joint(Joint.TransY),
-                                 Frame(Vector(0.0,0.0,0.4))))
-        self.chain.addSegment(Segment(Joint(Joint.None),
-                                 Frame(Vector(0.0,0.0,0.0))))
 
+    def setUp(self):
+        self.chain = buildChain()
         self.jacsolver   = ChainJntToJacSolver(self.chain)
         self.fksolverpos = ChainFkSolverPos_recursive(self.chain)
         self.fksolvervel = ChainFkSolverVel_recursive(self.chain)

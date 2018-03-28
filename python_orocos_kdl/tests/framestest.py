@@ -168,11 +168,11 @@ class FramesTestFunctions(unittest.TestCase):
         data['tw'] = Twist(data['v'], Vector(4,5,6))
         data['wr'] = Wrench(Vector(0.1,0.2,0.3), data['v'])
         
-        f = open('/tmp/pickle_test', 'w')
+        f = open('/tmp/pickle_test', 'wb')
         pickle.dump(data, f)
         f.close()
         
-        f = open('/tmp/pickle_test', 'r')
+        f = open('/tmp/pickle_test', 'rb')
         data1 = pickle.load(f)
         f.close()
        
