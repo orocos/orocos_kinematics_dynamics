@@ -391,50 +391,23 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
         if ((xx > yy) && (xx > zz))
         {
             // data[0] is the largest diagonal term
-            if (xx < epsilon)
-            {
-                x = 0;
-                y = half_sqrt_2;
-                z = half_sqrt_2;
-            }
-            else
-            {
-                x = sqrt(xx);
-                y = xy/x;
-                z = xz/x;
-            }
+            x = sqrt(xx);
+            y = xy/x;
+            z = xz/x;
         }
         else if (yy > zz)
         {
             // data[4] is the largest diagonal term
-            if (yy < epsilon)
-            {
-                x = half_sqrt_2;
-                y = 0;
-                z = half_sqrt_2;
-            }
-            else
-            {
-                y = sqrt(yy);
-                x = xy/y;
-                z = yz/y;
-            }
+            y = sqrt(yy);
+            x = xy/y;
+            z = yz/y;
         }
         else
         {
             // data[8] is the largest diagonal term so base result on this
-            if (zz < epsilon)
-            {
-                x = half_sqrt_2;
-                y = half_sqrt_2;
-                z = 0;
-            }
-            else
-            {
-                z = sqrt(zz);
-                x = xz/z;
-                y = yz/z;
-            }
+            z = sqrt(zz);
+            x = xz/z;
+            y = yz/z;
         }
         axis = KDL::Vector(x, y, z);
         return angle; // return 180 deg rotation
