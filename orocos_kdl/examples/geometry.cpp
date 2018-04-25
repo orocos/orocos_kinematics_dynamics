@@ -81,7 +81,7 @@ int main()
                      KDL::Vector(0,-1,0),
                      KDL::Vector(-1,0,0));
     //Creating a rotation matrix out of 9 values, Be careful, these
-    //values can result in an inconsisten rotation matrix if the
+    //values can result in an inconsistent rotation matrix if the
     //resulting rows/columns are not orthogonal/normalized
     KDL::Rotation r3(0,0,-1,1,0,0,0,-1,0);
     //Creating an Identity rotation matrix
