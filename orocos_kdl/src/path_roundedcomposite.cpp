@@ -85,7 +85,8 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 		if (bcdist < eps) {
 			throw Error_MotionPlanning_Not_Feasible(3);
 		}
-		double alpha = acos(dot(ab, bc) / abdist / bcdist);
+		// Clamp to avoid rounding errors (acos is defineed between [-1 ; 1])
+		double alpha = acos(std::max(-1., std::min(dot(ab, bc) / abdist / bcdist, 1.)));
 		if ((PI - alpha) < eps) {
 			throw Error_MotionPlanning_Not_Feasible(4);
 		}
