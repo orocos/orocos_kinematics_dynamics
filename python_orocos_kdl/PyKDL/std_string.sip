@@ -47,15 +47,14 @@
         *sipCppPtr = new std::string;
          return 1;
      }
-     if (PyUnicode_Check(sipPy)) {
-        PyObject* s = PyUnicode_AsEncodedString(sipPy, "UTF-8", "");
-        *sipCppPtr = new std::string(PyUnicode_AS_DATA(s));
-        Py_DECREF(s);
-        return 1;
-     }
 #if PY_MAJOR_VERSION < 3
      if (PyString_Check(sipPy)) {
         *sipCppPtr = new std::string(PyString_AS_STRING(sipPy));
+        return 1;
+     }
+#else
+     if (PyUnicode_Check(sipPy)) {
+        *sipCppPtr = new std::string(PyUnicode_AsUTF8(sipPy));
         return 1;
      }
 #endif
