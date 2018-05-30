@@ -251,7 +251,7 @@ bool runTest(const Chain& chain,const int& representation)
     
     for(double dt=1e-6;dt<0.1;dt*=10)
     {
-        double eps_diff_vs_solver = 3.0*dt; // Apparently :)
+        double eps_diff_vs_solver = 4.0*dt; // Apparently :)
 
         for(int i=0;i<100;i++)
         {
