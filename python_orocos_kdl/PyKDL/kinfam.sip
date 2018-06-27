@@ -69,8 +69,27 @@ public:
     RotationalInertia(double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
         
     static RotationalInertia Zero()/Factory/;
-    Vector operator*(Vector omega) const /Factory/;
+
+    double __getitem__(int index);
+%MethodCode
+    if (a0 < 0 || a0 >= 9) {
+        PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
+        return 0;
+    }
+    sipRes=(*sipCpp).data[a0];
+%End
+
+    void __setitem__(int i, double value);
+%MethodCode
+    if (a0 < 0 || a0 >= 9) {
+        PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
+        return 0;
+    }
+    (*sipCpp).data[a0]=a1;
+%End
+
 };
+Vector operator*(RotationalInertia& Ia, Vector omega) const /Factory/;
 RotationalInertia operator*(double a, const RotationalInertia& I)/Factory/;
 RotationalInertia operator+(const RotationalInertia& Ia, const RotationalInertia& Ib)/Factory/;
 
