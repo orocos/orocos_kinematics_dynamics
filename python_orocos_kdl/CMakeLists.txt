@@ -23,3 +23,8 @@ set(PYTHON_SITE_PACKAGES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${PYTHON_SITE_PACKA
 add_sip_python_module(PyKDL PyKDL/PyKDL.sip ${orocos_kdl_LIBRARIES})
 
 install(FILES package.xml DESTINATION share/python_orocos_kdl)
+
+find_package(catkin)
+if(catkin_FOUND)
+  catkin_add_env_hooks(python_orocos_kdl_site_packages SHELLS bash tcsh zsh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
+endif()
