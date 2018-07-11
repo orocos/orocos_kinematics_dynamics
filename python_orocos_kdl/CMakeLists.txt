@@ -24,7 +24,7 @@ add_sip_python_module(PyKDL PyKDL/PyKDL.sip ${orocos_kdl_LIBRARIES})
 
 install(FILES package.xml DESTINATION share/python_orocos_kdl)
 
-find_package(catkin)
+find_package(catkin QUIET)
 if(catkin_FOUND)
   catkin_add_env_hooks(python_orocos_kdl_site_packages SHELLS bash tcsh zsh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
 endif()
