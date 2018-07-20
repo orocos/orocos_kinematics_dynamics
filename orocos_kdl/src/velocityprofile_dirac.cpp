@@ -54,7 +54,7 @@ namespace KDL {
 
     double VelocityProfile_Dirac::Pos(double time) const {
         if ( t == 0 ) {
-            return time == 0 ? p1 : p2;
+            return time <= 0 ? p1 : p2;
         } else if (time < 0) {
             return p1;
         } else if (time <= t) {

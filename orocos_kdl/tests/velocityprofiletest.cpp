@@ -351,7 +351,7 @@ void VelocityProfileTest::TestDirac_SetProfile()
     CPPUNIT_ASSERT_DOUBLES_EQUAL(pos2, v.Pos(time), epsilon);
 
     time = -1.0;
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos2, v.Pos(time), epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos1, v.Pos(time), epsilon);
 }
 
 void VelocityProfileTest::TestDirac_SetProfileDuration()
