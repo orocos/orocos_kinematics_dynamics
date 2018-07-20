@@ -258,7 +258,6 @@ public:
     Twist operator * (const Twist& arg) const /Numeric,Factory/;
     
     static Frame Identity() /Factory/;
-    
     void Integrate(const Twist& t_this,double frequency);
 
 %PickleCode

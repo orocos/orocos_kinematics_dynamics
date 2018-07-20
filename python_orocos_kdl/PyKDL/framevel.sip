@@ -73,6 +73,7 @@ VectorVel operator + (const Vector& r1,const VectorVel& r2);
 VectorVel operator - (const Vector& r1,const VectorVel& r2);
 VectorVel operator + (const VectorVel& r1,const Vector& r2);
 VectorVel operator - (const VectorVel& r1,const Vector& r2);
+
 VectorVel operator * (const VectorVel& r1,const VectorVel& r2);
 VectorVel operator * (const VectorVel& r1,const Vector& r2);
 VectorVel operator * (const Vector& r1,const VectorVel& r2);
