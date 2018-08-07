@@ -85,7 +85,7 @@ int ChainJntToJacDotSolver::JntToJacDot(const JntArrayVel& q_in, Jacobian& jdot,
         if (representation_ == BODYFIXED) {
             // Ref Frame {ee}, Ref Point {ee}
             jac_.changeBase(F_bs_ee_.M.Inverse());
-        } else if (representation_ == INTERTIAL) {
+        } else if (representation_ == INERTIAL) {
             // Ref Frame {bs}, Ref Point {bs}
             jac_.changeRefPoint(-F_bs_ee_.p);
         } else {
@@ -125,7 +125,7 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivative(const KDL::Jacobian& J
             return getPartialDerivativeHybrid(J,joint_idx,column_idx);
         case BODYFIXED:
             return getPartialDerivativeBodyFixed(J,joint_idx,column_idx);
-        case INTERTIAL:
+        case INERTIAL:
             return getPartialDerivativeInertial(J,joint_idx,column_idx);
         default:
             SetToZero(this->t_djdq_);
@@ -211,7 +211,7 @@ void ChainJntToJacDotSolver::setRepresentation(const int& representation)
 {
     if(representation == HYBRID ||
         representation == BODYFIXED ||
-        representation == INTERTIAL)   
+        representation == INERTIAL)   
     this->representation_ = representation;
 }
 
