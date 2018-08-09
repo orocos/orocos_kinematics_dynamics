@@ -100,7 +100,7 @@ void changeRepresentation(Jacobian& J,const Frame& F_bs_ee,const int& representa
             // Ref Frame {ee}, Ref Point {ee}
             J.changeBase(F_bs_ee.M.Inverse());
             break;
-        case ChainJntToJacDotSolver::INTERTIAL:
+        case ChainJntToJacDotSolver::INERTIAL:
             // Ref Frame {bs}, Ref Point {bs}
             J.changeRefPoint(-F_bs_ee.p);
             break;
