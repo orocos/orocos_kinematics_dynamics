@@ -109,7 +109,7 @@ namespace KDL {
         const char* strError(const int error) const;
 
     private:
-        const Chain& chain;
+        const Chain chain;
         unsigned int nj;
         JntArray q_min;
         JntArray q_max;

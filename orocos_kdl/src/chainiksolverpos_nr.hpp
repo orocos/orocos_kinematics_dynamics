@@ -79,7 +79,7 @@ namespace KDL {
         /// @copydoc KDL::SolverI::updateInternalDataStructures
         virtual void updateInternalDataStructures();
     private:
-        const Chain& chain;
+        const Chain chain;
 
         unsigned int nj;
         ChainIkSolverVel& iksolver;

@@ -50,7 +50,7 @@ namespace KDL
         virtual void updateInternalDataStructures();
 
     private:
-        const Chain& chain;
+        const Chain chain;
         unsigned int nj;
         ChainJntToJacSolver jnt2jac;
         Jacobian jac;

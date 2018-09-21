@@ -164,8 +164,8 @@ protected:
                                const unsigned int& column_idx,
                                const int& representation);
 private:
-    
-    const Chain& chain;
+
+    const Chain chain;
     std::vector<bool> locked_joints_;
     unsigned int nr_of_unlocked_joints_;
     ChainJntToJacSolver jac_solver_;

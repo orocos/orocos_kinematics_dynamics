@@ -122,7 +122,7 @@ private:
     void final_upwards_sweep(JntArray &q_dotdot, JntArray &torques);
 
 private:
-    const Chain& chain;
+    const Chain chain;
     unsigned int nj;
     unsigned int ns;
     unsigned int nc;

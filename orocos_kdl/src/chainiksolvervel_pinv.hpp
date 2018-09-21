@@ -98,7 +98,7 @@ namespace KDL
         /// @copydoc KDL::SolverI::updateInternalDataStructures
         virtual void updateInternalDataStructures();
     private:
-        const Chain& chain;
+        const Chain chain;
         ChainJntToJacSolver jnt2jac;
         unsigned int nj;
         Jacobian jac;
