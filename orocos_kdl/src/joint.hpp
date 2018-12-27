@@ -192,6 +192,16 @@ namespace KDL {
             }
         };
 
+        /**
+         * Request the inertia of the joint.
+         *
+         * @return const reference to the inertia of the joint
+         */
+        const double& getInertia() const
+        {
+            return inertia;
+        };
+
         virtual ~Joint();
 
     private:
