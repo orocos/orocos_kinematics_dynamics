@@ -98,7 +98,8 @@ namespace KDL {
 	  F=Ic[i]*S[i];
 	  if(chain.getSegment(i).getJoint().getType()!=Joint::None)
 	  {
-	      H(k,k)=dot(S[i],F);
+          H(k,k)=dot(S[i],F);
+          H(k,k)+=chain.getSegment(i).getJoint().getInertia();  // add joint inertia
 	      j=k; //countervariable for the joints
 	      l=i; //countervariable for the segments
 	      while(l!=0) //go from leaf to root starting at i
