@@ -209,7 +209,7 @@ void KinFamTest::TreeTest()
 
     Chain extract_chain1;
     CPPUNIT_ASSERT(tree1.getChain("Segment 2", "Segment 4", extract_chain1));
-    Chain extract_chain2; 
+    Chain extract_chain2;
     CPPUNIT_ASSERT(tree1.getChain("Segment 4", "Segment 2", extract_chain2));
     CPPUNIT_ASSERT(tree1.getChain("Segment 4", "Segment 2", extract_chain2));
     CPPUNIT_ASSERT(extract_chain1.getNrOfJoints()==extract_chain2.getNrOfJoints());
@@ -232,8 +232,8 @@ void KinFamTest::TreeTest()
     Tree subtree;
     const std::string subroot("Segment 2");
     CPPUNIT_ASSERT(tree1.getSubTree(subroot, subtree));
-    cout << "Tree 1:" << endl << tree1 << endl;
-    cout << "Subtree (rooted at " << subroot << "):" << endl << subtree << endl;
+    cout << "Tree 1:" << endl << tree2str(tree1) << endl;
+    cout << "Subtree (rooted at " << subroot << "):" << endl << tree2str(subtree) << endl;
     CPPUNIT_ASSERT(isSubtree(tree1.getSegment(subroot), subtree.getRootSegment()));
     CPPUNIT_ASSERT(isSubtree(subtree.getRootSegment(), tree1.getSegment(subroot)));
 
@@ -241,7 +241,7 @@ void KinFamTest::TreeTest()
     Segment segment102("Segment 102", Joint("Joint 102", Joint::RotZ), Frame(Vector(0.0,0.0,1.0)));
     subtree.addSegment(segment101, subtree.getRootSegment()->first);
     subtree.addSegment(segment102, subtree.getSegment("Segment 5")->first);
-    cout << "Subtree (rooted at " << subroot << "):" << endl << subtree << endl;
+    cout << "Subtree (rooted at " << subroot << "):" << endl << tree2str(subtree) << endl;
     CPPUNIT_ASSERT(!isSubtree(tree1.getSegment(subroot), subtree.getRootSegment()));
     CPPUNIT_ASSERT(isSubtree(subtree.getRootSegment(), tree1.getSegment(subroot)));
 }
