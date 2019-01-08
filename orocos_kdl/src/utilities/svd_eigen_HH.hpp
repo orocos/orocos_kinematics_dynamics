@@ -24,7 +24,7 @@
 #ifndef SVD_EIGEN_HH_HPP
 #define SVD_EIGEN_HH_HPP
 
-#include "../eigen_types.h"
+#include "../eigen_types.hpp"
 #include <algorithm>
 
 namespace KDL

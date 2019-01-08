@@ -31,7 +31,7 @@
 #ifndef SVD_EIGEN_MACIE
 #define SVD_EIGEN_MACIE
 
-#include "../eigen_types.h"
+#include "../eigen_types.hpp"
 
 namespace KDL
 {

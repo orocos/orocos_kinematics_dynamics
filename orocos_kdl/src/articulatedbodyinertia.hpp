@@ -26,7 +26,7 @@
 
 #include "rotationalinertia.hpp"
 #include "rigidbodyinertia.hpp"
-#include "eigen_types.h"
+#include "eigen_types.hpp"
 
 namespace KDL {
     

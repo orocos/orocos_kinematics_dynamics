@@ -23,7 +23,7 @@
 #define KDL_JACOBIAN_HPP
 
 #include "frames.hpp"
-#include "eigen_types.h"
+#include "eigen_types.hpp"
 
 namespace KDL
 {

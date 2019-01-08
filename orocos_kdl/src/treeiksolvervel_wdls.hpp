@@ -10,7 +10,7 @@
 
 #include "treeiksolver.hpp"
 #include "treejnttojacsolver.hpp"
-#include "eigen_types.h"
+#include "eigen_types.hpp"
 
 namespace KDL {
 

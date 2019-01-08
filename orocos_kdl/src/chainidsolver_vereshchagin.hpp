@@ -25,7 +25,7 @@
 #include "chainidsolver.hpp"
 #include "frames.hpp"
 #include "articulatedbodyinertia.hpp"
-#include "eigen_types.h"
+#include "eigen_types.hpp"
 #include<Eigen/StdVector>
 
 namespace KDL

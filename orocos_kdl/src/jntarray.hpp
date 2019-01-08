@@ -24,7 +24,7 @@
 
 #include "frames.hpp"
 #include "jacobian.hpp"
-#include "eigen_types.h"
+#include "eigen_types.hpp"
 
 namespace KDL
 {
