@@ -23,7 +23,7 @@
 #define KDL_JACOBIAN_HPP
 
 #include "frames.hpp"
-#include <Eigen/Core>
+#include "eigen_types.h"
 
 namespace KDL
 {
@@ -36,9 +36,7 @@ namespace KDL
     class Jacobian
     {
     public:
-
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-        Eigen::Matrix<double,6,Eigen::Dynamic> data;
+        Mat<double, 6, Eigen::Dynamic> data;
         Jacobian();
         explicit Jacobian(unsigned int nr_of_columns);
         Jacobian(const Jacobian& arg);

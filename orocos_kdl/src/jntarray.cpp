@@ -20,10 +20,10 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "jntarray.hpp"
+#include "eigen_types.h"
 
 namespace KDL
 {
-    using namespace Eigen;
 
     JntArray::JntArray()
     {
@@ -54,7 +54,7 @@ namespace KDL
 
     void JntArray::resize(unsigned int newSize)
     {
-        data.conservativeResizeLike(VectorXd::Zero(newSize));
+        data.conservativeResizeLike(VecXd::Zero(newSize));
     }
 
     double JntArray::operator()(unsigned int i,unsigned int j)const
@@ -101,7 +101,7 @@ namespace KDL
 
     void MultiplyJacobian(const Jacobian& jac, const JntArray& src, Twist& dest)
     {
-        Eigen::Matrix<double,6,1> t=jac.data.lazyProduct(src.data);
+        const Vec6d t = jac.data.lazyProduct(src.data);
         dest=Twist(Vector(t(0),t(1),t(2)),Vector(t(3),t(4),t(5)));
     }
     

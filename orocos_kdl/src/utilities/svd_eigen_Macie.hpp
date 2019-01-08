@@ -31,9 +31,7 @@
 #ifndef SVD_EIGEN_MACIE
 #define SVD_EIGEN_MACIE
 
-#include <Eigen/Core>
-using namespace Eigen;
-
+#include "../eigen_types.h"
 
 namespace KDL
 {
@@ -56,8 +54,8 @@ namespace KDL
 	 * \param toggle [INPUT] toggle this boolean variable on each call of this routine.
 	 * \return number of sweeps.
 	 */
-    int svd_eigen_Macie(const MatrixXd& A,MatrixXd& U,VectorXd& S, MatrixXd& V,
-                        MatrixXd& B, VectorXd& tempi,
+    int svd_eigen_Macie(const MatXd& A,MatXd& U,VecXd& S, MatXd& V,
+                        MatXd& B, VecXd& tempi,
                         double threshold,bool toggle)
     {
         bool rotate = true;

@@ -24,7 +24,7 @@
 
 #include "chainiksolver.hpp"
 #include "chainjnttojacsolver.hpp"
-#include <Eigen/Core>
+#include "eigen_types.h"
 
 namespace KDL
 {
@@ -142,12 +142,12 @@ namespace KDL
         ChainJntToJacSolver jnt2jac;
         unsigned int nj;
         Jacobian jac;
-        Eigen::MatrixXd U;
-        Eigen::VectorXd S;
-        Eigen::VectorXd Sinv;
-        Eigen::MatrixXd V;
-        Eigen::VectorXd tmp;
-        Eigen::VectorXd tmp2;
+        MatXd U;
+        VecXd S;
+        VecXd Sinv;
+        MatXd V;
+        VecXd tmp;
+        VecXd tmp2;
         double eps;
         int maxiter;
         int svdResult;

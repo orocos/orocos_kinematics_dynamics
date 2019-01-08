@@ -24,7 +24,8 @@
 
 #include "chainiksolver.hpp"
 #include "chainjnttojacsolver.hpp"
-#include <Eigen/Core>
+#include "eigen_types.h"
+
 
 namespace KDL
 {
@@ -128,7 +129,7 @@ namespace KDL
          *
          * @return success/error code
          */
-        int setWeightJS(const Eigen::MatrixXd& Mq);
+        int setWeightJS(const MatXd& Mq);
 
         /**
          * Set the task space weighting matrix
@@ -155,7 +156,7 @@ namespace KDL
          *
          * @return success/error code
          */
-        int setWeightTS(const Eigen::MatrixXd& Mx);
+        int setWeightTS(const MatXd& Mx);
 
         /**
          * Set lambda
@@ -185,7 +186,7 @@ namespace KDL
         /**
          * Request the six singular values of the Jacobian
          */
-        int getSigma(Eigen::VectorXd& Sout);
+        int getSigma(VecXd& Sout);
 
         /**
          * Request the value of eps
@@ -220,19 +221,19 @@ namespace KDL
         ChainJntToJacSolver jnt2jac;
         unsigned int nj;
         Jacobian jac;
-        Eigen::MatrixXd U;
-        Eigen::VectorXd S;
-        Eigen::MatrixXd V;
+        MatXd U;
+        VecXd S;
+        MatXd V;
         double eps;
         int maxiter;
-        Eigen::VectorXd tmp;
-        Eigen::MatrixXd tmp_jac;
-        Eigen::MatrixXd tmp_jac_weight1;
-        Eigen::MatrixXd tmp_jac_weight2;
-        Eigen::MatrixXd tmp_ts;
-        Eigen::MatrixXd tmp_js;
-        Eigen::MatrixXd weight_ts;
-        Eigen::MatrixXd weight_js;
+        VecXd tmp;
+        MatXd tmp_jac;
+        MatXd tmp_jac_weight1;
+        MatXd tmp_jac_weight2;
+        MatXd tmp_ts;
+        MatXd tmp_js;
+        MatXd weight_ts;
+        MatXd weight_js;
         double lambda;
 		double lambda_scaled;
 		unsigned int nrZeroSigmas ;

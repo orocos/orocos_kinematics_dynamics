@@ -34,10 +34,8 @@
 namespace KDL {
 
 
-
-
 template <typename Derived>
-inline void Twist_to_Eigen(const KDL::Twist& t,Eigen::MatrixBase<Derived>& e) {
+inline void Twist_to_Eigen(const KDL::Twist& t, Eigen::MatrixBase<Derived>& e) {
 	e(0)=t.vel.data[0];
 	e(1)=t.vel.data[1];
 	e(2)=t.vel.data[2];
@@ -49,7 +47,7 @@ inline void Twist_to_Eigen(const KDL::Twist& t,Eigen::MatrixBase<Derived>& e) {
 
 ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 		const KDL::Chain& _chain,
-		const Eigen::Matrix<double,6,1>& _L,
+		const Vec6d& _L,
 		double _eps,
 		int _maxiter,
 		double _eps_joints
@@ -68,7 +66,7 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 	maxiter(_maxiter),
 	eps(_eps),
 	eps_joints(_eps_joints),
-	L(_L.cast<ScalarType>()),
+	L(_L.cast<double>()),
 	T_base_jointroot(nj),
 	T_base_jointtip(nj),
 	q(nj),
@@ -129,8 +127,8 @@ void ChainIkSolverPos_LMA::updateInternalDataStructures() {
     T_base_jointtip.resize(nj);
     q.conservativeResize(nj);
     A.conservativeResize(nj, nj);
-    ldlt = Eigen::LDLT<MatrixXq>(nj);
-    svd = Eigen::JacobiSVD<MatrixXq>(6, nj,Eigen::ComputeThinU | Eigen::ComputeThinV);
+    ldlt = Eigen::LDLT<MatXd>(nj);
+    svd = Eigen::JacobiSVD<MatXd>(6, nj,Eigen::ComputeThinU | Eigen::ComputeThinV);
     diffq.conservativeResize(nj);
     q_new.conservativeResize(nj);
     original_Aii.conservativeResize(nj);
@@ -138,7 +136,7 @@ void ChainIkSolverPos_LMA::updateInternalDataStructures() {
 
 ChainIkSolverPos_LMA::~ChainIkSolverPos_LMA() {}
 
-void ChainIkSolverPos_LMA::compute_fwdpos(const VectorXq& q) {
+void ChainIkSolverPos_LMA::compute_fwdpos(const VecXd& q) {
 	using namespace KDL;
 	unsigned int jointndx=0;
 	T_base_head = Frame::Identity(); // frame w.r.t. base of head
@@ -155,7 +153,7 @@ void ChainIkSolverPos_LMA::compute_fwdpos(const VectorXq& q) {
 	}
 }
 
-void ChainIkSolverPos_LMA::compute_jacobian(const VectorXq& q) {
+void ChainIkSolverPos_LMA::compute_jacobian(const VecXd& q) {
 	using namespace KDL;
 	unsigned int jointndx=0;
 	for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
@@ -175,8 +173,8 @@ void ChainIkSolverPos_LMA::compute_jacobian(const VectorXq& q) {
 }
 
 void ChainIkSolverPos_LMA::display_jac(const KDL::JntArray& jval) {
-	VectorXq q;
-	q = jval.data.cast<ScalarType>();
+	VecXd q;
+	q = jval.data.cast<double>();
 	compute_fwdpos(q);
 	compute_jacobian(q);
 	svd.compute(jac);
@@ -198,11 +196,11 @@ int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Fram
 	double lambda;
 	Twist t;
 	double delta_pos_norm;
-	Eigen::Matrix<ScalarType,6,1> delta_pos;
-	Eigen::Matrix<ScalarType,6,1> delta_pos_new;
+	Vec6d delta_pos;
+	Vec6d delta_pos_new;
 
 
-	q=q_init.data.cast<ScalarType>();
+	q=q_init.data.cast<double>();
 	compute_fwdpos(q);
 	Twist_to_Eigen( diff( T_base_head, T_base_goal), delta_pos );
 	delta_pos=L.asDiagonal()*delta_pos;

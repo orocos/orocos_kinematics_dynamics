@@ -20,8 +20,7 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "rotationalinertia.hpp"
-#include <Eigen/Core>
-using namespace Eigen;
+#include "eigen_types.h"
 
 namespace KDL
 {
@@ -43,19 +42,19 @@ namespace KDL
 	Vector RotationalInertia::operator*(const Vector& omega) const {
 		// Complexity : 9M+6A
         Vector result;
-        Map<Vector3d>(result.data)=Map<const Matrix3d>(this->data)*Map<const Vector3d>(omega.data);
+        Eigen::Map<Vec3d>(result.data)=Eigen::Map<const Mat3d>(this->data)*Eigen::Map<const Vec3d>(omega.data);
         return result;
  	}
 
     RotationalInertia operator*(double a, const RotationalInertia& I){
         RotationalInertia result;
-        Map<Matrix3d>(result.data)=a*Map<const Matrix3d>(I.data);
+        Eigen::Map<Mat3d>(result.data)=a*Eigen::Map<const Mat3d>(I.data);
         return result;
     }
     
     RotationalInertia operator+(const RotationalInertia& Ia, const RotationalInertia& Ib){
         RotationalInertia result;
-        Map<Matrix3d>(result.data)=Map<const Matrix3d>(Ia.data)+Map<const Matrix3d>(Ib.data);
+        Eigen::Map<Mat3d>(result.data)=Eigen::Map<const Mat3d>(Ia.data)+Eigen::Map<const Mat3d>(Ib.data);
         return result;
     }
 }

@@ -26,8 +26,7 @@
 
 #include "rotationalinertia.hpp"
 #include "rigidbodyinertia.hpp"
-
-#include <Eigen/Core>
+#include "eigen_types.h"
 
 namespace KDL {
     
@@ -63,7 +62,7 @@ namespace KDL {
          * Creates an inertia with zero mass, and zero RotationalInertia
          */
         static inline ArticulatedBodyInertia Zero(){
-            return ArticulatedBodyInertia(Eigen::Matrix3d::Zero(),Eigen::Matrix3d::Zero(),Eigen::Matrix3d::Zero());
+            return ArticulatedBodyInertia(Mat3d::Zero(), Mat3d::Zero(),Mat3d::Zero());
         };
         
         
@@ -84,11 +83,11 @@ namespace KDL {
          */
         ArticulatedBodyInertia RefPoint(const Vector& p);
 
-        ArticulatedBodyInertia(const Eigen::Matrix3d& M,const Eigen::Matrix3d& H,const Eigen::Matrix3d& I);
+        ArticulatedBodyInertia(const Mat3d& M,const Mat3d& H,const Mat3d& I);
 
-        Eigen::Matrix3d M;
-        Eigen::Matrix3d H;
-        Eigen::Matrix3d I;
+        Mat3d M;
+        Mat3d H;
+        Mat3d I;
     };
 
     /**

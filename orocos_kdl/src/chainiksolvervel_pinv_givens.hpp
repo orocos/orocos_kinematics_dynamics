@@ -5,10 +5,7 @@
 
 #include "chainiksolver.hpp"
 #include "chainjnttojacsolver.hpp"
-
-#include <Eigen/Core>
-
-using namespace Eigen;
+#include "eigen_types.h"
 
 namespace KDL
 {
@@ -56,8 +53,8 @@ namespace KDL
         Jacobian jac;
         bool transpose,toggle;
         unsigned int m,n;
-        MatrixXd jac_eigen,U,V,B;
-        VectorXd S,tempi,tempj,UY,SUY,qdot_eigen,v_in_eigen;
+        MatXd jac_eigen,U,V,B;
+        VecXd S,tempi,tempj,UY,SUY,qdot_eigen,v_in_eigen;
     };
 }
 #endif

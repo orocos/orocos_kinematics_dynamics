@@ -13,16 +13,16 @@ namespace KDL {
     
     TreeIkSolverVel_wdls::TreeIkSolverVel_wdls(const Tree& tree_in, const std::vector<std::string>& endpoints) :
         tree(tree_in), jnttojacsolver(tree),
-        J(MatrixXd::Zero(6 * endpoints.size(), tree.getNrOfJoints())),
-        Wy(MatrixXd::Identity(J.rows(),J.rows())),
-        Wq(MatrixXd::Identity(J.cols(),J.cols())),
+        J(MatXd::Zero(6 * endpoints.size(), tree.getNrOfJoints())),
+        Wy(MatXd::Identity(J.rows(),J.rows())),
+        Wq(MatXd::Identity(J.cols(),J.cols())),
         J_Wq(J.rows(),J.cols()),Wy_J_Wq(J.rows(),J.cols()),
-        U(MatrixXd::Identity(J.rows(),J.cols())),
-        V(MatrixXd::Identity(J.cols(),J.cols())),
+        U(MatXd::Identity(J.rows(),J.cols())),
+        V(MatXd::Identity(J.cols(),J.cols())),
         Wy_U(J.rows(),J.rows()),Wq_V(J.cols(),J.cols()),
-        t(VectorXd::Zero(J.rows())), Wy_t(VectorXd::Zero(J.rows())),
-        qdot(VectorXd::Zero(J.cols())),
-        tmp(VectorXd::Zero(J.cols())),S(VectorXd::Zero(J.cols())),
+        t(VecXd::Zero(J.rows())), Wy_t(VecXd::Zero(J.rows())),
+        qdot(VecXd::Zero(J.cols())),
+        tmp(VecXd::Zero(J.cols())),S(VecXd::Zero(J.cols())),
         lambda(0)
     {
         
@@ -35,11 +35,11 @@ namespace KDL {
     TreeIkSolverVel_wdls::~TreeIkSolverVel_wdls() {
     }
     
-    void TreeIkSolverVel_wdls::setWeightJS(const MatrixXd& Mq) {
+    void TreeIkSolverVel_wdls::setWeightJS(const MatXd& Mq) {
         Wq = Mq;
     }
     
-    void TreeIkSolverVel_wdls::setWeightTS(const MatrixXd& Mx) {
+    void TreeIkSolverVel_wdls::setWeightTS(const MatXd& Mx) {
         Wy = Mx;
     }
     
@@ -69,8 +69,8 @@ namespace KDL {
                 //lets put the jacobian in the big matrix and put the twist in the big t:
                 J.block(6*k,0, 6,tree.getNrOfJoints()) = jac_it->second.data;
                 const Twist& twist=v_in.find(jac_it->first)->second;
-                t.segment(6*k,3)   = Eigen::Map<const Eigen::Vector3d>(twist.vel.data);
-                t.segment(6*k+3,3) = Eigen::Map<const Eigen::Vector3d>(twist.rot.data);
+                t.segment(6*k,3)   = Eigen::Map<const Vec3d>(twist.vel.data);
+                t.segment(6*k+3,3) = Eigen::Map<const Vec3d>(twist.rot.data);
             }
             ++k;
         }

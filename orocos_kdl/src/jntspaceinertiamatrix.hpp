@@ -25,8 +25,7 @@
 #include "frames.hpp"
 #include "jacobian.hpp"
 #include "jntarray.hpp"
-
-#include <Eigen/Core>
+#include "eigen_types.h"
 
 namespace KDL
 {
@@ -70,7 +69,7 @@ class MyTask : public RTT::TaskContext
     class JntSpaceInertiaMatrix
     {
     public:
-        Eigen::MatrixXd data;
+        MatXd data;
 
         /** Construct with _no_ data array
          * @post NULL == data

@@ -26,7 +26,6 @@
 
 namespace KDL
 {
-using namespace Eigen;
 
 ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twist root_acc, unsigned int _nc) :
     chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(_nc),
@@ -37,10 +36,10 @@ ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twis
     //Provide the necessary memory for computing the inverse of M0
     nu_sum.resize(nc);
     M_0_inverse.resize(nc, nc);
-    Um = MatrixXd::Identity(nc, nc);
-    Vm = MatrixXd::Identity(nc, nc);
-    Sm = VectorXd::Ones(nc);
-    tmpm = VectorXd::Ones(nc);
+    Um = MatXd::Identity(nc, nc);
+    Vm = MatXd::Identity(nc, nc);
+    Sm = VecXd::Ones(nc);
+    tmpm = VecXd::Ones(nc);
 }
 
 void ChainIdSolver_Vereshchagin::updateInternalDataStructures() {
@@ -167,7 +166,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
                 Wrench col(Vector(s.E_tilde(3, c), s.E_tilde(4, c), s.E_tilde(5, c)),
                            Vector(s.E_tilde(0, c), s.E_tilde(1, c), s.E_tilde(2, c)));
                 col = base_to_end*col;
-                s.E_tilde.col(c) << Vector3d::Map(col.torque.data), Vector3d::Map(col.force.data);
+                s.E_tilde.col(c) << Vec3d::Map(col.torque.data), Vec3d::Map(col.force.data);
             }
         }
         else
@@ -176,9 +175,9 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             //Everything should expressed in the body coordinates of segment i
             segment_info& child = results[i + 1];
             //Copy PZ into a vector so we can do matrix manipulations, put torques above forces
-            Vector6d vPZ;
-            vPZ << Vector3d::Map(child.PZ.torque.data), Vector3d::Map(child.PZ.force.data);
-            Matrix6d PZDPZt;
+            Vec6d vPZ;
+            vPZ << Vec3d::Map(child.PZ.torque.data), Vec3d::Map(child.PZ.force.data);
+            Mat6d PZDPZt;
             PZDPZt.noalias() = vPZ * vPZ.transpose();
             PZDPZt /= child.D;
 
@@ -202,8 +201,8 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             //equation e) (see Vereshchagin89)
             s.G = child.G;
             Twist CiZDu = child.C + (child.Z / child.D) * child.u;
-            Vector6d vCiZDu;
-            vCiZDu << Vector3d::Map(CiZDu.rot.data), Vector3d::Map(CiZDu.vel.data);
+            Vec6d vCiZDu;
+            vCiZDu << Vec3d::Map(CiZDu.rot.data), Vec3d::Map(CiZDu.vel.data);
             s.G.noalias() += child.E.transpose() * vCiZDu;
         }
         if (i != 0)
@@ -219,7 +218,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
                 Wrench col(Vector(s.E_tilde(3, c), s.E_tilde(4, c), s.E_tilde(5, c)),
                            Vector(s.E_tilde(0, c), s.E_tilde(1, c), s.E_tilde(2, c)));
                 col = s.F*col;
-                s.E.col(c) << Vector3d::Map(col.torque.data), Vector3d::Map(col.force.data);
+                s.E.col(c) << Vec3d::Map(col.torque.data), Vec3d::Map(col.force.data);
             }
 
             //needed for next recursion
@@ -236,8 +235,8 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             s.u = torques(j) + s.totalBias;
 
             //Matrix form of Z, put rotations above translations
-            Vector6d vZ;
-            vZ << Vector3d::Map(s.Z.rot.data), Vector3d::Map(s.Z.vel.data);
+            Vec6d vZ;
+            vZ << Vec3d::Map(s.Z.rot.data), Vec3d::Map(s.Z.vel.data);
             s.EZ.noalias() = s.E.transpose() * vZ;
 
             if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
@@ -270,8 +269,8 @@ void ChainIdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
     M_0_inverse.noalias() = results[0].M * Um.transpose();
     //results[0].M.ldlt().solve(MatrixXd::Identity(nc,nc),&M_0_inverse);
     //results[0].M.computeInverse(&M_0_inverse);
-    Vector6d acc;
-    acc << Vector3d::Map(acc_root.rot.data), Vector3d::Map(acc_root.vel.data);
+    Vec6d acc;
+    acc << Vec3d::Map(acc_root.rot.data), Vec3d::Map(acc_root.vel.data);
     nu_sum.noalias() = -(results[0].E_tilde.transpose() * acc);
     //nu_sum.setZero();
     nu_sum += beta.data;
@@ -303,7 +302,7 @@ void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
         }
 
         //The contribution of the constraint forces at segment i
-        Vector6d tmp = s.E*nu;
+        Vec6d tmp = s.E*nu;
         Wrench constraint_force = Wrench(Vector(tmp(3), tmp(4), tmp(5)),
                                          Vector(tmp(0), tmp(1), tmp(2)));
 

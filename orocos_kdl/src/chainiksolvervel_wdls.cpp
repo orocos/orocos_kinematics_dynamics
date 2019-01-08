@@ -30,19 +30,19 @@ namespace KDL
         jnt2jac(chain),
         nj(chain.getNrOfJoints()),
         jac(nj),
-        U(MatrixXd::Zero(6,nj)),
-        S(VectorXd::Zero(nj)),
-        V(MatrixXd::Zero(nj,nj)),
+        U(MatXd::Zero(6,nj)),
+        S(VecXd::Zero(nj)),
+        V(MatXd::Zero(nj,nj)),
         eps(_eps),
         maxiter(_maxiter),
-        tmp(VectorXd::Zero(nj)),
-        tmp_jac(MatrixXd::Zero(6,nj)),
-        tmp_jac_weight1(MatrixXd::Zero(6,nj)),
-        tmp_jac_weight2(MatrixXd::Zero(6,nj)),
-        tmp_ts(MatrixXd::Zero(6,6)),
-        tmp_js(MatrixXd::Zero(nj,nj)),
-        weight_ts(MatrixXd::Identity(6,6)),
-        weight_js(MatrixXd::Identity(nj,nj)),
+        tmp(VecXd::Zero(nj)),
+        tmp_jac(MatXd::Zero(6,nj)),
+        tmp_jac_weight1(MatXd::Zero(6,nj)),
+        tmp_jac_weight2(MatXd::Zero(6,nj)),
+        tmp_ts(MatXd::Zero(6,6)),
+        tmp_js(MatXd::Zero(nj,nj)),
+        weight_ts(MatXd::Identity(6,6)),
+        weight_js(MatXd::Identity(nj,nj)),
         lambda(0.0),
         lambda_scaled(0.0),
         nrZeroSigmas(0),
@@ -55,9 +55,9 @@ namespace KDL
         jnt2jac.updateInternalDataStructures();
         nj = chain.getNrOfJoints();
         jac.resize(nj);
-        MatrixXd z6nj = MatrixXd::Zero(6,nj);
-        VectorXd znj = VectorXd::Zero(nj);
-        MatrixXd znjnj = MatrixXd::Zero(nj,nj);
+        MatXd z6nj = MatXd::Zero(6,nj);
+        VecXd znj = VecXd::Zero(nj);
+        MatXd znjnj = MatXd::Zero(nj,nj);
         U.conservativeResizeLike(z6nj);
         S.conservativeResizeLike(znj);
         V.conservativeResizeLike(znjnj);
@@ -66,14 +66,14 @@ namespace KDL
         tmp_jac_weight1.conservativeResizeLike(z6nj);
         tmp_jac_weight2.conservativeResizeLike(z6nj);
         tmp_js.conservativeResizeLike(znjnj);
-        weight_js.conservativeResizeLike(MatrixXd::Identity(nj,nj));
+        weight_js.conservativeResizeLike(MatXd::Identity(nj,nj));
     }
 
     ChainIkSolverVel_wdls::~ChainIkSolverVel_wdls()
     {
     }
     
-    int ChainIkSolverVel_wdls::setWeightJS(const MatrixXd& Mq){
+    int ChainIkSolverVel_wdls::setWeightJS(const MatXd& Mq){
         if(nj != chain.getNrOfJoints())
             return (error = E_NOT_UP_TO_DATE);
 
@@ -83,7 +83,7 @@ namespace KDL
         return (error = E_NOERROR);
     }
     
-    int ChainIkSolverVel_wdls::setWeightTS(const MatrixXd& Mx){
+    int ChainIkSolverVel_wdls::setWeightTS(const MatXd& Mx){
         if (Mx.size() != weight_ts.size())
             return (error = E_SIZE_MISMATCH);
         weight_ts = Mx;
@@ -105,7 +105,7 @@ namespace KDL
         maxiter=maxiter_in;
     }
 
-    int ChainIkSolverVel_wdls::getSigma(Eigen::VectorXd& Sout)
+    int ChainIkSolverVel_wdls::getSigma(VecXd& Sout)
     {
         if (Sout.size() != S.size())
             return (error = E_SIZE_MISMATCH);

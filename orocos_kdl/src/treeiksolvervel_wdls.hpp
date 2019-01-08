@@ -10,11 +10,9 @@
 
 #include "treeiksolver.hpp"
 #include "treejnttojacsolver.hpp"
-#include <Eigen/Core>
+#include "eigen_types.h"
 
 namespace KDL {
-
-    using namespace Eigen;
 
     class TreeIkSolverVel_wdls: public TreeIkSolverVel {
     public:
@@ -47,8 +45,8 @@ namespace KDL {
          * it gets an infinite weight in the norm computation.  For
          * more detailed explanation : vincent.padois@upmc.fr
          */
-        void setWeightJS(const MatrixXd& Mq);
-        const MatrixXd& getWeightJS() const {return Wq;}
+        void setWeightJS(const MatXd& Mq);
+        const MatXd& getWeightJS() const {return Wq;}
         
         /*
          * Set the task space weighting matrix
@@ -73,8 +71,8 @@ namespace KDL {
          * weighted norm sqrt(|x_dot-Jq_dot|'*(M_x^2)*|x_dot-Jq_dot|).
          * For more detailed explanation : vincent.padois@upmc.fr
          */
-        void setWeightTS(const MatrixXd& Mx);
-        const MatrixXd& getWeightTS() const {return Wy;}
+        void setWeightTS(const MatXd& Mx);
+        const MatXd& getWeightTS() const {return Wy;}
 
         void setLambda(const double& lambda);
         double getLambda () const {return lambda;}
@@ -84,8 +82,8 @@ namespace KDL {
         TreeJntToJacSolver jnttojacsolver;
         Jacobians jacobians;
         
-        MatrixXd J, Wy, Wq, J_Wq, Wy_J_Wq, U, V, Wy_U, Wq_V;
-        VectorXd t, Wy_t, qdot, tmp, S;
+        MatXd J, Wy, Wq, J_Wq, Wy_J_Wq, U, V, Wy_U, Wq_V;
+        VecXd t, Wy_t, qdot, tmp, S;
         double lambda;
     };
     

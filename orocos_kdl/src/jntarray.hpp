@@ -24,8 +24,7 @@
 
 #include "frames.hpp"
 #include "jacobian.hpp"
-
-#include <Eigen/Core>
+#include "eigen_types.h"
 
 namespace KDL
 {
@@ -69,7 +68,7 @@ class MyTask : public RTT::TaskContext
     class JntArray
     {
     public:
-        Eigen::VectorXd data;
+        VecXd data;
 
         /** Construct with _no_ data array
          * @post NULL == data

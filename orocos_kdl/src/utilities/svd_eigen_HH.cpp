@@ -23,7 +23,7 @@
 
 namespace KDL{
     
-    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter,double epsilon)
+    int svd_eigen_HH(const MatXd& A,MatXd& U,VecXd& S,MatXd& V,VecXd& tmp,int maxiter,double epsilon)
     {
         //get the rows/columns of the matrix
         const int rows = A.rows();

@@ -33,7 +33,7 @@
 
 #include "chainiksolver.hpp"
 #include "chain.hpp"
-#include <Eigen/Dense>
+#include "eigen_types.h"
 
 namespace KDL
 {
@@ -62,11 +62,7 @@ namespace KDL
  * \ingroup KinematicFamily
  */
 class ChainIkSolverPos_LMA : public KDL::ChainIkSolverPos
-{
-private:
-	typedef double ScalarType;
-    typedef Eigen::Matrix<ScalarType,Eigen::Dynamic,Eigen::Dynamic> MatrixXq;
-    typedef Eigen::Matrix<ScalarType,Eigen::Dynamic,1> VectorXq;
+{    
 public:
 
     static const int E_GRADIENT_JOINTS_TOO_SMALL = -100;
@@ -94,7 +90,7 @@ public:
      */
     ChainIkSolverPos_LMA(
     		const KDL::Chain& _chain,
-    		const Eigen::Matrix<double,6,1>& _L,
+    		const Vec6d& _L,
     		double _eps=1E-5,
     		int _maxiter=500,
     		double _eps_joints=1E-15
@@ -135,14 +131,14 @@ public:
      *
      * Only exposed for test and diagnostic purposes.
      */
-    void compute_fwdpos(const VectorXq& q);
+    void compute_fwdpos(const VecXd& q);
 
     /**
      * \brief for internal use only.
      * Only exposed for test and diagnostic purposes.
      * compute_fwdpos(q) should always have been called before.
      */
-    void compute_jacobian(const VectorXq& q);
+    void compute_jacobian(const VecXd& q);
 
     /**
      * \brief for internal use only.
@@ -187,21 +183,21 @@ public:
     /**
      * \brief contains the last values for the singular values of the weighted Jacobian after an execution of CartToJnt.
      */
-    VectorXq lastSV;
+    VecXd lastSV;
 
     /**
      * \brief for internal use only.
      *
      * contains the last value for the Jacobian after an execution of compute_jacobian.
      */
-    MatrixXq jac;
+    MatXd jac;
 
     /**
      * \brief for internal use only.
      *
      * contains the gradient of the error criterion after an execution of CartToJnt.
      */
-    VectorXq grad;
+    VecXd grad;
     /**
      * \brief for internal use only.
      *
@@ -218,7 +214,7 @@ private:
     unsigned int maxiter;
     double eps;
     double eps_joints;
-    Eigen::Matrix<ScalarType,6,1> L;
+    Vec6d L;
 
 
 
@@ -232,14 +228,14 @@ private:
 
     // the following are state of CartToJnt that is pre-allocated:
 
-    VectorXq q;
-    MatrixXq A;
-    VectorXq tmp;
-    Eigen::LDLT<MatrixXq> ldlt;
-    Eigen::JacobiSVD<MatrixXq> svd;
-    VectorXq diffq;
-    VectorXq q_new;
-    VectorXq original_Aii;
+    VecXd q;
+    MatXd A;
+    VecXd tmp;
+    Eigen::LDLT<MatXd> ldlt;
+    Eigen::JacobiSVD<MatXd> svd;
+    VecXd diffq;
+    VecXd q_new;
+    VecXd original_Aii;
 };
 
 

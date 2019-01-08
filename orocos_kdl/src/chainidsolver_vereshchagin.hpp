@@ -25,7 +25,7 @@
 #include "chainidsolver.hpp"
 #include "frames.hpp"
 #include "articulatedbodyinertia.hpp"
-
+#include "eigen_types.h"
 #include<Eigen/StdVector>
 
 namespace KDL
@@ -41,9 +41,7 @@ class ChainIdSolver_Vereshchagin : KDL::SolverI
 {
     typedef std::vector<Twist> Twists;
     typedef std::vector<Frame> Frames;
-    typedef Eigen::Matrix<double, 6, 1 > Vector6d;
-    typedef Eigen::Matrix<double, 6, 6 > Matrix6d;
-    typedef Eigen::Matrix<double, 6, Eigen::Dynamic> Matrix6Xd;
+    typedef Mat<double, 6, Eigen::Dynamic> Mat6Xd;
 
 public:
     /**
@@ -129,14 +127,14 @@ private:
     Twist acc_root;
     Jacobian alfa_N;
     Jacobian alfa_N2;
-    Eigen::MatrixXd M_0_inverse;
-    Eigen::MatrixXd Um;
-    Eigen::MatrixXd Vm;
+    MatXd M_0_inverse;
+    MatXd Um;
+    MatXd Vm;
     JntArray beta_N;
-    Eigen::VectorXd nu;
-    Eigen::VectorXd nu_sum;
-    Eigen::VectorXd Sm;
-    Eigen::VectorXd tmpm;
+    VecXd nu;
+    VecXd nu_sum;
+    VecXd  Sm;
+    VecXd  tmpm;
     Wrench qdotdot_sum;
     Frame F_total;
 
@@ -158,11 +156,11 @@ private:
         Wrench PZ; //vector U[i] = I_A[i]*S[i]
         Wrench PC; //vector E[i] = I_A[i]*c[i]
         double D; //vector D[i] = S[i]^T*U[i]
-        Matrix6Xd E; //matrix with virtual unit constraint force due to acceleration constraints
-        Matrix6Xd E_tilde;
-        Eigen::MatrixXd M; //acceleration energy already generated at link i
-        Eigen::VectorXd G; //magnitude of the constraint forces already generated at link i
-        Eigen::VectorXd EZ; //K[i] = Etiltde'*Z
+        Mat<double, 6, Eigen::Dynamic> E; //matrix with virtual unit constraint force due to acceleration constraints
+        Mat<double, 6, Eigen::Dynamic> E_tilde;
+        MatXd M; //acceleration energy already generated at link i
+        VecXd G; //magnitude of the constraint forces already generated at link i
+        VecXd EZ; //K[i] = Etiltde'*Z
         double nullspaceAccComp; //Azamat: constribution of joint space u[i] forces to joint space acceleration
         double constAccComp; //Azamat: constribution of joint space constraint forces to joint space acceleration
         double biasAccComp; //Azamat: constribution of joint space bias forces to joint space acceleration

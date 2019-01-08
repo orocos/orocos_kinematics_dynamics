@@ -33,14 +33,14 @@ namespace KDL
         m(max(6,nj)),
         n(min(6,nj)),
         jac_eigen(m,n),
-        U(MatrixXd::Identity(m,m)),
-        V(MatrixXd::Identity(n,n)),
+        U(MatXd::Identity(m,m)),
+        V(MatXd::Identity(n,n)),
         B(m,n),
         S(n),
         tempi(m),
         tempj(m),
-        UY(VectorXd::Zero(6)),
-        SUY(VectorXd::Zero(nj)),
+        UY(VecXd::Zero(6)),
+        SUY(VecXd::Zero(nj)),
         qdot_eigen(nj),
         v_in_eigen(6)
     {
@@ -54,13 +54,13 @@ namespace KDL
         m = max(6,nj);
         n = min(6,nj);
         jac_eigen.conservativeResize(m,n);
-        U.conservativeResizeLike(MatrixXd::Identity(m,m));
-        V.conservativeResizeLike(MatrixXd::Identity(n,n));
+        U.conservativeResizeLike(MatXd::Identity(m,m));
+        V.conservativeResizeLike(MatXd::Identity(n,n));
         B.conservativeResize(m,n);
         S.conservativeResize(n);
         tempi.conservativeResize(m);
         tempj.conservativeResize(n);
-        SUY.conservativeResizeLike(VectorXd::Zero(nj));
+        SUY.conservativeResizeLike(VecXd::Zero(nj));
         qdot_eigen.conservativeResize(nj);
     }
 

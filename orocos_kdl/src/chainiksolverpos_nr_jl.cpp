@@ -52,8 +52,8 @@ namespace KDL
 
     void ChainIkSolverPos_NR_JL::updateInternalDataStructures() {
        nj = chain.getNrOfJoints();
-       q_min.data.conservativeResizeLike(Eigen::VectorXd::Constant(nj,std::numeric_limits<double>::min()));
-       q_max.data.conservativeResizeLike(Eigen::VectorXd::Constant(nj,std::numeric_limits<double>::max()));
+       q_min.data.conservativeResizeLike(VecXd::Constant(nj,std::numeric_limits<double>::min()));
+       q_max.data.conservativeResizeLike(VecXd::Constant(nj,std::numeric_limits<double>::max()));
        iksolver.updateInternalDataStructures();
        fksolver.updateInternalDataStructures();
        delta_q.resize(nj);

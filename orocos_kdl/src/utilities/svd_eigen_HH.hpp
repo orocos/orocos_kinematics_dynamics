@@ -24,11 +24,8 @@
 #ifndef SVD_EIGEN_HH_HPP
 #define SVD_EIGEN_HH_HPP
 
-
-#include <Eigen/Core>
+#include "../eigen_types.h"
 #include <algorithm>
-
-using namespace Eigen;
 
 namespace KDL
 {
@@ -66,6 +63,6 @@ namespace KDL
      *
      * @return -2 if maxiter exceeded, 0 otherwise
      */
-    int svd_eigen_HH(const MatrixXd& A,MatrixXd& U,VectorXd& S,MatrixXd& V,VectorXd& tmp,int maxiter=150,double epsilon=1e-300);
+    int svd_eigen_HH(const MatXd& A,MatXd& U,VecXd& S,MatXd& V,VecXd& tmp,int maxiter=150,double epsilon=1e-300);
 }
 #endif
