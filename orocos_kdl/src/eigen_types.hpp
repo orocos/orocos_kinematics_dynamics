@@ -7,18 +7,14 @@
 namespace KDL
 {
 
-//
 // Eigen type alias
 // For the purpose of Eigen::DontAlign, please refer to:
 // http://eigen.tuxfamily.org/dox/group__TopicStructHavingEigenMembers.html
 template <typename T, int Row, int Col>
 using Mat = Eigen::Matrix<T, Row, Col, Eigen::DontAlign>;
 
-// NOTE: By default Eigen uses ColumnMajor, here we use RowMajor, Be careful about this.
-
 template <typename T, int Row>
 using Vec = Eigen::Matrix<T, Row, 1, Eigen::DontAlign>;
-
 
 //  alias for double type
 using Vec2d = Vec<double, 2>;
