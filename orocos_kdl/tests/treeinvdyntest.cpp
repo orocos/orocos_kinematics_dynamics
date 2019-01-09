@@ -138,7 +138,8 @@ void TreeInvDynTest::TwoChainsTest() {
 void TreeInvDynTest::YTreeTest() {
   std::cout << "\nY-shaped tree: " << endl << ytree << endl;
 
-  TreeIdSolver_RNE solver(ytree, Vector(0,-9.8,0));
+  double g = 9.8;
+  TreeIdSolver_RNE solver(ytree, Vector(0,-g,0));
 
   //Following is just a check in case the model is modified. In this case the
   //analytic model derived using Euler-Lagrange equations would not be valid.
@@ -175,4 +176,5 @@ void TreeInvDynTest::YTreeTest() {
     //compare efforts
     CPPUNIT_ASSERT_EQUAL(tau, eff);
   }
+
 }
