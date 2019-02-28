@@ -55,9 +55,7 @@ Path_Circle::Path_Circle(const Frame& F_base_start,
 			RotationalInterpolation* _orient,
 			double _eqradius,
             bool _aggregate) :
-				orient(_orient) ,
-				eqradius(_eqradius),
-                aggregate(_aggregate)
+				Path_Circle(_orient, _eqradius, _aggregate)
 			{
 					F_base_center.p = _V_base_center;
 					orient->SetStartEnd(F_base_start.M,R_base_end);
@@ -90,6 +88,14 @@ Path_Circle::Path_Circle(const Frame& F_base_start,
 					}
 			}
 
+
+Path_Circle::Path_Circle(RotationalInterpolation* _orient,
+			double _eqradius,
+			bool _aggregate) :
+				orient(_orient) ,
+				eqradius(_eqradius),
+                aggregate(_aggregate)
+			{}
 
 
 double Path_Circle::LengthToS(double length) {
