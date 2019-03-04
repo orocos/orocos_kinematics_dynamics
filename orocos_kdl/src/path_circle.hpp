@@ -92,16 +92,6 @@ class Path_Circle : public Path
 			double eqradius,
 			bool _aggregate=true);
 
-		/**
-		 * object initialization is delegated to this constructor such that destructor is called always
-		 */
-	private:
-		Path_Circle(RotationalInterpolation* otraj,
-			double eqradius,
-			bool _aggregate);
-
-	public:
-
 		double LengthToS(double length);
 
 		virtual double PathLength();
