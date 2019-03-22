@@ -59,34 +59,39 @@ Path_Circle::Path_Circle(const Frame& F_base_start,
 				eqradius(_eqradius),
                 aggregate(_aggregate)
 			{
-					F_base_center.p = _V_base_center;
-					orient->SetStartEnd(F_base_start.M,R_base_end);
-					double oalpha = orient->Angle();
+					try {
+						F_base_center.p = _V_base_center;
+						orient->SetStartEnd(F_base_start.M,R_base_end);
+						double oalpha = orient->Angle();
 
-					Vector x(F_base_start.p - F_base_center.p);
-					radius = x.Normalize();
-					if (radius < epsilon) throw Error_MotionPlanning_Circle_ToSmall();
-					Vector tmpv(V_base_p-F_base_center.p);
-					tmpv.Normalize();
-					Vector z( x * tmpv);
-                    double n = z.Normalize();
-				    if (n < epsilon) throw Error_MotionPlanning_Circle_No_Plane();
-					F_base_center.M = Rotation(x,z*x,z);
-					double dist = alpha*radius;
-					// See what has the slowest eq. motion, and adapt
-					// the other to this slower motion
-					// use eqradius to transform between rot and transl.
-					// the same as for lineair motion
-					if (oalpha*eqradius > dist) {
-						// rotational_interpolation is the limitation
-						pathlength = oalpha*eqradius;
-						scalerot   = 1/eqradius;
-						scalelin   = dist/pathlength;
-					} else {
-						// translation is the limitation
-						pathlength = dist;
-						scalerot   = oalpha/pathlength;
-						scalelin   = 1;
+						Vector x(F_base_start.p - F_base_center.p);
+						radius = x.Normalize();
+						if (radius < epsilon) throw Error_MotionPlanning_Circle_ToSmall();
+						Vector tmpv(V_base_p-F_base_center.p);
+						tmpv.Normalize();
+						Vector z( x * tmpv);
+						double n = z.Normalize();
+						if (n < epsilon) throw Error_MotionPlanning_Circle_No_Plane();
+						F_base_center.M = Rotation(x,z*x,z);
+						double dist = alpha*radius;
+						// See what has the slowest eq. motion, and adapt
+						// the other to this slower motion
+						// use eqradius to transform between rot and transl.
+						// the same as for lineair motion
+						if (oalpha*eqradius > dist) {
+							// rotational_interpolation is the limitation
+							pathlength = oalpha*eqradius;
+							scalerot   = 1/eqradius;
+							scalelin   = dist/pathlength;
+						} else {
+							// translation is the limitation
+							pathlength = dist;
+							scalerot   = oalpha/pathlength;
+							scalelin   = 1;
+						}
+					} catch (...) {
+						if (aggregate) delete orient;
+						throw;
 					}
 			}
 
