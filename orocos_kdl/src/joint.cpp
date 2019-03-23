@@ -26,7 +26,7 @@ namespace KDL {
     // constructor for joint along x,y or z axis, at origin of reference frame
     Joint::Joint(const std::string& _name, const JointType& _type, const double& _scale, const double& _offset,
                  const double& _inertia, const double& _damping, const double& _stiffness, const double& _upper, const double& _lower):
-      name(_name),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper(_upper),lower(_lower)
+      name(_name),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper_position_limit(_upper),lower_position_limit(_lower)
     {
       if (type == RotAxis || type == TransAxis) throw joint_type_ex;
       q_previous = 0;
@@ -35,7 +35,7 @@ namespace KDL {
     // constructor for joint along x,y or z axis, at origin of reference frame
     Joint::Joint(const JointType& _type, const double& _scale, const double& _offset,
                  const double& _inertia, const double& _damping, const double& _stiffness, const double& _upper, const double& _lower):
-      name("NoName"),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper(_upper),lower(_lower)
+      name("NoName"),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper_position_limit(_upper),lower_position_limit(_lower)
     {
       if (type == RotAxis || type == TransAxis) throw joint_type_ex;
       q_previous = 0;
@@ -44,7 +44,7 @@ namespace KDL {
     // constructor for joint along arbitrary axis, at arbitrary origin
     Joint::Joint(const std::string& _name, const Vector& _origin, const Vector& _axis, const JointType& _type, const double& _scale, 
                  const double& _offset, const double& _inertia, const double& _damping, const double& _stiffness, const double& _upper, const double& _lower):
-      name(_name), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper(_upper),lower(_lower)
+      name(_name), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper_position_limit(_upper),lower_position_limit(_lower)
       , axis(_axis / _axis.Norm()), origin(_origin)
     {
       if (type != RotAxis && type != TransAxis) throw joint_type_ex;
@@ -58,7 +58,7 @@ namespace KDL {
     // constructor for joint along arbitrary axis, at arbitrary origin
     Joint::Joint(const Vector& _origin, const Vector& _axis, const JointType& _type, const double& _scale, 
                  const double& _offset, const double& _inertia, const double& _damping, const double& _stiffness, const double& _upper, const double& _lower):
-          name("NoName"), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper(_upper),lower(_lower),
+          name("NoName"), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),upper_position_limit(_upper),lower_position_limit(_lower),
           axis(_axis / _axis.Norm()),origin(_origin)
     {
       if (type != RotAxis && type != TransAxis) throw joint_type_ex;
@@ -154,14 +154,14 @@ namespace KDL {
     return Vector::Zero();
   }
 
-  double Joint::JointUpper() const
+  double Joint::JointUpperPositionLimit() const
   {
-      return upper;
+      return upper_position_limit;
   }
 
-  double Joint::JointLower() const
+  double Joint::JointLowerPositionLimit() const
   {
-      return lower;
+      return lower_position_limit;
   }
 
   Vector Joint::JointOrigin() const

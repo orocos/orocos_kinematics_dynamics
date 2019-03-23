@@ -62,7 +62,7 @@ namespace KDL {
          * default: 0
          */
         explicit Joint(const std::string& name, const JointType& type=None,const double& scale=1,const double& offset=0,
-              const double& inertia=0,const double& damping=0,const double& stiffness=0,const double& upper=0,const double& lower=0);
+              const double& inertia=0,const double& damping=0,const double& stiffness=0,const double& upper_position_limit=0,const double& lower_position_limit=0);
         /**
          * Constructor of a joint.
          *
@@ -79,7 +79,7 @@ namespace KDL {
          * default: 0
          */
         explicit Joint(const JointType& type=None,const double& scale=1,const double& offset=0,
-               const double& inertia=0,const double& damping=0,const double& stiffness=0,const double& upper=0,const double& lower=0);
+               const double& inertia=0,const double& damping=0,const double& stiffness=0,const double& upper_position_limit=0,const double& lower_position_limit=0);
         /**
          * Constructor of a joint.
          *
@@ -98,7 +98,7 @@ namespace KDL {
          * default: 0
          */
         Joint(const std::string& name, const Vector& _origin, const Vector& _axis, const JointType& type, const double& _scale=1, const double& _offset=0,
-             const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
+               const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
         /**
          * Constructor of a joint.
          *
@@ -116,7 +116,7 @@ namespace KDL {
          * default: 0
          */
         Joint(const Vector& _origin, const Vector& _axis, const JointType& type, const double& _scale=1, const double& _offset=0,
-             const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
+               const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
 
         /**
          * Request the 6D-pose between the beginning and the end of
@@ -148,14 +148,14 @@ namespace KDL {
          *
          * @return upper
          */
-        double JointUpper() const;
+        double JointUpperPositionLimit() const;
 
         /**
          * Request the double corresponding to the lower position limit of a joint.
          *
          * @return lower
          */
-        double JointLower() const;
+        double JointLowerPositionLimit() const;
 
         /**                                                                     
          * Request the Vector corresponding to the origin of a revolute joint.    
@@ -224,8 +224,8 @@ namespace KDL {
         double inertia;
         double damping;
         double stiffness;
-        double upper;
-        double lower;
+        double upper_position_limit;
+        double lower_position_limit;
 
         // variables for RotAxis joint
         Vector axis, origin;
