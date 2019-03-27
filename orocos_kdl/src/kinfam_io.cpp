@@ -21,6 +21,7 @@
 
 #include "kinfam_io.hpp"
 #include "frames_io.hpp"
+#include <string>
 
 namespace KDL {
 std::ostream& operator <<(std::ostream& os, const Joint& joint) {
