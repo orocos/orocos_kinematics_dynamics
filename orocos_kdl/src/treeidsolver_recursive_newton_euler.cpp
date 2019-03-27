@@ -21,6 +21,7 @@
 
 #include "treeidsolver_recursive_newton_euler.hpp"
 #include "frames_io.hpp"
+#include <stdexcept>
 
 namespace KDL{
 
