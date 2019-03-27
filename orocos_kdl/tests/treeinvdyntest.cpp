@@ -144,10 +144,7 @@ void TreeInvDynTest::YTreeTest() {
   //Following is just a check in case the model is modified. In this case the
   //analytic model derived using Euler-Lagrange equations would not be valid.
   unsigned int dof = ytree.getNrOfJoints();
-  if(dof != 3)
-    throw std::runtime_error("The analytic euler-lagrange model was derived for"
-                             " a specific 3-dof model. The kinematic tree has"
-                             " however " + std::to_string(dof) + " dof.");
+  CPPUNIT_ASSERT_EQUAL(dof, 3); // The analytic euler-lagrange model was derived for a specific 3-dof model
 
   JntArray q(dof), qd(dof), qdd(dof), tau(dof), eff(dof);
 
