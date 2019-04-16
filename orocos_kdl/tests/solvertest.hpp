@@ -39,6 +39,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(FkVelVectTest );
     CPPUNIT_TEST(FdSolverDevelopmentTest );
     CPPUNIT_TEST(FdSolverConsistencyTest );
+    CPPUNIT_TEST(LDLdecompTest);
     CPPUNIT_TEST(UpdateChainTest );
     CPPUNIT_TEST_SUITE_END();
 
@@ -57,6 +58,7 @@ public:
     void FkVelVectTest();
     void FdSolverDevelopmentTest();
     void FdSolverConsistencyTest();
+    void LDLdecompTest();
     void UpdateChainTest();
 
 private:

@@ -1147,3 +1147,59 @@ void SolverTest::FdSolverConsistencyTest()
 
     return;
 }
+
+void SolverTest::LDLdecompTest()
+{
+    std::cout<<"LDL Solver Test"<<std::endl;
+    double eps=1.e-6;
+
+    //  Given A and b, solve Ax=b for x, where A is a symmetric real matrix
+    //  https://en.wikipedia.org/wiki/Cholesky_decomposition
+    Eigen::MatrixXd A(3,3), Aout(3,3);
+    Eigen::VectorXd b(3);
+    Eigen::MatrixXd L(3,3), Lout(3,3);
+    Eigen::VectorXd d(3), dout(3);
+    Eigen::VectorXd x(3), xout(3);
+    Eigen::VectorXd r(3);  // temp variable used internally by ldl solver
+    Eigen::MatrixXd Dout(3,3);  // diagonal matrix
+
+    // Given
+    A <<  4, 12, -16,
+         12, 37, -43,
+        -16, -43, 98;
+    b << 28, 117, 98;
+    // Results to verify
+    L <<  1, 0, 0,
+          3, 1, 0,
+          -4, 5, 1;
+    d << 4, 1, 9;
+    x << 3, 8, 5;
+
+    ldl_solver_eigen(A, b, Lout, dout, r, xout);
+
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            CPPUNIT_ASSERT(Equal(L(i,j), Lout(i,j), eps));
+        }
+    }
+
+    Dout.setZero();
+    for(int i=0;i<3;i++){
+        Dout(i,i) = dout(i);
+    }
+
+    // Verify solution for x
+    for(int i=0;i<3;i++){
+        xout(i,i) = x(i);
+    }
+
+    // Test reconstruction of A from LDL^T decomposition
+    Aout = Lout * Dout * Lout.transpose();
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            CPPUNIT_ASSERT(Equal(A(i,j), Aout(i,j), eps));
+        }
+    }
+
+    return;
+}
