@@ -108,7 +108,7 @@ namespace KDL {
     class ChainFkSolverAcc : public KDL::SolverI {
     public:
         /**
-         * Calculate forward position, velocity and accelaration
+         * Calculate forward position, velocity and acceleration
          * kinematics, from joint coordinates to cartesian coordinates
          *
          * @param q_in input joint coordinates (position, velocity and
@@ -120,7 +120,7 @@ namespace KDL {
          */
     virtual int JntToCart(const JntArrayAcc& q_in, FrameAcc& out,int segmentNr=-1)=0;
         /**
-         * Calculate forward position, velocity and accelaration
+         * Calculate forward position, velocity and acceleration
          * kinematics, from joint coordinates to cartesian coordinates
          *
          * @param q_in input joint coordinates (position, velocity and
