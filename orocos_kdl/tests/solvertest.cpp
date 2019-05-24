@@ -1190,7 +1190,7 @@ void SolverTest::LDLdecompTest()
 
     // Verify solution for x
     for(int i=0;i<3;i++){
-        xout(i,i) = x(i);
+        CPPUNIT_ASSERT(Equal(xout(i), x(i), eps));
     }
 
     // Test reconstruction of A from LDL^T decomposition
