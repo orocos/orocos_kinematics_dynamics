@@ -127,9 +127,9 @@ namespace KDL {
     }
 #endif  
 
-
-
-
+#if (__cplusplus > 199711L)
+using std::isnan;
+#endif
 
 /** 
  * Auxiliary class for argument types (Trait-template class )
