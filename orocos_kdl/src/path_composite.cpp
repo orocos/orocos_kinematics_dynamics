@@ -128,18 +128,18 @@ void Path_Composite::Write(std::ostream& os)  {
 }
 
 int Path_Composite::GetNrOfSegments() {
-	return dv.size();
+	return static_cast<int>(dv.size());
 }
 
 Path* Path_Composite::GetSegment(int i) {
 	assert(i>=0);
-	assert(i<dv.size());
+	assert(i<static_cast<int>(dv.size()));
 	return gv[i].first;
 }
 
 double Path_Composite::GetLengthToEndOfSegment(int i) {
 	assert(i>=0);
-	assert(i<dv.size());
+	assert(i<static_cast<int>(dv.size()));
 	return dv[i];
 }
 

@@ -93,8 +93,7 @@ namespace KDL
                 else
                     jac_eigen(i,j)=jac(i,j);
         }
-        int ret = svd_eigen_Macie(jac_eigen,U,S,V,B,tempi,1e-15,toggle);
-        //std::cout<<"# sweeps: "<<ret<<std::endl;
+        svd_eigen_Macie(jac_eigen,U,S,V,B,tempi,1e-15,toggle);
 
         if(transpose)
             UY.noalias() = V.transpose() * v_in_eigen;
