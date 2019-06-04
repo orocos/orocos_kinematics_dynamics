@@ -840,7 +840,6 @@ void SolverTest::VereshchaginTest()
     double taskTimeConstant = 0.1;
     double simulationTime = 1*taskTimeConstant;
     double timeDelta = 0.01;
-    int status;
 
     const std::string msg = "Assertion failed, check matrix and array sizes";
 
