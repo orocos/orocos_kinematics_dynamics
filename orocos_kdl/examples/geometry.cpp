@@ -74,14 +74,14 @@ int main()
     //Default constructor
     KDL::Rotation r1;
     //Creating a rotation matrix out of three unit vectors Vx, Vy,
-    //Vz. Be carefull, these vectors should be normalised and
+    //Vz. Be careful, these vectors should be normalised and
     //orthogonal. Otherwise this can result in an inconsistent
     //rotation matrix
     KDL::Rotation r2(KDL::Vector(0,0,1),
                      KDL::Vector(0,-1,0),
                      KDL::Vector(-1,0,0));
-    //Creating a rotation matrix out of 9 values, Be carefull, these
-    //values can result in an inconsisten rotation matrix if the
+    //Creating a rotation matrix out of 9 values, Be careful, these
+    //values can result in an inconsistent rotation matrix if the
     //resulting rows/columns are not orthogonal/normalized
     KDL::Rotation r3(0,0,-1,1,0,0,0,-1,0);
     //Creating an Identity rotation matrix

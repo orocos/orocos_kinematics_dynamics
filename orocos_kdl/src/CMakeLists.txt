@@ -68,7 +68,7 @@ ENDIF()
 IF(NOT (CMAKE_VERSION VERSION_LESS 2.8.12))
     IF(NOT MSVC)
         #add the option to disable RPATH
-        OPTION(OROCOSKDL_ENABLE_RPATH "Enable RPATH during installation" FALSE)
+        OPTION(OROCOSKDL_ENABLE_RPATH "Enable RPATH during installation" TRUE)
         MARK_AS_ADVANCED(OROCOSKDL_ENABLE_RPATH)
     ENDIF(NOT MSVC)
 

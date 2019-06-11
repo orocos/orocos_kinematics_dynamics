@@ -42,9 +42,24 @@ namespace KDL {
         ag=-Twist(grav,Vector::Zero());
     }
 
+    void ChainDynParam::updateInternalDataStructures() {
+        nj = chain.getNrOfJoints();
+        ns = chain.getNrOfSegments();
+        jntarraynull.resize(nj);
+        chainidsolver_coriolis.updateInternalDataStructures();
+        chainidsolver_gravity.updateInternalDataStructures();
+        wrenchnull.resize(ns,Wrench::Zero());
+        X.resize(ns);
+        S.resize(ns);
+        Ic.resize(ns);
+    }
+
+
     //calculate inertia matrix H
     int ChainDynParam::JntToMass(const JntArray &q, JntSpaceInertiaMatrix& H)
     {
+        if(nj != chain.getNrOfJoints() || ns != chain.getNrOfSegments())
+            return (error = E_NOT_UP_TO_DATE);
 	//Check sizes when in debug mode
         if(q.rows()!=nj || H.rows()!=nj || H.columns()!=nj )
             return (error = E_SIZE_MISMATCH);
@@ -83,7 +98,8 @@ namespace KDL {
 	  F=Ic[i]*S[i];
 	  if(chain.getSegment(i).getJoint().getType()!=Joint::None)
 	  {
-	      H(k,k)=dot(S[i],F);
+          H(k,k)=dot(S[i],F);
+          H(k,k)+=chain.getSegment(i).getJoint().getInertia();  // add joint inertia
 	      j=k; //countervariable for the joints
 	      l=i; //countervariable for the segments
 	      while(l!=0) //go from leaf to root starting at i

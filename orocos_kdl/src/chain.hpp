@@ -28,7 +28,7 @@
 namespace KDL {
     /**
 	  * \brief This class encapsulates a <strong>serial</strong> kinematic
-	  * interconnection structure. It is build out of segments.
+	  * interconnection structure. It is built out of segments.
      *
      * @ingroup KinematicFamily
      */
@@ -84,6 +84,16 @@ namespace KDL {
          * @return a constant reference to the nr'd segment
          */
         const Segment& getSegment(unsigned int nr)const;
+
+        /**
+         * Request the nr'd segment of the chain. There is no boundary
+         * checking.
+         *
+         * @param nr the nr of the segment starting from 0
+         *
+         * @return a reference to the nr'd segment
+         */
+        Segment& getSegment(unsigned int nr);
 
         virtual ~Chain();
     };

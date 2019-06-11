@@ -119,6 +119,57 @@ void SolverTest::setUp()
 									Frame::DH_Craig1989(0.0, -M_PI_2, 0.0, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
 									Frame(Rotation::Identity(),Vector(0.0,0.0,0.155))));
+
+    // Motoman SIA10 Chain with Mass Parameters (for forward dynamics tests)
+
+    //  effective motor inertia is included as joint inertia
+    static const double scale=1;
+    static const double offset=0;
+    static const double inertiamotorA=5.0;      // effective motor inertia kg-m^2
+    static const double inertiamotorB=3.0;      // effective motor inertia kg-m^2
+    static const double inertiamotorC=1.0;      // effective motor inertia kg-m^2
+    static const double damping=0;
+    static const double stiffness=0;
+
+    //  Segment Inertias
+    KDL::RigidBodyInertia inert1(15.0, KDL::Vector(0.0, -0.02, 0.0),                       // mass, CM
+                                 KDL::RotationalInertia(0.1, 0.05, 0.1, 0.0, 0.0, 0.0));   // inertia
+    KDL::RigidBodyInertia inert2(5.0, KDL::Vector(0.0, -0.02, -0.1),
+                                 KDL::RotationalInertia(0.01, 0.1, 0.1, 0.0, 0.0, 0.0));
+    KDL::RigidBodyInertia inert3(5.0, KDL::Vector(0.0, -0.05, 0.02),
+                                 KDL::RotationalInertia(0.05, 0.01, 0.05, 0.0, 0.0, 0.0));
+    KDL::RigidBodyInertia inert4(3.0, KDL::Vector(0.0, 0.02, -0.15),
+                                 KDL::RotationalInertia(0.1, 0.1, 0.01, 0.0, 0.0, 0.0));
+    KDL::RigidBodyInertia inert5(3.0, KDL::Vector(0.0, -0.05, 0.01),
+                                 KDL::RotationalInertia(0.02, 0.01, 0.02, 0.0, 0.0, 0.0));
+    KDL::RigidBodyInertia inert6(3.0, KDL::Vector(0.0, -0.01, -0.1),
+                                 KDL::RotationalInertia(0.1, 0.1, 0.01, 0.0, 0.0, 0.0));
+    KDL::RigidBodyInertia inert7(1.0, KDL::Vector(0.0, 0.0, 0.05),
+                                 KDL::RotationalInertia(0.01, 0.01, 0.1, 0.0, 0.0, 0.0));
+
+    motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
+                               Frame::DH(0.0, M_PI_2, 0.36, 0.0),
+                               inert1));
+    motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
+                               Frame::DH(0.0, -M_PI_2, 0.0, 0.0),
+                               inert2));
+    motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
+                               Frame::DH(0.0, M_PI_2, 0.36, 0.0),
+                               inert3));
+    motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
+                               Frame::DH(0.0, -M_PI_2, 0.0, 0.0),
+                               inert4));
+    motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
+                               Frame::DH(0.0, M_PI_2, 0.36, 0.0),
+                               inert5));
+    motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
+                               Frame::DH(0.0, -M_PI_2, 0.0, 0.0),
+                               inert6));
+    motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
+                               Frame::DH(0.0, 0.0, 0.0, 0.0),
+                               inert7));
+    motomansia10dyn.addSegment(Segment(Joint(Joint::None),
+                                       Frame(Rotation::Identity(),Vector(0.0,0.0,0.155))));
 }
 
 void SolverTest::tearDown()
@@ -130,6 +181,152 @@ void SolverTest::tearDown()
 //     delete iksolverpos;
 }
 
+void SolverTest::UpdateChainTest()
+{
+    ChainFkSolverPos_recursive fksolverpos(chain2);
+    ChainFkSolverVel_recursive fksolvervel(chain2);
+    ChainJntToJacSolver jacsolver1(chain2);
+    ChainJntToJacDotSolver jacdotsolver1(chain2);
+    ChainIkSolverVel_pinv iksolver2(chain2);
+    ChainIkSolverVel_pinv_givens iksolver_pinv_givens2(chain2);
+    ChainIkSolverVel_pinv_nso  iksolver_pinv_nso(chain2);
+    ChainIkSolverVel_wdls iksolver_wdls(chain2,1e-6,30);
+    ChainIkSolverPos_NR iksolverpos(chain2,fksolverpos,iksolver2);
+    ChainIkSolverPos_NR_JL iksolverpos2(chain2,fksolverpos,iksolver2);
+    ChainIkSolverPos_LMA iksolverpos3(chain2);
+    ChainDynParam dynparam(chain2, Vector::Zero());
+    ChainIdSolver_RNE idsolver1(chain2, Vector::Zero());
+    unsigned int nr_of_constraints = 4;
+    ChainIdSolver_Vereshchagin idsolver2(chain2,Twist::Zero(),4);
+
+    JntArray q_in(chain2.getNrOfJoints());
+    JntArray q_in2(chain2.getNrOfJoints());
+    JntArrayVel q_in3(chain2.getNrOfJoints());
+    for(unsigned int i=0; i<chain2.getNrOfJoints(); i++)
+    {
+        random(q_in(i));
+        random(q_in2(i));
+    }
+    JntArray q_out(chain2.getNrOfJoints());
+    JntArray q_out2(chain2.getNrOfJoints());
+    Jacobian jac(chain2.getNrOfJoints());
+    Frame T;
+    Twist t;
+    FrameVel T2;
+    Wrenches wrenches(chain2.getNrOfSegments());
+    JntSpaceInertiaMatrix m(chain2.getNrOfJoints());
+
+    Jacobian alpha(nr_of_constraints - 1);
+    JntArray beta(nr_of_constraints - 1);
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()+1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()+1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()+1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()+1));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()+1));
+    chain2.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotX),
+            Frame(Vector(0.0,0.0,0.1))));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolver2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolver_pinv_nso.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolver_wdls.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos2.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToMass(q_in, m));
+
+    jacsolver1.updateInternalDataStructures();
+    jacdotsolver1.updateInternalDataStructures();
+    iksolver2.updateInternalDataStructures();
+    iksolver_pinv_givens2.updateInternalDataStructures();
+    iksolver_pinv_nso.updateInternalDataStructures();
+    iksolver_wdls.updateInternalDataStructures();
+    iksolverpos.updateInternalDataStructures();
+    iksolverpos2.updateInternalDataStructures();
+    iksolverpos3.updateInternalDataStructures();
+    idsolver1.updateInternalDataStructures();
+    idsolver2.updateInternalDataStructures();
+    dynparam.updateInternalDataStructures();
+
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_pinv_nso.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_wdls.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos2.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
+
+    q_in.resize(chain2.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_pinv_nso.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolver_wdls.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos2.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos2.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
+    q_in2.resize(chain2.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    wrenches.resize(chain2.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    q_out2.resize(chain2.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    alpha.resize(nr_of_constraints);
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    beta.resize(nr_of_constraints);
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    jac.resize(chain2.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
+    q_out.resize(chain2.getNrOfJoints());
+    q_in3.resize(chain2.getNrOfJoints());
+    m.resize(chain2.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver_pinv_givens2.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver_pinv_nso.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolver_wdls.CartToJnt(q_in,t,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos2.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos2.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos3.CartToJnt(q_in,T,q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= idsolver2.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToCoriolis(q_in, q_in2, q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToGravity(q_in, q_out));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToMass(q_in, m));
+}
 void SolverTest::FkPosAndJacTest()
 {
     ChainFkSolverPos_recursive fksolver1(chain1);
@@ -643,7 +840,6 @@ void SolverTest::VereshchaginTest()
     double taskTimeConstant = 0.1;
     double simulationTime = 1*taskTimeConstant;
     double timeDelta = 0.01;
-    int status;
 
     const std::string msg = "Assertion failed, check matrix and array sizes";
 
@@ -700,4 +896,309 @@ void SolverTest::FkVelVectTest()
     fksolver1.JntToCart(qvel,f_out);
     
     CPPUNIT_ASSERT(Equal(v_out[chain1.getNrOfSegments()-1],f_out,1e-5));
+}
+
+void SolverTest::FdSolverDevelopmentTest()
+{
+    int ret;
+    double eps=1.e-3;
+
+    std::cout<<"KDL FD Solver Development Test for Motoman SIA10"<<std::endl;
+
+    //  NOTE:  This is prototype code for the KDL forward dynamics solver class
+    //         based on the Recurse Newton Euler Method:  ChainFdSolver_RNE
+
+    //  Dynamics Solver
+    Vector gravity(0.0, 0.0, -9.81);  // base frame
+    ChainDynParam DynSolver = KDL::ChainDynParam(motomansia10dyn, gravity);
+
+    unsigned int nj = motomansia10dyn.getNrOfJoints();
+    unsigned int ns = motomansia10dyn.getNrOfSegments();
+
+    // Joint position, velocity, and acceleration
+    JntArray q(nj);
+    JntArray qd(nj);
+    JntArray qdd(nj);
+
+    //  random
+    q(0) = 0.2;
+    q(1) = 0.6;
+    q(2) = 1.;
+    q(3) = 0.5;
+    q(4) = -1.4;
+    q(5) = 0.3;
+    q(6) = -0.8;
+
+    qd(0) = 1.;
+    qd(1) = -2.;
+    qd(2) = 3.;
+    qd(3) = -4.;
+    qd(4) = 5.;
+    qd(5) = -6.;
+    qd(6) = 7.;
+
+    // Validate FK
+    ChainFkSolverPos_recursive fksolver(motomansia10dyn);
+    Frame f_out;
+    fksolver.JntToCart(q,f_out);
+    CPPUNIT_ASSERT(Equal(-0.547, f_out.p(0), eps));
+    CPPUNIT_ASSERT(Equal(-0.301, f_out.p(1), eps));
+    CPPUNIT_ASSERT(Equal(0.924, f_out.p(2), eps));
+    CPPUNIT_ASSERT(Equal(0.503, f_out.M(0,0), eps));
+    CPPUNIT_ASSERT(Equal(0.286, f_out.M(0,1), eps));
+    CPPUNIT_ASSERT(Equal(-0.816, f_out.M(0,2), eps));
+    CPPUNIT_ASSERT(Equal(-0.859, f_out.M(1,0), eps));
+    CPPUNIT_ASSERT(Equal(0.269, f_out.M(1,1), eps));
+    CPPUNIT_ASSERT(Equal(-0.436, f_out.M(1,2), eps));
+    CPPUNIT_ASSERT(Equal(0.095, f_out.M(2,0), eps));
+    CPPUNIT_ASSERT(Equal(0.920, f_out.M(2,1), eps));
+    CPPUNIT_ASSERT(Equal(0.381, f_out.M(2,2), eps));
+
+    // Validate Jacobian
+    ChainJntToJacSolver jacsolver(motomansia10dyn);
+    Jacobian jac(nj);
+    jacsolver.JntToJac(q, jac);
+    double Jac[6][7] =
+        {{0.301,-0.553,0.185,0.019,0.007,-0.086,0.},
+        {-0.547,-0.112,-0.139,-0.376,-0.037,0.063,0.},
+        {0.,-0.596,0.105,-0.342,-0.026,-0.113,0.},
+        {0.,0.199,-0.553,0.788,-0.615,0.162,-0.816},
+        {0.,-0.980,-0.112,-0.392,-0.536,-0.803,-0.436},
+        {1.,0.,0.825,0.475,0.578,-0.573,0.381}};
+    for ( int i=0; i<6; i++ ) {
+        for ( int j=0; j<nj; j++ ) {
+            CPPUNIT_ASSERT(Equal(jac(i,j), Jac[i][j], eps));
+        }
+    }
+
+    // Return values
+    JntArray taugrav(nj);
+    JntArray taucor(nj);
+    JntSpaceInertiaMatrix H(nj), Heff(nj);
+
+    // Compute Dynamics (torque in N-m)
+    ret = DynSolver.JntToGravity(q, taugrav);
+    if (ret < 0) std::cout << "KDL: inverse dynamics ERROR: " << ret << std::endl;
+    CPPUNIT_ASSERT(Equal(0.000, taugrav(0), eps));
+    CPPUNIT_ASSERT(Equal(-36.672, taugrav(1), eps));
+    CPPUNIT_ASSERT(Equal(4.315, taugrav(2), eps));
+    CPPUNIT_ASSERT(Equal(-11.205, taugrav(3), eps));
+    CPPUNIT_ASSERT(Equal(0.757, taugrav(4), eps));
+    CPPUNIT_ASSERT(Equal(1.780, taugrav(5), eps));
+    CPPUNIT_ASSERT(Equal(0.000, taugrav(6), eps));
+
+    ret = DynSolver.JntToCoriolis(q, qd, taucor);
+    if (ret < 0) std::cout << "KDL: inverse dynamics ERROR: " << ret << std::endl;
+    CPPUNIT_ASSERT(Equal(-15.523, taucor(0), eps));
+    CPPUNIT_ASSERT(Equal(24.250, taucor(1), eps));
+    CPPUNIT_ASSERT(Equal(-6.862, taucor(2), eps));
+    CPPUNIT_ASSERT(Equal(6.303, taucor(3), eps));
+    CPPUNIT_ASSERT(Equal(0.110, taucor(4), eps));
+    CPPUNIT_ASSERT(Equal(-4.898, taucor(5), eps));
+    CPPUNIT_ASSERT(Equal(-0.249, taucor(6), eps));
+
+    ret = DynSolver.JntToMass(q, H);
+    if (ret < 0) std::cout << "KDL: inverse dynamics ERROR: " << ret << std::endl;
+    double Hexp[7][7] =
+        {{6.8687,-0.4333,0.4599,0.6892,0.0638,-0.0054,0.0381},
+        {-0.4333,8.8324,-0.5922,0.7905,0.0003,-0.0242,0.0265},
+        {0.4599,-0.5922,3.3496,-0.0253,0.1150,-0.0243,0.0814},
+        {0.6892,0.7905,-0.0253,3.9623,-0.0201,0.0087,-0.0291},
+        {0.0638,0.0003,0.1150,-0.0201,1.1234,0.0029,0.0955},
+        {-0.0054,-0.0242,-0.0243,0.0087,0.0029,1.1425,0},
+        {0.0381,0.0265,0.0814,-0.0291,0.0955,0,1.1000}};
+    for ( int i=0; i<nj; i++ ) {
+        for ( int j=0; j<nj; j++ ) {
+            CPPUNIT_ASSERT(Equal(H(i,j), Hexp[i][j], eps));
+        }
+    }
+
+    // Inverse Dynamics:
+    //   T = H * qdd + Tcor + Tgrav - J^T * Fext
+    // Forward Dynamics
+    //   1. Call JntToMass from ChainDynParam to get H
+    //   2. Call ID with qdd=0 to get T=Tcor+Tgrav+J^T*Fext
+    //   3. Calculate qdd = H^-1 * T
+    KDL::ChainIdSolver_RNE IdSolver = KDL::ChainIdSolver_RNE(motomansia10dyn, gravity);
+
+    // In tool coordinates
+    Vector f(10,-20,30) ;
+    Vector n(3,-4,5) ;
+    Wrench f_tool(f,n);
+    // In local link coordinates
+    Wrenches f_ext(ns);
+    for(int i=0;i<ns;i++){
+        SetToZero(f_ext[i]);
+    }
+    f_ext[ns-1]=f_tool;
+
+    JntArray Tnoninertial(nj);
+    JntArray jntarraynull(nj);
+    SetToZero(jntarraynull);
+    IdSolver.CartToJnt(q, qd, jntarraynull, f_ext, Tnoninertial);
+    CPPUNIT_ASSERT(Equal(-21.252, Tnoninertial(0), eps));
+    CPPUNIT_ASSERT(Equal(-37.933, Tnoninertial(1), eps));
+    CPPUNIT_ASSERT(Equal(-2.497, Tnoninertial(2), eps));
+    CPPUNIT_ASSERT(Equal(-15.289, Tnoninertial(3), eps));
+    CPPUNIT_ASSERT(Equal(-4.646, Tnoninertial(4), eps));
+    CPPUNIT_ASSERT(Equal(-9.201, Tnoninertial(5), eps));
+    CPPUNIT_ASSERT(Equal(-5.249, Tnoninertial(6), eps));
+
+    // get acceleration using inverse symmetric matrix times vector
+    Eigen::MatrixXd H_eig(nj,nj), L(nj,nj);
+    Eigen::VectorXd Tnon_eig(nj), D(nj), r(nj), acc_eig(nj);
+    for(int i=0;i<nj;i++){
+        Tnon_eig(i) =  -Tnoninertial(i);
+        for(int j=0;j<nj;j++){
+            H_eig(i,j) =  H(i,j);
+        }
+    }
+    ldl_solver_eigen(H_eig, Tnon_eig, L, D, r, acc_eig);
+    for(int i=0;i<nj;i++){
+        qdd(i) = acc_eig(i);
+    }
+    CPPUNIT_ASSERT(Equal(2.998, qdd(0), eps));
+    CPPUNIT_ASSERT(Equal(4.289, qdd(1), eps));
+    CPPUNIT_ASSERT(Equal(0.946, qdd(2), eps));
+    CPPUNIT_ASSERT(Equal(2.518, qdd(3), eps));
+    CPPUNIT_ASSERT(Equal(3.530, qdd(4), eps));
+    CPPUNIT_ASSERT(Equal(8.150, qdd(5), eps));
+    CPPUNIT_ASSERT(Equal(4.254, qdd(6), eps));
+}
+
+void SolverTest::FdSolverConsistencyTest()
+{
+    int ret;
+    double eps=1.e-3;
+
+    std::cout<<"KDL FD Solver Consistency Test for Motoman SIA10"<<std::endl;
+
+    //  NOTE:  Compute the forward and inverse dynamics and test for consistency
+
+    //  Forward Dynamics Solver
+    Vector gravity(0.0, 0.0, -9.81);  // base frame
+    KDL::ChainFdSolver_RNE FdSolver = KDL::ChainFdSolver_RNE(motomansia10dyn, gravity);
+
+    unsigned int nj = motomansia10dyn.getNrOfJoints();
+    unsigned int ns = motomansia10dyn.getNrOfSegments();
+
+    // Joint position, velocity, and acceleration
+    KDL::JntArray q(nj);
+    KDL::JntArray qd(nj);
+    KDL::JntArray qdd(nj);
+    KDL::JntArray tau(nj);
+
+    //  random
+    q(0) = 0.2;
+    q(1) = 0.6;
+    q(2) = 1.;
+    q(3) = 0.5;
+    q(4) = -1.4;
+    q(5) = 0.3;
+    q(6) = -0.8;
+
+    qd(0) = 1.;
+    qd(1) = -2.;
+    qd(2) = 3.;
+    qd(3) = -4.;
+    qd(4) = 5.;
+    qd(5) = -6.;
+    qd(6) = 7.;
+
+    // actuator torques
+    tau(0) = 50.;
+    tau(1) = -20.;
+    tau(2) = 10.;
+    tau(3) = 40.;
+    tau(4) = -60.;
+    tau(5) = 15.;
+    tau(6) = -10.;
+
+    KDL::Vector f(10,-20,30) ;
+    KDL::Vector n(3,-4,5) ;
+    KDL::Wrench f_tool(f,n);
+    // In local link coordinates
+    KDL::Wrenches f_ext(ns);
+    for(int i=0;i<ns;i++){
+        SetToZero(f_ext[i]);
+    }
+    f_ext[ns-1]=f_tool;
+
+    // Call FD function
+    ret = FdSolver.CartToJnt(q, qd, tau, f_ext, qdd);
+    if (ret < 0) std::cout << "KDL: forward dynamics ERROR: " << ret << std::endl;
+    CPPUNIT_ASSERT(Equal(9.486, qdd(0), eps));
+    CPPUNIT_ASSERT(Equal(1.830, qdd(1), eps));
+    CPPUNIT_ASSERT(Equal(4.726, qdd(2), eps));
+    CPPUNIT_ASSERT(Equal(11.665, qdd(3), eps));
+    CPPUNIT_ASSERT(Equal(-50.108, qdd(4), eps));
+    CPPUNIT_ASSERT(Equal(21.403, qdd(5), eps));
+    CPPUNIT_ASSERT(Equal(-0.381, qdd(6), eps));
+
+    // Check against ID solver for consistency
+    KDL::ChainIdSolver_RNE IdSolver = KDL::ChainIdSolver_RNE(motomansia10dyn, gravity);
+    KDL::JntArray torque(nj);
+    IdSolver.CartToJnt(q, qd, qdd, f_ext, torque);
+    for ( int i=0; i<nj; i++ )
+    {
+        CPPUNIT_ASSERT(Equal(torque(i), tau(i), eps));
+    }
+
+    return;
+}
+
+void SolverTest::LDLdecompTest()
+{
+    std::cout<<"LDL Solver Test"<<std::endl;
+    double eps=1.e-6;
+
+    //  Given A and b, solve Ax=b for x, where A is a symmetric real matrix
+    //  https://en.wikipedia.org/wiki/Cholesky_decomposition
+    Eigen::MatrixXd A(3,3), Aout(3,3);
+    Eigen::VectorXd b(3);
+    Eigen::MatrixXd L(3,3), Lout(3,3);
+    Eigen::VectorXd d(3), dout(3);
+    Eigen::VectorXd x(3), xout(3);
+    Eigen::VectorXd r(3);  // temp variable used internally by ldl solver
+    Eigen::MatrixXd Dout(3,3);  // diagonal matrix
+
+    // Given
+    A <<  4, 12, -16,
+         12, 37, -43,
+        -16, -43, 98;
+    b << 28, 117, 98;
+    // Results to verify
+    L <<  1, 0, 0,
+          3, 1, 0,
+          -4, 5, 1;
+    d << 4, 1, 9;
+    x << 3, 8, 5;
+
+    ldl_solver_eigen(A, b, Lout, dout, r, xout);
+
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            CPPUNIT_ASSERT(Equal(L(i,j), Lout(i,j), eps));
+        }
+    }
+
+    Dout.setZero();
+    for(int i=0;i<3;i++){
+        Dout(i,i) = dout(i);
+    }
+
+    // Verify solution for x
+    for(int i=0;i<3;i++){
+        CPPUNIT_ASSERT(Equal(xout(i), x(i), eps));
+    }
+
+    // Test reconstruction of A from LDL^T decomposition
+    Aout = Lout * Dout * Lout.transpose();
+    for(int i=0;i<3;i++){
+        for(int j=0;j<3;j++){
+            CPPUNIT_ASSERT(Equal(A(i,j), Aout(i,j), eps));
+        }
+    }
+
+    return;
 }

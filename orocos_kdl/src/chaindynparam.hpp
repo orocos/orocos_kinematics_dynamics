@@ -54,8 +54,11 @@ namespace KDL {
 	virtual int JntToMass(const JntArray &q, JntSpaceInertiaMatrix& H);
 	virtual int JntToGravity(const JntArray &q,JntArray &gravity);
 
+    /// @copydoc KDL::SolverI::updateInternalDataStructures()
+    virtual void updateInternalDataStructures();
+
     private:
-        const Chain chain;
+        const Chain& chain;
 	int nr;
 	unsigned int nj;
         unsigned int ns;	

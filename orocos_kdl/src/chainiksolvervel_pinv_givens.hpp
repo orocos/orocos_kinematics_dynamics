@@ -46,8 +46,11 @@ namespace KDL
          */
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return (error = E_NOT_IMPLEMENTED);};
 
+        /// @copydoc KDL::SolverI::updateInternalDataStructures
+        virtual void updateInternalDataStructures();
+
     private:
-        const Chain chain;
+        const Chain& chain;
         unsigned int nj;
         ChainJntToJacSolver jnt2jac;
         Jacobian jac;

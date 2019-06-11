@@ -40,6 +40,16 @@ void FramesTest::TestVector() {
 	CPPUNIT_ASSERT_EQUAL(nu2.Norm(),10.0);
 }
 
+void FramesTest::TestVector2DNorm() {
+    Vector2 nu(0, 0);
+	CPPUNIT_ASSERT_EQUAL(nu.Norm(), 0.0);
+ 	
+	CPPUNIT_ASSERT_EQUAL(Vector2(1, 0).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(0, 1).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(-1, 0).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(0, -1).Norm(), 1.0);
+}
+
 void FramesTest::TestTwist2(Twist& t) {
 	Twist t2(Vector(16,-3,5),Vector(-4,2,1));
 
@@ -228,7 +238,7 @@ void FramesTest::TestEuler() {
 	TESTEULERZYX(0,0,0.3)
 	TESTEULERZYX(0,0,0)
 	TESTEULERZYX(0.3,0.999*M_PI/2,0.1)
-	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be choosen to be zero !
+	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be chosen to be zero !
 	// so we test with gamma==0 !
 	TESTEULERZYX(0.3,0.9999999999*M_PI/2,0)
 	TESTEULERZYX(0.3,0.99999999*M_PI/2,0)
@@ -375,8 +385,8 @@ void FramesTest::TestRotation() {
 
 	TestOneRotation("rot([1,1,0],180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 	// opposite of +180
-	TestOneRotation("rot([1,1,0],-180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),-180*deg2rad), 180*deg2rad, -Vector(1,1,0)/sqrt(2.0));
-	TestOneRotation("rot([-1,-1,0],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),180*deg2rad), 180*deg2rad, -Vector(1,1,0)/sqrt(2.0));
+	TestOneRotation("rot([1,1,0],-180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),-180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
+	TestOneRotation("rot([-1,-1,0],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 	// opposite of +180
 	TestOneRotation("rot([-1,-1,0],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),-180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 
@@ -393,6 +403,65 @@ void FramesTest::TestRotation() {
 	TestOneRotation("rot([-1,-1,-1],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
 	// same as +180
 	TestOneRotation("rot([-1,-1,-1],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),-180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
+
+	TestOneRotation("rot([0.707107, 0, 0.707107", KDL::Rotation::RPY(-2.9811968953315162, -atan(1)*2, -0.1603957582582825), 180*deg2rad, Vector(0.707107,0,0.707107) );
+}
+
+void FramesTest::TestGetRotAngle() {
+    static const double pi = atan(1)*4;
+    double roll = -2.9811968953315162;
+    double pitch = -pi/2;
+    double yaw = -0.1603957582582825;
+
+    // rpy -> rotation
+    KDL::Rotation kdlRotation1 = KDL::Rotation::RPY(roll, pitch, yaw);
+
+    // rotation -> angle-axis (with KDL::GetRotAngle)
+    KDL::Vector kdlAxis;
+    double theta = kdlRotation1.GetRotAngle(kdlAxis);
+
+
+    CPPUNIT_ASSERT(0==isnan(theta));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[0]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[1]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[2]));
+
+  // Test GetRotAngle on slightly non-orthogonal rotation matrices
+  {
+    Vector axis;
+    double angle = KDL::Rotation( 1, 0, 0 + 1e-6, 0, 1, 0, 0, 0,  1 + 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, 0)", 0.0, angle, epsilon);
+  }
+
+  {
+    Vector axis;
+    double angle = KDL::Rotation(-1, 0, 0 + 1e-6, 0, 1, 0, 0, 0, -1 - 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, PI)", M_PI, angle, epsilon);
+  }
+
+  // Tests to show that GetRotAngle does not work for an improper rotation matrix which has a determinant of -1;
+  // an improper rotation matrix corresponds to a rotation between a right-hand and left-hand coordinate system
+  {
+    Vector axis;
+    double angle;
+    Rotation R, Rout;
+    double det;
+    // Improper Rotation Matrix for 120 deg rotation
+    R = KDL::Rotation( 0, -1, 0, 0, 0, -1, -1, 0, 0);
+    det = +R(0,0)*(R(1,1)*R(2,2)-R(2,1)*R(1,2))-R(0,1)*(R(1,0)*R(2,2)-R(2,0)*R(1,2))+R(0,2)*(R(1,0)*R(2,1)-R(2,0)*R(1,1));
+    CPPUNIT_ASSERT_EQUAL(det,-1.0);
+    angle = R.GetRotAngle(axis);
+    Rout = KDL::Rotation::Rot(axis, angle);
+    CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(R,Rout));
+    // Improper Rotation matrix for 180 deg rotation (singular)
+    R = KDL::Rotation( -1, 0, 0, 0, -1, 0, 0, 0, -1);
+    det = +R(0,0)*(R(1,1)*R(2,2)-R(2,1)*R(1,2))-R(0,1)*(R(1,0)*R(2,2)-R(2,0)*R(1,2))+R(0,2)*(R(1,0)*R(2,1)-R(2,0)*R(1,1));
+    CPPUNIT_ASSERT_EQUAL(det,-1.0);
+    angle = R.GetRotAngle(axis);
+    Rout = KDL::Rotation::Rot(axis, angle);
+    CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(R,Rout));
+  }
+
 }
 
 void FramesTest::TestQuaternion() {

@@ -274,7 +274,7 @@ public:
      Suppose V2 = R*V,                                    (1)
      V is expressed in frame B
      V2 is expressed in frame A
-     This matrix R consists of 3 collumns [ X,Y,Z ],
+     This matrix R consists of 3 columns [ X,Y,Z ],
      X,Y, and Z contain the axes of frame B, expressed in frame A
      Because of linearity expr(1) is valid.
  \endverbatim
@@ -378,10 +378,10 @@ public:
 
 	/** Returns the rotation angle around the equiv. axis
 	 * @param axis the rotation axis is returned in this variable
-	 * @param eps :  in the case of angle == 0 : rot axis is undefined and choosen
+	 * @param eps :  in the case of angle == 0 : rot axis is undefined and chosen
 	 *                                         to be +/- Z-axis
 	 *               in the case of angle == PI : 2 solutions, positive Z-component
-	 *                                            of the axis is choosen.
+	 *                                            of the axis is chosen.
 	 * @result returns the rotation angle (between [0..PI] )
 	 */
 	double GetRotAngle(Vector& axis,double eps=epsilon) const;
@@ -1118,7 +1118,7 @@ public:
      inline Frame2 Inverse() const;
      inline Vector2 Inverse(const Vector2& arg) const;
      inline Frame2& operator = (const Frame2& arg);
-     inline Vector2 operator * (const Vector2& arg);
+     inline Vector2 operator * (const Vector2& arg) const;
      inline friend Frame2 operator *(const Frame2& lhs,const Frame2& rhs);
      inline void SetIdentity();
      inline void Integrate(const Twist& t_this,double frequency);

@@ -824,7 +824,7 @@ IMETHOD void Vector2::Set3DYZ(const Vector& v)
     data[1]=v(2);
 }
 IMETHOD void Vector2::Set3DZX(const Vector& v)
-// projects v in its XY plane, and and sets *this to these values
+// projects v in its XY plane, and sets *this to these values
 {
     data[0]=v(2);
     data[1]=v(0);
@@ -925,7 +925,7 @@ IMETHOD Frame2 operator *(const Frame2& lhs,const Frame2& rhs)
     return Frame2(lhs.M*rhs.M,lhs.M*rhs.p+lhs.p);
 }
 
-IMETHOD Vector2 Frame2::operator *(const Vector2 & arg)
+IMETHOD Vector2 Frame2::operator *(const Vector2 & arg) const
 {
     return M*arg+p;
 }

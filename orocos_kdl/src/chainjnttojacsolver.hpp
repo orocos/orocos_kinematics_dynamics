@@ -47,7 +47,7 @@ namespace KDL
         /**
          * Calculate the jacobian expressed in the base frame of the
          * chain, with reference point at the end effector of the
-         * *chain. The alghoritm is similar to the one used in
+         * *chain. The algorithm is similar to the one used in
          * KDL::ChainFkSolverVel_recursive
          *
          * @param q_in input joint positions
@@ -56,7 +56,7 @@ namespace KDL
          * @return success/error code
          */
         virtual int JntToJac(const JntArray& q_in, Jacobian& jac, int segmentNR=-1);
-        
+
         /**
          *
          * @param locked_joints new values for locked joints
@@ -64,13 +64,14 @@ namespace KDL
          */
         int setLockedJoints(const std::vector<bool> locked_joints);
 
+        /// @copydoc KDL::SolverI::updateInternalDataStructures
+        virtual void updateInternalDataStructures();
 
     private:
-        const Chain chain;
+        const Chain& chain;
         Twist t_tmp;
         Frame T_tmp;
         std::vector<bool> locked_joints_;
     };
 }
 #endif
-

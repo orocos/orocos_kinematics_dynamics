@@ -31,8 +31,21 @@ namespace KDL{
         ag=-Twist(grav,Vector::Zero());
     }
 
+    void ChainIdSolver_RNE::updateInternalDataStructures() {
+        nj = chain.getNrOfJoints();
+        ns = chain.getNrOfSegments();
+        X.resize(ns);
+        S.resize(ns);
+        v.resize(ns);
+        a.resize(ns);
+        f.resize(ns);
+    }
+
     int ChainIdSolver_RNE::CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const Wrenches& f_ext,JntArray &torques)
     {
+        if(nj != chain.getNrOfJoints() || ns != chain.getNrOfSegments())
+            return (error = E_NOT_UP_TO_DATE);
+
         //Check sizes when in debug mode
         if(q.rows()!=nj || q_dot.rows()!=nj || q_dotdot.rows()!=nj || torques.rows()!=nj || f_ext.size()!=ns)
             return (error = E_SIZE_MISMATCH);
@@ -74,8 +87,11 @@ namespace KDL{
         //Sweep from leaf to root
         j=nj-1;
         for(int i=ns-1;i>=0;i--){
-            if(chain.getSegment(i).getJoint().getType()!=Joint::None)
-                torques(j--)=dot(S[i],f[i]);
+            if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                torques(j)=dot(S[i],f[i]);
+                torques(j)+=chain.getSegment(i).getJoint().getInertia()*q_dotdot(j);  // add torque from joint inertia
+                --j;
+            }
             if(i!=0)
                 f[i-1]=f[i-1]+X[i]*f[i];
         }

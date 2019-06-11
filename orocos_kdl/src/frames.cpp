@@ -29,6 +29,7 @@
 
 #define _USE_MATH_DEFINES  // For MSVC
 #include <math.h>
+#include <algorithm>
 
 namespace KDL {
 
@@ -86,10 +87,16 @@ namespace KDL {
 
     double Vector2::Norm() const
     {
-        if (fabs(data[0]) > fabs(data[1]) ) {
-            return data[0]*sqrt(1+sqr(data[1]/data[0]));
+        double tmp1 = fabs(data[0]);
+        double tmp2 = fabs(data[1]);
+        
+        if (tmp1 == 0.0 && tmp2 == 0.0)
+            return 0.0;
+
+        if (tmp1 > tmp2) {
+            return tmp1*sqrt(1+sqr(data[1]/data[0]));
         } else {
-            return data[1]*sqrt(1+sqr(data[0]/data[1]));
+            return tmp2*sqrt(1+sqr(data[0]/data[1]));
         }
     }
     // makes v a unitvector and returns the norm of v.
@@ -341,47 +348,85 @@ Vector Rotation::GetRot() const
 
 /** Returns the rotation angle around the equiv. axis
  * @param axis the rotation axis is returned in this variable
- * @param eps :  in the case of angle == 0 : rot axis is undefined and choosen
+ * @param eps :  in the case of angle == 0 : rot axis is undefined and chosen
  *                                         to be the Z-axis
  *               in the case of angle == PI : 2 solutions, positive Z-component
- *                                            of the axis is choosen.
+ *                                            of the axis is chosen.
  * @result returns the rotation angle (between [0..PI] )
  * /todo :
  *   Check corresponding routines in rframes and rrframes
  */
 double Rotation::GetRotAngle(Vector& axis,double eps) const {
-	double ca    = (data[0]+data[4]+data[8]-1)/2.0;
-	double t= eps*eps/2.0;
-	if (ca>1-t) {
-		// undefined choose the Z-axis, and angle 0
-		axis = Vector(0,0,1);
-		return 0;
-	}
-	if (ca < -1+t) {
-		// The case of angles consisting of multiples of M_PI:
-		// two solutions, choose a positive Z-component of the axis
-		double x = sqrt( (data[0]+1.0)/2);
-		double y = sqrt( (data[4]+1.0)/2);
-		double z = sqrt( (data[8]+1.0)/2);
-		if ( data[2] < 0) x=-x;
-		if ( data[7] < 0) y=-y;
-		if ( x*y*data[1] < 0) x=-x;  // this last line can be necessary when z is 0
-		// z always >= 0 
-		// if z equal to zero 
-		axis = Vector( x,y,z  );
-		return PI;
-	}
-    double angle;
-    double mod_axis;
-    double axisx, axisy, axisz;
-	axisx = data[7]-data[5];
-    axisy = data[2]-data[6];
-    axisz = data[3]-data[1];
-    mod_axis = sqrt(axisx*axisx+axisy*axisy+axisz*axisz);
-	axis  = Vector(axisx/mod_axis,
-                   axisy/mod_axis,
-                   axisz/mod_axis );
-    angle = atan2(mod_axis/2,ca);
+    double angle,x,y,z; // variables for result
+    double epsilon = eps; // margin to allow for rounding errors
+    double epsilon2 = eps*10; // margin to distinguish between 0 and 180 degrees
+
+    // optional check that input is pure rotation, 'isRotationMatrix' is defined at:
+    // http://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/
+
+    if ((std::abs(data[1] - data[3]) < epsilon)
+        && (std::abs(data[2] - data[6])< epsilon)
+        && (std::abs(data[5] - data[7]) < epsilon))
+    {
+        // singularity found
+        // first check for identity matrix which must have +1 for all terms
+        //  in leading diagonal and zero in other terms
+        if ((std::abs(data[1] + data[3]) < epsilon2)
+            && (std::abs(data[2] + data[6]) < epsilon2)
+            && (std::abs(data[5] + data[7]) < epsilon2)
+            && (std::abs(data[0] + data[4] + data[8]-3) < epsilon2))
+        {
+            // this singularity is identity matrix so angle = 0, axis is arbitrary
+            // Choose 0, 0, 1 to pass orocos tests
+            axis = KDL::Vector(0,0,1);
+            angle = 0.0;
+            return angle;
+        }
+
+        // otherwise this singularity is angle = 180
+        angle = M_PI;
+        double xx = (data[0] + 1) / 2;
+        double yy = (data[4] + 1) / 2;
+        double zz = (data[8] + 1) / 2;
+        double xy = (data[1] + data[3]) / 4;
+        double xz = (data[2] + data[6]) / 4;
+        double yz = (data[5] + data[7]) / 4;
+
+        if ((xx > yy) && (xx > zz))
+        {
+            // data[0] is the largest diagonal term
+            x = sqrt(xx);
+            y = xy/x;
+            z = xz/x;
+        }
+        else if (yy > zz)
+        {
+            // data[4] is the largest diagonal term
+            y = sqrt(yy);
+            x = xy/y;
+            z = yz/y;
+        }
+        else
+        {
+            // data[8] is the largest diagonal term so base result on this
+            z = sqrt(zz);
+            x = xz/z;
+            y = yz/z;
+        }
+        axis = KDL::Vector(x, y, z);
+        return angle; // return 180 deg rotation
+    }
+
+    // If the matrix is slightly non-orthogonal, `f` may be out of the (-1, +1) range.
+    // Therefore, clamp it between those values to avoid NaNs.
+    double f = (data[0] + data[4] + data[8] - 1) / 2;
+    angle = acos(std::max(-1.0, std::min(1.0, f)));
+
+    x = (data[7] - data[5]);
+    y = (data[2] - data[6]);
+    z = (data[3] - data[1]);
+    axis = KDL::Vector(x, y, z);
+    axis.Normalize();
     return angle;
 }
 

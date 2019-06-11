@@ -43,8 +43,16 @@ ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twis
     tmpm = VectorXd::Ones(nc);
 }
 
+void ChainIdSolver_Vereshchagin::updateInternalDataStructures() {
+    ns = chain.getNrOfSegments();
+    results.resize(ns+1,segment_info(nc));
+}
+
 int ChainIdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, JntArray &torques)
 {
+    nj = chain.getNrOfJoints();
+    if(ns != chain.getNrOfSegments())
+        return (error = E_NOT_UP_TO_DATE);
     //Check sizes always
     if (q.rows() != nj || q_dot.rows() != nj || q_dotdot.rows() != nj || torques.rows() != nj || f_ext.size() != ns)
         return (error = E_SIZE_MISMATCH);
@@ -91,7 +99,7 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
         //Put Z in the joint root reference frame:
         s.Z = s.F * s.Z;
 
-        //The total velocity of the segment expressed in the the segments reference frame (tip)
+        //The total velocity of the segment expressed in the segments reference frame (tip)
         if (i != 0)
         {
             s.v = s.F.Inverse(results[i].v) + vj; // recursive velocity of each link in segment frame
@@ -220,7 +228,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             s.PC = s.P * s.C;
 
             //u=(Q-Z(R+PC)=sum of external forces along the joint axes,
-            //R are the forces comming from the children,
+            //R are the forces coming from the children,
             //Q is taken zero (do we need to take the previous calculated torques?
 
             //projection of coriolis and centrepital forces into joint subspace (0 0 Z)
@@ -388,7 +396,7 @@ void ChainIdSolver_Vereshchagin::getJointBiasAcceleration(JntArray& bias_q_dotdo
     {
         //this is only force
         double tmp = results[i + 1].totalBias;
-        //this is accelleration
+        //this is acceleration
         bias_q_dotdot(i) = tmp / results[i + 1].D;
 
         //s.totalBias = - dot(s.Z, s.R + s.PC);
@@ -436,7 +444,7 @@ void ChainIdSolver_Vereshchagin::getJointNullSpaceAcceleration(JntArray& nullspa
 
 //This is not only a bias force energy but also includes generalized forces
 //change type of parameter G
-//this method should retur array of G's
+//this method should return array of G's
 
 void ChainIdSolver_Vereshchagin::getLinkBiasForceAcceleratoinEnergy(Eigen::VectorXd& G)
 {
@@ -453,7 +461,7 @@ void ChainIdSolver_Vereshchagin::getLinkBiasForceAcceleratoinEnergy(Eigen::Vecto
 
 }
 
-//this method should retur array of R's
+//this method should return array of R's
 
 void ChainIdSolver_Vereshchagin::getLinkBiasForceMatrix(Wrenches& R_tilde)
 {
