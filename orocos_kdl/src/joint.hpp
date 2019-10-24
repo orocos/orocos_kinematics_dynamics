@@ -202,6 +202,26 @@ namespace KDL {
             return inertia;
         };
 
+        /**
+         * Request the damping of the joint.
+         *
+         * @return const reference to the damping of the joint
+         */
+        const double& getDamping() const
+        {
+            return damping;
+        };
+
+        /**
+         * Request the stiffness of the joint.
+         *
+         * @return const reference to the stiffness of the joint
+         */
+        const double& getStiffness() const
+        {
+            return stiffness;
+        };
+
         virtual ~Joint();
 
     private:
