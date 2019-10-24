@@ -1151,7 +1151,7 @@ IMETHOD Vector addDelta(const Vector& a,const Vector&da,double dt) {
 }
 
 IMETHOD Rotation addDelta(const Rotation& a,const Vector&da,double dt) {
-	return a*Rot(a.Inverse(da)*dt);
+	return Rot(da*dt)*a;
 }
 IMETHOD Frame addDelta(const Frame& a,const Twist& da,double dt) {
 	return Frame(
