@@ -276,6 +276,50 @@ void KinFamTest::TreeTest()
     solver1.JntToCart(jnt1, f1);
     solver2.JntToCart(jnt2, f2);
     CPPUNIT_ASSERT(f1 == f2.Inverse());
+    
+    Tree tree3("root");
+    tree3.addSegment(Segment("S1", Joint("J1", Joint::RotX)), "root");
+    tree3.addSegment(Segment("S2", Joint("J2", Joint::RotX)), "root");
+    tree3.addSegment(Segment("S3", Joint("J3", Joint::RotX)), "S2");
+    tree3.addSegment(Segment("S4", Joint("J4", Joint::None)), "S3");
+    tree3.addSegment(Segment("S5", Joint("J5", Joint::RotX)), "S2");
+    tree3.addSegment(Segment("S6", Joint("J6", Joint::RotX)), "S5");
+    tree3.addSegment(Segment("S7", Joint("J7", Joint::None)), "S5");
+    cout << "Tree 3:" << endl << tree3 << endl;
+    
+    Tree tree4(tree3);
+    tree4.deleteSegmentsFrom("S1");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)6);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)4);
+    cout << "After removing S1:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("S2");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)1);
+    cout << "After removing S2:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("S3");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)5);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)4);
+    cout << "After removing S3:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("S7");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)6);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)5);
+    cout << "After removing S7:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("ABCDEF");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), tree3.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), tree3.getNrOfJoints());
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("root");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), tree3.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), tree3.getNrOfJoints());
 }
 
 
