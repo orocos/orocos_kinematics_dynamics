@@ -20,6 +20,7 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "chain.hpp"
+#include <algorithm>
 
 namespace KDL {
     using namespace std;
@@ -73,6 +74,37 @@ namespace KDL {
     Segment& Chain::getSegment(unsigned int nr)
     {
         return segments[nr];
+    }
+
+    unsigned int Chain::deleteSegmentsFrom(unsigned int nr)
+    {
+      // make sure the index is valid
+      if(nr >= nrOfSegments)
+        return 0;
+      // decrease the number of joints (once for each moving joint that is removed)
+      nrOfJoints -= std::count_if(
+        segments.begin()+nr, segments.end(),
+        [](const Segment& seg) { return seg.getJoint().getType() != Joint::None; }
+      );
+      // number of segments to be deleted
+      unsigned int to_del = nrOfSegments - nr;
+      // reset the number of segments
+      nrOfSegments = nr;
+      segments.resize(nr);
+      return to_del;
+    }
+
+    unsigned int Chain::deleteSegmentsFrom(const std::string& name)
+    {
+      unsigned int irev;
+      for(unsigned int i=0; i<nrOfSegments; i++) {
+        irev = nrOfSegments-i-1;
+        if(segments[irev].getName() == name) {
+          // remove the segment
+          return deleteSegmentsFrom(irev);
+        }
+      }
+      return 0;
     }
 
     Chain::~Chain()

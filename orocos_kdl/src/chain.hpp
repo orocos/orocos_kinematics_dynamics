@@ -95,6 +95,28 @@ namespace KDL {
          */
         Segment& getSegment(unsigned int nr);
 
+        /**
+         * Request to delete all child segments starting from the given index.
+         *
+         * @param nr the nr of the first segment to delete (all children will
+         * be removed as well).
+         *
+         * @return the number of deleted segments.
+         */
+        unsigned int deleteSegmentsFrom(unsigned int nr);
+
+        /**
+         * Request to delete all child segments starting from the one with given name.
+         *
+         * @param name the name of the first segment to delete (all children will
+         * be removed as well). Note that multiple segments with the same name
+         * are allowed in a `Chain`. The search in this function starts
+         * <strong>from the tip</strong> and stops at the first match (if any).
+         *
+         * @return the number of deleted segments.
+         */
+        unsigned int deleteSegmentsFrom(const std::string& name);
+
         virtual ~Chain();
     };
 

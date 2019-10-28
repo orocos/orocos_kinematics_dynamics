@@ -153,6 +153,57 @@ void KinFamTest::ChainTest()
     chain2.addChain(chain1);
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfJoints(),chain1.getNrOfJoints()*(uint)2);
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfSegments(),chain1.getNrOfSegments()*(uint)2);
+    
+    // test segment removal from chains
+    Chain chain3(chain1);
+    // try to remove an inexistent segment
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Non existent segment"), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments());
+    // try to from an invalid index
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(chain3.getNrOfSegments()), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments());
+    // remove the last segment (which is attached to a fixed joint)
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(chain3.getNrOfSegments()-1), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments()-1);
+    // reset the chain, then try to remove all segments/joints
+    chain3 = chain1;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(0), chain1.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), (uint)0);
+    CPPUNIT_ASSERT(chain3.segments.empty());
+    // reset the chain, then try to remove the last 3 segments (having 2 moving joints)
+    chain3 = chain1;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Segment 4"), (uint)3);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints()-2);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments()-3);
+    CPPUNIT_ASSERT_EQUAL((uint)chain3.segments.size(), chain3.getNrOfSegments());
+    // create a new chain with some segment names whith repetitions
+    Chain chain4(chain1);
+    chain4.addSegment(Segment("SegmentX", Joint("JointX", Joint::None)));
+    chain4.addSegment(Segment("SegmentY", Joint("JointY", Joint::None)));
+    chain4.addSegment(Segment("SegmentY", Joint("JointY", Joint::None)));
+    chain4.addSegment(Segment("SegmentZ", Joint("JointZ", Joint::None)));
+    chain4.addSegment(Segment("SegmentX", Joint("JointX", Joint::None)));
+    chain4.addSegment(Segment("SegmentY", Joint("JointY", Joint::None)));
+    CPPUNIT_ASSERT_EQUAL(chain4.getNrOfSegments(), chain1.getNrOfSegments()+6);
+    CPPUNIT_ASSERT_EQUAL(chain4.getNrOfJoints(), chain1.getNrOfJoints());
+    chain3 = chain4;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentY"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentY"), (uint)2);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentY"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain4.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain4.getNrOfSegments()-6);
+    // reset the chain, then remove similarly to before
+    chain3  = chain4;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)2);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)4);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain4.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain4.getNrOfSegments()-6);
 }
 
 void KinFamTest::TreeTest()
