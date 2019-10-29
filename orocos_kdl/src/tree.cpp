@@ -182,27 +182,25 @@ void Tree::deleteSegmentsRecursive(SegmentMap::const_iterator segment, unsigned 
 }
 
 unsigned int Tree::deleteSegmentsFrom(SegmentMap::const_iterator segment) {
+  // prevent to remove the root segment or a segment that does not exist
   if(segment == segments.end() || segment == getRootSegment())
     return 0;
 
   // remove references to this segment from its parent
   auto parent = segments.find(GetTreeElementParent(segment->second)->first);
   auto& parent_children = GetTreeElementChildren(parent->second);
-  // parent_children.erase(std::find_if(
-  //   parent_children.begin(), parent_children.end(),
-  //   [&](SegmentMap::const_iterator it) { return it->first == segment->first; }
-  // ));
   parent_children.erase(std::remove(parent_children.begin(), parent_children.end(), segment));
 
   // delete children recursively
   unsigned int ns=0, nj=0;
   deleteSegmentsRecursive(segment, ns, nj);
   
-  // update number o joints and segments
+  // update number of segments
   nrOfSegments -= ns;
-  nrOfJoints -= nj;
   
   if(nj > 0) {
+    // update joints indices if needed
+    nrOfJoints -= nj;
     unsigned int nq = 0;
     for(SegmentMap::iterator s=segments.begin(); s!=segments.end(); s++) {
       if(GetTreeElementSegment(s->second).getJoint().getType() != Joint::None) {
@@ -216,10 +214,8 @@ unsigned int Tree::deleteSegmentsFrom(SegmentMap::const_iterator segment) {
 }
     
 unsigned int Tree::deleteSegmentsFrom(const std::string& name) {
-  // prevent to remove the root segment
-  if(name == root_name)
-    return 0;
-  // delete segments using the iterator version
+  // delete segments using the iterator version; if name is the root
+  // or an invalid segment, this overload will exit immediately 
   return deleteSegmentsFrom(segments.find(name));
 }
     
