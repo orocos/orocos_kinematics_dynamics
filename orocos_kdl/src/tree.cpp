@@ -178,7 +178,7 @@ void Tree::deleteSegmentsRecursive(SegmentMap::const_iterator segment, unsigned 
   if(GetTreeElementSegment(segment->second).getJoint().getType() != Joint::None)
     nj++;
   // remove the segment from the map
-  segments.erase(segment);
+  segments.erase(segment->first);
 }
 
 unsigned int Tree::deleteSegmentsFrom(SegmentMap::const_iterator segment) {
@@ -187,8 +187,8 @@ unsigned int Tree::deleteSegmentsFrom(SegmentMap::const_iterator segment) {
     return 0;
 
   // remove references to this segment from its parent
-  auto parent = segments.find(GetTreeElementParent(segment->second)->first);
-  auto& parent_children = GetTreeElementChildren(parent->second);
+  SegmentMap::iterator parent = segments.find(GetTreeElementParent(segment->second)->first);
+  std::vector<SegmentMap::const_iterator>& parent_children = GetTreeElementChildren(parent->second);
   parent_children.erase(std::remove(parent_children.begin(), parent_children.end(), segment));
 
   // delete children recursively
