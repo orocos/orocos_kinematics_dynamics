@@ -20,7 +20,7 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "chain.hpp"
-#include <algorithm>
+// #include <algorithm>
 
 namespace KDL {
     using namespace std;
@@ -82,10 +82,10 @@ namespace KDL {
       if(nr >= nrOfSegments)
         return 0;
       // decrease the number of joints (once for each moving joint that is removed)
-      nrOfJoints -= std::count_if(
-        segments.begin()+nr, segments.end(),
-        [](const Segment& seg) { return seg.getJoint().getType() != Joint::None; }
-      );
+      for(unsigned int i=nr; i<segments.size(); i++) {
+        if(segments[i].getJoint().getType() != Joint::None)
+          nrOfJoints--;
+      }
       // number of segments to be deleted
       unsigned int to_del = nrOfSegments - nr;
       // reset the number of segments
