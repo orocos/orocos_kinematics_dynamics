@@ -417,8 +417,6 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
         return angle; // return 180 deg rotation
     }
 
-    // If the matrix is slightly non-orthogonal, `f` may be out of the (-1, +1) range.
-    // Therefore, clamp it between those values to avoid NaNs.
     double f = (data[0] + data[4] + data[8] - 1) / 2;
 
     x = (data[7] - data[5]);
