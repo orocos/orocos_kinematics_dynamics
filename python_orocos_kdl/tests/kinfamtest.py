@@ -33,11 +33,11 @@ class KinfamTestFunctions(unittest.TestCase):
                                  Frame(Vector(0.0,0.0,0.0))))
         self.chain.addSegment(Segment(Joint(Joint.RotX),
                                  Frame(Vector(0.0,0.0,0.9))))
-        self.chain.addSegment(Segment(Joint(Joint.None),
+        self.chain.addSegment(Segment(Joint(Joint.NONE),
                                  Frame(Vector(-0.4,0.0,0.0))))
         self.chain.addSegment(Segment(Joint(Joint.RotY),
                              Frame(Vector(0.0,0.0,1.2))))
-        self.chain.addSegment(Segment(Joint(Joint.None),
+        self.chain.addSegment(Segment(Joint(Joint.NONE),
                                  Frame(Vector(0.4,0.0,0.0))))
         self.chain.addSegment(Segment(Joint(Joint.TransZ),
                                  Frame(Vector(0.0,0.0,1.4))))
@@ -45,7 +45,7 @@ class KinfamTestFunctions(unittest.TestCase):
                                  Frame(Vector(0.0,0.0,0.0))))
         self.chain.addSegment(Segment(Joint(Joint.TransY),
                                  Frame(Vector(0.0,0.0,0.4))))
-        self.chain.addSegment(Segment(Joint(Joint.None),
+        self.chain.addSegment(Segment(Joint(Joint.NONE),
                                  Frame(Vector(0.0,0.0,0.0))))
 
         self.jacsolver   = ChainJntToJacSolver(self.chain)

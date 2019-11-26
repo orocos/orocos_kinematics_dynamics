@@ -186,9 +186,9 @@ namespace KDL {
             case TransZ:
                 return "TransZ";
             case None:
-                return "None";
+                return "NONE";
             default:
-                return "None";
+                return "NONE";
             }
         };
 
