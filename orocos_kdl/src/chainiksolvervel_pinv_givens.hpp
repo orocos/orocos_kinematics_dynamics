@@ -44,7 +44,7 @@ namespace KDL
          * not (yet) implemented.
          *
          */
-        virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return (error = E_NOT_IMPLEMENTED);};
+        virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return (error = E_NOT_IMPLEMENTED);};
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures
         virtual void updateInternalDataStructures();
