@@ -92,13 +92,13 @@ namespace KDL{
         return (error = E_NOERROR);
     }
 
-    void ChainFdSolver_RNE::RK4Integrator(int& nj, const double& t, double& dt, KDL::JntArray& q, KDL::JntArray& q_dot,
+    void ChainFdSolver_RNE::RK4Integrator(unsigned int& nj, const double& t, double& dt, KDL::JntArray& q, KDL::JntArray& q_dot,
                                           KDL::JntArray& torques, KDL::Wrenches& f_ext, KDL::ChainFdSolver_RNE& fdsolver,
                                           KDL::JntArray& q_dotdot, KDL::JntArray& dq, KDL::JntArray& dq_dot,
                                           KDL::JntArray& q_temp, KDL::JntArray& q_dot_temp)
     {
         fdsolver.CartToJnt(q, q_dot, torques, f_ext, q_dotdot);
-        for (int i=0; i<nj; ++i)
+        for (unsigned int i=0; i<nj; ++i)
         {
             q_temp(i) = q(i) + q_dot(i)*dt/2.0;
             q_dot_temp(i) = q_dot(i) + q_dotdot(i)*dt/2.0;
@@ -106,7 +106,7 @@ namespace KDL{
             dq_dot(i) = q_dotdot(i);
         }
         fdsolver.CartToJnt(q_temp, q_dot_temp, torques, f_ext, q_dotdot);
-        for (int i=0; i<nj; ++i)
+        for (unsigned int i=0; i<nj; ++i)
         {
             q_temp(i) = q(i) + q_dot_temp(i)*dt/2.0;
             q_dot_temp(i) = q_dot(i) + q_dotdot(i)*dt/2.0;
@@ -114,7 +114,7 @@ namespace KDL{
             dq_dot(i) += 2.0*q_dotdot(i);
         }
         fdsolver.CartToJnt(q_temp, q_dot_temp, torques, f_ext, q_dotdot);
-        for (int i=0; i<nj; ++i)
+        for (unsigned int i=0; i<nj; ++i)
         {
             q_temp(i) = q(i) + q_dot_temp(i)*dt;
             q_dot_temp(i) = q_dot(i) + q_dotdot(i)*dt;
@@ -122,12 +122,12 @@ namespace KDL{
             dq_dot(i) += 2.0*q_dotdot(i);
         }
         fdsolver.CartToJnt(q_temp, q_dot_temp, torques, f_ext, q_dotdot);
-        for (int i=0; i<nj; ++i)
+        for (unsigned int i=0; i<nj; ++i)
         {
             dq(i) = (dq(i)+q_dot_temp(i))*dt/6.0;
             dq_dot(i) = (dq_dot(i)+q_dotdot(i))*dt/6.0;
         }
-        for (int i=0; i<nj; ++i)
+        for (unsigned int i=0; i<nj; ++i)
         {
             q(i) += dq(i);
             q_dot(i) += dq_dot(i);

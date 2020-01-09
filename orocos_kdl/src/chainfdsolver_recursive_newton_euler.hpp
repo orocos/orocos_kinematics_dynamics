@@ -86,7 +86,7 @@ namespace KDL{
          * \param qtemp Intermediate joint positions
          * \param qdtemp Intermediate joint velocities
          */
-        void RK4Integrator(int& nj, const double& t, double& dt, KDL::JntArray& q, KDL::JntArray& q_dot,
+        void RK4Integrator(unsigned int& nj, const double& t, double& dt, KDL::JntArray& q, KDL::JntArray& q_dot,
                            KDL::JntArray& torques, KDL::Wrenches& f_ext, KDL::ChainFdSolver_RNE& fdsolver,
                            KDL::JntArray& q_dotdot, KDL::JntArray& dq, KDL::JntArray& dq_dot,
                            KDL::JntArray& q_temp, KDL::JntArray& q_dot_temp);
