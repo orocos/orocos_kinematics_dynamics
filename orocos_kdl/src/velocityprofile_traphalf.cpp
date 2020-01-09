@@ -52,7 +52,7 @@ VelocityProfile_TrapHalf::VelocityProfile_TrapHalf(double _maxvel,double _maxacc
 
 void VelocityProfile_TrapHalf::SetMax(double _maxvel,double _maxacc, bool _starting)
 {
-    maxvel = _maxvel; maxacc = _maxacc; starting = _starting;
+	maxvel = _maxvel; maxacc = _maxacc; starting = _starting;
 }
 
 void VelocityProfile_TrapHalf::PlanProfile1(double v,double a) {
@@ -100,11 +100,11 @@ void VelocityProfile_TrapHalf::SetProfile(double pos1,double pos2) {
 void VelocityProfile_TrapHalf::SetProfileDuration(
 	double pos1,double pos2,double newduration)
 {
-    SetProfile(pos1,pos2);
-    double factor = duration/newduration;
+	SetProfile(pos1,pos2);
+	double factor = duration/newduration;
 
-    if ( factor > 1 )
-        return;
+	if ( factor > 1 )
+		return;
 
 	double s        = sign(endpos-startpos);
 	double tmp      = 2.0*s*(endpos-startpos)/maxvel;
@@ -183,8 +183,8 @@ double VelocityProfile_TrapHalf::Acc(double time) const {
 }
 
 VelocityProfile* VelocityProfile_TrapHalf::Clone() const {
-    VelocityProfile_TrapHalf* res =  new VelocityProfile_TrapHalf(maxvel,maxacc, starting);
-    res->SetProfileDuration( this->startpos, this->endpos, this->duration );
+	VelocityProfile_TrapHalf* res =  new VelocityProfile_TrapHalf(maxvel,maxacc, starting);
+	res->SetProfileDuration( this->startpos, this->endpos, this->duration );
 	return res;
 }
 
