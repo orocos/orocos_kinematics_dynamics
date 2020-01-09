@@ -97,8 +97,8 @@ namespace KDL{
         ChainIdSolver_RNE IdSolver;
         unsigned int nj;
         unsigned int ns;
-        JntArray Tzeroacc;
         JntSpaceInertiaMatrix H;
+        JntArray Tzeroacc;
         Eigen::MatrixXd H_eig;
         Eigen::VectorXd Tzeroacc_eig;
         Eigen::MatrixXd L_eig;
