@@ -70,7 +70,7 @@ namespace KDL{
             return (error);
 
         // Calculate non-inertial internal torques by inputting zero joint acceleration to ID
-        for(int i=0;i<nj;i++){
+        for(unsigned int i=0;i<nj;i++){
             q_dotdot(i) = 0.;
         }
         error = IdSolver.CartToJnt(q, q_dot, q_dotdot, f_ext, Tzeroacc);
@@ -78,14 +78,14 @@ namespace KDL{
             return (error);
 
         // Calculate acceleration using inverse symmetric matrix times vector
-        for(int i=0;i<nj;i++){
+        for(unsigned int i=0;i<nj;i++){
             Tzeroacc_eig(i) =  (torques(i)-Tzeroacc(i));
-            for(int j=0;j<nj;j++){
+            for(unsigned int j=0;j<nj;j++){
                 H_eig(i,j) =  H(i,j);
             }
         }
         ldl_solver_eigen(H_eig, Tzeroacc_eig, L_eig, D_eig, r_eig, acc_eig);
-        for(int i=0;i<nj;i++){
+        for(unsigned int i=0;i<nj;i++){
             q_dotdot(i) = acc_eig(i);
         }
 
