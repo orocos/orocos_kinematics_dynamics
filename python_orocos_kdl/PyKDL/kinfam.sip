@@ -266,7 +266,7 @@ public:
     bool addSegment(const Segment& segment, const std::string& hook_name);
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
-    Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const;
+    Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const /Factory/;
 %MethodCode
     Chain* chain = new Chain();
     sipCpp->getChain(*a0, *a1, *chain);
