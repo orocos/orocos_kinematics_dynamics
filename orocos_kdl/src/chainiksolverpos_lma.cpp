@@ -321,4 +321,4 @@ const char* ChainIkSolverPos_LMA::strError(const int error) const
         else return SolverI::strError(error);
     }
 
-};//namespace KDL
+}//namespace KDL

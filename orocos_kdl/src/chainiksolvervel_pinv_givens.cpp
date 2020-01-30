@@ -38,7 +38,6 @@ namespace KDL
         B(m,n),
         S(n),
         tempi(m),
-        tempj(m),
         UY(VectorXd::Zero(6)),
         SUY(VectorXd::Zero(nj)),
         qdot_eigen(nj),
@@ -59,7 +58,6 @@ namespace KDL
         B.conservativeResize(m,n);
         S.conservativeResize(n);
         tempi.conservativeResize(m);
-        tempj.conservativeResize(n);
         SUY.conservativeResizeLike(VectorXd::Zero(nj));
         qdot_eigen.conservativeResize(nj);
     }
