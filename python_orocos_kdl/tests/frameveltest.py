@@ -63,9 +63,6 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(Equal(R*R.Inverse(),RotationVel.Identity()))
         self.assertTrue(Equal(R.Inverse()*R,RotationVel.Identity()))
         self.assertTrue(Equal(R.Inverse()*v,R.Inverse(v)))
-        #v2=v*v-2*v
-        #print dot(v2,v2)
-        #self.assertTrue(Equal((v2).Norm(),sqrt(dot(v2,v2))))
 
     def testFrameVel(self):
         v=VectorVel(Vector(3,4,5),Vector(-2,-4,-1))
@@ -116,97 +113,6 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(data['tv'].rot.p, data1['tv'].rot.p)
         self.assertEqual(data['tv'].rot.v, data1['tv'].rot.v)
 
-#void TestTwistVel() {
-#    KDL_CTX;
-#	// Twist
-#	TwistVel t(VectorVel(
-#				Vector(6,3,5),
-#				Vector(1,4,2)
-#			 ),VectorVel(
-#			 		Vector(4,-2,7),
-#			 		Vector(-1,-2,-3)
-#			 )
-#		);
-#	TwistVel t2;
-#	RotationVel  R(Rotation::RPY(10*deg2rad,20*deg2rad,-15*deg2rad),Vector(-1,5,3));
-#	FrameVel F = FrameVel(
-#		Frame(
-#			Rotation::EulerZYX(-17*deg2rad,13*deg2rad,-16*deg2rad),
-#			Vector(4,-2,1)
-#		),
-#		Twist(
-#			Vector(2,-2,-2),
-#			Vector(-5,-3,-2)
-#		)
-#	);
-#
-#	KDL_DIFF(2.0*t-t,t);
-#	KDL_DIFF(t*2.0-t,t);
-#	KDL_DIFF(t+t+t-2.0*t,t);
-#	t2=t;
-#	KDL_DIFF(t,t2);
-#	t2+=t;
-#	KDL_DIFF(2.0*t,t2);
-#	t2-=t;
-#	KDL_DIFF(t,t2);
-#	t.ReverseSign();
-#	KDL_DIFF(t,-t2);
-#	KDL_DIFF(R.Inverse(R*t),t);
-#	KDL_DIFF(R*t,R*R.Inverse(R*t));
-#	KDL_DIFF(F.Inverse(F*t),t);
-#	KDL_DIFF(F*t,F*F.Inverse(F*t));
-#	KDL_DIFF(doubleVel(3.14,2)*t,t*doubleVel(3.14,2));
-#	KDL_DIFF(t/doubleVel(3.14,2),t*(1.0/doubleVel(3.14,2)));
-#	KDL_DIFF(t/3.14,t*(1.0/3.14));
-#	KDL_DIFF(-t,-1.0*t);
-#	VectorVel p1(Vector(5,1,2),Vector(4,2,1)) ;
-#	VectorVel p2(Vector(2,0,5),Vector(-2,7,-1)) ;
-#	KDL_DIFF(t.RefPoint(p1+p2),t.RefPoint(p1).RefPoint(p2));
-#	KDL_DIFF(t,t.RefPoint(-p1).RefPoint(p1));
-#}
-#
-#void TestTwistAcc() {
-#    KDL_CTX;
-#	// Twist
-#	TwistAcc     t( VectorAcc(Vector(6,3,5),Vector(1,4,2),Vector(5,2,1)),
-#		              VectorAcc(Vector(4,-2,7),Vector(-1,-2,-3),Vector(5,2,9) )
-#					);
-#	TwistAcc    t2; 
-#	RotationAcc  R(Rotation::RPY(10*deg2rad,20*deg2rad,-15*deg2rad),
-#		             Vector(-1,5,3),
-#					 Vector(2,1,3)
-#					 ) ;
-#	FrameAcc F = FrameAcc(
-#			Frame(Rotation::EulerZYX(-17*deg2rad,13*deg2rad,-16*deg2rad),Vector(4,-2,1)),
-#			Twist(Vector(2,-2,-2),Vector(-5,-3,-2)),
-#			Twist(Vector(5,4,-5),Vector(12,13,17))
-#		    );	
-#
-#	KDL_DIFF(2.0*t-t,t);
-#	KDL_DIFF(t*2.0-t,t);
-#	KDL_DIFF(t+t+t-2.0*t,t);
-#	t2=t; 
-#	KDL_DIFF(t,t2);
-#	t2+=t;
-#	KDL_DIFF(2.0*t,t2);
-#	t2-=t;
-#	KDL_DIFF(t,t2);
-#	t.ReverseSign();
-#	KDL_DIFF(t,-t2);
-#	KDL_DIFF(R.Inverse(R*t),t);
-#	KDL_DIFF(R*t,R*R.Inverse(R*t));
-#	KDL_DIFF(F.Inverse(F*t),t);
-#	KDL_DIFF(F*t,F*F.Inverse(F*t));
-#	KDL_DIFF(doubleAcc(3.14,2,3)*t,t*doubleAcc(3.14,2,3));
-#	KDL_DIFF(t/doubleAcc(3.14,2,7),t*(1.0/doubleAcc(3.14,2,7)));
-#	KDL_DIFF(t/3.14,t*(1.0/3.14));
-#	KDL_DIFF(-t,-1.0*t);
-#	VectorAcc p1(Vector(5,1,2),Vector(4,2,1),Vector(2,1,3));
-#	VectorAcc p2(Vector(2,0,5),Vector(-2,7,-1),Vector(-3,2,-1));
-#	KDL_DIFF(t.RefPoint(p1+p2),t.RefPoint(p1).RefPoint(p2));
-#	KDL_DIFF(t,t.RefPoint(-p1).RefPoint(p1));
-#}
-#
 
 def suite():
     suite=unittest.TestSuite()
