@@ -23,7 +23,7 @@
 import unittest
 from PyKDL import *
 from math import *
-    
+
 class FramesTestFunctions(unittest.TestCase):
 
     def testVector2(self,v):
@@ -44,7 +44,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.testVector2(v)
         v=Vector.Zero()
         self.testVector2(v)
-    
+
     def testTwist2(self,t):
         self.assertEqual(2*t-t,t)
         self.assertEqual(t*2-t,t)
@@ -90,7 +90,7 @@ class FramesTestFunctions(unittest.TestCase):
         w=Wrench(Vector(7,-1,3),Vector(2,-3,3))
         t=Twist(Vector(6,3,5),Vector(4,-2,7))
         R=Rotation.RPY(a,b,c)
-        
+
         self.assertAlmostEqual(dot(R.UnitX(),R.UnitX()),1.0,15)
         self.assertEqual(dot(R.UnitY(),R.UnitY()),1.0)
         self.assertEqual(dot(R.UnitZ(),R.UnitZ()),1.0)
@@ -133,12 +133,12 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(R,R2)
         v2=Vector(6,2,4)
         self.assertAlmostEqual(v2.Norm(),sqrt(dot(v2,v2)),14)
-    
+
     def testRotation(self):
         self.testRotation2(Vector(3,4,5),radians(10),radians(20),radians(30))
-    
+
     def testFrame(self):
-        v=Vector(3,4,5) 
+        v=Vector(3,4,5)
         w=Wrench(Vector(7,-1,3),Vector(2,-3,3))
         t=Twist(Vector(6,3,5),Vector(4,-2,7))
         F = Frame(Rotation.EulerZYX(radians(10),radians(20),radians(-10)),Vector(4,-2,1))
@@ -167,15 +167,15 @@ class FramesTestFunctions(unittest.TestCase):
         data['fr'] = Frame(data['rot'], data['v'])
         data['tw'] = Twist(data['v'], Vector(4,5,6))
         data['wr'] = Wrench(Vector(0.1,0.2,0.3), data['v'])
-        
+
         f = open('/tmp/pickle_test', 'w')
         pickle.dump(data, f)
         f.close()
-        
+
         f = open('/tmp/pickle_test', 'r')
         data1 = pickle.load(f)
         f.close()
-       
+
         self.assertEqual(data, data1)
 
 

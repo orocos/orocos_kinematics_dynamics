@@ -26,7 +26,7 @@ from math import *
 import random
 
 class KinfamTestFunctions(unittest.TestCase):
-    
+
     def setUp(self):
         self.chain = Chain()
         self.chain.addSegment(Segment(Joint(Joint.RotZ),
@@ -63,12 +63,12 @@ class KinfamTestFunctions(unittest.TestCase):
 
         q=JntArray(self.chain.getNrOfJoints())
         jac=Jacobian(self.chain.getNrOfJoints())
-        
+
         for i in range(q.rows()):
             q[i]=random.uniform(-3.14,3.14)
 
         self.jacsolver.JntToJac(q,jac)
-        
+
         for i in range(q.rows()):
             oldqi=q[i];
             q[i]=oldqi+deltaq
@@ -84,7 +84,7 @@ class KinfamTestFunctions(unittest.TestCase):
     def testFkVelAndJac(self):
         deltaq = 1E-4
         epsJ   = 1E-4
-    
+
         q=JntArray(self.chain.getNrOfJoints())
         qdot=JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
@@ -113,37 +113,36 @@ class KinfamTestFunctions(unittest.TestCase):
 
         qvel=JntArrayVel(q,qdot)
         qdot_solved=JntArray(self.chain.getNrOfJoints())
-        
+
         cart = FrameVel()
-        
+
         self.assertTrue(0==self.fksolvervel.JntToCart(qvel,cart))
         self.assertTrue(0==self.iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved))
-        
+
         self.assertEqual(qvel.qdot,qdot_solved);
-        
 
     def testFkPosAndIkPos(self):
         q=JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
             q[i]=random.uniform(-3.14,3.14)
-        
+
         q_init=JntArray(self.chain.getNrOfJoints())
         for i in range(q_init.rows()):
             q_init[i]=q[i]+0.1*random.random()
-            
+
         q_solved=JntArray(q.rows())
 
         F1=Frame.Identity()
         F2=Frame.Identity()
-    
+
         self.assertTrue(0==self.fksolverpos.JntToCart(q,F1))
         self.assertTrue(0==self.iksolverpos.CartToJnt(q_init,F1,q_solved))
         self.assertTrue(0==self.fksolverpos.JntToCart(q_solved,F2))
-        
+
         self.assertEqual(F1,F2)
         self.assertEqual(q,q_solved)
-        
-        
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))

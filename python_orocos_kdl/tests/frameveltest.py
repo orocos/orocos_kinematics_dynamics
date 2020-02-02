@@ -22,7 +22,6 @@ class FrameVelTestFunctions(unittest.TestCase):
         v2 = VectorVel(Vector(-5,-6,-3),Vector(3,4,5))
         self.assertTrue(Equal( v*v2,-v2*v))
 
-       
     def testRotationVel(self):
         v=VectorVel(Vector(9,4,-2),Vector(-5,6,-2))
         vt=Vector(2,3,4)
@@ -65,7 +64,6 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(Equal( F.Inverse()*F,Frame.Identity()))
         self.assertTrue(Equal( F.Inverse()*vt,F.Inverse(vt)))
 
-
     def testPickle(self):
         rot = Rotation.RotX(1.3)
         import pickle
@@ -74,15 +72,15 @@ class FrameVelTestFunctions(unittest.TestCase):
         data['rv'] = RotationVel(rot, Vector(4.1,5.1,6.1))
         data['fv'] = FrameVel(data['rv'], data['vv'])
         data['tv'] = TwistVel(data['vv'], data['vv'])
-        
+
         f = open('/tmp/pickle_test_kdl_framevel', 'w')
         pickle.dump(data, f)
         f.close()
-        
+
         f = open('/tmp/pickle_test_kdl_framevel', 'r')
         data1 = pickle.load(f)
         f.close()
-       
+
         self.assertEqual(data['vv'].p, data1['vv'].p)
         self.assertEqual(data['vv'].v, data1['vv'].v)
         self.assertEqual(data['rv'].R, data1['rv'].R)
