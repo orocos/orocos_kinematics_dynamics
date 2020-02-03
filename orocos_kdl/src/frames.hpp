@@ -310,8 +310,9 @@ public:
                 double Xy,double Yy,double Zy,
                 double Xz,double Yz,double Zz);
     inline Rotation(const Vector& x,const Vector& y,const Vector& z);
-    // default copy constructor is sufficient
 
+    // default copy constructor is sufficient
+    constexpr Rotation(const Rotation&) = default;
 
      inline Rotation& operator=(const Rotation& arg);
 
@@ -1059,6 +1060,9 @@ public:
     explicit Rotation2(double angle_rad):s(sin(angle_rad)),c(cos(angle_rad)) {}
 
     Rotation2(double ca,double sa):s(sa),c(ca){}
+
+    // default copy constructor is sufficient
+    constexpr Rotation2(const Rotation2&) = default;
 
      inline Rotation2& operator=(const Rotation2& arg);
      inline Vector2 operator*(const Vector2& v) const;
