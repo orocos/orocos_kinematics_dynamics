@@ -4,8 +4,10 @@ compiler:
   - gcc
   - clang
 env:
-  - OROCOS_KDL_BUILD_TYPE=Debug
-  - OROCOS_KDL_BUILD_TYPE=Release
+  - OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
+  - OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=ON
+  - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
+  - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
 
 before_script:
   - sudo apt-get -qq update
@@ -23,7 +25,7 @@ before_script:
   - cd python_orocos_kdl
   - mkdir build
   - cd build
-  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
+  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
   #compile and install python bindings
   - make
   - sudo make install
