@@ -85,7 +85,7 @@ class FrameVelTestFunctions(unittest.TestCase):
 
     def testPickle(self):
         rot = Rotation.RotX(1.3)
-        import pickle
+        import cPickle as pickle
         data = {}
         data['vv'] = VectorVel(Vector(1,2,3), Vector(4,5,6))
         data['rv'] = RotationVel(rot, Vector(4.1,5.1,6.1))
@@ -93,7 +93,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         data['tv'] = TwistVel(data['vv'], data['vv'])
 
         f = open('/tmp/pickle_test_kdl_framevel', 'w')
-        pickle.dump(data, f)
+        pickle.dump(data, f, 2)
         f.close()
 
         f = open('/tmp/pickle_test_kdl_framevel', 'r')

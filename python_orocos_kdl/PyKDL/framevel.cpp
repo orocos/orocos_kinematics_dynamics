@@ -80,6 +80,20 @@ void init_framevel(pybind11::module &m)
         .def("__neg__", [](const VectorVel &a) {
             return operator-(a);
         }, py::is_operator())
+        .def(py::pickle(
+            [](const VectorVel &vv) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(vv.p, vv.v);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 2) {
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                VectorVel vv(t[0].cast<Vector>(), t[1].cast<Vector>());
+                return vv;
+            }))
         ;
 
     m.def("Equal", (bool (*)(const VectorVel&, const VectorVel&, double)) &KDL::Equal,
@@ -132,6 +146,20 @@ void init_framevel(pybind11::module &m)
         .def(py::self * py::self)
         .def(Rotation() * py::self)
         .def(py::self * Rotation())
+        .def(py::pickle(
+            [](const RotationVel &rv) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(rv.R, rv.w);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 2) {
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                RotationVel rv(t[0].cast<Rotation>(), t[1].cast<Vector>());
+                return rv;
+            }))
         ;
 
     m.def("Equal", (bool (*)(const RotationVel&, const RotationVel&, double)) &KDL::Equal,
@@ -170,6 +198,20 @@ void init_framevel(pybind11::module &m)
         .def(py::self * py::self)
         .def(Frame() * py::self)
         .def(py::self * Frame())
+        .def(py::pickle(
+            [](const FrameVel &fv) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(fv.M, fv.p);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 2) {
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                FrameVel rv(t[0].cast<RotationVel>(), t[1].cast<VectorVel>());
+                return rv;
+            }))
         ;
 
     m.def("Equal", (bool (*)(const FrameVel&, const FrameVel&, double)) &KDL::Equal,
@@ -213,6 +255,20 @@ void init_framevel(pybind11::module &m)
         .def("__neg__", [](const TwistVel &a) {
             return operator-(a);
         }, py::is_operator())
+        .def(py::pickle(
+            [](const TwistVel &tv) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(tv.vel, tv.rot);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 2) {
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                TwistVel tv(t[0].cast<VectorVel>(), t[1].cast<VectorVel>());
+                return tv;
+            }))
         ;
 
     m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero);

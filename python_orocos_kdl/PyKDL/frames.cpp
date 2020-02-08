@@ -74,6 +74,21 @@ void init_frames(py::module &m)
         .def_static("Zero", &Vector::Zero)
         .def("Norm", &Vector::Norm)
         .def("Normalize", &Vector::Normalize, py::arg("eps")=epsilon)
+        .def(py::pickle(
+            [](const Vector &v) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(v.x(), v.y(), v.z());
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 3) {
+                    std::cout << "size error\n";
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                Vector v(t[0].cast<double>(), t[1].cast<double>(), t[2].cast<double>());
+                return v;
+            }))
         ;
 
     m.def("SetToZero", (void (*)(Vector&)) &KDL::SetToZero);
@@ -155,6 +170,18 @@ void init_frames(py::module &m)
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def(py::self * py::self)
+        .def(py::pickle(
+            [](const Rotation &rot) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                double roll{0}, pitch{0}, yaw{0};
+                rot.GetRPY(roll, pitch, yaw);
+                return py::make_tuple(roll, pitch, yaw);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 3) { throw std::runtime_error("Invalid state!"); }
+                /* Create a new C++ instance */
+                return Rotation::RPY(t[0].cast<double>(), t[1].cast<double>(), t[2].cast<double>());
+            }))
         ;
 
     m.def("Equal", (bool (*)(const Rotation&, const Rotation&, double eps)) &KDL::Equal,
@@ -211,6 +238,20 @@ void init_frames(py::module &m)
         .def(py::self * py::self)
         .def(py::self == py::self)
         .def(py::self != py::self)
+        .def(py::pickle(
+            [](const Frame &frm) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(frm.M, frm.p);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 2) {
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                Frame frm(t[0].cast<Rotation>(), t[1].cast<Vector>());
+                return frm;
+            }))
         ;
 
     m.def("Equal", (bool (*)(const Frame&, const Frame&, double eps)) &KDL::Equal,
@@ -258,6 +299,20 @@ void init_frames(py::module &m)
         .def("__neg__", [](const Twist &a) {
             return operator-(a);
         }, py::is_operator())
+        .def(py::pickle(
+            [](const Twist &tt) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(tt.vel, tt.rot);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 2) {
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                Twist tt(t[0].cast<Vector>(), t[1].cast<Vector>());
+                return tt;
+            }))
         ;
 
     m.def("dot", (double (*)(const Twist&, const Wrench&)) &KDL::dot);
@@ -308,6 +363,20 @@ void init_frames(py::module &m)
         .def("__neg__", [](const Wrench &w) {
             return operator-(w);
         }, py::is_operator())
+        .def(py::pickle(
+            [](const Wrench &wr) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(wr.force, wr.torque);
+            },
+            [](py::tuple t) { // __setstate__
+                if (t.size() != 2) {
+                    throw std::runtime_error("Invalid state!");
+                }
+
+                /* Create a new C++ instance */
+                Wrench wr(t[0].cast<Vector>(), t[1].cast<Vector>());
+                return wr;
+            }))
         ;
 
     m.def("SetToZero", (void (*)(Wrench&)) &KDL::SetToZero);

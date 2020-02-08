@@ -160,16 +160,17 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(F.Inverse()*v,F.Inverse(v))
 
     def testPickle(self):
-        import pickle
+        # import pickle
+        import cPickle as pickle
         data = {}
         data['v'] = Vector(1,2,3)
-        data['rot'] = Rotation.RotX(1.3)
+        data['rot'] = Rotation().EulerZYZ(1, 2, 3)
         data['fr'] = Frame(data['rot'], data['v'])
         data['tw'] = Twist(data['v'], Vector(4,5,6))
         data['wr'] = Wrench(Vector(0.1,0.2,0.3), data['v'])
 
         f = open('/tmp/pickle_test', 'w')
-        pickle.dump(data, f)
+        pickle.dump(data, f, 2)
         f.close()
 
         f = open('/tmp/pickle_test', 'r')
