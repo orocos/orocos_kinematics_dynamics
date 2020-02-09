@@ -123,7 +123,7 @@ void init_kinfam(pybind11::module &m)
     // --------------------
     py::class_<RigidBodyInertia>(m, "RigidBodyInertia")
         .def(py::init<double, const Vector&, const RotationalInertia&>(),
-                py::arg("m")=0, py::arg("oc")=Vector::Zero(), py::arg("Ic")=RotationalInertia::Zero())
+                py::arg("m")=0, py::arg_v("oc", Vector::Zero(), "Vector.Zero()"), py::arg_v("Ic", RotationalInertia::Zero(), "RigidBodyInertia.Zero()"))
         .def_static("Zero", &RigidBodyInertia::Zero)
         .def("RefPoint", &RigidBodyInertia::RefPoint)
         .def("getMass", &RigidBodyInertia::getMass)
@@ -141,9 +141,9 @@ void init_kinfam(pybind11::module &m)
     // --------------------
     py::class_<Segment>(m, "Segment")
         .def(py::init<const std::string&, const Joint&, const Frame&, const RigidBodyInertia&>(),
-             py::arg("name"), py::arg("joint")=Joint(), py::arg("f_tip")=Frame::Identity(), py::arg("I")=RigidBodyInertia::Zero())
+             py::arg("name"), py::arg_v("joint", Joint(), "Joint()"), py::arg_v("f_tip", Frame::Identity(), "Frame.Identity()"), py::arg_v("I", RigidBodyInertia::Zero(), "RigidBodyInertia.Zero()"))
         .def(py::init<const Joint&, const Frame&, const RigidBodyInertia&>(),
-             py::arg("joint")=Joint(), py::arg("f_tip")=Frame::Identity(), py::arg("I")=RigidBodyInertia::Zero())
+             py::arg_v("joint", Joint(), "Joint()"), py::arg_v("f_tip", Frame::Identity(), "Frame.Identity()"), py::arg_v("I", RigidBodyInertia::Zero(), "RigidBodyInertia.Zero()"))
         .def(py::init<const Segment&>())
         .def("getFrameToTip", &Segment::getFrameToTip)
         .def("pose", &Segment::pose)
