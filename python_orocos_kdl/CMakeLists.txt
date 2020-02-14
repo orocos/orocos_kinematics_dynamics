@@ -25,12 +25,12 @@ option(BUILD_PYKDL_PYBIND11 "Use PyBind11 instead of SIP" OFF)
 if (BUILD_PYKDL_PYBIND11)
   add_subdirectory(pybind11)
   pybind11_add_module(${LIBRARY_NAME}
-    PyKDL/PyKDL.h
-    PyKDL/PyKDL.cpp
-    PyKDL/frames.cpp
-    PyKDL/kinfam.cpp
-    PyKDL/framevel.cpp
-    PyKDL/dynamics.cpp)
+    PyKDL/pybind11/PyKDL.h
+    PyKDL/pybind11/PyKDL.cpp
+    PyKDL/pybind11/frames.cpp
+    PyKDL/pybind11/kinfam.cpp
+    PyKDL/pybind11/framevel.cpp
+    PyKDL/pybind11/dynamics.cpp)
   target_link_libraries(${LIBRARY_NAME} PRIVATE ${orocos_kdl_LIBRARIES})
   install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
 else (BUILD_PYKDL_PYBIND11)
@@ -43,7 +43,7 @@ else (BUILD_PYKDL_PYBIND11)
   file(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.sip")
   set(SIP_INCLUDES ${SIP_FILES})
   set(SIP_EXTRA_OPTIONS "-o")
-  add_sip_python_module(${LIBRARY_NAME} ${LIBRARY_NAME}/${LIBRARY_NAME}.sip ${orocos_kdl_LIBRARIES})
+  add_sip_python_module(${LIBRARY_NAME} ${LIBRARY_NAME}/sip/${LIBRARY_NAME}.sip ${orocos_kdl_LIBRARIES})
 endif(BUILD_PYKDL_PYBIND11)
 
 install(FILES package.xml DESTINATION share/python_orocos_kdl)
