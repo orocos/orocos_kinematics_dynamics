@@ -40,7 +40,7 @@ else (BUILD_PYKDL_PYBIND11)
 
   include_directories(${SIP_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
 
-  file(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.sip")
+  file(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${LIBRARY_NAME}/sip/*.sip")
   set(SIP_INCLUDES ${SIP_FILES})
   set(SIP_EXTRA_OPTIONS "-o")
   add_sip_python_module(${LIBRARY_NAME} ${LIBRARY_NAME}/sip/${LIBRARY_NAME}.sip ${orocos_kdl_LIBRARIES})
