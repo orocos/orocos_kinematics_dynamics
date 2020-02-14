@@ -60,7 +60,7 @@ bool Equal(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2,d
 bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
 
 class ChainDynParam {
-    
+
 %TypeHeaderCode
 #include <kdl/chaindynparam.hpp>
 using namespace KDL;
@@ -70,6 +70,6 @@ public:
     ChainDynParam(const Chain& chain, Vector _grav);
 
     int JntToCoriolis(const JntArray &q, const JntArray &q_dot, JntArray &coriolis);
-	int JntToMass(const JntArray &q, JntSpaceInertiaMatrix& H);
-	int JntToGravity(const JntArray &q,JntArray &gravity);
+    int JntToMass(const JntArray &q, JntSpaceInertiaMatrix& H);
+    int JntToGravity(const JntArray &q,JntArray &gravity);
 };

@@ -21,7 +21,7 @@
 
 class doubleVel
 {
-        
+
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
 using namespace KDL;
@@ -46,8 +46,8 @@ using namespace KDL;
 %End
 public:
     Vector p;
-	Vector v;
-    
+    Vector v;
+
     VectorVel();
     VectorVel(const Vector& _p,const Vector& _v);
     VectorVel(const Vector& _p);
@@ -113,9 +113,9 @@ public:
     Vector   deriv() const;
 
 
-	VectorVel UnitX() const;
-	VectorVel UnitY() const;
-	VectorVel UnitZ() const;
+    VectorVel UnitX() const;
+    VectorVel UnitY() const;
+    VectorVel UnitZ() const;
     static RotationVel Identity();
     RotationVel Inverse() const;
     VectorVel Inverse(const VectorVel& arg) const;
@@ -126,7 +126,7 @@ public:
     void DoRotY(const doubleVel& angle);
     void DoRotZ(const doubleVel& angle);
     static RotationVel RotX(const doubleVel& angle);
-    static RotationVel RotY(const doubleVel& angle);    
+    static RotationVel RotY(const doubleVel& angle);
     static RotationVel RotZ(const doubleVel& angle);
     static RotationVel Rot(const Vector& rotvec,const doubleVel& angle);
     static RotationVel Rot2(const Vector& rotvec,const doubleVel& angle);
@@ -155,7 +155,7 @@ bool Equal(const RotationVel& r1,const Rotation& r2,double eps=epsilon);
 
 class FrameVel
 {
-        
+
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
 using namespace KDL;
@@ -169,7 +169,7 @@ public:
     FrameVel(const Frame& _T);
     FrameVel(const Frame& _T,const Twist& _t);
     FrameVel(const RotationVel& _M,const VectorVel& _p);
-    
+
     Frame value() const;
     Twist deriv() const;
 
@@ -207,7 +207,7 @@ class TwistVel
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
 using namespace KDL;
-%End    
+%End
 
 public:
     VectorVel vel;
@@ -224,7 +224,7 @@ public:
     TwistVel& operator+=(const TwistVel& arg);
 
     static TwistVel Zero();
-    
+
     void ReverseSign();
 
     TwistVel RefPoint(const VectorVel& v_base_AB);

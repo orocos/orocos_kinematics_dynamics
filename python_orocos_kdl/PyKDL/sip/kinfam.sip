@@ -121,12 +121,12 @@ public:
     Joint(JointType type=None,double scale=1,double offset=0,
           double inertia=0,const double damping=0,double stiffness=0);
     Joint(std::string name, Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
-	      double inertia=0, double damping=0, double stiffness=0);
+          double inertia=0, double damping=0, double stiffness=0);
     Joint(Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
-	      double inertia=0, double damping=0, double stiffness=0);
-    
+          double inertia=0, double damping=0, double stiffness=0);
+
     Joint(const Joint& in);
-    
+
     Frame pose(const double& q)const /Factory/ ;
     Twist twist(const double& qdot)const /Factory/ ;
     Vector JointAxis() const /Factory/;
@@ -156,7 +156,7 @@ using namespace KDL;
 %End
 public:
     RotationalInertia(double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
-        
+
     static RotationalInertia Zero()/Factory/;
 
     double __getitem__(int index);
@@ -192,9 +192,9 @@ using namespace KDL;
 %End
 public:
     RigidBodyInertia(double m=0, const Vector& oc=Vector::Zero(), const RotationalInertia& Ic=RotationalInertia::Zero());
-    static RigidBodyInertia Zero() /Factory/;        
+    static RigidBodyInertia Zero() /Factory/;
     RigidBodyInertia RefPoint(const Vector& p) /Factory/;
-    double getMass()const /Factory/;        
+    double getMass()const /Factory/;
     Vector getCOG() const /Factory/;
     RotationalInertia getRotationalInertia() const /Factory/;
 };
@@ -206,7 +206,7 @@ RigidBodyInertia operator*(const Rotation& R,const RigidBodyInertia& I) /Factory
 
 class Segment
 {
-    
+
 %TypeHeaderCode
 #include <kdl/segment.hpp>
 #include <kdl/kinfam_io.hpp>
@@ -224,7 +224,7 @@ public:
     std::string s(ss.str());
     sipRes=&s;
 %End
-    
+
     const Frame& getFrameToTip()const /Factory/;
     Frame pose(const double& q)const /Factory/ ;
     Twist twist(const double& q,const double& qdot)const /Factory/ ;
@@ -236,7 +236,7 @@ public:
 
 class Chain
 {
-    
+
 %TypeHeaderCode
 #include <kdl/chain.hpp>
 using namespace KDL;
@@ -245,13 +245,13 @@ using namespace KDL;
 public:
     Chain();
     Chain(const Chain& in);
-    
+
     void addSegment(const Segment& segment);
     void addChain(const Chain& chain);
-        
+
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
-        
+
     const Segment& getSegment(unsigned int nr)const /Factory/;
 
 };
@@ -296,7 +296,7 @@ public:
     }
     sipRes=(*sipCpp)(a0);
 %End
-    
+
     void __setitem__(int index, double value);
 %MethodCode
     if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
@@ -339,7 +339,7 @@ public:
     JntArrayVel(const JntArray& q,const JntArray& qdot);
     JntArrayVel(const JntArray& q);
     void resize(unsigned int newSize);
-    
+
     JntArray value()const /Factory/;
     JntArray deriv()const /Factory/;
 };
@@ -378,7 +378,7 @@ public:
     }
     sipRes=(*sipCpp)(i,j);
 %End
-    
+
     void __setitem__(SIP_PYTUPLE,double value);
 %MethodCode
     int i,j;
@@ -399,14 +399,14 @@ public:
 %End
     Twist getColumn(unsigned int i) const /Factory/;
     void setColumn(unsigned int i,const Twist& t);
-    
+
     void changeRefPoint(const Vector& base_AB);
     void changeBase(const Rotation& rot);
     void changeRefFrame(const Frame& frame);
 
 };
 void SetToZero(Jacobian& jac);
-    
+
 void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
 void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
 void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
@@ -497,7 +497,7 @@ using namespace KDL;
 public:
     ChainIkSolverPos_NR(const Chain& chain,ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
                         unsigned int maxiter=100,double eps=epsilon);
-    
+
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
 };
@@ -509,10 +509,10 @@ class ChainIkSolverPos_NR_JL : ChainIkSolverPos
 using namespace KDL;
 %End
 public:
-    ChainIkSolverPos_NR_JL(const Chain& chain,const JntArray &q_min,const JntArray &q_max, 
+    ChainIkSolverPos_NR_JL(const Chain& chain,const JntArray &q_min,const JntArray &q_max,
                         ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
                         unsigned int maxiter=100,double eps=epsilon);
-    
+
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
 };
@@ -525,7 +525,7 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_pinv(const Chain& chain,double eps=0.00001,int maxiter=150);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
 };
@@ -538,7 +538,7 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
 
@@ -562,7 +562,7 @@ public:
     }
     Eigen::MatrixXd Mx;
     Mx=Eigen::MatrixXd::Identity(numRows,numCols);
-    
+
     for (Py_ssize_t r=0;r<numRows;r++) {
         PyObject *row;
         row=PyList_GetItem(list,r);
@@ -639,7 +639,7 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_pinv_nso(const Chain& chain,double eps=0.00001,int maxiter=150, double alpha=0.25);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
 
@@ -664,7 +664,7 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_pinv_givens(const Chain& chain);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
 };
@@ -710,7 +710,7 @@ using namespace KDL;
 %End
 
 public:
-	ChainIdSolver_RNE(const Chain& chain,Vector grav);
-	int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const std::vector<Wrench>& f_ext,JntArray &torques);
-	virtual void updateInternalDataStructures();
+    ChainIdSolver_RNE(const Chain& chain,Vector grav);
+    int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const std::vector<Wrench>& f_ext,JntArray &torques);
+    virtual void updateInternalDataStructures();
 };
