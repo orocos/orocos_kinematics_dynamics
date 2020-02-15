@@ -21,7 +21,7 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import
 set(PYTHON_SITE_PACKAGES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${PYTHON_SITE_PACKAGES})
 set(LIBRARY_NAME "PyKDL")
 
-option(BUILD_PYKDL_PYBIND11 "Use PyBind11 instead of SIP" OFF)
+option(BUILD_PYKDL_PYBIND11 "Use PyBind11 instead of SIP" ON)
 if (BUILD_PYKDL_PYBIND11)
   add_subdirectory(pybind11)
   pybind11_add_module(${LIBRARY_NAME}
