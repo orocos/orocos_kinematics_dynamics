@@ -70,7 +70,6 @@ void init_frames(py::module &m)
         .def("__neg__", [](const Vector &a) {
             return operator-(a);
         }, py::is_operator())
-        .def("x", (double (Vector::*)(void) const) &Vector::x, "Get x")
         .def_static("Zero", &Vector::Zero)
         .def("Norm", &Vector::Norm)
         .def("Normalize", &Vector::Normalize, py::arg("eps")=epsilon)
