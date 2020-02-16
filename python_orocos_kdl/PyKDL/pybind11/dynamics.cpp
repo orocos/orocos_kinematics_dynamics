@@ -36,33 +36,36 @@ void init_dynamics(pybind11::module &m)
     // --------------------
     // JntSpaceInertiaMatrix
     // --------------------
-    py::class_<JntSpaceInertiaMatrix>(m, "JntSpaceInertiaMatrix")
-        .def(py::init<>())
-        .def(py::init<int>())
-        .def(py::init<const JntSpaceInertiaMatrix&>())
-        .def("resize", &JntSpaceInertiaMatrix::resize)
-        .def("rows", &JntSpaceInertiaMatrix::rows)
-        .def("columns", &JntSpaceInertiaMatrix::columns)
-        .def("__getitem__", [](const JntSpaceInertiaMatrix &jm, std::tuple<int, int> idx) {
-            int i = std::get<0>(idx);
-            int j = std::get<1>(idx);
-            if (i < 0 || i > jm.rows() || j < 0 || j > jm.columns()) {
-                throw py::index_error("Inertia index out of range");
+    py::class_<JntSpaceInertiaMatrix> jnt_space_inertia_matrix(m, "JntSpaceInertiaMatrix");
+    jnt_space_inertia_matrix.def(py::init<>());
+    jnt_space_inertia_matrix.def(py::init<int>());
+    jnt_space_inertia_matrix.def(py::init<const JntSpaceInertiaMatrix&>());
+    jnt_space_inertia_matrix.def("resize", &JntSpaceInertiaMatrix::resize);
+    jnt_space_inertia_matrix.def("rows", &JntSpaceInertiaMatrix::rows);
+    jnt_space_inertia_matrix.def("columns", &JntSpaceInertiaMatrix::columns);
+    jnt_space_inertia_matrix.def("__getitem__", [](const JntSpaceInertiaMatrix &jm, std::tuple<int, int> idx)
+    {
+        int i = std::get<0>(idx);
+        int j = std::get<1>(idx);
+        if (i < 0 || i > jm.rows() || j < 0 || j > jm.columns())
+            throw py::index_error("Inertia index out of range");
+
+        return jm((unsigned int)i, (unsigned int)j);
+    });
+    jnt_space_inertia_matrix.def("__repr__", [](const JntSpaceInertiaMatrix &jm)
+    {
+        std::ostringstream oss;
+        for (size_t r = 0; r < jm.rows(); r++)
+        {
+            for (size_t c = 0; c < jm.columns(); c++)
+            {
+                oss << std::setw(KDL_FRAME_WIDTH) << jm(r, c);
             }
-            return jm((unsigned int)i, (unsigned int)j);
-        })
-        .def("__repr__", [](const JntSpaceInertiaMatrix &jm) {
-            std::ostringstream oss;
-            for (size_t r = 0; r < jm.rows(); r++) {
-                for (size_t c = 0; c < jm.columns(); c++) {
-                    oss << std::setw(KDL_FRAME_WIDTH) << jm(r, c);
-                }
-                oss << std::endl;
-            }
-            return oss.str();
-        })
-        .def(py::self == py::self)
-        ;
+            oss << std::endl;
+        }
+        return oss.str();
+    });
+    jnt_space_inertia_matrix.def(py::self == py::self);
 
     m.def("Add", (void (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&, JntSpaceInertiaMatrix&)) &KDL::Add);
     m.def("Subtract", (void (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&,JntSpaceInertiaMatrix&)) &KDL::Subtract);
@@ -77,10 +80,9 @@ void init_dynamics(pybind11::module &m)
     // --------------------
     // ChainDynParam
     // --------------------
-    py::class_<ChainDynParam>(m, "ChainDynParam")
-        .def(py::init<const Chain&, Vector>())
-        .def("JntToCoriolis", &ChainDynParam::JntToCoriolis)
-        .def("JntToMass", &ChainDynParam::JntToMass)
-        .def("JntToGravity", &ChainDynParam::JntToGravity)
-        ;
+    py::class_<ChainDynParam> chain_dyn_param(m, "ChainDynParam");
+    chain_dyn_param.def(py::init<const Chain&, Vector>());
+    chain_dyn_param.def("JntToCoriolis", &ChainDynParam::JntToCoriolis);
+    chain_dyn_param.def("JntToMass", &ChainDynParam::JntToMass);
+    chain_dyn_param.def("JntToGravity", &ChainDynParam::JntToGravity);
 }

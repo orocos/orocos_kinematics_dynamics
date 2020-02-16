@@ -20,6 +20,7 @@
 //License along with this library; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+
 #include <kdl/framevel.hpp>
 #include <kdl/framevel_io.hpp>
 #include "PyKDL.h"
@@ -33,11 +34,11 @@ void init_framevel(pybind11::module &m)
     // --------------------
     // doubleVel
     // --------------------
-    py::class_<Rall1d<double> >(m, "doubleVel")
-        .def_readwrite("t", &doubleVel::t)
-        .def_readwrite("grad", &doubleVel::grad)
-        .def(py::init<>())
-        ;
+    py::class_<doubleVel > double_vel(m, "doubleVel");
+    double_vel.def(py::init<>());
+    double_vel.def_readwrite("t", &doubleVel::t);
+    double_vel.def_readwrite("grad", &doubleVel::grad);
+
     m.def("diff", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::diff,
           py::arg("a"), py::arg("b"), py::arg("dt")=1.0);
     m.def("addDelta", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::addDelta,
@@ -45,56 +46,61 @@ void init_framevel(pybind11::module &m)
     m.def("Equal", (bool (*)(const doubleVel&, const doubleVel&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
 
-    py::class_<VectorVel>(m, "VectorVel")
-        .def_readwrite("p", &VectorVel::p)
-        .def_readwrite("v", &VectorVel::v)
-        .def(py::init<>())
-        .def(py::init<const Vector&, const Vector&>())
-        .def(py::init<const Vector&>())
-        .def(py::init<const VectorVel&>())
-        .def("value", &VectorVel::value)
-        .def("deriv", &VectorVel::deriv)
-        .def_static("Zero", &VectorVel::Zero)
-        .def("ReverseSign", &VectorVel::ReverseSign)
-        .def("Norm", &VectorVel::Norm)
-        .def(py::self += py::self)
-        .def(py::self -= py::self)
-        .def(py::self + py::self)
-        .def(py::self - py::self)
-        .def(Vector() + py::self)
-        .def(Vector() - py::self)
-        .def(py::self + Vector())
-        .def(py::self - Vector())
 
-        .def(py::self * py::self)
-        .def(py::self * Vector())
-        .def(Vector() * py::self)
-        .def(double() * py::self)
-        .def(py::self * double())
-        .def(doubleVel() * py::self)
-        .def(py::self * doubleVel())
-        .def(Rotation() * py::self)
+    // --------------------
+    // VectorVel
+    // --------------------
+    py::class_<VectorVel> vector_vel(m, "VectorVel");
+    vector_vel.def_readwrite("p", &VectorVel::p);
+    vector_vel.def_readwrite("v", &VectorVel::v);
+    vector_vel.def(py::init<>());
+    vector_vel.def(py::init<const Vector&, const Vector&>());
+    vector_vel.def(py::init<const Vector&>());
+    vector_vel.def(py::init<const VectorVel&>());
+    vector_vel.def("value", &VectorVel::value);
+    vector_vel.def("deriv", &VectorVel::deriv);
+    vector_vel.def_static("Zero", &VectorVel::Zero);
+    vector_vel.def("ReverseSign", &VectorVel::ReverseSign);
+    vector_vel.def("Norm", &VectorVel::Norm);
+    vector_vel.def(py::self += py::self);
+    vector_vel.def(py::self -= py::self);
+    vector_vel.def(py::self + py::self);
+    vector_vel.def(py::self - py::self);
+    vector_vel.def(Vector() + py::self);
+    vector_vel.def(Vector() - py::self);
+    vector_vel.def(py::self + Vector());
+    vector_vel.def(py::self - Vector());
 
-        .def(py::self / double())
-        .def(py::self / doubleVel())
-        .def("__neg__", [](const VectorVel &a) {
-            return operator-(a);
-        }, py::is_operator())
-        .def(py::pickle(
-            [](const VectorVel &vv) { // __getstate__
+    vector_vel.def(py::self * py::self);
+    vector_vel.def(py::self * Vector());
+    vector_vel.def(Vector() * py::self);
+    vector_vel.def(double() * py::self);
+    vector_vel.def(py::self * double());
+    vector_vel.def(doubleVel() * py::self);
+    vector_vel.def(py::self * doubleVel());
+    vector_vel.def(Rotation() * py::self);
+
+    vector_vel.def(py::self / double());
+    vector_vel.def(py::self / doubleVel());
+    vector_vel.def("__neg__", [](const VectorVel &a)
+    {
+        return operator-(a);
+    }, py::is_operator());
+    vector_vel.def(py::pickle(
+            [](const VectorVel &vv)
+            { // __getstate__
                 /* Return a tuple that fully encodes the state of the object */
                 return py::make_tuple(vv.p, vv.v);
             },
-            [](py::tuple t) { // __setstate__
-                if (t.size() != 2) {
+            [](py::tuple t)
+            { // __setstate__
+                if (t.size() != 2)
                     throw std::runtime_error("Invalid state!");
-                }
 
                 /* Create a new C++ instance */
                 VectorVel vv(t[0].cast<Vector>(), t[1].cast<Vector>());
                 return vv;
-            }))
-        ;
+            }));
 
     m.def("Equal", (bool (*)(const VectorVel&, const VectorVel&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
@@ -111,56 +117,56 @@ void init_framevel(pybind11::module &m)
     // --------------------
     // RotationVel
     // --------------------
-    py::class_<RotationVel>(m, "RotationVel")
-        .def_readwrite("R", &RotationVel::R)
-        .def_readwrite("w", &RotationVel::w)
-        .def(py::init<>())
-        .def(py::init<const Rotation&>())
-        .def(py::init<const Rotation&, const Vector&>())
-        .def(py::init<const RotationVel&>())
-        .def("value", &RotationVel::value)
-        .def("deriv", &RotationVel::deriv)
-        .def("UnitX", &RotationVel::UnitX)
-        .def("UnitY", &RotationVel::UnitY)
-        .def("UnitZ", &RotationVel::UnitZ)
-        .def_static("Identity", &RotationVel::Identity)
-        .def("Inverse", (RotationVel (RotationVel::*)(void) const) &RotationVel::Inverse)
-        .def("Inverse", (VectorVel (RotationVel::*)(const VectorVel&) const) &RotationVel::Inverse)
-        .def("Inverse", (VectorVel (RotationVel::*)(const Vector&) const) &RotationVel::Inverse)
-        .def("DoRotX", &RotationVel::DoRotX)
-        .def("DoRotY", &RotationVel::DoRotY)
-        .def("DoRotZ", &RotationVel::DoRotZ)
-        .def_static("RotX", &RotationVel::RotX)
-        .def_static("RotY", &RotationVel::RotY)
-        .def_static("RotZ", &RotationVel::RotZ)
-        .def_static("Rot", &RotationVel::Rot)
-        .def_static("Rot2", &RotationVel::Rot2)
+    py::class_<RotationVel> rotation_vel(m, "RotationVel");
+    rotation_vel.def_readwrite("R", &RotationVel::R);
+    rotation_vel.def_readwrite("w", &RotationVel::w);
+    rotation_vel.def(py::init<>());
+    rotation_vel.def(py::init<const Rotation&>());
+    rotation_vel.def(py::init<const Rotation&, const Vector&>());
+    rotation_vel.def(py::init<const RotationVel&>());
+    rotation_vel.def("value", &RotationVel::value);
+    rotation_vel.def("deriv", &RotationVel::deriv);
+    rotation_vel.def("UnitX", &RotationVel::UnitX);
+    rotation_vel.def("UnitY", &RotationVel::UnitY);
+    rotation_vel.def("UnitZ", &RotationVel::UnitZ);
+    rotation_vel.def_static("Identity", &RotationVel::Identity);
+    rotation_vel.def("Inverse", (RotationVel (RotationVel::*)(void) const) &RotationVel::Inverse);
+    rotation_vel.def("Inverse", (VectorVel (RotationVel::*)(const VectorVel&) const) &RotationVel::Inverse);
+    rotation_vel.def("Inverse", (VectorVel (RotationVel::*)(const Vector&) const) &RotationVel::Inverse);
+    rotation_vel.def("DoRotX", &RotationVel::DoRotX);
+    rotation_vel.def("DoRotY", &RotationVel::DoRotY);
+    rotation_vel.def("DoRotZ", &RotationVel::DoRotZ);
+    rotation_vel.def_static("RotX", &RotationVel::RotX);
+    rotation_vel.def_static("RotY", &RotationVel::RotY);
+    rotation_vel.def_static("RotZ", &RotationVel::RotZ);
+    rotation_vel.def_static("Rot", &RotationVel::Rot);
+    rotation_vel.def_static("Rot2", &RotationVel::Rot2);
 
-        .def("Inverse", (TwistVel (RotationVel::*)(const TwistVel&) const) &RotationVel::Inverse)
-        .def("Inverse", (TwistVel (RotationVel::*)(const Twist&) const) &RotationVel::Inverse)
+    rotation_vel.def("Inverse", (TwistVel (RotationVel::*)(const TwistVel&) const) &RotationVel::Inverse);
+    rotation_vel.def("Inverse", (TwistVel (RotationVel::*)(const Twist&) const) &RotationVel::Inverse);
 
-        .def(py::self * VectorVel())
-        .def(py::self * Vector())
-        .def(py::self * TwistVel())
-        .def(py::self * Twist())
-        .def(py::self * py::self)
-        .def(Rotation() * py::self)
-        .def(py::self * Rotation())
-        .def(py::pickle(
-            [](const RotationVel &rv) { // __getstate__
+    rotation_vel.def(py::self * VectorVel());
+    rotation_vel.def(py::self * Vector());
+    rotation_vel.def(py::self * TwistVel());
+    rotation_vel.def(py::self * Twist());
+    rotation_vel.def(py::self * py::self);
+    rotation_vel.def(Rotation() * py::self);
+    rotation_vel.def(py::self * Rotation());
+    rotation_vel.def(py::pickle(
+            [](const RotationVel &rv)
+            { // __getstate__
                 /* Return a tuple that fully encodes the state of the object */
                 return py::make_tuple(rv.R, rv.w);
             },
-            [](py::tuple t) { // __setstate__
-                if (t.size() != 2) {
+            [](py::tuple t)
+            { // __setstate__
+                if (t.size() != 2)
                     throw std::runtime_error("Invalid state!");
-                }
 
                 /* Create a new C++ instance */
                 RotationVel rv(t[0].cast<Rotation>(), t[1].cast<Vector>());
                 return rv;
-            }))
-        ;
+            }));
 
     m.def("Equal", (bool (*)(const RotationVel&, const RotationVel&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
@@ -173,46 +179,46 @@ void init_framevel(pybind11::module &m)
     // --------------------
     // FrameVel
     // --------------------
-    py::class_<FrameVel>(m, "FrameVel")
-        .def_readwrite("M", &FrameVel::M)
-        .def_readwrite("p", &FrameVel::p)
-        .def(py::init<>())
-        .def(py::init<const Frame&>())
-        .def(py::init<const Frame&, const Twist&>())
-        .def(py::init<const RotationVel&, const VectorVel&>())
-        .def(py::init<const FrameVel&>())
-        .def("value", &FrameVel::value)
-        .def("deriv", &FrameVel::deriv)
-        .def_static("Identity", &FrameVel::Identity)
-        .def("Inverse", (FrameVel (FrameVel::*)() const) &FrameVel::Inverse)
-        .def("Inverse", (VectorVel (FrameVel::*)(const VectorVel&) const) &FrameVel::Inverse)
-        .def("Inverse", (VectorVel (FrameVel::*)(const Vector&) const) &FrameVel::Inverse)
-        .def(py::self * VectorVel())
-        .def(py::self * Vector())
-        .def("GetFrame", &FrameVel::GetFrame)
-        .def("GetTwist", &FrameVel::GetTwist)
-        .def("Inverse", (TwistVel (FrameVel::*)(const TwistVel&) const) &FrameVel::Inverse)
-        .def("Inverse", (TwistVel (FrameVel::*)(const Twist&) const) &FrameVel::Inverse)
-        .def(py::self * TwistVel())
-        .def(py::self * Twist())
-        .def(py::self * py::self)
-        .def(Frame() * py::self)
-        .def(py::self * Frame())
-        .def(py::pickle(
-            [](const FrameVel &fv) { // __getstate__
+    py::class_<FrameVel> frame_vel(m, "FrameVel");
+    frame_vel.def_readwrite("M", &FrameVel::M);
+    frame_vel.def_readwrite("p", &FrameVel::p);
+    frame_vel.def(py::init<>());
+    frame_vel.def(py::init<const Frame&>());
+    frame_vel.def(py::init<const Frame&, const Twist&>());
+    frame_vel.def(py::init<const RotationVel&, const VectorVel&>());
+    frame_vel.def(py::init<const FrameVel&>());
+    frame_vel.def("value", &FrameVel::value);
+    frame_vel.def("deriv", &FrameVel::deriv);
+    frame_vel.def_static("Identity", &FrameVel::Identity);
+    frame_vel.def("Inverse", (FrameVel (FrameVel::*)() const) &FrameVel::Inverse);
+    frame_vel.def("Inverse", (VectorVel (FrameVel::*)(const VectorVel&) const) &FrameVel::Inverse);
+    frame_vel.def("Inverse", (VectorVel (FrameVel::*)(const Vector&) const) &FrameVel::Inverse);
+    frame_vel.def(py::self * VectorVel());
+    frame_vel.def(py::self * Vector());
+    frame_vel.def("GetFrame", &FrameVel::GetFrame);
+    frame_vel.def("GetTwist", &FrameVel::GetTwist);
+    frame_vel.def("Inverse", (TwistVel (FrameVel::*)(const TwistVel&) const) &FrameVel::Inverse);
+    frame_vel.def("Inverse", (TwistVel (FrameVel::*)(const Twist&) const) &FrameVel::Inverse);
+    frame_vel.def(py::self * TwistVel());
+    frame_vel.def(py::self * Twist());
+    frame_vel.def(py::self * py::self);
+    frame_vel.def(Frame() * py::self);
+    frame_vel.def(py::self * Frame());
+    frame_vel.def(py::pickle(
+            [](const FrameVel &fv)
+            { // __getstate__
                 /* Return a tuple that fully encodes the state of the object */
                 return py::make_tuple(fv.M, fv.p);
             },
-            [](py::tuple t) { // __setstate__
-                if (t.size() != 2) {
+            [](py::tuple t)
+            { // __setstate__
+                if (t.size() != 2)
                     throw std::runtime_error("Invalid state!");
-                }
 
                 /* Create a new C++ instance */
                 FrameVel rv(t[0].cast<RotationVel>(), t[1].cast<VectorVel>());
                 return rv;
-            }))
-        ;
+            }));
 
     m.def("Equal", (bool (*)(const FrameVel&, const FrameVel&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
@@ -225,51 +231,52 @@ void init_framevel(pybind11::module &m)
     // --------------------
     // TwistVel
     // --------------------
-    py::class_<TwistVel>(m, "TwistVel")
-        .def_readwrite("vel", &TwistVel::vel)
-        .def_readwrite("rot", &TwistVel::rot)
-        .def(py::init<>())
-        .def(py::init<const VectorVel&, const VectorVel&>())
-        .def(py::init<const Twist&, const Twist&>())
-        .def(py::init<const Twist&>())
-        .def("value", &TwistVel::value)
-        .def("deriv", &TwistVel::deriv)
-        .def_static("Zero", &TwistVel::Zero)
-        .def("ReverseSign", &TwistVel::ReverseSign)
-        .def("RefPoint", &TwistVel::RefPoint)
-        .def("GetTwist", &TwistVel::GetTwist)
-        .def("GetTwistDot", &TwistVel::GetTwistDot)
+    py::class_<TwistVel> twist_vel(m, "TwistVel");
+    twist_vel.def_readwrite("vel", &TwistVel::vel);
+    twist_vel.def_readwrite("rot", &TwistVel::rot);
+    twist_vel.def(py::init<>());
+    twist_vel.def(py::init<const VectorVel&, const VectorVel&>());
+    twist_vel.def(py::init<const Twist&, const Twist&>());
+    twist_vel.def(py::init<const Twist&>());
+    twist_vel.def("value", &TwistVel::value);
+    twist_vel.def("deriv", &TwistVel::deriv);
+    twist_vel.def_static("Zero", &TwistVel::Zero);
+    twist_vel.def("ReverseSign", &TwistVel::ReverseSign);
+    twist_vel.def("RefPoint", &TwistVel::RefPoint);
+    twist_vel.def("GetTwist", &TwistVel::GetTwist);
+    twist_vel.def("GetTwistDot", &TwistVel::GetTwistDot);
 
-        .def(py::self -= py::self)
-        .def(py::self += py::self)
-        .def(py::self * double())
-        .def(double() * py::self)
-        .def(py::self / double())
+    twist_vel.def(py::self -= py::self);
+    twist_vel.def(py::self += py::self);
+    twist_vel.def(py::self * double());
+    twist_vel.def(double() * py::self);
+    twist_vel.def(py::self / double());
 
-        .def(py::self * doubleVel())
-        .def(doubleVel() * py::self)
-        .def(py::self / doubleVel())
+    twist_vel.def(py::self * doubleVel());
+    twist_vel.def(doubleVel() * py::self);
+    twist_vel.def(py::self / doubleVel());
 
-        .def(py::self + py::self)
-        .def(py::self - py::self)
-        .def("__neg__", [](const TwistVel &a) {
-            return operator-(a);
-        }, py::is_operator())
-        .def(py::pickle(
-            [](const TwistVel &tv) { // __getstate__
+    twist_vel.def(py::self + py::self);
+    twist_vel.def(py::self - py::self);
+    twist_vel.def("__neg__", [](const TwistVel &a)
+    {
+        return operator-(a);
+    }, py::is_operator());
+    twist_vel.def(py::pickle(
+            [](const TwistVel &tv)
+            { // __getstate__
                 /* Return a tuple that fully encodes the state of the object */
                 return py::make_tuple(tv.vel, tv.rot);
             },
-            [](py::tuple t) { // __setstate__
-                if (t.size() != 2) {
+            [](py::tuple t)
+            { // __setstate__
+                if (t.size() != 2)
                     throw std::runtime_error("Invalid state!");
-                }
 
                 /* Create a new C++ instance */
                 TwistVel tv(t[0].cast<VectorVel>(), t[1].cast<VectorVel>());
                 return tv;
-            }))
-        ;
+            }));
 
     m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero);
     m.def("Equal", (bool (*)(const TwistVel&, const TwistVel&, double)) &KDL::Equal,

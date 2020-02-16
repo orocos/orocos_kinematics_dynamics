@@ -26,6 +26,7 @@
 
 namespace py = pybind11;
 
+
 PYBIND11_MODULE(PyKDL, m)
 {
     m.doc() = "Orocos KDL Python wrapper"; // optional module docstring
