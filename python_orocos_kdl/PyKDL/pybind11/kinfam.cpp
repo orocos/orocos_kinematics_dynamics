@@ -178,8 +178,6 @@ void init_kinfam(pybind11::module &m)
         .def("addTree", &Tree::addTree)
         .def("getNrOfJoints", &Tree::getNrOfJoints)
         .def("getNrOfSegments", &Tree::getNrOfSegments)
-        .def("getSegment", &Tree::getSegment)
-        .def("getRootSegment", &Tree::getRootSegment)
         .def("getChain", [](const Tree &tree, const std::string& chain_root, const std::string& chain_tip) {
             Chain* chain = new Chain();
             tree.getChain(chain_root, chain_tip, *chain);
