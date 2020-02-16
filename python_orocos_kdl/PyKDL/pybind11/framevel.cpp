@@ -115,6 +115,65 @@ void init_framevel(pybind11::module &m)
 
 
     // --------------------
+    // TwistVel
+    // --------------------
+    py::class_<TwistVel> twist_vel(m, "TwistVel");
+    twist_vel.def_readwrite("vel", &TwistVel::vel);
+    twist_vel.def_readwrite("rot", &TwistVel::rot);
+    twist_vel.def(py::init<>());
+    twist_vel.def(py::init<const VectorVel&, const VectorVel&>());
+    twist_vel.def(py::init<const Twist&, const Twist&>());
+    twist_vel.def(py::init<const Twist&>());
+    twist_vel.def("value", &TwistVel::value);
+    twist_vel.def("deriv", &TwistVel::deriv);
+    twist_vel.def_static("Zero", &TwistVel::Zero);
+    twist_vel.def("ReverseSign", &TwistVel::ReverseSign);
+    twist_vel.def("RefPoint", &TwistVel::RefPoint);
+    twist_vel.def("GetTwist", &TwistVel::GetTwist);
+    twist_vel.def("GetTwistDot", &TwistVel::GetTwistDot);
+
+    twist_vel.def(py::self -= py::self);
+    twist_vel.def(py::self += py::self);
+    twist_vel.def(py::self * double());
+    twist_vel.def(double() * py::self);
+    twist_vel.def(py::self / double());
+
+    twist_vel.def(py::self * doubleVel());
+    twist_vel.def(doubleVel() * py::self);
+    twist_vel.def(py::self / doubleVel());
+
+    twist_vel.def(py::self + py::self);
+    twist_vel.def(py::self - py::self);
+    twist_vel.def("__neg__", [](const TwistVel &a)
+    {
+        return operator-(a);
+    }, py::is_operator());
+    twist_vel.def(py::pickle(
+            [](const TwistVel &tv)
+            { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(tv.vel, tv.rot);
+            },
+            [](py::tuple t)
+            { // __setstate__
+                if (t.size() != 2)
+                    throw std::runtime_error("Invalid state!");
+
+                /* Create a new C++ instance */
+                TwistVel tv(t[0].cast<VectorVel>(), t[1].cast<VectorVel>());
+                return tv;
+            }));
+
+    m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero);
+    m.def("Equal", (bool (*)(const TwistVel&, const TwistVel&, double)) &KDL::Equal,
+          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
+    m.def("Equal", (bool (*)(const Twist&, const TwistVel&, double)) &KDL::Equal,
+          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
+    m.def("Equal", (bool (*)(const TwistVel&, const Twist&, double)) &KDL::Equal,
+          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
+
+
+    // --------------------
     // RotationVel
     // --------------------
     py::class_<RotationVel> rotation_vel(m, "RotationVel");
@@ -226,65 +285,6 @@ void init_framevel(pybind11::module &m)
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
     m.def("Equal", (bool (*)(const FrameVel&, const Frame&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
-
-
-    // --------------------
-    // TwistVel
-    // --------------------
-    py::class_<TwistVel> twist_vel(m, "TwistVel");
-    twist_vel.def_readwrite("vel", &TwistVel::vel);
-    twist_vel.def_readwrite("rot", &TwistVel::rot);
-    twist_vel.def(py::init<>());
-    twist_vel.def(py::init<const VectorVel&, const VectorVel&>());
-    twist_vel.def(py::init<const Twist&, const Twist&>());
-    twist_vel.def(py::init<const Twist&>());
-    twist_vel.def("value", &TwistVel::value);
-    twist_vel.def("deriv", &TwistVel::deriv);
-    twist_vel.def_static("Zero", &TwistVel::Zero);
-    twist_vel.def("ReverseSign", &TwistVel::ReverseSign);
-    twist_vel.def("RefPoint", &TwistVel::RefPoint);
-    twist_vel.def("GetTwist", &TwistVel::GetTwist);
-    twist_vel.def("GetTwistDot", &TwistVel::GetTwistDot);
-
-    twist_vel.def(py::self -= py::self);
-    twist_vel.def(py::self += py::self);
-    twist_vel.def(py::self * double());
-    twist_vel.def(double() * py::self);
-    twist_vel.def(py::self / double());
-
-    twist_vel.def(py::self * doubleVel());
-    twist_vel.def(doubleVel() * py::self);
-    twist_vel.def(py::self / doubleVel());
-
-    twist_vel.def(py::self + py::self);
-    twist_vel.def(py::self - py::self);
-    twist_vel.def("__neg__", [](const TwistVel &a)
-    {
-        return operator-(a);
-    }, py::is_operator());
-    twist_vel.def(py::pickle(
-            [](const TwistVel &tv)
-            { // __getstate__
-                /* Return a tuple that fully encodes the state of the object */
-                return py::make_tuple(tv.vel, tv.rot);
-            },
-            [](py::tuple t)
-            { // __setstate__
-                if (t.size() != 2)
-                    throw std::runtime_error("Invalid state!");
-
-                /* Create a new C++ instance */
-                TwistVel tv(t[0].cast<VectorVel>(), t[1].cast<VectorVel>());
-                return tv;
-            }));
-
-    m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero);
-    m.def("Equal", (bool (*)(const TwistVel&, const TwistVel&, double)) &KDL::Equal,
-          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
-    m.def("Equal", (bool (*)(const Twist&, const TwistVel&, double)) &KDL::Equal,
-          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
-    m.def("Equal", (bool (*)(const TwistVel&, const Twist&, double)) &KDL::Equal,
-          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
 
 
     // --------------------

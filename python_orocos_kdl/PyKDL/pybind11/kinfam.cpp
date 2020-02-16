@@ -193,6 +193,50 @@ void init_kinfam(pybind11::module &m)
 
 
     // --------------------
+    // Jacobian
+    // --------------------
+    py::class_<Jacobian> jacobian(m, "Jacobian");
+    jacobian.def(py::init<unsigned int>());
+    jacobian.def(py::init<const Jacobian&>());
+    jacobian.def("rows", &Jacobian::rows);
+    jacobian.def("columns", &Jacobian::columns);
+    jacobian.def("resize", &Jacobian::resize);
+    jacobian.def("getColumn", &Jacobian::getColumn);
+    jacobian.def("setColumn", &Jacobian::setColumn);
+    jacobian.def("changeRefPoint", &Jacobian::changeRefPoint);
+    jacobian.def("changeBase", &Jacobian::changeBase);
+    jacobian.def("changeRefFrame", &Jacobian::changeRefFrame);
+    jacobian.def("__getitem__", [](const Jacobian &jac, std::tuple<int, int> idx)
+    {
+        int i = std::get<0>(idx);
+        int j = std::get<1>(idx);
+        if (i < 0 || i > 5 || j < 0 || j > jac.columns())
+            throw py::index_error("Jacobian index out of range");
+        return jac((unsigned int)i, (unsigned int)j);
+    });
+    jacobian.def("__setitem__", [](Jacobian &jac, std::tuple<int, int> idx, double value)
+    {
+        int i = std::get<0>(idx);
+        int j = std::get<1>(idx);
+        if (i < 0 || i > 5 || j < 0 || j > jac.columns())
+            throw py::index_error("Jacobian index out of range");
+
+        jac((unsigned int)i, (unsigned int)j) = value;
+    });
+    jacobian.def("__repr__", [](const Jacobian &jac)
+    {
+        std::ostringstream oss;
+        oss << jac;
+        return oss.str();
+    });
+
+    m.def("SetToZero", (void (*)(Jacobian&)) &KDL::SetToZero);
+    m.def("changeRefPoint", (void (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint);
+    m.def("changeBase", (void (*)(const Jacobian&, const Rotation&, Jacobian&)) &KDL::changeBase);
+    m.def("SetToZero", (void (*)(const Jacobian&, const Frame&, Jacobian&)) &KDL::changeRefFrame);
+
+
+    // --------------------
     // JntArray
     // --------------------
     py::class_<JntArray> jnt_array(m, "JntArray");
@@ -257,49 +301,6 @@ void init_kinfam(pybind11::module &m)
     m.def("SetToZero", (void (*)(JntArrayVel&)) &KDL::SetToZero);
     m.def("Equal", (bool (*)(const JntArrayVel&, const JntArrayVel&, double)) &KDL::Equal,
           py::arg("src1"), py::arg("src2"), py::arg("eps")=epsilon);
-
-
-    // --------------------
-    // Jacobian
-    // --------------------
-    py::class_<Jacobian> jacobian(m, "Jacobian");
-    jacobian.def(py::init<unsigned int>());
-    jacobian.def(py::init<const Jacobian&>());
-    jacobian.def("rows", &Jacobian::rows);
-    jacobian.def("columns", &Jacobian::columns);
-    jacobian.def("resize", &Jacobian::resize);
-    jacobian.def("getColumn", &Jacobian::getColumn);
-    jacobian.def("setColumn", &Jacobian::setColumn);
-    jacobian.def("changeRefPoint", &Jacobian::changeRefPoint);
-    jacobian.def("changeBase", &Jacobian::changeBase);
-    jacobian.def("changeRefFrame", &Jacobian::changeRefFrame);
-    jacobian.def("__getitem__", [](const Jacobian &jac, std::tuple<int, int> idx)
-    {
-        int i = std::get<0>(idx);
-        int j = std::get<1>(idx);
-        if (i < 0 || i > 5 || j < 0 || j > jac.columns())
-            throw py::index_error("Jacobian index out of range");
-        return jac((unsigned int)i, (unsigned int)j);
-    });
-    jacobian.def("__setitem__", [](Jacobian &jac, std::tuple<int, int> idx, double value)
-    {
-        int i = std::get<0>(idx);
-        int j = std::get<1>(idx);
-        if (i < 0 || i > 5 || j < 0 || j > jac.columns())
-            throw py::index_error("Jacobian index out of range");
-        jac((unsigned int)i, (unsigned int)j) = value;
-    });
-    jacobian.def("__repr__", [](const Jacobian &jac)
-    {
-        std::ostringstream oss;
-        oss << jac;
-        return oss.str();
-    });
-
-    m.def("SetToZero", (void (*)(Jacobian&)) &KDL::SetToZero);
-    m.def("changeRefPoint", (void (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint);
-    m.def("changeBase", (void (*)(const Jacobian&, const Rotation&, Jacobian&)) &KDL::changeBase);
-    m.def("SetToZero", (void (*)(const Jacobian&, const Frame&, Jacobian&)) &KDL::changeRefFrame);
 
 
     // --------------------

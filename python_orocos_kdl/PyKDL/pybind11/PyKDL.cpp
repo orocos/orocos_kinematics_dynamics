@@ -32,7 +32,7 @@ PYBIND11_MODULE(PyKDL, m)
     m.doc() = "Orocos KDL Python wrapper"; // optional module docstring
     m.attr("__version__") = KDL_VERSION_STRING;
     init_frames(m);
-    init_kinfam(m);
     init_framevel(m);
+    init_kinfam(m);
     init_dynamics(m);
 }

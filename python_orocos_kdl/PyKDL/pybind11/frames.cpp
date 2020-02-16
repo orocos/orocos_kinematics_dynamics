@@ -105,6 +105,140 @@ void init_frames(py::module &m)
 
 
     // --------------------
+    // Wrench
+    // --------------------
+    py::class_<Wrench> wrench(m, "Wrench");
+    wrench.def(py::init<>());
+    wrench.def(py::init<const Vector&, const Vector&>());
+    wrench.def(py::init<const Wrench&>());
+    wrench.def_readwrite("force", &Wrench::force);
+    wrench.def_readwrite("torque", &Wrench::torque);
+    wrench.def("__getitem__", [](const Wrench &t, int i)
+    {
+        if (i < 0 || i > 5)
+            throw py::index_error("Wrench index out of range");
+
+        return t(i);
+    });
+    wrench.def("__setitem__", [](Wrench &t, int i, double value)
+    {
+        if (i < 0 || i > 5)
+            throw py::index_error("Wrench index out of range");
+
+        t(i) = value;
+    });
+    wrench.def("__repr__", [](const Wrench &t)
+    {
+        std::ostringstream oss;
+        oss << t;
+        return oss.str();
+    });
+    wrench.def_static("Zero", &Wrench::Zero);
+    wrench.def("ReverseSign", &Wrench::ReverseSign);
+    wrench.def("RefPoint", &Wrench::RefPoint);
+    wrench.def(py::self -= py::self);
+    wrench.def(py::self += py::self);
+    wrench.def(py::self * double());
+    wrench.def(double() * py::self);
+    wrench.def(py::self / double());
+    wrench.def(py::self + py::self);
+    wrench.def(py::self - py::self);
+    wrench.def(py::self == py::self);
+    wrench.def(py::self != py::self);
+    wrench.def("__neg__", [](const Wrench &w)
+    {
+        return operator-(w);
+    }, py::is_operator());
+    wrench.def(py::pickle(
+            [](const Wrench &wr)
+            { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(wr.force, wr.torque);
+            },
+            [](py::tuple t)
+            { // __setstate__
+                if (t.size() != 2)
+                    throw std::runtime_error("Invalid state!");
+
+                /* Create a new C++ instance */
+                Wrench wr(t[0].cast<Vector>(), t[1].cast<Vector>());
+                return wr;
+            }));
+
+    m.def("SetToZero", (void (*)(Wrench&)) &KDL::SetToZero);
+    m.def("Equal", (bool (*)(const Wrench&, const Wrench&, double eps)) &KDL::Equal,
+          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
+
+
+    // --------------------
+    // Twist
+    // --------------------
+    py::class_<Twist> twist(m, "Twist");
+    twist.def(py::init<>());
+    twist.def(py::init<const Vector&, const Vector&>());
+    twist.def(py::init<const Twist&>());
+    twist.def_readwrite("vel", &Twist::vel);
+    twist.def_readwrite("rot", &Twist::rot);
+    twist.def("__getitem__", [](const Twist &t, int i)
+    {
+        if (i < 0 || i > 5)
+            throw py::index_error("Twist index out of range");
+
+        return t(i);
+    });
+    twist.def("__setitem__", [](Twist &t, int i, double value)
+    {
+        if (i < 0 || i > 5)
+            throw py::index_error("Twist index out of range");
+
+        t(i) = value;
+    });
+    twist.def("__repr__", [](const Twist &t)
+    {
+        std::ostringstream oss;
+        oss << t;
+        return oss.str();
+    });
+    twist.def_static("Zero", &Twist::Zero);
+    twist.def("ReverseSign", &Twist::ReverseSign);
+    twist.def("RefPoint", &Twist::RefPoint);
+    twist.def(py::self -= py::self);
+    twist.def(py::self += py::self);
+    twist.def(py::self * double());
+    twist.def(double() * py::self);
+    twist.def(py::self / double());
+    twist.def(py::self + py::self);
+    twist.def(py::self - py::self);
+    twist.def(py::self == py::self);
+    twist.def(py::self != py::self);
+    twist.def("__neg__", [](const Twist &a)
+    {
+        return operator-(a);
+    }, py::is_operator());
+    twist.def(py::pickle(
+            [](const Twist &tt)
+            { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(tt.vel, tt.rot);
+            },
+            [](py::tuple t)
+            { // __setstate__
+                if (t.size() != 2)
+                    throw std::runtime_error("Invalid state!");
+
+                /* Create a new C++ instance */
+                Twist tt(t[0].cast<Vector>(), t[1].cast<Vector>());
+                return tt;
+            }));
+
+    m.def("dot", (double (*)(const Twist&, const Wrench&)) &KDL::dot);
+    m.def("dot", (double (*)(const Wrench&, const Twist&)) &KDL::dot);
+    m.def("SetToZero", (void (*)(Twist&)) &KDL::SetToZero);
+    m.def("Equal", (bool (*)(const Twist&, const Twist&, double eps)) &KDL::Equal,
+          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
+
+
+    // --------------------
     // Rotation
     // --------------------
     py::class_<Rotation> rotation(m, "Rotation");
@@ -276,140 +410,6 @@ void init_frames(py::module &m)
             }));
 
     m.def("Equal", (bool (*)(const Frame&, const Frame&, double eps)) &KDL::Equal,
-          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
-
-
-    // --------------------
-    // Twist
-    // --------------------
-    py::class_<Twist> twist(m, "Twist");
-    twist.def(py::init<>());
-    twist.def(py::init<const Vector&, const Vector&>());
-    twist.def(py::init<const Twist&>());
-    twist.def_readwrite("vel", &Twist::vel);
-    twist.def_readwrite("rot", &Twist::rot);
-    twist.def("__getitem__", [](const Twist &t, int i)
-    {
-        if (i < 0 || i > 5)
-            throw py::index_error("Twist index out of range");
-
-        return t(i);
-    });
-    twist.def("__setitem__", [](Twist &t, int i, double value)
-    {
-        if (i < 0 || i > 5)
-            throw py::index_error("Twist index out of range");
-
-        t(i) = value;
-    });
-    twist.def("__repr__", [](const Twist &t)
-    {
-        std::ostringstream oss;
-        oss << t;
-        return oss.str();
-    });
-    twist.def_static("Zero", &Twist::Zero);
-    twist.def("ReverseSign", &Twist::ReverseSign);
-    twist.def("RefPoint", &Twist::RefPoint);
-    twist.def(py::self -= py::self);
-    twist.def(py::self += py::self);
-    twist.def(py::self * double());
-    twist.def(double() * py::self);
-    twist.def(py::self / double());
-    twist.def(py::self + py::self);
-    twist.def(py::self - py::self);
-    twist.def(py::self == py::self);
-    twist.def(py::self != py::self);
-    twist.def("__neg__", [](const Twist &a)
-    {
-        return operator-(a);
-    }, py::is_operator());
-    twist.def(py::pickle(
-            [](const Twist &tt)
-            { // __getstate__
-                /* Return a tuple that fully encodes the state of the object */
-                return py::make_tuple(tt.vel, tt.rot);
-            },
-            [](py::tuple t)
-            { // __setstate__
-                if (t.size() != 2)
-                    throw std::runtime_error("Invalid state!");
-
-                /* Create a new C++ instance */
-                Twist tt(t[0].cast<Vector>(), t[1].cast<Vector>());
-                return tt;
-            }));
-
-    m.def("dot", (double (*)(const Twist&, const Wrench&)) &KDL::dot);
-    m.def("dot", (double (*)(const Wrench&, const Twist&)) &KDL::dot);
-    m.def("SetToZero", (void (*)(Twist&)) &KDL::SetToZero);
-    m.def("Equal", (bool (*)(const Twist&, const Twist&, double eps)) &KDL::Equal,
-          py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
-
-
-    // --------------------
-    // Wrench
-    // --------------------
-    py::class_<Wrench> wrench(m, "Wrench");
-    wrench.def(py::init<>());
-    wrench.def(py::init<const Vector&, const Vector&>());
-    wrench.def(py::init<const Wrench&>());
-    wrench.def_readwrite("force", &Wrench::force);
-    wrench.def_readwrite("torque", &Wrench::torque);
-    wrench.def("__getitem__", [](const Wrench &t, int i)
-    {
-        if (i < 0 || i > 5)
-            throw py::index_error("Wrench index out of range");
-
-        return t(i);
-    });
-    wrench.def("__setitem__", [](Wrench &t, int i, double value)
-    {
-        if (i < 0 || i > 5)
-            throw py::index_error("Wrench index out of range");
-
-        t(i) = value;
-    });
-    wrench.def("__repr__", [](const Wrench &t)
-    {
-        std::ostringstream oss;
-        oss << t;
-        return oss.str();
-    });
-    wrench.def_static("Zero", &Wrench::Zero);
-    wrench.def("ReverseSign", &Wrench::ReverseSign);
-    wrench.def("RefPoint", &Wrench::RefPoint);
-    wrench.def(py::self -= py::self);
-    wrench.def(py::self += py::self);
-    wrench.def(py::self * double());
-    wrench.def(double() * py::self);
-    wrench.def(py::self / double());
-    wrench.def(py::self + py::self);
-    wrench.def(py::self - py::self);
-    wrench.def(py::self == py::self);
-    wrench.def(py::self != py::self);
-    wrench.def("__neg__", [](const Wrench &w)
-    {
-        return operator-(w);
-    }, py::is_operator());
-    wrench.def(py::pickle(
-            [](const Wrench &wr)
-            { // __getstate__
-                /* Return a tuple that fully encodes the state of the object */
-                return py::make_tuple(wr.force, wr.torque);
-            },
-            [](py::tuple t)
-            { // __setstate__
-                if (t.size() != 2)
-                    throw std::runtime_error("Invalid state!");
-
-                /* Create a new C++ instance */
-                Wrench wr(t[0].cast<Vector>(), t[1].cast<Vector>());
-                return wr;
-            }));
-
-    m.def("SetToZero", (void (*)(Wrench&)) &KDL::SetToZero);
-    m.def("Equal", (bool (*)(const Wrench&, const Wrench&, double eps)) &KDL::Equal,
           py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
 
 
