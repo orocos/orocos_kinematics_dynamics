@@ -359,7 +359,7 @@ void init_frames(py::module &m)
         if (i < 0 || i > 2 || j < 0 || j > 3)
             throw py::index_error("Frame index out of range");
 
-        return frm((unsigned int)i, (unsigned int)j);
+        return frm(i, j);
     });
     frame.def("__setitem__", [](Frame &frm, std::tuple<int, int> idx, double value)
     {
