@@ -52,6 +52,15 @@ void init_dynamics(pybind11::module &m)
 
         return jm((unsigned int)i, (unsigned int)j);
     });
+    jnt_space_inertia_matrix.def("__setitem__", [](JntSpaceInertiaMatrix &jm, std::tuple<int, int> idx, double value)
+    {
+        int i = std::get<0>(idx);
+        int j = std::get<1>(idx);
+        if (i < 0 || i > jm.rows() || j < 0 || j > jm.columns())
+            throw py::index_error("Inertia index out of range");
+
+        jm((unsigned int)i, (unsigned int)j) = value;
+    });
     jnt_space_inertia_matrix.def("__repr__", [](const JntSpaceInertiaMatrix &jm)
     {
         std::ostringstream oss;
