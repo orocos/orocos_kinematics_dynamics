@@ -255,6 +255,15 @@ void init_frames(py::module &m)
 
         return r(i, j);
     });
+    rotation.def("__setitem__", [](Rotation &r, std::tuple<int, int> idx, double value)
+    {
+        int i = std::get<0>(idx);
+        int j = std::get<1>(idx);
+        if (i < 0 || i > 2 || j < 0 || j > 2)
+            throw py::index_error("Rotation index out of range");
+
+        r(i, j) = value;
+    });
     rotation.def("__repr__", [](const Rotation &r)
     {
             std::ostringstream oss;
