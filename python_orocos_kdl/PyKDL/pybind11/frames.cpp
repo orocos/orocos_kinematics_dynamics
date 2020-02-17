@@ -246,10 +246,12 @@ void init_frames(py::module &m)
     rotation.def(py::init<double, double, double, double, double, double, double, double, double>());
     rotation.def(py::init<const Vector&, const Vector&, const Vector&>());
     rotation.def(py::init<const Rotation&>());
-    rotation.def("__getitem__", [](const Rotation &r, int i, int j)
+    rotation.def("__getitem__", [](const Rotation &r, std::tuple<int, int> idx)
     {
+        int i = std::get<0>(idx);
+        int j = std::get<1>(idx);
         if (i < 0 || i > 2 || j < 0 || j > 2)
-                throw py::index_error("Rotation index out of range");
+            throw py::index_error("Rotation index out of range");
 
         return r(i, j);
     });
