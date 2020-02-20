@@ -251,8 +251,15 @@ public:
         
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
-        
-    const Segment& getSegment(unsigned int nr)const /Factory/;
+
+    const Segment* getSegment(unsigned int nr)const /Factory/;
+%MethodCode
+    if (a0 < 0 || a0 >= (unsigned int)sipCpp->getNrOfSegments()) {
+        PyErr_SetString(PyExc_IndexError, "Chain index out of range");
+        return 0;
+    }
+    sipRes = &(sipCpp->getSegment(a0));
+%End
 
 };
 
