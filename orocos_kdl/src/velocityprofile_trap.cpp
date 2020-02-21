@@ -91,12 +91,12 @@ void VelocityProfile_Trap::SetProfile(double pos1,double pos2) {
 void VelocityProfile_Trap::SetProfileDuration(
 	double pos1,double pos2,double newduration) {
 	// duration should be longer than originally planned duration
-    // Fastest :
+	// Fastest :
 	SetProfile(pos1,pos2);
-    // Must be Slower  :
+	// Must be Slower  :
 	double factor = duration/newduration;
-    if (factor > 1)
-        return; // do not exceed max
+	if (factor > 1)
+		return; // do not exceed max
 	a2*=factor;
 	a3*=factor*factor;
 	b2*=factor;
@@ -110,9 +110,9 @@ void VelocityProfile_Trap::SetProfileDuration(
 
 void VelocityProfile_Trap::SetProfileVelocity(
 	double pos1,double pos2,double newvelocity) {
-    // Max velocity
+	// Max velocity
 	SetProfile(pos1,pos2);
-    // Must be Slower  :
+	// Must be Slower  :
 	double factor = newvelocity;		// valid = [KDL::epsilon, 1.0]
 	if (1.0 < factor) factor = 1.0;
 	if (KDL::epsilon > factor) factor = KDL::epsilon;
@@ -129,7 +129,7 @@ void VelocityProfile_Trap::SetProfileVelocity(
 
 void VelocityProfile_Trap::SetMax(double _maxvel,double _maxacc)
 {
-    maxvel = _maxvel; maxacc = _maxacc;
+	maxvel = _maxvel; maxacc = _maxacc;
 }
 
 double VelocityProfile_Trap::Duration() const {
@@ -178,8 +178,8 @@ double VelocityProfile_Trap::Acc(double time) const {
 }
 
 VelocityProfile* VelocityProfile_Trap::Clone() const {
-    VelocityProfile_Trap* res =  new VelocityProfile_Trap(maxvel,maxacc);
-    res->SetProfileDuration( this->startpos, this->endpos, this->duration );
+	VelocityProfile_Trap* res =  new VelocityProfile_Trap(maxvel,maxacc);
+	res->SetProfileDuration( this->startpos, this->endpos, this->duration );
 	return res;
 }
 

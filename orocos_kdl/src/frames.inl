@@ -512,6 +512,11 @@ Rotation::Rotation(const Vector& x,const Vector& y,const Vector& z)
     data[2] = z.data[0];data[5] = z.data[1];data[8] = z.data[2];
 }
 
+Rotation::Rotation(const Rotation& arg) {
+    int count=9;
+    while (count--) data[count] = arg.data[count];
+}
+
 Rotation& Rotation::operator=(const Rotation& arg) {
     int count=9;
     while (count--) data[count] = arg.data[count];
@@ -839,7 +844,9 @@ IMETHOD void Vector2::Set3DPlane(const Frame& F_someframe_XY,const Vector& v_som
     data[1]=tmp(1);
 }
 
-
+IMETHOD Rotation2::Rotation2(const Rotation2& arg) {
+    c=arg.c;s=arg.s;
+}
 
 IMETHOD Rotation2& Rotation2::operator=(const Rotation2& arg) {
     c=arg.c;s=arg.s;

@@ -6,6 +6,7 @@ addons:
     packages:
       - libeigen3-dev
       - libcppunit-dev
+      - python-psutil
       - python-sip-dev
       - sip-dev
 
