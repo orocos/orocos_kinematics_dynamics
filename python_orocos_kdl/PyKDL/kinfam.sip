@@ -109,9 +109,6 @@ template<TYPE>
 class Joint{
 
 %TypeHeaderCode
-#if PY_VERSION_HEX >= 0x03000000
-#define Fixed None
-#endif
 #include <kdl/joint.hpp>
 #include <kdl/kinfam_io.hpp>
 using namespace KDL;
@@ -122,22 +119,18 @@ public:
 
 %If (PYTHON3)
     enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed};
-    Joint(std::string name, JointType type=Fixed,double scale=1,double offset=0,
-              double inertia=0,double damping=0,double stiffness=0);
-    Joint(JointType type=Fixed,double scale=1,double offset=0,
-          double inertia=0,const double damping=0,double stiffness=0);
 %End
 %If (!PYTHON3)
-    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None};
-    Joint(std::string name, JointType type=None,double scale=1,double offset=0,
-              double inertia=0,double damping=0,double stiffness=0);
-    Joint(JointType type=None,double scale=1,double offset=0,
-          double inertia=0,const double damping=0,double stiffness=0);
+    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None,Fixed=None};
 %End
+    Joint(std::string name, JointType type=Fixed,double scale=1,double offset=0,
+        double inertia=0,double damping=0,double stiffness=0);
+    Joint(JointType type=Fixed,double scale=1,double offset=0,
+        double inertia=0,const double damping=0,double stiffness=0);
     Joint(std::string name, Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
-	      double inertia=0, double damping=0, double stiffness=0);
+        double inertia=0, double damping=0, double stiffness=0);
     Joint(Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
-	      double inertia=0, double damping=0, double stiffness=0);
+        double inertia=0, double damping=0, double stiffness=0);
     
     Joint(const Joint& in);
     
@@ -227,14 +220,8 @@ class Segment
 using namespace KDL;
 %End
 public:
-%If (PYTHON3)
     Segment(const std::string& name, const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
-%End
-%If (!PYTHON3)
-    Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
-    Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
-%End
     Segment(const Segment& in);
 
     const std::string* __repr__();
