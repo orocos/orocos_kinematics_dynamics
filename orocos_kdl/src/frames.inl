@@ -512,6 +512,11 @@ Rotation::Rotation(const Vector& x,const Vector& y,const Vector& z)
     data[2] = z.data[0];data[5] = z.data[1];data[8] = z.data[2];
 }
 
+Rotation::Rotation(const Rotation& arg) {
+    int count=9;
+    while (count--) data[count] = arg.data[count];
+}
+
 Rotation& Rotation::operator=(const Rotation& arg) {
     int count=9;
     while (count--) data[count] = arg.data[count];
@@ -824,7 +829,7 @@ IMETHOD void Vector2::Set3DYZ(const Vector& v)
     data[1]=v(2);
 }
 IMETHOD void Vector2::Set3DZX(const Vector& v)
-// projects v in its XY plane, and and sets *this to these values
+// projects v in its XY plane, and sets *this to these values
 {
     data[0]=v(2);
     data[1]=v(0);
@@ -839,7 +844,9 @@ IMETHOD void Vector2::Set3DPlane(const Frame& F_someframe_XY,const Vector& v_som
     data[1]=tmp(1);
 }
 
-
+IMETHOD Rotation2::Rotation2(const Rotation2& arg) {
+    c=arg.c;s=arg.s;
+}
 
 IMETHOD Rotation2& Rotation2::operator=(const Rotation2& arg) {
     c=arg.c;s=arg.s;
@@ -925,7 +932,7 @@ IMETHOD Frame2 operator *(const Frame2& lhs,const Frame2& rhs)
     return Frame2(lhs.M*rhs.M,lhs.M*rhs.p+lhs.p);
 }
 
-IMETHOD Vector2 Frame2::operator *(const Vector2 & arg)
+IMETHOD Vector2 Frame2::operator *(const Vector2 & arg) const
 {
     return M*arg+p;
 }

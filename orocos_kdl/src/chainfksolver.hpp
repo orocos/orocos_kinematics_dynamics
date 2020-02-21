@@ -60,6 +60,8 @@ namespace KDL {
          * @return if < 0 something went wrong
          */
         virtual int JntToCart(const JntArray& q_in, std::vector<KDL::Frame>& p_out,int segmentNr=-1)=0;
+
+        virtual void updateInternalDataStructures()=0;
         virtual ~ChainFkSolverPos(){};
     };
 
@@ -91,6 +93,8 @@ namespace KDL {
          * @return if < 0 something went wrong
          */
         virtual int JntToCart(const JntArrayVel& q_in, std::vector<KDL::FrameVel>& out,int segmentNr=-1)=0;
+
+        virtual void updateInternalDataStructures()=0;
         virtual ~ChainFkSolverVel(){};
     };
 
@@ -104,7 +108,7 @@ namespace KDL {
     class ChainFkSolverAcc : public KDL::SolverI {
     public:
         /**
-         * Calculate forward position, velocity and accelaration
+         * Calculate forward position, velocity and acceleration
          * kinematics, from joint coordinates to cartesian coordinates
          *
          * @param q_in input joint coordinates (position, velocity and
@@ -116,7 +120,7 @@ namespace KDL {
          */
     virtual int JntToCart(const JntArrayAcc& q_in, FrameAcc& out,int segmentNr=-1)=0;
         /**
-         * Calculate forward position, velocity and accelaration
+         * Calculate forward position, velocity and acceleration
          * kinematics, from joint coordinates to cartesian coordinates
          *
          * @param q_in input joint coordinates (position, velocity and
@@ -128,6 +132,7 @@ namespace KDL {
          */
     virtual int JntToCart(const JntArrayAcc& q_in, std::vector<FrameAcc>& out,int segmentNr=-1)=0;
     
+        virtual void updateInternalDataStructures()=0;
         virtual ~ChainFkSolverAcc()=0;
     };
 

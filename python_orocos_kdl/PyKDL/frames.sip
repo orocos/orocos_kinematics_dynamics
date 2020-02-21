@@ -60,12 +60,12 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    const char* __repr__() const;
+    const std::string* __repr__() const;
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
     std::string s(oss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
 
     void ReverseSign();
@@ -134,12 +134,12 @@ public:
     (*sipCpp)(i,j)=a1;
 %End
 
-    const char* __repr__() const;
+    const std::string* __repr__() const;
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
     std::string s(oss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
     
     void SetInverse();
@@ -238,12 +238,12 @@ public:
         (*sipCpp).M(i,j)=a1;
 %End
 
-    const char* __repr__() const;
+    const std::string* __repr__() const;
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
     std::string s(oss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
 
     Frame DH_Craig1989(double a,double alpha,double d,double theta);
@@ -311,12 +311,12 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    const char* __repr__() const;
+    const std::string* __repr__() const;
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
     std::string s(oss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
 
     static Twist Zero() /Factory/;
@@ -369,7 +369,7 @@ public:
     double __getitem__ (int i) const;
 %MethodCode
     if (a0 < 0 || a0 > 5) {
-        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
         return 0;
     }
     sipRes=(*sipCpp)(a0);
@@ -378,18 +378,18 @@ public:
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 > 5) {
-        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
         return 0;
     }
     (*sipCpp)(a0)=a1;
 %End
 
-    const char* __repr__() const;
+    const std::string* __repr__() const;
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
     std::string s(oss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
 
     static Wrench Zero() /Factory/;

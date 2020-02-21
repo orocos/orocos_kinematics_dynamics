@@ -19,6 +19,92 @@
 //License along with this library; if not, write to the Free Software
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+
+template<TYPE>
+%MappedType std::vector<TYPE>
+{
+%TypeHeaderCode
+#include <vector>
+%End
+
+%ConvertFromTypeCode
+    PyObject *l = PyList_New(sipCpp -> size());
+
+    // Create the Python list of the correct length.
+    if (!l)
+        return NULL;
+
+    // Go through each element in the C++ instance and convert it to a
+    // wrapped P2d.
+    for (int i = 0; i < (int)sipCpp->size(); ++i) {
+        TYPE *cpp = new TYPE(sipCpp->at(i));
+        PyObject *pobj = sipConvertFromInstance(cpp, sipClass_TYPE, sipTransferObj);
+
+        // Get the Python wrapper for the Type instance, creating a new
+        // one if necessary, and handle any ownership transfer.
+        if (!pobj) {
+            // There was an error so garbage collect the Python list.
+            Py_DECREF(l);
+            return NULL;
+        }
+
+        // Add the wrapper to the list.
+        PyList_SET_ITEM(l, i, pobj);
+    }
+
+    // Return the Python list.
+    return l;
+%End
+
+%ConvertToTypeCode
+    // Check if type is compatible
+    if (!sipIsErr) {
+        // Must be any iterable
+        PyObject *i = PyObject_GetIter(sipPy);
+        bool iterable = (i != NULL);
+        Py_XDECREF(i);
+        return iterable;
+    }
+
+    // Iterate over the object
+    PyObject *iterator = PyObject_GetIter(sipPy);
+    PyObject *item;
+
+    std::vector<TYPE> *V = new std::vector<TYPE>();
+
+    while ((item = PyIter_Next(iterator)))
+    {
+        if (!sipCanConvertToInstance(item, sipClass_TYPE, SIP_NOT_NONE)) {
+            PyErr_Format(PyExc_TypeError, "object in iterable cannot be converted to TYPE");
+            *sipIsErr = 1;
+            break;
+        }
+
+        int state;
+        TYPE* p = reinterpret_cast<TYPE*>(
+             sipConvertToInstance(item, sipClass_TYPE, 0, SIP_NOT_NONE, &state, sipIsErr));
+
+        if (!*sipIsErr)
+            V->push_back(*p);
+
+        sipReleaseInstance(p, sipClass_TYPE, state);
+        Py_DECREF(item);
+    }
+
+    Py_DECREF(iterator);
+
+    if (*sipIsErr) {
+        delete V;
+        return 0;
+    }
+
+    *sipCppPtr = V;
+    return sipGetState(sipTransferObj);
+%End
+};
+
+
+
 class Joint{
 
 %TypeHeaderCode
@@ -46,15 +132,18 @@ public:
     Vector JointAxis() const /Factory/;
     Vector JointOrigin() const /Factory/;
     std::string getName()const;
+    const double& getInertia()const;
+    const double& getDamping()const;
+    const double& getStiffness()const;
 
     JointType getType() const;
     std::string getTypeName() const;
-    const char* __repr__();
+    const std::string* __repr__();
     %MethodCode
         std::ostringstream oss;
         oss<<(*sipCpp);
         std::string s(oss.str());
-        sipRes=s.c_str();
+        sipRes=&s;
     %End
 };
 
@@ -69,8 +158,27 @@ public:
     RotationalInertia(double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
         
     static RotationalInertia Zero()/Factory/;
-    Vector operator*(Vector omega) const /Factory/;
+
+    double __getitem__(int index);
+%MethodCode
+    if (a0 < 0 || a0 >= 9) {
+        PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
+        return 0;
+    }
+    sipRes=(*sipCpp).data[a0];
+%End
+
+    void __setitem__(int i, double value);
+%MethodCode
+    if (a0 < 0 || a0 >= 9) {
+        PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
+        return 0;
+    }
+    (*sipCpp).data[a0]=a1;
+%End
+
 };
+Vector operator*(RotationalInertia& Ia, Vector omega) const /Factory/;
 RotationalInertia operator*(double a, const RotationalInertia& I)/Factory/;
 RotationalInertia operator+(const RotationalInertia& Ia, const RotationalInertia& Ib)/Factory/;
 
@@ -109,12 +217,12 @@ public:
     Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Segment& in);
 
-    const char* __repr__();
+    const std::string* __repr__();
 %MethodCode
     std::stringstream ss;
     ss<<(*sipCpp);
     std::string s(ss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
     
     const Frame& getFrameToTip()const /Factory/;
@@ -158,7 +266,7 @@ public:
     bool addSegment(const Segment& segment, const std::string& hook_name);
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
-    Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const;
+    Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const /Factory/;
 %MethodCode
     Chain* chain = new Chain();
     sipCpp->getChain(*a0, *a1, *chain);
@@ -198,12 +306,12 @@ public:
     (*sipCpp)(a0)=a1;
 %End
 
-    const char* __repr__();
+    const std::string* __repr__();
 %MethodCode
     std::stringstream ss;
     ss<<sipCpp->data;
     std::string s(ss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
 };
 
@@ -282,12 +390,12 @@ public:
     (*sipCpp)(i,j)=a1;
 %End
 
-    const char* __repr__();
+    const std::string* __repr__();
 %MethodCode
     std::stringstream ss;
     ss<<sipCpp->data;
     std::string s(ss.str());
-    sipRes=s.c_str();
+    sipRes=&s;
 %End
     Twist getColumn(unsigned int i) const /Factory/;
     void setColumn(unsigned int i,const Twist& t);
@@ -303,8 +411,18 @@ void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest)
 void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
 void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
 
+class SolverI
+{
+%TypeHeaderCode
+#include <kdl/solveri.hpp>
+using namespace KDL;
+%End
+    virtual int getError() const;
+    virtual const char* strError(const int error) const;
+    virtual void updateInternalDataStructures() = 0;
+};
 
-class ChainFkSolverPos
+class ChainFkSolverPos : SolverI
 {
 %TypeHeaderCode
 #include <kdl/chainfksolver.hpp>
@@ -313,7 +431,7 @@ using namespace KDL;
     virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1)=0;
 };
 
-class ChainFkSolverVel
+class ChainFkSolverVel : SolverI
 {
 %TypeHeaderCode
 #include <kdl/chainfksolver.hpp>
@@ -333,6 +451,7 @@ using namespace KDL;
 public:
     ChainFkSolverPos_recursive(const Chain& chain);
     virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainFkSolverVel_recursive : ChainFkSolverVel
@@ -345,18 +464,20 @@ public:
     ChainFkSolverVel_recursive(const Chain& chain);
     virtual int JntToCart(const JntArrayVel& q_in ,FrameVel& out,int
     segmentNr=-1 );
+    virtual void updateInternalDataStructures();
 };
 
-class ChainIkSolverPos {
+class ChainIkSolverPos : SolverI {
 %TypeHeaderCode
 #include <kdl/chainiksolver.hpp>
 using namespace KDL;
 %End
 public:
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in, JntArray& q_out )=0;
+    virtual void updateInternalDataStructures()=0;
 };
 
-class ChainIkSolverVel {
+class ChainIkSolverVel : SolverI {
 %TypeHeaderCode
 #include <kdl/chainiksolver.hpp>
 using namespace KDL;
@@ -364,6 +485,7 @@ using namespace KDL;
 public:
     virtual int CartToJnt(const JntArray& q_in , const Twist& v_in , JntArray& qdot_out )=0;
     virtual int CartToJnt(const JntArray& q_init , const FrameVel& v_in , JntArrayVel& q_out )=0;
+    virtual void updateInternalDataStructures()=0;
 };
 
 class ChainIkSolverPos_NR : ChainIkSolverPos
@@ -377,6 +499,7 @@ public:
                         unsigned int maxiter=100,double eps=epsilon);
     
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainIkSolverPos_NR_JL : ChainIkSolverPos
@@ -391,6 +514,7 @@ public:
                         unsigned int maxiter=100,double eps=epsilon);
     
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainIkSolverVel_pinv : ChainIkSolverVel
@@ -403,6 +527,7 @@ public:
     ChainIkSolverVel_pinv(const Chain& chain,double eps=0.00001,int maxiter=150);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+    virtual void updateInternalDataStructures();
 };
 
 class ChainIkSolverVel_wdls : ChainIkSolverVel
@@ -415,6 +540,8 @@ public:
     ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+    virtual void updateInternalDataStructures();
+
     void setWeightTS(SIP_PYLIST);
 %MethodCode
     //void setWeightTS(const Eigen::MatrixXd& Mx);
@@ -500,6 +627,7 @@ public:
     ChainIkSolverPos_LMA(const Chain& chain, double eps=0.00001, int _maxiter=500, double _eps_joints=0.000000000000001);
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
+    virtual void updateInternalDataStructures();
 };
 
 
@@ -513,6 +641,19 @@ public:
     ChainIkSolverVel_pinv_nso(const Chain& chain,double eps=0.00001,int maxiter=150, double alpha=0.25);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+    virtual void updateInternalDataStructures();
+
+    virtual int setWeights(const JntArray &weights);
+
+    virtual int setOptPos(const JntArray &opt_pos);
+
+    virtual int setAlpha(const double alpha);
+
+    const JntArray& getWeights()const /Factory/;
+
+    const JntArray& getOptPos()const /Factory/;
+
+    const double& getAlpha()const /Factory/;
 };
 
 class ChainIkSolverVel_pinv_givens : ChainIkSolverVel
@@ -525,12 +666,10 @@ public:
     ChainIkSolverVel_pinv_givens(const Chain& chain);
         
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
-
+    virtual void updateInternalDataStructures();
 };
 
-
-
-class ChainJntToJacSolver
+class ChainJntToJacSolver : SolverI
 {
 %TypeHeaderCode
 #include <kdl/chainjnttojacsolver.hpp>
@@ -538,7 +677,40 @@ using namespace KDL;
 %End
 public:
     ChainJntToJacSolver(const Chain& chain);
-    int JntToJac(const JntArray& q_in,Jacobian& jac);
+    int JntToJac(const JntArray& q_in,Jacobian& jac, int seg_nr=-1);
+    virtual void updateInternalDataStructures();
 };
 
+class ChainJntToJacDotSolver : SolverI
+{
+%TypeHeaderCode
+#include <kdl/chainjnttojacdotsolver.hpp>
+using namespace KDL;
+%End
+public:
+    ChainJntToJacDotSolver(const Chain& chain);
+    int JntToJacDot(const JntArrayVel& q_in,Jacobian& jac, int seg_nr=-1);
+    virtual void updateInternalDataStructures();
+};
 
+class ChainIdSolver : SolverI
+{
+%TypeHeaderCode
+#include <kdl/chainidsolver.hpp>
+using namespace KDL;
+%End
+    virtual int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const std::vector<Wrench>& f_ext,JntArray &torques)=0;
+};
+
+class ChainIdSolver_RNE : ChainIdSolver
+{
+%TypeHeaderCode
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
+using namespace KDL;
+%End
+
+public:
+	ChainIdSolver_RNE(const Chain& chain,Vector grav);
+	int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const std::vector<Wrench>& f_ext,JntArray &torques);
+	virtual void updateInternalDataStructures();
+};

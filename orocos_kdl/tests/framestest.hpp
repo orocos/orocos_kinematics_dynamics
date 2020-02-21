@@ -11,6 +11,7 @@ class FramesTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE( FramesTest);
     CPPUNIT_TEST(TestVector);
+    CPPUNIT_TEST(TestVector2DNorm);
     CPPUNIT_TEST(TestTwist);
     CPPUNIT_TEST(TestWrench);
     CPPUNIT_TEST(TestRotation);
@@ -19,6 +20,7 @@ class FramesTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestJntArray);
     CPPUNIT_TEST(TestRotationDiff);
     CPPUNIT_TEST(TestEuler);
+    CPPUNIT_TEST(TestGetRotAngle);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -26,6 +28,7 @@ public:
     void tearDown();
 
     void TestVector();
+    void TestVector2DNorm();
     void TestTwist();
     void TestWrench();
     void TestRotation();
@@ -35,6 +38,7 @@ public:
     void TestJntArrayWhenEmpty();
 	void TestRotationDiff();
 	void TestEuler();
+	void TestGetRotAngle();
 
 private:
     void TestVector2(Vector& v);

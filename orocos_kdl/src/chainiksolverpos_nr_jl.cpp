@@ -50,9 +50,21 @@ namespace KDL
         q_max.data.setConstant(std::numeric_limits<double>::max());
     }
 
+    void ChainIkSolverPos_NR_JL::updateInternalDataStructures() {
+       nj = chain.getNrOfJoints();
+       q_min.data.conservativeResizeLike(Eigen::VectorXd::Constant(nj,std::numeric_limits<double>::min()));
+       q_max.data.conservativeResizeLike(Eigen::VectorXd::Constant(nj,std::numeric_limits<double>::max()));
+       iksolver.updateInternalDataStructures();
+       fksolver.updateInternalDataStructures();
+       delta_q.resize(nj);
+    }
+
     int ChainIkSolverPos_NR_JL::CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)
     {
-        if(nj != q_init.rows() || nj != q_out.rows())
+        if(nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
+
+        if(nj != q_init.rows() || nj != q_out.rows() || nj != q_min.rows() || nj != q_max.rows())
             return (error = E_SIZE_MISMATCH);
 
             q_out = q_init;
@@ -63,11 +75,11 @@ namespace KDL
                     return (error = E_FKSOLVERPOS_FAILED);
                 delta_twist = diff(f,p_in);
 
-				if(Equal(delta_twist,Twist::Zero(),eps))
-					break;
+        if(Equal(delta_twist,Twist::Zero(),eps))
+            break;
 
-				if ( iksolver.CartToJnt(q_out,delta_twist,delta_q) < 0)
-				    return (error = E_IKSOLVERVEL_FAILED);
+        if ( iksolver.CartToJnt(q_out,delta_twist,delta_q) < 0)
+            return (error = E_IKSOLVERVEL_FAILED);
                 Add(q_out,delta_q,q_out);
 
                 for(unsigned int j=0; j<q_min.rows(); j++) {

@@ -20,13 +20,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-import unittest
-from PyKDL import *
-from math import *
+import gc
 import random
+import unittest
+from math import *
+
+import psutil
+from PyKDL import *
+
 
 class KinfamTestFunctions(unittest.TestCase):
-    
+
     def setUp(self):
         self.chain = Chain()
         self.chain.addSegment(Segment(Joint(Joint.RotZ),
@@ -63,18 +67,18 @@ class KinfamTestFunctions(unittest.TestCase):
 
         q=JntArray(self.chain.getNrOfJoints())
         jac=Jacobian(self.chain.getNrOfJoints())
-        
+
         for i in range(q.rows()):
             q[i]=random.uniform(-3.14,3.14)
 
         self.jacsolver.JntToJac(q,jac)
-        
+
         for i in range(q.rows()):
             oldqi=q[i];
             q[i]=oldqi+deltaq
-            self.assert_(0==self.fksolverpos.JntToCart(q,F2))
+            self.assertTrue(0==self.fksolverpos.JntToCart(q,F2))
             q[i]=oldqi-deltaq
-            self.assert_(0==self.fksolverpos.JntToCart(q,F1))
+            self.assertTrue(0==self.fksolverpos.JntToCart(q,F1))
             q[i]=oldqi
             Jcol1 = diff(F1,F2,2*deltaq)
             Jcol2 = Twist(Vector(jac[0,i],jac[1,i],jac[2,i]),
@@ -84,7 +88,7 @@ class KinfamTestFunctions(unittest.TestCase):
     def testFkVelAndJac(self):
         deltaq = 1E-4
         epsJ   = 1E-4
-    
+
         q=JntArray(self.chain.getNrOfJoints())
         qdot=JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
@@ -98,7 +102,7 @@ class KinfamTestFunctions(unittest.TestCase):
         t = Twist.Zero();
 
         self.jacsolver.JntToJac(qvel.q,jac)
-        self.assert_(self.fksolvervel.JntToCart(qvel,cart)==0)
+        self.assertTrue(self.fksolvervel.JntToCart(qvel,cart)==0)
         MultiplyJacobian(jac,qvel.qdot,t)
         self.assertEqual(cart.deriv(),t)
 
@@ -113,45 +117,70 @@ class KinfamTestFunctions(unittest.TestCase):
 
         qvel=JntArrayVel(q,qdot)
         qdot_solved=JntArray(self.chain.getNrOfJoints())
-        
+
         cart = FrameVel()
-        
-        self.assert_(0==self.fksolvervel.JntToCart(qvel,cart))
-        self.assert_(0==self.iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved))
-        
+
+        self.assertTrue(0==self.fksolvervel.JntToCart(qvel,cart))
+        self.assertTrue(0==self.iksolvervel.CartToJnt(qvel.q,cart.deriv(),qdot_solved))
+
         self.assertEqual(qvel.qdot,qdot_solved);
-        
 
     def testFkPosAndIkPos(self):
         q=JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
             q[i]=random.uniform(-3.14,3.14)
-        
+
         q_init=JntArray(self.chain.getNrOfJoints())
         for i in range(q_init.rows()):
             q_init[i]=q[i]+0.1*random.random()
-            
+
         q_solved=JntArray(q.rows())
 
         F1=Frame.Identity()
         F2=Frame.Identity()
-    
-        self.assert_(0==self.fksolverpos.JntToCart(q,F1))
-        self.assert_(0==self.iksolverpos.CartToJnt(q_init,F1,q_solved))
-        self.assert_(0==self.fksolverpos.JntToCart(q_solved,F2))
-        
+
+        self.assertTrue(0==self.fksolverpos.JntToCart(q,F1))
+        self.assertTrue(0==self.iksolverpos.CartToJnt(q_init,F1,q_solved))
+        self.assertTrue(0==self.fksolverpos.JntToCart(q_solved,F2))
+
         self.assertEqual(F1,F2)
         self.assertEqual(q,q_solved)
-        
-        
+
+
+class KinfamTestTree(unittest.TestCase):
+
+    def setUp(self):
+        self.tree = Tree()
+        self.tree.addSegment(Segment(Joint(Joint.RotZ),
+                                     Frame(Vector(0.0, 0.0, 0.0))), "foo")
+        self.tree.addSegment(Segment(Joint(Joint.None),
+                                     Frame(Vector(0.0, 0.0, 0.0))), "bar")
+
+    def testTreeGetChainMemLeak(self):
+        """ test for the memory leak in Tree.getChain described in issue #211 """
+        process = psutil.Process()
+        self.tree.getChain("foo", "bar")
+        gc.collect()
+        mem_before = process.memory_info().vms
+        # needs at least 2000 iterations on my system to cause a detectable
+        # difference in memory usage
+        for _ in xrange(10000):
+            self.tree.getChain("foo", "bar")
+        gc.collect()
+        mem_after = process.memory_info().vms
+        self.assertEqual(mem_before, mem_after)
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
+    suite.addTest(KinfamTestTree('testTreeGetChainMemLeak'))
     return suite
 
-#suite = suite()
-#unittest.TextTestRunner(verbosity=3).run(suite)
-            
+
+if __name__ == '__main__':
+    suite = suite()
+    unittest.TextTestRunner(verbosity=3).run(suite)

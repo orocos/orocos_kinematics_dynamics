@@ -79,7 +79,7 @@ bool Tree::addSegment(const Segment& segment, const std::string& hook_name) {
         nrOfJoints++;
     return true;
 }
-    
+
 bool Tree::addChain(const Chain& chain, const std::string& hook_name) {
     string parent_name = hook_name;
     for (unsigned int i = 0; i < chain.getNrOfSegments(); i++) {
@@ -113,56 +113,65 @@ bool Tree::addTreeRecursive(SegmentMap::const_iterator root, const std::string& 
     }
     return true;
 }
-    
-    bool Tree::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const
-    {
-        // clear chain
-        chain = Chain();
-        
-        // walk down from chain_root and chain_tip to the root of the tree
-        vector<SegmentMap::key_type> parents_chain_root, parents_chain_tip;
-        for (SegmentMap::const_iterator s=getSegment(chain_root); s!=segments.end(); s = GetTreeElementParent(s->second)){
-            parents_chain_root.push_back(s->first);
-            if (s->first == root_name) break;
-        }
-        if (parents_chain_root.empty() || parents_chain_root.back() != root_name) return false;
-        for (SegmentMap::const_iterator s=getSegment(chain_tip); s!=segments.end(); s = GetTreeElementParent(s->second)){
-            parents_chain_tip.push_back(s->first);
-            if (s->first == root_name) break;
-        }
-        if (parents_chain_tip.empty() || parents_chain_tip.back()  != root_name) return false;
-        
-        // remove common part of segment lists
-        SegmentMap::key_type last_segment = root_name;
-        while (!parents_chain_root.empty() && !parents_chain_tip.empty() &&
-               parents_chain_root.back() == parents_chain_tip.back()){
-            last_segment = parents_chain_root.back();
-            parents_chain_root.pop_back();
-            parents_chain_tip.pop_back();
-        }
-        parents_chain_root.push_back(last_segment);
-        
-        
-        // add the segments from the root to the common frame
-        for (unsigned int s=0; s<parents_chain_root.size()-1; s++){
-            Segment seg = GetTreeElementSegment(getSegment(parents_chain_root[s])->second);
-            Frame f_tip = seg.pose(0.0).Inverse();
-            Joint jnt = seg.getJoint();
-            if (jnt.getType() == Joint::RotX || jnt.getType() == Joint::RotY || jnt.getType() == Joint::RotZ || jnt.getType() == Joint::RotAxis)
-	      jnt = Joint(jnt.getName(), f_tip*jnt.JointOrigin(), f_tip.M*(-jnt.JointAxis()), Joint::RotAxis);
-	    else if (jnt.getType() == Joint::TransX || jnt.getType() == Joint::TransY || jnt.getType() == Joint::TransZ || jnt.getType() == Joint::TransAxis)
-	      jnt = Joint(jnt.getName(),f_tip*jnt.JointOrigin(), f_tip.M*(-jnt.JointAxis()), Joint::TransAxis);
-        chain.addSegment(Segment(GetTreeElementSegment(getSegment(parents_chain_root[s+1])->second).getName(),
-                                     jnt, f_tip, GetTreeElementSegment(getSegment(parents_chain_root[s+1])->second).getInertia()));
-        }
-        
-        // add the segments from the common frame to the tip frame
-        for (int s=parents_chain_tip.size()-1; s>-1; s--){
-            chain.addSegment(GetTreeElementSegment(getSegment(parents_chain_tip[s])->second));
-        }
-        return true;
+
+bool Tree::getChain(const std::string& chain_root, const std::string& chain_tip, Chain& chain)const
+{
+    // clear chain
+    chain = Chain();
+
+    // walk down from chain_root and chain_tip to the root of the tree
+    vector<SegmentMap::key_type> parents_chain_root, parents_chain_tip;
+    for (SegmentMap::const_iterator s=getSegment(chain_root); s!=segments.end(); s = GetTreeElementParent(s->second)){
+        parents_chain_root.push_back(s->first);
+        if (s->first == root_name) break;
     }
-    
+    if (parents_chain_root.empty() || parents_chain_root.back() != root_name) return false;
+    for (SegmentMap::const_iterator s=getSegment(chain_tip); s!=segments.end(); s = GetTreeElementParent(s->second)){
+        parents_chain_tip.push_back(s->first);
+        if (s->first == root_name) break;
+    }
+    if (parents_chain_tip.empty() || parents_chain_tip.back()  != root_name) return false;
+
+    // remove common part of segment lists
+    SegmentMap::key_type last_segment = root_name;
+    while (!parents_chain_root.empty() && !parents_chain_tip.empty() &&
+           parents_chain_root.back() == parents_chain_tip.back()){
+        last_segment = parents_chain_root.back();
+        parents_chain_root.pop_back();
+        parents_chain_tip.pop_back();
+    }
+    parents_chain_root.push_back(last_segment);
+
+
+    // add the segments from the root to the common frame
+    for (unsigned int s=0; s<parents_chain_root.size()-1; s++){
+        Segment seg = GetTreeElementSegment(getSegment(parents_chain_root[s])->second);
+        Frame f_tip = seg.pose(0.0).Inverse();
+        Joint jnt = seg.getJoint();
+        if (jnt.getType() == Joint::RotX || jnt.getType() == Joint::RotY || jnt.getType() == Joint::RotZ || jnt.getType() == Joint::RotAxis)
+    jnt = Joint(jnt.getName(), f_tip*jnt.JointOrigin(), f_tip.M*(-jnt.JointAxis()), Joint::RotAxis);
+  else if (jnt.getType() == Joint::TransX || jnt.getType() == Joint::TransY || jnt.getType() == Joint::TransZ || jnt.getType() == Joint::TransAxis)
+    jnt = Joint(jnt.getName(),f_tip*jnt.JointOrigin(), f_tip.M*(-jnt.JointAxis()), Joint::TransAxis);
+    chain.addSegment(Segment(GetTreeElementSegment(getSegment(parents_chain_root[s+1])->second).getName(),
+                                 jnt, f_tip, GetTreeElementSegment(getSegment(parents_chain_root[s+1])->second).getInertia()));
+    }
+
+    // add the segments from the common frame to the tip frame
+    for (int s=parents_chain_tip.size()-1; s>-1; s--){
+        chain.addSegment(GetTreeElementSegment(getSegment(parents_chain_tip[s])->second));
+    }
+    return true;
+}
+
+bool Tree::getSubTree(const std::string& segment_name, Tree& tree) const
+{
+  //check if segment_name exists
+  SegmentMap::const_iterator root = segments.find(segment_name);
+  if (root == segments.end())
+    return false;
+  //init the tree, segment_name is the new root.
+  tree = Tree(root->first);
+  return tree.addTreeRecursive(root, segment_name);
+}
+
 }//end of namespace
-
-

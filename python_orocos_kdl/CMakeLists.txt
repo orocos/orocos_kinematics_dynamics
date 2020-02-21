@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 2.4.6)
+if(POLICY CMP0048)
+  cmake_policy(SET CMP0048 NEW)
+endif()
 
 project(python_orocos_kdl)
 
@@ -6,7 +9,11 @@ find_package(orocos_kdl)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
-SET(PYTHON_VERSION 2 CACHE STRING "Python Version")
+if(DEFINED ENV{ROS_PYTHON_VERSION})
+  SET(PYTHON_VERSION $ENV{ROS_PYTHON_VERSION} CACHE STRING "Python Version")
+else()
+  SET(PYTHON_VERSION 2 CACHE STRING "Python Version")
+endif()
 find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
 find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} REQUIRED)
 execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(plat_specific=True, prefix=''))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -23,3 +30,8 @@ set(PYTHON_SITE_PACKAGES_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${PYTHON_SITE_PACKA
 add_sip_python_module(PyKDL PyKDL/PyKDL.sip ${orocos_kdl_LIBRARIES})
 
 install(FILES package.xml DESTINATION share/python_orocos_kdl)
+
+find_package(catkin QUIET)
+if(catkin_FOUND)
+  catkin_add_env_hooks(python_orocos_kdl_site_packages SHELLS bash tcsh zsh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
+endif()

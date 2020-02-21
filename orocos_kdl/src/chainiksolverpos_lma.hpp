@@ -75,7 +75,7 @@ public:
     /**
 	 * \brief constructs an ChainIkSolverPos_LMA solver.
 	 *
-	 * The default parameters are choosen to be applicable to industrial-size robots
+	 * The default parameters are chosen to be applicable to industrial-size robots
 	 * (e.g. 0.5 to 3 meters range in task space), with an accuracy that is more then
 	 * sufficient for typical industrial applications.
 	 *
@@ -150,6 +150,8 @@ public:
      */
     void display_jac(const KDL::JntArray& jval);
 
+    /// @copydoc KDL::SolverI::updateInternalDataStructures
+    void updateInternalDataStructures();
 
     /// @copydoc KDL::SolverI::strError()
     virtual const char* strError(const int error) const;
@@ -244,7 +246,7 @@ private:
 
 
 
-}; // namespace KDL
+} // namespace KDL
 
 
 

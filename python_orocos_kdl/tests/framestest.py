@@ -23,7 +23,7 @@
 import unittest
 from PyKDL import *
 from math import *
-    
+
 class FramesTestFunctions(unittest.TestCase):
 
     def testVector2(self,v):
@@ -44,19 +44,19 @@ class FramesTestFunctions(unittest.TestCase):
         self.testVector2(v)
         v=Vector.Zero()
         self.testVector2(v)
-    
+
     def testTwist2(self,t):
         self.assertEqual(2*t-t,t)
-	self.assertEqual(t*2-t,t)
-	self.assertEqual(t+t+t-2*t,t)
-	t2=Twist(t)
-	self.assertEqual(t,t2)
-	t2+=t
-	self.assertEqual(2*t,t2)
-	t2-=t
-	self.assertEqual(t,t2)
-	t.ReverseSign()
-	self.assertEqual(t,-t2)
+        self.assertEqual(t*2-t,t)
+        self.assertEqual(t+t+t-2*t,t)
+        t2=Twist(t)
+        self.assertEqual(t,t2)
+        t2+=t
+        self.assertEqual(2*t,t2)
+        t2-=t
+        self.assertEqual(t,t2)
+        t.ReverseSign()
+        self.assertEqual(t,-t2)
 
     def testTwist(self):
         t=Twist(Vector(6,3,5),Vector(4,-2,7))
@@ -67,97 +67,97 @@ class FramesTestFunctions(unittest.TestCase):
 
     def testWrench2(self,w):
         self.assertEqual(2*w-w,w)
-	self.assertEqual(w*2-w,w)
-	self.assertEqual(w+w+w-2*w,w)
-	w2=Wrench(w)
-	self.assertEqual(w,w2)
-	w2+=w
-	self.assertEqual(2*w,w2)
-	w2-=w
-	self.assertEqual(w,w2)
-	w.ReverseSign()
-	self.assertEqual(w,-w2)
+        self.assertEqual(w*2-w,w)
+        self.assertEqual(w+w+w-2*w,w)
+        w2=Wrench(w)
+        self.assertEqual(w,w2)
+        w2+=w
+        self.assertEqual(2*w,w2)
+        w2-=w
+        self.assertEqual(w,w2)
+        w.ReverseSign()
+        self.assertEqual(w,-w2)
 
     def testWrench(self):
         w=Wrench(Vector(7,-1,3),Vector(2,-3,3))
-	self.testWrench2(w)
-	w=Wrench.Zero()
-	self.testWrench2(w)
+        self.testWrench2(w)
+        w=Wrench.Zero()
+        self.testWrench2(w)
         w=Wrench(Vector(2,1,4),Vector(5,3,1))
-	self.testWrench2(w)	
+        self.testWrench2(w)
 
     def testRotation2(self,v,a,b,c):
-	w=Wrench(Vector(7,-1,3),Vector(2,-3,3))
-	t=Twist(Vector(6,3,5),Vector(4,-2,7))
+        w=Wrench(Vector(7,-1,3),Vector(2,-3,3))
+        t=Twist(Vector(6,3,5),Vector(4,-2,7))
         R=Rotation.RPY(a,b,c)
-        
+
         self.assertAlmostEqual(dot(R.UnitX(),R.UnitX()),1.0,15)
-	self.assertEqual(dot(R.UnitY(),R.UnitY()),1.0)
-	self.assertEqual(dot(R.UnitZ(),R.UnitZ()),1.0)
-	self.assertAlmostEqual(dot(R.UnitX(),R.UnitY()),0.0,15)
-	self.assertAlmostEqual(dot(R.UnitX(),R.UnitZ()),0.0,15)
-	self.assertEqual(dot(R.UnitY(),R.UnitZ()),0.0)
-	R2=Rotation(R)
-	self.assertEqual(R,R2)
-	self.assertAlmostEqual((R*v).Norm(),v.Norm(),14)
-	self.assertEqual(R.Inverse(R*v),v)
-	self.assertEqual(R.Inverse(R*t),t)
-	self.assertEqual(R.Inverse(R*w),w)
-	self.assertEqual(R*R.Inverse(v),v)
-	self.assertEqual(R*Rotation.Identity(),R)
-	self.assertEqual(Rotation.Identity()*R,R)
-	self.assertEqual(R*(R*(R*v)),(R*R*R)*v)
-	self.assertEqual(R*(R*(R*t)),(R*R*R)*t)
-	self.assertEqual(R*(R*(R*w)),(R*R*R)*w)
-	self.assertEqual(R*R.Inverse(),Rotation.Identity())
-	self.assertEqual(R.Inverse()*R,Rotation.Identity())
-	self.assertEqual(R.Inverse()*v,R.Inverse(v))
-	(ra,rb,rc)=R.GetRPY()
-	self.assertEqual(ra,a)
+        self.assertEqual(dot(R.UnitY(),R.UnitY()),1.0)
+        self.assertEqual(dot(R.UnitZ(),R.UnitZ()),1.0)
+        self.assertAlmostEqual(dot(R.UnitX(),R.UnitY()),0.0,15)
+        self.assertAlmostEqual(dot(R.UnitX(),R.UnitZ()),0.0,15)
+        self.assertEqual(dot(R.UnitY(),R.UnitZ()),0.0)
+        R2=Rotation(R)
+        self.assertEqual(R,R2)
+        self.assertAlmostEqual((R*v).Norm(),v.Norm(),14)
+        self.assertEqual(R.Inverse(R*v),v)
+        self.assertEqual(R.Inverse(R*t),t)
+        self.assertEqual(R.Inverse(R*w),w)
+        self.assertEqual(R*R.Inverse(v),v)
+        self.assertEqual(R*Rotation.Identity(),R)
+        self.assertEqual(Rotation.Identity()*R,R)
+        self.assertEqual(R*(R*(R*v)),(R*R*R)*v)
+        self.assertEqual(R*(R*(R*t)),(R*R*R)*t)
+        self.assertEqual(R*(R*(R*w)),(R*R*R)*w)
+        self.assertEqual(R*R.Inverse(),Rotation.Identity())
+        self.assertEqual(R.Inverse()*R,Rotation.Identity())
+        self.assertEqual(R.Inverse()*v,R.Inverse(v))
+        (ra,rb,rc)=R.GetRPY()
+        self.assertEqual(ra,a)
         self.assertEqual(rb,b)
         self.assertEqual(rc,c)
-	R = Rotation.EulerZYX(a,b,c)
-	(ra,rb,rc)=R.GetEulerZYX()
-	self.assertEqual(ra,a)
+        R = Rotation.EulerZYX(a,b,c)
+        (ra,rb,rc)=R.GetEulerZYX()
+        self.assertEqual(ra,a)
         self.assertEqual(rb,b)
         self.assertEqual(rc,c)
-	R = Rotation.EulerZYZ(a,b,c)
-	(ra,rb,rc)=R.GetEulerZYZ()
-	self.assertEqual(ra,a)
+        R = Rotation.EulerZYZ(a,b,c)
+        (ra,rb,rc)=R.GetEulerZYZ()
+        self.assertEqual(ra,a)
         self.assertEqual(rb,b)
         self.assertAlmostEqual(rc,c,15)
-	(angle,v2)= R.GetRotAngle()
-	R2=Rotation.Rot(v2,angle)
-	self.assertEqual(R2,R)
-	R2=Rotation.Rot(v2*1E20,angle)
-	self.assertEqual(R,R2)
-	v2=Vector(6,2,4)
-	self.assertAlmostEqual(v2.Norm(),sqrt(dot(v2,v2)),14)
-    
+        (angle,v2)= R.GetRotAngle()
+        R2=Rotation.Rot(v2,angle)
+        self.assertEqual(R2,R)
+        R2=Rotation.Rot(v2*1E20,angle)
+        self.assertEqual(R,R2)
+        v2=Vector(6,2,4)
+        self.assertAlmostEqual(v2.Norm(),sqrt(dot(v2,v2)),14)
+
     def testRotation(self):
         self.testRotation2(Vector(3,4,5),radians(10),radians(20),radians(30))
-    
+
     def testFrame(self):
-        v=Vector(3,4,5) 
-	w=Wrench(Vector(7,-1,3),Vector(2,-3,3))
-	t=Twist(Vector(6,3,5),Vector(4,-2,7))
-	F = Frame(Rotation.EulerZYX(radians(10),radians(20),radians(-10)),Vector(4,-2,1))
-	F2=Frame(F)
-	self.assertEqual(F,F2)
-	self.assertEqual(F.Inverse(F*v),v)
-	self.assertEqual(F.Inverse(F*t),t)
-	self.assertEqual(F.Inverse(F*w),w)
-	self.assertEqual(F*F.Inverse(v),v)
-	self.assertEqual(F*F.Inverse(t),t)
-	self.assertEqual(F*F.Inverse(w),w)
-	self.assertEqual(F*Frame.Identity(),F)
-	self.assertEqual(Frame.Identity()*F,F)
-	self.assertEqual(F*(F*(F*v)),(F*F*F)*v)
-	self.assertEqual(F*(F*(F*t)),(F*F*F)*t)
-	self.assertEqual(F*(F*(F*w)),(F*F*F)*w)
-	self.assertEqual(F*F.Inverse(),Frame.Identity())
-	self.assertEqual(F.Inverse()*F,Frame.Identity())
-	self.assertEqual(F.Inverse()*v,F.Inverse(v))
+        v=Vector(3,4,5)
+        w=Wrench(Vector(7,-1,3),Vector(2,-3,3))
+        t=Twist(Vector(6,3,5),Vector(4,-2,7))
+        F = Frame(Rotation.EulerZYX(radians(10),radians(20),radians(-10)),Vector(4,-2,1))
+        F2=Frame(F)
+        self.assertEqual(F,F2)
+        self.assertEqual(F.Inverse(F*v),v)
+        self.assertEqual(F.Inverse(F*t),t)
+        self.assertEqual(F.Inverse(F*w),w)
+        self.assertEqual(F*F.Inverse(v),v)
+        self.assertEqual(F*F.Inverse(t),t)
+        self.assertEqual(F*F.Inverse(w),w)
+        self.assertEqual(F*Frame.Identity(),F)
+        self.assertEqual(Frame.Identity()*F,F)
+        self.assertEqual(F*(F*(F*v)),(F*F*F)*v)
+        self.assertEqual(F*(F*(F*t)),(F*F*F)*t)
+        self.assertEqual(F*(F*(F*w)),(F*F*F)*w)
+        self.assertEqual(F*F.Inverse(),Frame.Identity())
+        self.assertEqual(F.Inverse()*F,Frame.Identity())
+        self.assertEqual(F.Inverse()*v,F.Inverse(v))
 
     def testPickle(self):
         import pickle
@@ -167,15 +167,15 @@ class FramesTestFunctions(unittest.TestCase):
         data['fr'] = Frame(data['rot'], data['v'])
         data['tw'] = Twist(data['v'], Vector(4,5,6))
         data['wr'] = Wrench(Vector(0.1,0.2,0.3), data['v'])
-        
+
         f = open('/tmp/pickle_test', 'w')
         pickle.dump(data, f)
         f.close()
-        
+
         f = open('/tmp/pickle_test', 'r')
         data1 = pickle.load(f)
         f.close()
-       
+
         self.assertEqual(data, data1)
 
 
@@ -188,6 +188,8 @@ def suite():
     suite.addTest(FramesTestFunctions('testFrame'))
     suite.addTest(FramesTestFunctions('testPickle'))
     return suite
-    
-#suite = suite()
-#unittest.TextTestRunner(verbosity=3).run(suite)
+
+
+if __name__ == '__main__':
+    suite = suite()
+    unittest.TextTestRunner(verbosity=3).run(suite)

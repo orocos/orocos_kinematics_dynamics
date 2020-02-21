@@ -73,6 +73,8 @@ public:
      */
     int CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, JntArray &torques);
 
+    /// @copydoc KDL::SolverI::updateInternalDataStructures
+    virtual void updateInternalDataStructures();
     /*
     //Returns cartesian positions of links in base coordinates
     void getLinkCartesianPose(Frames& x_base);
@@ -80,7 +82,7 @@ public:
     void getLinkCartesianVelocity(Twists& xDot_base);
     //Returns cartesian acceleration of links in base coordinates
     void getLinkCartesianAcceleration(Twists& xDotDot_base);
-    //Returns cartesian postions of links in link tip coordinates
+    //Returns cartesian positions of links in link tip coordinates
     void getLinkPose(Frames& x_local);
     //Returns cartesian velocities of links in link tip coordinates
     void getLinkVelocity(Twists& xDot_local);
@@ -120,7 +122,7 @@ private:
     void final_upwards_sweep(JntArray &q_dotdot, JntArray &torques);
 
 private:
-    Chain chain;
+    const Chain& chain;
     unsigned int nj;
     unsigned int ns;
     unsigned int nc;

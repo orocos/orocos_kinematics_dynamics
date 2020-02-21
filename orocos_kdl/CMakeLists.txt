@@ -2,6 +2,9 @@
 # Test CMake version
 #
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+IF(POLICY CMP0048)
+  CMAKE_POLICY(SET CMP0048 NEW)
+ENDIF()
 #MARK_AS_ADVANCED( FORCE CMAKE_BACKWARDS_COMPATIBILITY )
 
 
@@ -19,7 +22,7 @@ LIST( GET KDL_VERSIONS 0 KDL_VERSION_MAJOR)
 LIST( GET KDL_VERSIONS 1 KDL_VERSION_MINOR)
 LIST( GET KDL_VERSIONS 2 KDL_VERSION_PATCH)
 
-MESSAGE( "Orocos KDL version ${VERSION} (${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}.${KDL_VERSION_PATCH})" )
+MESSAGE( STATUS "Orocos KDL version ${VERSION} (${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}.${KDL_VERSION_PATCH})" )
 
 SET( PROJ_SOURCE_DIR ${orocos_kdl_SOURCE_DIR} )
 SET( PROJ_BINARY_DIR ${orocos_kdl_BINARY_DIR} )
@@ -35,9 +38,9 @@ SET(CMAKE_VERSION "${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_V
 
 IF ( NOT CMAKE_BUILD_TYPE )
   SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
-  MESSAGE( "Setting build type to '${CMAKE_BUILD_TYPE}'" )
+  MESSAGE( STATUS "Setting build type to '${CMAKE_BUILD_TYPE}'" )
 ELSE ( NOT CMAKE_BUILD_TYPE )
-  MESSAGE( "Build type set to '${CMAKE_BUILD_TYPE}' by user." )
+  MESSAGE( STATUS "Build type set to '${CMAKE_BUILD_TYPE}' by user." )
 ENDIF ( NOT CMAKE_BUILD_TYPE )
 
 SET( KDL_CFLAGS "")
@@ -83,7 +86,7 @@ IF( ENABLE_TESTS )
   SET(CPPUNIT ${CPPUNIT} "dl")
   FIND_PATH(CPPUNIT_HEADERS cppunit/TestRunner.h)
   IF ( CPPUNIT AND CPPUNIT_HEADERS)
-    MESSAGE("-- Looking for Cppunit - found")
+    MESSAGE( STATUS "-- Looking for Cppunit - found")
   ELSE ( CPPUNIT AND CPPUNIT_HEADERS )
     MESSAGE( FATAL_ERROR "-- Looking for Cppunit - not found")
   ENDIF ( CPPUNIT AND CPPUNIT_HEADERS )
@@ -110,8 +113,8 @@ CONFIGURE_FILE(KDLConfig.cmake.in
 CONFIGURE_FILE(KDLConfigVersion.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
 
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
+INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
 
 INSTALL(FILES package.xml DESTINATION share/orocos_kdl)
