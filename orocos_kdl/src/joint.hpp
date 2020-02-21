@@ -98,7 +98,7 @@ namespace KDL {
          * default: 0
          */
         Joint(const std::string& name, const Vector& _origin, const Vector& _axis, const JointType& type, const double& _scale=1, const double& _offset=0,
-               const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
+              const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
         /**
          * Constructor of a joint.
          *
@@ -116,7 +116,7 @@ namespace KDL {
          * default: 0
          */
         Joint(const Vector& _origin, const Vector& _axis, const JointType& type, const double& _scale=1, const double& _offset=0,
-               const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
+              const double& _inertia=0, const double& _damping=0, const double& _stiffness=0,const double& _upper=0,const double& _lower=0);
 
         /**
          * Request the 6D-pose between the beginning and the end of
