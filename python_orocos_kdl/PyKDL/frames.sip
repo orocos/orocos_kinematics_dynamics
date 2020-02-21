@@ -369,7 +369,7 @@ public:
     double __getitem__ (int i) const;
 %MethodCode
     if (a0 < 0 || a0 > 5) {
-        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
         return 0;
     }
     sipRes=(*sipCpp)(a0);
@@ -378,7 +378,7 @@ public:
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 > 5) {
-        PyErr_SetString(PyExc_IndexError, "Twist index out of range");
+        PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
         return 0;
     }
     (*sipCpp)(a0)=a1;

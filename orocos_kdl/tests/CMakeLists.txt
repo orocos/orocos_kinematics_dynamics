@@ -9,7 +9,7 @@ IF(ENABLE_TESTS)
   SET_TARGET_PROPERTIES( framestest PROPERTIES
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
   ADD_TEST(framestest framestest)
-  
+
  ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
  TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
  SET(TESTNAME "kinfamtest")
@@ -44,13 +44,20 @@ IF(ENABLE_TESTS)
  SET_TARGET_PROPERTIES( jacobiandottest PROPERTIES
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(jacobiandottest jacobiandottest)
- 
+
  ADD_EXECUTABLE(velocityprofiletest velocityprofiletest.cpp test-runner.cpp)
  SET(TESTNAME "velocityprofiletest")
  TARGET_LINK_LIBRARIES(velocityprofiletest orocos-kdl ${CPPUNIT})
  SET_TARGET_PROPERTIES( velocityprofiletest PROPERTIES
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(velocityprofiletest velocityprofiletest)
+
+ ADD_EXECUTABLE(treeinvdyntest treeinvdyntest.cpp test-runner.cpp)
+ SET(TESTNAME "treeinvdyntest")
+ TARGET_LINK_LIBRARIES(treeinvdyntest orocos-kdl ${CPPUNIT})
+ SET_TARGET_PROPERTIES( treeinvdyntest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+ ADD_TEST(treeinvdyntest treeinvdyntest)
 
 #  ADD_EXECUTABLE(rframestest  rframestest.cpp)
 #  TARGET_LINK_LIBRARIES(rframestest orocos-kdl)
@@ -60,7 +67,7 @@ IF(ENABLE_TESTS)
 #  TARGET_LINK_LIBRARIES(rallnumbertest orocos-kdl)
 #  ADD_TEST(rallnumbertest rallnumbertest)
 #
-#  
+#
 # IF(OROCOS_PLUGIN)
 #   ADD_EXECUTABLE(toolkittest toolkittest.cpp)
 #   LINK_DIRECTORIES(${OROCOS_RTT_LINK_DIRS})
@@ -78,10 +85,9 @@ IF(ENABLE_TESTS)
 #   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/PyKDLtest.py
 #     ${CMAKE_CURRENT_BINARY_DIR}/PyKDLtest.py COPY_ONLY)
 #   ADD_TEST(PyKDLtest PyKDLtest.py)
-#   
-#  
+#
+#
 # ENDIF(PYTHON_BINDINGS)
-  
-  ADD_CUSTOM_TARGET(check ctest -V WORKING_DIRECTORY ${PROJ_BINARY_DIR}/tests)
-ENDIF(ENABLE_TESTS)  
 
+  ADD_CUSTOM_TARGET(check ctest -V WORKING_DIRECTORY ${PROJ_BINARY_DIR}/tests)
+ENDIF(ENABLE_TESTS)

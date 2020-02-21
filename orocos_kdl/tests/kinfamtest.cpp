@@ -155,6 +155,9 @@ void KinFamTest::ChainTest()
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfSegments(),chain1.getNrOfSegments()*(uint)2);
 }
 
+// forward declaration, see below
+bool isSubtree(const SegmentMap::const_iterator container, const SegmentMap::const_iterator contained);
+
 void KinFamTest::TreeTest()
 {
     Tree tree1;
@@ -206,7 +209,7 @@ void KinFamTest::TreeTest()
 
     Chain extract_chain1;
     CPPUNIT_ASSERT(tree1.getChain("Segment 2", "Segment 4", extract_chain1));
-    Chain extract_chain2; 
+    Chain extract_chain2;
     CPPUNIT_ASSERT(tree1.getChain("Segment 4", "Segment 2", extract_chain2));
     CPPUNIT_ASSERT(tree1.getChain("Segment 4", "Segment 2", extract_chain2));
     CPPUNIT_ASSERT(extract_chain1.getNrOfJoints()==extract_chain2.getNrOfJoints());
@@ -225,7 +228,46 @@ void KinFamTest::TreeTest()
     solver1.JntToCart(jnt1, f1);
     solver2.JntToCart(jnt2, f2);
     CPPUNIT_ASSERT(f1 == f2.Inverse());
+
+    Tree subtree;
+    const std::string subroot("Segment 2");
+    CPPUNIT_ASSERT(tree1.getSubTree(subroot, subtree));
+    cout << "Tree 1:" << endl << tree2str(tree1) << endl;
+    cout << "Subtree (rooted at " << subroot << "):" << endl << tree2str(subtree) << endl;
+    CPPUNIT_ASSERT(isSubtree(tree1.getSegment(subroot), subtree.getRootSegment()));
+    CPPUNIT_ASSERT(isSubtree(subtree.getRootSegment(), tree1.getSegment(subroot)));
+
+    Segment segment101("Segment 101", Joint("Joint 101", Joint::RotZ), Frame(Vector(0.0,0.0,0.5)));
+    Segment segment102("Segment 102", Joint("Joint 102", Joint::RotZ), Frame(Vector(0.0,0.0,1.0)));
+    subtree.addSegment(segment101, subtree.getRootSegment()->first);
+    subtree.addSegment(segment102, subtree.getSegment("Segment 5")->first);
+    cout << "Subtree (rooted at " << subroot << "):" << endl << tree2str(subtree) << endl;
+    CPPUNIT_ASSERT(!isSubtree(tree1.getSegment(subroot), subtree.getRootSegment()));
+    CPPUNIT_ASSERT(isSubtree(subtree.getRootSegment(), tree1.getSegment(subroot)));
 }
 
-
-
+//Utility to check if the set of segments in contained is a subset of container.
+//In addition, all the children of a segment in contained must be present in
+//container as children of the same segment.
+bool isSubtree(const SegmentMap::const_iterator container, const SegmentMap::const_iterator contained) {
+    //Check that the container and contained point to the same link
+    if(container->first != contained->first)
+        return false;
+    //Check that each child of contained is a child of container
+    std::vector<SegmentMap::const_iterator> children = GetTreeElementChildren(contained->second);
+    for(unsigned int i=0; i < children.size(); i++) {
+        //look for a child of container whose name matches the one of the current child from contained
+        std::vector<SegmentMap::const_iterator>::const_iterator it = GetTreeElementChildren(container->second).begin();
+        while(it != GetTreeElementChildren(container->second).end()) {
+            if((*it)->first == children[i]->first)
+                break; //segment found, exit the loop
+            it++;
+        }
+        if(it == GetTreeElementChildren(container->second).end())
+            return false; //child of contained not found as child of container
+        //inspect recursively all the children
+        if(!isSubtree((*it), children[i]))
+            return false;
+    }
+    return true;
+}
