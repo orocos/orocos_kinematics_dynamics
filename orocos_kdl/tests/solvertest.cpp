@@ -225,6 +225,10 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_OUT_OF_RANGE, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()+1));
     chain2.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotX),
             Frame(Vector(0.0,0.0,0.1))));
+    chain2.addSegment(Segment("Segment 7", Joint("Joint 7", Joint::RotY),
+            Frame(Vector(0.1,0.2,0.1))));
+    chain2.addSegment(Segment("Segment 8", Joint("Joint 8", Joint::RotZ),
+            Frame(Vector(-0.1,0,0))));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, jacdotsolver1.JntToJacDot(q_in3, t, chain2.getNrOfSegments()));
@@ -327,7 +331,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToMass(q_in, m));
     
-    chain2.deleteSegmentsFrom("Segment 6");
+    chain2.deleteSegmentsFrom("Segment 7");
     
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
@@ -392,9 +396,6 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToMass(q_in, m));
-    
-    chain2.addSegment(Segment("Segment 6", Joint("Joint 6", Joint::RotX),
-            Frame(Vector(0.0,0.0,0.1))));
 }
 void SolverTest::FkPosAndJacTest()
 {
