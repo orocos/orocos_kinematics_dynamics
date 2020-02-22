@@ -9,7 +9,7 @@ env:
 
 before_script:
   - sudo apt-get -qq update
-  - sudo apt-get install -y libeigen3-dev libcppunit-dev python-sip-dev
+  - sudo apt-get install -y libeigen3-dev libcppunit-dev python-sip-dev python-psutil
   #build orocos_kdl
   - cd orocos_kdl
   - mkdir build
