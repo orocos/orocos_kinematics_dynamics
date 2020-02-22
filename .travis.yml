@@ -17,10 +17,10 @@ matrix:
       env: LIB_EXT=so PYTHON=/usr/bin/python
     - os: osx
       osx_image: xcode7.3
-      env: LIB_EXT=dylib PYTHON=/usr/local/bin/python
+      env: LIB_EXT=dylib PYTHON=/usr/local/bin/python3
     - os: osx
       osx_image: xcode8.2
-      env: LIB_EXT=dylib PYTHON=/usr/local/bin/python
+      env: LIB_EXT=dylib PYTHON=/usr/local/bin/python3
 
 virtualenv:
   system_site_packages: true
@@ -28,6 +28,7 @@ virtualenv:
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install cppunit eigen sip; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install psutil; fi
 
 before_script:
   #build orocos_kdl
@@ -60,4 +61,5 @@ script:
   - cd ../..
   #execute python bindings tests
   - cd python_orocos_kdl/build
+  - export PYTHONPATH=$(ls -1d ${TRAVIS_BUILD_DIR}/install/lib/python*/*-packages):${PYTHONPATH}
   - $PYTHON ../tests/PyKDLtest.py
