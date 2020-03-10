@@ -5,7 +5,7 @@ endif()
 
 project(python_orocos_kdl)
 
-find_package(orocos_kdl)
+find_package(orocos_kdl REQUIRED)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
