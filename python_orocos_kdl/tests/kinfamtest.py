@@ -20,10 +20,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-import unittest
-from PyKDL import *
-from math import *
+import gc
 import random
+import unittest
+from math import *
+
+import psutil
+from PyKDL import *
+
 
 class KinfamTestFunctions(unittest.TestCase):
 
@@ -143,12 +147,37 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertEqual(q,q_solved)
 
 
+class KinfamTestTree(unittest.TestCase):
+
+    def setUp(self):
+        self.tree = Tree()
+        self.tree.addSegment(Segment(Joint(Joint.RotZ),
+                                     Frame(Vector(0.0, 0.0, 0.0))), "foo")
+        self.tree.addSegment(Segment(Joint(Joint.None),
+                                     Frame(Vector(0.0, 0.0, 0.0))), "bar")
+
+    def testTreeGetChainMemLeak(self):
+        """ test for the memory leak in Tree.getChain described in issue #211 """
+        process = psutil.Process()
+        self.tree.getChain("foo", "bar")
+        gc.collect()
+        mem_before = process.memory_info().vms
+        # needs at least 2000 iterations on my system to cause a detectable
+        # difference in memory usage
+        for _ in xrange(10000):
+            self.tree.getChain("foo", "bar")
+        gc.collect()
+        mem_after = process.memory_info().vms
+        self.assertEqual(mem_before, mem_after)
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
+    suite.addTest(KinfamTestTree('testTreeGetChainMemLeak'))
     return suite
 
 
