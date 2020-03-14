@@ -26,7 +26,41 @@ from math import *
 
 
 class FramesTestFunctions(unittest.TestCase):
-    def testVector2(self, v):
+    def testVector(self):
+        v = Vector(3, 4, 5)
+        self.testVectorImpl(v)
+        v = Vector()
+        self.testVectorImpl(v)
+        v = Vector.Zero()
+        self.testVectorImpl(v)
+
+        v = Vector(3, 4, 5)
+        self.assertFalse(v == -v)  # Doesn't work for zero vector
+        self.assertTrue(v != -v)  # Doesn't work for zero vector
+        self.assertEqual(v.x(), 3)
+        v.x(1)
+        self.assertEqual(v, Vector(1, 4, 5))
+        self.assertEqual(v.y(), 4)
+        v.y(1)
+        self.assertEqual(v, Vector(1, 1, 5))
+        self.assertEqual(v.z(), 5)
+        v.z(1)
+        self.assertEqual(v, Vector(1, 1, 1))
+        self.assertEqual(v[1], 1)
+        self.assertEqual(v[2], 1)
+        v[0] = 3
+        self.assertEqual(v[0], 3)
+        v[1] = 4
+        self.assertEqual(v[1], 4)
+        v[2] = 5
+        self.assertEqual(v[2], 5)
+
+        SetToZero(v)
+        self.assertEqual(v, Vector(0, 0, 0))
+
+    def testVectorImpl(self, v):
+        self.assertTrue(v == v)
+        self.assertFalse(v != v)
         self.assertEqual(2*v-v, v)
         self.assertEqual(v*2-v, v)
         self.assertEqual(v+v+v-2*v, v)
@@ -39,13 +73,15 @@ class FramesTestFunctions(unittest.TestCase):
         v2.ReverseSign()
         self.assertEqual(v, -v2)
 
-    def testVector(self):
-        v = Vector(3, 4, 5)
-        self.testVector2(v)
-        v = Vector.Zero()
-        self.testVector2(v)
+    def testTwist(self):
+        t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
+        self.testTwistImpl(t)
+        t = Twist.Zero()
+        self.testTwistImpl(t)
+        t = Twist(Vector(0, -9, -3), Vector(1, -2, -4))
+        self.testTwistImpl(t)
 
-    def testTwist2(self, t):
+    def testTwistImpl(self, t):
         self.assertEqual(2*t-t, t)
         self.assertEqual(t*2-t, t)
         self.assertEqual(t+t+t-2*t, t)
@@ -58,14 +94,15 @@ class FramesTestFunctions(unittest.TestCase):
         t.ReverseSign()
         self.assertEqual(t, -t2)
 
-    def testTwist(self):
-        t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
-        self.testTwist2(t)
-        t = Twist.Zero()
-        self.testTwist2(t)
-        t = Twist(Vector(0, -9, -3), Vector(1, -2, -4))
+    def testWrench(self):
+        w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
+        self.testWrenchImpl(w)
+        w = Wrench.Zero()
+        self.testWrenchImpl(w)
+        w = Wrench(Vector(2, 1, 4), Vector(5, 3, 1))
+        self.testWrenchImpl(w)
 
-    def testWrench2(self, w):
+    def testWrenchImpl(self, w):
         self.assertEqual(2*w-w, w)
         self.assertEqual(w*2-w, w)
         self.assertEqual(w+w+w-2*w, w)
@@ -78,15 +115,10 @@ class FramesTestFunctions(unittest.TestCase):
         w.ReverseSign()
         self.assertEqual(w, -w2)
 
-    def testWrench(self):
-        w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
-        self.testWrench2(w)
-        w = Wrench.Zero()
-        self.testWrench2(w)
-        w = Wrench(Vector(2, 1, 4), Vector(5, 3, 1))
-        self.testWrench2(w)
+    def testRotation(self):
+        self.testRotationImpl(Vector(3, 4, 5), radians(10), radians(20), radians(30))
 
-    def testRotation2(self, v, a, b, c):
+    def testRotationImpl(self, v, a, b, c):
         w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
         t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
         R = Rotation.RPY(a, b, c)
@@ -129,13 +161,10 @@ class FramesTestFunctions(unittest.TestCase):
         (angle, v2) = R.GetRotAngle()
         R2 = Rotation.Rot(v2, angle)
         self.assertEqual(R2, R)
-        R2 = Rotation.Rot(v2*1e20, angle)
+        R2 = Rotation.Rot(v2*1E20, angle)
         self.assertEqual(R, R2)
         v2 = Vector(6, 2, 4)
         self.assertAlmostEqual(v2.Norm(), sqrt(dot(v2, v2)), 14)
-
-    def testRotation(self):
-        self.testRotation2(Vector(3, 4, 5), radians(10), radians(20), radians(30))
 
     def testFrame(self):
         v = Vector(3, 4, 5)
@@ -160,9 +189,8 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(F.Inverse()*v, F.Inverse(v))
 
     def testPickle(self):
-        # import pickle
         import cPickle as pickle
-        data = {}
+        data = dict()
         data['v'] = Vector(1, 2, 3)
         data['rot'] = Rotation().EulerZYZ(1, 2, 3)
         data['fr'] = Frame(data['rot'], data['v'])
