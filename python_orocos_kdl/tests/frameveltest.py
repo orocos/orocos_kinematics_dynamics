@@ -24,71 +24,71 @@ import unittest
 from PyKDL import *
 from math import *
 
-class FrameVelTestFunctions(unittest.TestCase):
 
+class FrameVelTestFunctions(unittest.TestCase):
     def testVectorVel(self):
-        v=VectorVel(Vector(3,-4,5),Vector(6,3,-5))
-        vt = Vector(-4,-6,-8);
-        self.assertTrue(Equal( 2*v-v,v))
-        self.assertTrue(Equal( v*2-v,v))
-        self.assertTrue(Equal( v+v+v-2*v,v))
-        v2=VectorVel(v)
-        self.assertTrue(Equal( v,v2))
-        v2+=v
-        self.assertTrue(Equal( 2*v,v2))
-        v2-=v
-        self.assertTrue(Equal( v,v2))
+        v = VectorVel(Vector(3, -4, 5), Vector(6, 3, -5))
+        vt = Vector(-4, -6, -8)
+        self.assertTrue(Equal(2*v-v, v))
+        self.assertTrue(Equal(v*2-v, v))
+        self.assertTrue(Equal(v+v+v-2*v, v))
+        v2 = VectorVel(v)
+        self.assertTrue(Equal(v, v2))
+        v2 += v
+        self.assertTrue(Equal(2*v, v2))
+        v2 -= v
+        self.assertTrue(Equal(v, v2))
         v2.ReverseSign()
-        self.assertTrue(Equal( v,-v2))
-        self.assertTrue(Equal( v*vt,-vt*v))
-        v2 = VectorVel(Vector(-5,-6,-3),Vector(3,4,5))
-        self.assertTrue(Equal( v*v2,-v2*v))
+        self.assertTrue(Equal(v, -v2))
+        self.assertTrue(Equal(v*vt, -vt*v))
+        v2 = VectorVel(Vector(-5, -6, -3), Vector(3, 4, 5))
+        self.assertTrue(Equal(v*v2, -v2*v))
 
     def testRotationVel(self):
-        v=VectorVel(Vector(9,4,-2),Vector(-5,6,-2))
-        vt=Vector(2,3,4)
-        a= radians(-15)
-        b= radians(20)
-        c= radians(-80)
-        R = RotationVel(Rotation.RPY(a,b,c),Vector(2,4,1))
-        R2=RotationVel(R)
-        self.assertTrue(Equal(R,R2))
-        self.assertTrue(Equal((R*v).Norm(),(v.Norm())))
-        self.assertTrue(Equal(R.Inverse(R*v),v))
-        self.assertTrue(Equal(R*R.Inverse(v),v))
-        self.assertTrue(Equal(R*Rotation.Identity(),R))
-        self.assertTrue(Equal(Rotation.Identity()*R,R))
-        self.assertTrue(Equal(R*(R*(R*v)),(R*R*R)*v))
-        self.assertTrue(Equal(R*(R*(R*vt)),(R*R*R)*vt))
-        self.assertTrue(Equal(R*R.Inverse(),RotationVel.Identity()))
-        self.assertTrue(Equal(R.Inverse()*R,RotationVel.Identity()))
-        self.assertTrue(Equal(R.Inverse()*v,R.Inverse(v)))
+        v = VectorVel(Vector(9, 4, -2), Vector(-5, 6, -2))
+        vt = Vector(2, 3, 4)
+        a = radians(-15)
+        b = radians(20)
+        c = radians(-80)
+        R = RotationVel(Rotation.RPY(a, b, c), Vector(2, 4, 1))
+        R2 = RotationVel(R)
+        self.assertTrue(Equal(R, R2))
+        self.assertTrue(Equal((R*v).Norm(), (v.Norm())))
+        self.assertTrue(Equal(R.Inverse(R*v), v))
+        self.assertTrue(Equal(R*R.Inverse(v), v))
+        self.assertTrue(Equal(R*Rotation.Identity(), R))
+        self.assertTrue(Equal(Rotation.Identity()*R, R))
+        self.assertTrue(Equal(R*(R*(R*v)), (R*R*R)*v))
+        self.assertTrue(Equal(R*(R*(R*vt)), (R*R*R)*vt))
+        self.assertTrue(Equal(R*R.Inverse(), RotationVel.Identity()))
+        self.assertTrue(Equal(R.Inverse()*R, RotationVel.Identity()))
+        self.assertTrue(Equal(R.Inverse()*v, R.Inverse(v)))
 
     def testFrameVel(self):
-        v=VectorVel(Vector(3,4,5),Vector(-2,-4,-1))
-        vt=Vector(-1,0,-10)
-        F = FrameVel(Frame(Rotation.EulerZYX(radians(10),radians(20),radians(-10)),Vector(4,-2,1)),
-                     Twist(Vector(2,-2,-2),Vector(-5,-3,-2)))
-        F2=FrameVel(F)
-        self.assertTrue(Equal( F,F2))
-        self.assertTrue(Equal( F.Inverse(F*v),v))
-        self.assertTrue(Equal( F.Inverse(F*vt), vt))
-        self.assertTrue(Equal( F*F.Inverse(v),v))
-        self.assertTrue(Equal( F*F.Inverse(vt),vt))
-        self.assertTrue(Equal( F*Frame.Identity(),F))
-        self.assertTrue(Equal( Frame.Identity()*F,F))
-        self.assertTrue(Equal( F*(F*(F*v)),(F*F*F)*v))
-        self.assertTrue(Equal( F*(F*(F*vt)),(F*F*F)*vt))
-        self.assertTrue(Equal( F*F.Inverse(),FrameVel.Identity()))
-        self.assertTrue(Equal( F.Inverse()*F,Frame.Identity()))
-        self.assertTrue(Equal( F.Inverse()*vt,F.Inverse(vt)))
+        v = VectorVel(Vector(3, 4, 5), Vector(-2, -4, -1))
+        vt = Vector(-1, 0, -10)
+        F = FrameVel(Frame(Rotation.EulerZYX(radians(10), radians(20), radians(-10)), Vector(4, -2, 1)),
+                     Twist(Vector(2, -2, -2), Vector(-5, -3, -2)))
+        F2 = FrameVel(F)
+        self.assertTrue(Equal(F, F2))
+        self.assertTrue(Equal(F.Inverse(F*v), v))
+        self.assertTrue(Equal(F.Inverse(F*vt), vt))
+        self.assertTrue(Equal(F*F.Inverse(v), v))
+        self.assertTrue(Equal(F*F.Inverse(vt), vt))
+        self.assertTrue(Equal(F*Frame.Identity(), F))
+        self.assertTrue(Equal(Frame.Identity()*F, F))
+        self.assertTrue(Equal(F*(F*(F*v)), (F*F*F)*v))
+        self.assertTrue(Equal(F*(F*(F*vt)), (F*F*F)*vt))
+        self.assertTrue(Equal(F*F.Inverse(), FrameVel.Identity()))
+        self.assertTrue(Equal(F.Inverse()*F, Frame.Identity()))
+        self.assertTrue(Equal(F.Inverse()*vt, F.Inverse(vt)))
 
     def testPickle(self):
         rot = Rotation.RotX(1.3)
         import cPickle as pickle
         data = {}
-        data['vv'] = VectorVel(Vector(1,2,3), Vector(4,5,6))
-        data['rv'] = RotationVel(rot, Vector(4.1,5.1,6.1))
+        data['vv'] = VectorVel(Vector(1, 2, 3), Vector(4, 5, 6))
+        data['rv'] = RotationVel(rot, Vector(4.1, 5.1, 6.1))
         data['fv'] = FrameVel(data['rv'], data['vv'])
         data['tv'] = TwistVel(data['vv'], data['vv'])
 
@@ -115,7 +115,7 @@ class FrameVelTestFunctions(unittest.TestCase):
 
 
 def suite():
-    suite=unittest.TestSuite()
+    suite = unittest.TestSuite()
     suite.addTest(FrameVelTestFunctions('testVectorVel'))
     suite.addTest(FrameVelTestFunctions('testRotationVel'))
     suite.addTest(FrameVelTestFunctions('testFrameVel'))
