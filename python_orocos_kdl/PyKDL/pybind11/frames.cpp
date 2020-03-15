@@ -44,9 +44,6 @@ void init_frames(py::module &m)
     vector.def("x", (double (Vector::*)(void) const) &Vector::x);
     vector.def("y", (double (Vector::*)(void) const) &Vector::y);
     vector.def("z", (double (Vector::*)(void) const) &Vector::z);
-    vector.def_property("x", (double (Vector::*)(void) const) &Vector::x, (void (Vector::*)(double)) &Vector::x);
-    vector.def_property("y", (double (Vector::*)(void) const) &Vector::y, (void (Vector::*)(double)) &Vector::y);
-    vector.def_property("z", (double (Vector::*)(void) const) &Vector::z, (void (Vector::*)(double)) &Vector::z);
     vector.def("__getitem__", [](const Vector &v, int i)
     {
         if (i < 0 || i > 2)
