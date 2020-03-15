@@ -163,18 +163,22 @@ public:
 %MethodCode
     if (a0 < 0 || a0 >= 9) {
         PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp).data[a0];
+    else {
+        sipRes=(*sipCpp).data[a0];
+    }
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 >= 9) {
         PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp).data[a0]=a1;
+    else {
+        (*sipCpp).data[a0]=a1;
+    }
 %End
 
 };
@@ -292,18 +296,22 @@ public:
 %MethodCode
     if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
 
     void __setitem__(int index, double value);
 %MethodCode
     if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
     const std::string* __repr__();
@@ -374,9 +382,11 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(i,j);
+    else {
+        sipRes=(*sipCpp)(i,j);
+    }
 %End
 
     void __setitem__(SIP_PYTUPLE,double value);
@@ -385,9 +395,11 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(i,j)=a1;
+    else {
+        (*sipCpp)(i,j)=a1;
+    }
 %End
 
     const std::string* __repr__();

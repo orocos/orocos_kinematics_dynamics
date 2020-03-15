@@ -46,18 +46,22 @@ public:
 %MethodCode
     if (a0 < 0 || a0 > 2) {
         PyErr_SetString(PyExc_IndexError, "Vector index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
 
     void __setitem__(int index, double value);
 %MethodCode
     if (a0 < 0 || a0 > 2) {
         PyErr_SetString(PyExc_IndexError, "Vector index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -118,9 +122,11 @@ public:
     PyArg_ParseTuple(a0, "ii", &i, &j);
     if (i < 0 || j < 0 || i > 2 || j > 2) {
         PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=((const Rotation)(*sipCpp))(i,j);
+    else {
+        sipRes=((const Rotation)(*sipCpp))(i,j);
+    }
 %End
 
     void __setitem__(SIP_PYTUPLE,double value);
@@ -129,9 +135,11 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 2 || j > 2) {
         PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(i,j)=a1;
+    else {
+        (*sipCpp)(i,j)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -219,9 +227,11 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 2 || j > 3) {
         PyErr_SetString(PyExc_IndexError, "Frame index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(i,j);
+    else {
+        sipRes=(*sipCpp)(i,j);
+    }
 %End
 
     void __setitem__(SIP_PYTUPLE,double value);
@@ -230,12 +240,14 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 2 || j > 3) {
         PyErr_SetString(PyExc_IndexError, "Frame index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    if(j==3)
-        (*sipCpp).p(i)=a1;
-    else
-        (*sipCpp).M(i,j)=a1;
+    else {
+        if(j==3)
+            (*sipCpp).p(i)=a1;
+        else
+            (*sipCpp).M(i,j)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -296,18 +308,22 @@ public:
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Twist index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Twist index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -369,18 +385,22 @@ public:
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
