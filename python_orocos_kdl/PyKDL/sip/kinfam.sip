@@ -567,28 +567,41 @@ public:
     temp1=PyList_GetItem(list,0);
     numCols=PyList_Size(temp1);
     if (numRows!=numCols) {
-       sipIsErr=1; //todo: raise exception
+        std::ostringstream oss;
+        oss << "Number of rows(" << numRows << ") and columns(" << numCols << ") don't match" << std::endl;
+        PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+        sipError = sipErrorFail;
     }
-    if (numRows!=6) {
-       sipIsErr=1; //todo: raise exception
+    if (sipError==sipErrorNone && numRows!=6) {
+        std::ostringstream oss;
+        oss << "Number of rows != 6, but " << numRows << std::endl;
+        PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+        sipError = sipErrorFail;
     }
-    Eigen::MatrixXd Mx;
-    Mx=Eigen::MatrixXd::Identity(numRows,numCols);
+    if (sipError==sipErrorNone) {
+        Eigen::MatrixXd Mx;
+        Mx=Eigen::MatrixXd::Identity(numRows,numCols);
 
-    for (Py_ssize_t r=0;r<numRows;r++) {
-        PyObject *row;
-        row=PyList_GetItem(list,r);
-        if (numCols!=PyList_Size(row)) {
-           sipIsErr=1; //todo: raise exception
+        for (Py_ssize_t r=0;r<numRows;r++) {
+            PyObject *row;
+            row=PyList_GetItem(list,r);
+            if (numCols!=PyList_Size(row)) {
+                std::ostringstream oss;
+                oss << "Number of colums(" << PyList_Size(row) << ") of column(" << r << ") doesn't match with the expected number of columns(" << numCols << ")" << std::endl;
+                PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+                sipError = sipErrorFail;
+                break;
+            }
+            for (Py_ssize_t c=0;c<numCols;c++) {
+                PyObject *item;
+                item=PyList_GetItem(row,c);
+                c_item=PyFloat_AsDouble(item);
+                Mx(r,c)= c_item;
+            }
         }
-        for (Py_ssize_t c=0;c<numCols;c++) {
-            PyObject *item;
-            item=PyList_GetItem(row,c);
-            c_item=PyFloat_AsDouble(item);
-            Mx(r,c)= c_item;
-        }
+        if (sipError==sipErrorNone)
+            sipCpp->setWeightTS(Mx);
     }
-    sipCpp->setWeightTS(Mx);
 %End
 
     void setWeightJS(SIP_PYLIST);
@@ -604,24 +617,34 @@ public:
     temp1=PyList_GetItem(list,0);
     numCols=PyList_Size(temp1);
     if (numRows!=numCols) {
-       sipIsErr=1; //todo: raise exception
+        std::ostringstream oss;
+        oss << "Number of rows(" << numRows << ") and columns(" << numCols << ") don't match" << std::endl;
+        PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+        sipError = sipErrorFail;
     }
-    Eigen::MatrixXd Mq;
-    Mq=Eigen::MatrixXd::Identity(numRows,numCols);
-    for (Py_ssize_t r=0;r<numRows;r++) {
-        PyObject *row;
-        row=PyList_GetItem(list,r);
-        if (numCols!=PyList_Size(row)) {
-           sipIsErr=1; //todo: raise exception
+    if (sipError==sipErrorNone) {
+        Eigen::MatrixXd Mq;
+        Mq=Eigen::MatrixXd::Identity(numRows,numCols);
+        for (Py_ssize_t r=0;r<numRows;r++) {
+            PyObject *row;
+            row=PyList_GetItem(list,r);
+            if (numCols!=PyList_Size(row)) {
+                std::ostringstream oss;
+                oss << "Number of colums(" << PyList_Size(row) << ") of column(" << r << ") doesn't match with the expected number of columns(" << numCols << ")" << std::endl;
+                PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+                sipError = sipErrorFail;
+                break;
+            }
+            for (Py_ssize_t c=0;c<numCols;c++) {
+                PyObject *item;
+                item=PyList_GetItem(row,c);
+                c_item=PyFloat_AsDouble(item);
+                Mq(r,c)= c_item;
+            }
         }
-        for (Py_ssize_t c=0;c<numCols;c++) {
-            PyObject *item;
-            item=PyList_GetItem(row,c);
-            c_item=PyFloat_AsDouble(item);
-            Mq(r,c)= c_item;
-        }
+        if (sipError==sipErrorNone)
+            sipCpp->setWeightJS(Mq);
     }
-    sipCpp->setWeightJS(Mq);
 %End
 
     void setLambda(const double& lambda);
