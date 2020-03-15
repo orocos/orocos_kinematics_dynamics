@@ -220,52 +220,84 @@ class FramesTestFunctions(unittest.TestCase):
 
     def testRotation(self):
         self.testRotationImpl(Vector(3, 4, 5), radians(10), radians(20), radians(30))
+        self.testRotationImpl(Vector(), radians(10), radians(20), radians(30))
+        self.testRotationImpl(Vector(3, 4, 5), radians(0), radians(0), radians(0))
+        self.testRotationImpl(Vector(), radians(0), radians(0), radians(0))
+
+        r = Rotation(*range(1, 10))
+        # Test __getitem__
+        for i in range(3):
+            for j in range(3):
+                self.assertEqual(r[i, j], 3*i+j+1)
+        with self.assertRaises(IndexError):
+            _ = r[-1, 0]
+        with self.assertRaises(IndexError):
+            _ = r[0, -1]
+        with self.assertRaises(IndexError):
+            _ = r[3, 2]
+        with self.assertRaises(IndexError):
+            _ = r[2, 3]
+        # Test __setitem__
+        for i in range(3):
+            for j in range(3):
+                r[i, j] = 3*i+j
+        for i in range(3):
+            for j in range(3):
+                self.assertEqual(r[i, j], 3*i+j)
+        with self.assertRaises(IndexError):
+            r[-1, 0] = 1
+        with self.assertRaises(IndexError):
+            r[0, -1] = 1
+        with self.assertRaises(IndexError):
+            r[3, 2] = 1
+        with self.assertRaises(IndexError):
+            r[2, 3] = 1
 
     def testRotationImpl(self, v, a, b, c):
         w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
         t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
-        R = Rotation.RPY(a, b, c)
+        r = Rotation.RPY(a, b, c)
 
-        self.assertAlmostEqual(dot(R.UnitX(), R.UnitX()), 1.0, 15)
-        self.assertEqual(dot(R.UnitY(), R.UnitY()), 1.0)
-        self.assertEqual(dot(R.UnitZ(), R.UnitZ()), 1.0)
-        self.assertAlmostEqual(dot(R.UnitX(), R.UnitY()), 0.0, 15)
-        self.assertAlmostEqual(dot(R.UnitX(), R.UnitZ()), 0.0, 15)
-        self.assertEqual(dot(R.UnitY(), R.UnitZ()), 0.0)
-        R2 = Rotation(R)
-        self.assertEqual(R, R2)
-        self.assertAlmostEqual((R*v).Norm(), v.Norm(), 14)
-        self.assertEqual(R.Inverse(R*v), v)
-        self.assertEqual(R.Inverse(R*t), t)
-        self.assertEqual(R.Inverse(R*w), w)
-        self.assertEqual(R*R.Inverse(v), v)
-        self.assertEqual(R*Rotation.Identity(), R)
-        self.assertEqual(Rotation.Identity()*R, R)
-        self.assertEqual(R*(R*(R*v)), (R*R*R)*v)
-        self.assertEqual(R*(R*(R*t)), (R*R*R)*t)
-        self.assertEqual(R*(R*(R*w)), (R*R*R)*w)
-        self.assertEqual(R*R.Inverse(), Rotation.Identity())
-        self.assertEqual(R.Inverse()*R, Rotation.Identity())
-        self.assertEqual(R.Inverse()*v, R.Inverse(v))
-        (ra, rb, rc) = R.GetRPY()
+        self.assertAlmostEqual(dot(r.UnitX(), r.UnitX()), 1.0, 15)
+        self.assertEqual(dot(r.UnitY(), r.UnitY()), 1.0)
+        self.assertEqual(dot(r.UnitZ(), r.UnitZ()), 1.0)
+        self.assertAlmostEqual(dot(r.UnitX(), r.UnitY()), 0.0, 15)
+        self.assertAlmostEqual(dot(r.UnitX(), r.UnitZ()), 0.0, 15)
+        self.assertEqual(dot(r.UnitY(), r.UnitZ()), 0.0)
+        r2 = Rotation(r)
+        self.assertEqual(r, r2)
+        self.assertAlmostEqual((r*v).Norm(), v.Norm(), 14)
+        self.assertEqual(r.Inverse(r*v), v)
+        self.assertEqual(r.Inverse(r*t), t)
+        self.assertEqual(r.Inverse(r*w), w)
+        self.assertEqual(r*r.Inverse(v), v)
+        self.assertEqual(r*Rotation.Identity(), r)
+        self.assertEqual(Rotation.Identity()*r, r)
+        self.assertEqual(r*(r*(r*v)), (r*r*r)*v)
+        self.assertEqual(r*(r*(r*t)), (r*r*r)*t)
+        self.assertEqual(r*(r*(r*w)), (r*r*r)*w)
+        self.assertEqual(r*r.Inverse(), Rotation.Identity())
+        self.assertEqual(r.Inverse()*r, Rotation.Identity())
+        self.assertEqual(r.Inverse()*v, r.Inverse(v))
+        (ra, rb, rc) = r.GetRPY()
         self.assertEqual(ra, a)
         self.assertEqual(rb, b)
         self.assertEqual(rc, c)
-        R = Rotation.EulerZYX(a, b, c)
-        (ra, rb, rc) = R.GetEulerZYX()
+        r = Rotation.EulerZYX(a, b, c)
+        (ra, rb, rc) = r.GetEulerZYX()
         self.assertEqual(ra, a)
         self.assertEqual(rb, b)
         self.assertEqual(rc, c)
-        R = Rotation.EulerZYZ(a, b, c)
-        (ra, rb, rc) = R.GetEulerZYZ()
+        r = Rotation.EulerZYZ(a, b, c)
+        (ra, rb, rc) = r.GetEulerZYZ()
         self.assertEqual(ra, a)
         self.assertEqual(rb, b)
         self.assertAlmostEqual(rc, c, 15)
-        (angle, v2) = R.GetRotAngle()
-        R2 = Rotation.Rot(v2, angle)
-        self.assertEqual(R2, R)
-        R2 = Rotation.Rot(v2*1E20, angle)
-        self.assertEqual(R, R2)
+        (angle, v2) = r.GetRotAngle()
+        r2 = Rotation.Rot(v2, angle)
+        self.assertEqual(r2, r)
+        r2 = Rotation.Rot(v2*1E20, angle)
+        self.assertEqual(r, r2)
         v2 = Vector(6, 2, 4)
         self.assertAlmostEqual(v2.Norm(), sqrt(dot(v2, v2)), 14)
 
