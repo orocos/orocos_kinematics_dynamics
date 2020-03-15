@@ -111,7 +111,9 @@ class FramesTestFunctions(unittest.TestCase):
         v2 = Vector(4, 5, 6)
         t = Twist(v1, v2)
         self.assertEqual(t.vel, v1)
+        self.assertEqual(Twist(t).vel, v1)
         self.assertEqual(t.rot, v2)
+        self.assertEqual(Twist(t).rot, v2)
         # Test __getitem__
         for i in range(6):
             self.assertEqual(t[i], i+1)
@@ -178,7 +180,9 @@ class FramesTestFunctions(unittest.TestCase):
         v2 = Vector(4, 5, 6)
         w = Wrench(v1, v2)
         self.assertEqual(w.force, v1)
+        self.assertEqual(Wrench(w).force, v1)
         self.assertEqual(w.torque, v2)
+        self.assertEqual(Wrench(w).torque, v2)
         # Test __getitem__
         for i in range(6):
             self.assertEqual(w[i], i+1)
@@ -316,7 +320,9 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(f, f2)
 
         self.assertEqual(f.M, r)
+        self.assertEqual(Frame(f).M, r)
         self.assertEqual(f.p, v2)
+        self.assertEqual(Frame(f).p, v2)
 
         f = Frame(Rotation(1, 2, 3,
                            5, 6, 7,
