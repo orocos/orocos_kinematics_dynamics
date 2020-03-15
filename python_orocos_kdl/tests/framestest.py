@@ -154,6 +154,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(t2.vel, t.vel + t.rot*v)
         self.assertEqual(t2.rot, t.rot)
 
+        # No need to test the dot functions again for Wrench
         w = Wrench(v, v)
         dot_result = dot(t.vel, w.force) + dot(t.rot, w.torque)
         self.assertEqual(dot(t, w), dot_result)
@@ -162,10 +163,42 @@ class FramesTestFunctions(unittest.TestCase):
     def testWrench(self):
         w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
         self.testWrenchImpl(w)
-        w = Wrench.Zero()
+        w = Wrench()
         self.testWrenchImpl(w)
         w = Wrench(Vector(2, 1, 4), Vector(5, 3, 1))
         self.testWrenchImpl(w)
+
+        w = Wrench(Vector(1, 2, 3), Vector(1, 2, 3))
+        self.assertFalse(w == -w)  # Doesn't work for zero wrench
+        self.assertFalse(Equal(w, -w))  # Doesn't work for zero wrench
+        self.assertTrue(w != -w)  # Doesn't work for zero wrench
+        self.assertTrue(not Equal(w, -w))  # Doesn't work for zero wrench
+
+        v1 = Vector(1, 2, 3)
+        v2 = Vector(4, 5, 6)
+        w = Wrench(v1, v2)
+        self.assertEqual(w.force, v1)
+        self.assertEqual(w.torque, v2)
+        # Test __getitem__
+        for i in range(6):
+            self.assertEqual(w[i], i+1)
+        with self.assertRaises(IndexError):
+            _ = w[-1]
+        with self.assertRaises(IndexError):
+            _ = w[6]
+        # Test __setitem__
+        for i in range(6):
+            w[i] = i
+        for i in range(6):
+            self.assertEqual(w[i], i)
+        with self.assertRaises(IndexError):
+            w[-1] = 1
+        with self.assertRaises(IndexError):
+            w[6] = 1
+
+        SetToZero(w)
+        self.assertEqual(w, Wrench())
+        self.assertEqual(Wrench.Zero(), Wrench())
 
     def testWrenchImpl(self, w):
         self.assertEqual(2*w-w, w)
@@ -177,8 +210,13 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(2*w, w2)
         w2 -= w
         self.assertEqual(w, w2)
-        w.ReverseSign()
+        w2.ReverseSign()
         self.assertEqual(w, -w2)
+
+        v = Vector(1, 2, 3)
+        w2 = w.RefPoint(v)
+        self.assertEqual(w2.force, w.force)
+        self.assertEqual(w2.torque, w.torque + w.force*v)
 
     def testRotation(self):
         self.testRotationImpl(Vector(3, 4, 5), radians(10), radians(20), radians(30))
