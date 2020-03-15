@@ -305,23 +305,66 @@ class FramesTestFunctions(unittest.TestCase):
         v = Vector(3, 4, 5)
         w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
         t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
-        F = Frame(Rotation.EulerZYX(radians(10), radians(20), radians(-10)), Vector(4, -2, 1))
-        F2 = Frame(F)
-        self.assertEqual(F, F2)
-        self.assertEqual(F.Inverse(F*v), v)
-        self.assertEqual(F.Inverse(F*t), t)
-        self.assertEqual(F.Inverse(F*w), w)
-        self.assertEqual(F*F.Inverse(v), v)
-        self.assertEqual(F*F.Inverse(t), t)
-        self.assertEqual(F*F.Inverse(w), w)
-        self.assertEqual(F*Frame.Identity(), F)
-        self.assertEqual(Frame.Identity()*F, F)
-        self.assertEqual(F*(F*(F*v)), (F*F*F)*v)
-        self.assertEqual(F*(F*(F*t)), (F*F*F)*t)
-        self.assertEqual(F*(F*(F*w)), (F*F*F)*w)
-        self.assertEqual(F*F.Inverse(), Frame.Identity())
-        self.assertEqual(F.Inverse()*F, Frame.Identity())
-        self.assertEqual(F.Inverse()*v, F.Inverse(v))
+        f = Frame()
+        self.testFrameImpl(v, w, t, f)
+        r = Rotation.EulerZYX(radians(10), radians(20), radians(-10))
+        v2 = Vector(4, -2, 1)
+        f = Frame(r, v2)
+        self.testFrameImpl(v, w, t, f)
+
+        f2 = Frame(f)
+        self.assertEqual(f, f2)
+
+        self.assertEqual(f.M, r)
+        self.assertEqual(f.p, v2)
+
+        f = Frame(Rotation(1, 2, 3,
+                           5, 6, 7,
+                           9, 10, 11),
+                  Vector(4, 8, 12))
+        # Test __getitem__
+        for i in range(3):
+            for j in range(4):
+                self.assertEqual(f[i, j], 4*i+j+1)
+        with self.assertRaises(IndexError):
+            _ = f[-1, 0]
+        with self.assertRaises(IndexError):
+            _ = f[0, -1]
+        with self.assertRaises(IndexError):
+            _ = f[3, 3]
+        with self.assertRaises(IndexError):
+            _ = f[2, 4]
+        # Test __setitem__
+        for i in range(3):
+            for j in range(4):
+                f[i, j] = 4*i+j
+        for i in range(3):
+            for j in range(4):
+                self.assertEqual(f[i, j], 4*i+j)
+        with self.assertRaises(IndexError):
+            f[-1, 0] = 1
+        with self.assertRaises(IndexError):
+            f[0, -1] = 1
+        with self.assertRaises(IndexError):
+            f[3, 3] = 1
+        with self.assertRaises(IndexError):
+            f[2, 4] = 1
+
+    def testFrameImpl(self, v, w, t, f):
+        self.assertEqual(f.Inverse(f*v), v)
+        self.assertEqual(f.Inverse(f*t), t)
+        self.assertEqual(f.Inverse(f*w), w)
+        self.assertEqual(f*f.Inverse(v), v)
+        self.assertEqual(f*f.Inverse(t), t)
+        self.assertEqual(f*f.Inverse(w), w)
+        self.assertEqual(f*Frame.Identity(), f)
+        self.assertEqual(Frame.Identity()*f, f)
+        self.assertEqual(f*(f*(f*v)), (f*f*f)*v)
+        self.assertEqual(f*(f*(f*t)), (f*f*f)*t)
+        self.assertEqual(f*(f*(f*w)), (f*f*f)*w)
+        self.assertEqual(f*f.Inverse(), Frame.Identity())
+        self.assertEqual(f.Inverse()*f, Frame.Identity())
+        self.assertEqual(f.Inverse()*v, f.Inverse(v))
 
     def testPickle(self):
         import cPickle as pickle
