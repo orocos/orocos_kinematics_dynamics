@@ -31,12 +31,13 @@ class FramesTestFunctions(unittest.TestCase):
         self.testVectorImpl(v)
         v = Vector()
         self.testVectorImpl(v)
-        v = Vector.Zero()
-        self.testVectorImpl(v)
 
         v = Vector(3, 4, 5)
         self.assertFalse(v == -v)  # Doesn't work for zero vector
+        self.assertFalse(Equal(v, -v))  # Doesn't work for zero vector
         self.assertTrue(v != -v)  # Doesn't work for zero vector
+        self.assertTrue(not Equal(v, -v))  # Doesn't work for zero vector
+        # Test member get and set functions
         self.assertEqual(v.x(), 3)
         v.x(1)
         self.assertEqual(v, Vector(1, 4, 5))
@@ -46,21 +47,35 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(v.z(), 5)
         v.z(1)
         self.assertEqual(v, Vector(1, 1, 1))
+        # Test __getitem__
+        self.assertEqual(v[0], 1)
         self.assertEqual(v[1], 1)
         self.assertEqual(v[2], 1)
+        with self.assertRaises(IndexError):
+            _ = v[-1]
+        with self.assertRaises(IndexError):
+            _ = v[3]
+        # Test __setitem__
         v[0] = 3
         self.assertEqual(v[0], 3)
         v[1] = 4
         self.assertEqual(v[1], 4)
         v[2] = 5
         self.assertEqual(v[2], 5)
+        with self.assertRaises(IndexError):
+            v[-1] = 1
+        with self.assertRaises(IndexError):
+            v[3] = 1
 
         SetToZero(v)
         self.assertEqual(v, Vector(0, 0, 0))
+        self.assertEqual(Vector.Zero(), Vector(0, 0, 0))
 
     def testVectorImpl(self, v):
         self.assertTrue(v == v)
+        self.assertTrue(Equal(v, v))
         self.assertFalse(v != v)
+        self.assertFalse(not Equal(v, v))
         self.assertEqual(2*v-v, v)
         self.assertEqual(v*2-v, v)
         self.assertEqual(v+v+v-2*v, v)
@@ -72,6 +87,11 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(v, v2)
         v2.ReverseSign()
         self.assertEqual(v, -v2)
+        for v2 in [Vector(v), -Vector(v)]:
+            self.assertAlmostEqual(v2.Norm()**2, sum(map(lambda i: i * i, v2)), delta=1e-10)
+            self.assertEqual(v2.Norm(), v2.Normalize())  # Norm before Normalize, so taking norm of un-normalized vector
+
+        self.assertEqual(dot(v, v), sum(map(lambda i: i * i, v)))
 
     def testTwist(self):
         t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
