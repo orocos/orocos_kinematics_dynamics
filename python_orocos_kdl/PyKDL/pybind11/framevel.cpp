@@ -40,6 +40,12 @@ void init_framevel(pybind11::module &m)
     double_vel.def_readwrite("grad", &doubleVel::grad);
     double_vel.def("value", &doubleVel::value);
     double_vel.def("deriv", &doubleVel::deriv);
+    double_vel.def("__repr__", [](const doubleVel &d)
+    {
+        std::ostringstream oss;
+        oss << d;
+        return oss.str();
+    });
 
     m.def("diff", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::diff,
           py::arg("a"), py::arg("b"), py::arg("dt")=1.0);
@@ -61,6 +67,12 @@ void init_framevel(pybind11::module &m)
     vector_vel.def(py::init<const VectorVel&>());
     vector_vel.def("value", &VectorVel::value);
     vector_vel.def("deriv", &VectorVel::deriv);
+    vector_vel.def("__repr__", [](const VectorVel &vv)
+    {
+        std::ostringstream oss;
+        oss << vv;
+        return oss.str();
+    });
     vector_vel.def_static("Zero", &VectorVel::Zero);
     vector_vel.def("ReverseSign", &VectorVel::ReverseSign);
     vector_vel.def("Norm", &VectorVel::Norm);
@@ -128,6 +140,12 @@ void init_framevel(pybind11::module &m)
     twist_vel.def(py::init<const Twist&>());
     twist_vel.def("value", &TwistVel::value);
     twist_vel.def("deriv", &TwistVel::deriv);
+    twist_vel.def("__repr__", [](const TwistVel &tv)
+    {
+        std::ostringstream oss;
+        oss << tv;
+        return oss.str();
+    });
     twist_vel.def_static("Zero", &TwistVel::Zero);
     twist_vel.def("ReverseSign", &TwistVel::ReverseSign);
     twist_vel.def("RefPoint", &TwistVel::RefPoint);
@@ -187,6 +205,12 @@ void init_framevel(pybind11::module &m)
     rotation_vel.def(py::init<const RotationVel&>());
     rotation_vel.def("value", &RotationVel::value);
     rotation_vel.def("deriv", &RotationVel::deriv);
+    rotation_vel.def("__repr__", [](const RotationVel &rv)
+    {
+        std::ostringstream oss;
+        oss << rv;
+        return oss.str();
+    });
     rotation_vel.def("UnitX", &RotationVel::UnitX);
     rotation_vel.def("UnitY", &RotationVel::UnitY);
     rotation_vel.def("UnitZ", &RotationVel::UnitZ);
@@ -250,6 +274,12 @@ void init_framevel(pybind11::module &m)
     frame_vel.def(py::init<const FrameVel&>());
     frame_vel.def("value", &FrameVel::value);
     frame_vel.def("deriv", &FrameVel::deriv);
+    frame_vel.def("__repr__", [](const FrameVel &fv)
+    {
+        std::ostringstream oss;
+        oss << fv;
+        return oss.str();
+    });
     frame_vel.def_static("Identity", &FrameVel::Identity);
     frame_vel.def("Inverse", (FrameVel (FrameVel::*)() const) &FrameVel::Inverse);
     frame_vel.def("Inverse", (VectorVel (FrameVel::*)(const VectorVel&) const) &FrameVel::Inverse);
