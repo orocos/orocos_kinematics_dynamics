@@ -154,7 +154,7 @@ class KinfamTestTree(unittest.TestCase):
                                      Frame(Vector(0.0, 0.0, 0.0))), "bar")
 
     def testTreeGetChainMemLeak(self):
-        """ test for the memory leak in Tree.getChain described in issue #211 """
+        # test for the memory leak in Tree.getChain described in issue #211
         process = psutil.Process()
         self.tree.getChain("foo", "bar")
         gc.collect()
