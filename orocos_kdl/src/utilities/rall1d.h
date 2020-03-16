@@ -471,6 +471,22 @@ INLINE  bool Equal(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x,double eps=epsi
     return (Equal(x.t,y.t,eps)&&Equal(x.grad,y.grad,eps));
 }
 
+template <class T,class V,class S>
+INLINE  bool operator==(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x)
+{
+#ifdef KDL_USE_EQUAL
+    return Equal(y, x);
+#else
+    return (x.t == y.t && x.grad == y.grad);
+#endif
+}
+
+template <class T,class V,class S>
+INLINE  bool operator!=(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x)
+{
+    return !operator==(y, x);
+}
+
 }
 
 

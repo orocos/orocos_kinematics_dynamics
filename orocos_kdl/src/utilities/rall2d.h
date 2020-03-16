@@ -531,6 +531,24 @@ INLINE  bool Equal(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x,double eps=epsi
             );
 }
 
+template <class T,class V,class S>
+INLINE  bool operator==(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
+{
+#ifdef KDL_USE_EQUAL
+    return Equal(y, x);
+#else
+    return (x.t == y.t &&
+            x.d == y.d &&
+            x.dd == y.dd);
+#endif
+
+}
+
+template <class T,class V,class S>
+INLINE  bool operator!=(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
+{
+    return !operator==(y, x);
+}
 
 }
 
