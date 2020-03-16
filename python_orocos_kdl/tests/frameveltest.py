@@ -106,10 +106,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         with open('/tmp/pickle_test_kdl_framevel', 'r') as f:
             data1 = pickle.load(f)
 
-        self.assertTrue(Equal(data['vv'], data1['vv']))
-        self.assertTrue(Equal(data['rv'], data1['rv']))
-        self.assertTrue(Equal(data['fv'], data1['fv']))
-        self.assertTrue(Equal(data['tv'], data1['tv']))
+        self.assertEqual(data, data1)
 
 
 def suite():
