@@ -81,8 +81,6 @@ if(KDL_USE_NEW_TREE_INTERFACE)
     set(KDL_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
 
-INCLUDE (${PROJ_SOURCE_DIR}/cmake/DependentOption.cmake)
-
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
 IF( ENABLE_TESTS )
   # If not in standard paths, set CMAKE_xxx_PATH's in environment, eg.
