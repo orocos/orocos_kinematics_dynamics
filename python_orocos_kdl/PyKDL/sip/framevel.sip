@@ -24,6 +24,7 @@ class doubleVel
 
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
+#include <kdl/framevel_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -31,6 +32,13 @@ public:
     double grad;
     double value();
     double deriv();
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
 };
 
 doubleVel diff(const doubleVel& a,const doubleVel& b,double dt=1.0);
@@ -43,6 +51,7 @@ class VectorVel
 {
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
+#include <kdl/framevel_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -54,6 +63,14 @@ public:
     VectorVel(const Vector& _p);
     Vector value() const;
     Vector deriv() const;
+
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
 
     VectorVel& operator += (const VectorVel& arg);
     VectorVel& operator -= (const VectorVel& arg);
@@ -100,6 +117,7 @@ class RotationVel
 {
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
+#include <kdl/framevel_io.hpp>
 using namespace KDL;
 %End
 
@@ -112,6 +130,14 @@ public:
 
     Rotation value() const;
     Vector   deriv() const;
+
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
 
 
     VectorVel UnitX() const;
@@ -159,6 +185,7 @@ class FrameVel
 
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
+#include <kdl/framevel_io.hpp>
 using namespace KDL;
 %End
 
@@ -173,6 +200,14 @@ public:
 
     Frame value() const;
     Twist deriv() const;
+
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
 
 
     static FrameVel Identity();
@@ -207,6 +242,7 @@ class TwistVel
 {
 %TypeHeaderCode
 #include <kdl/framevel.hpp>
+#include <kdl/framevel_io.hpp>
 using namespace KDL;
 %End
 
@@ -221,6 +257,15 @@ public:
 
     Twist value() const;
     Twist deriv() const;
+
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
+
     TwistVel& operator-=(const TwistVel& arg);
     TwistVel& operator+=(const TwistVel& arg);
 
