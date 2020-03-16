@@ -26,6 +26,11 @@ from math import *
 
 
 class FrameVelTestFunctions(unittest.TestCase):
+    def testdoubleVel(self):
+        d = doubleVel()
+        self.assertEqual(d.t, d.value())
+        self.assertEqual(d.grad, d.deriv())
+
     def testVectorVel(self):
         v = VectorVel(Vector(3, -4, 5), Vector(6, 3, -5))
         vt = Vector(-4, -6, -8)
@@ -114,6 +119,7 @@ class FrameVelTestFunctions(unittest.TestCase):
 
 def suite():
     suite = unittest.TestSuite()
+    suite.addTest(FrameVelTestFunctions('testdoubleVel'))
     suite.addTest(FrameVelTestFunctions('testVectorVel'))
     suite.addTest(FrameVelTestFunctions('testRotationVel'))
     suite.addTest(FrameVelTestFunctions('testFrameVel'))
