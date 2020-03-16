@@ -43,9 +43,12 @@ public:
 
 doubleVel diff(const doubleVel& a,const doubleVel& b,double dt=1.0);
 doubleVel addDelta(const doubleVel& a,const doubleVel&da,double dt=1.0);
+
 bool Equal(const doubleVel& r1,const doubleVel& r2,double eps=epsilon);
-//bool Equal(const double& r1,const doubleVel& r2,double eps=epsilon);
-//bool Equal(const doubleVel& r1,const double& r2,double eps=epsilon);
+
+bool operator==(const doubleVel& r1,const doubleVel& r2);
+bool operator!=(const doubleVel& r1,const doubleVel& r2);
+
 
 class VectorVel
 {
@@ -108,10 +111,18 @@ bool Equal(const VectorVel& r1,const VectorVel& r2,double eps=epsilon);
 bool Equal(const Vector& r1,const VectorVel& r2,double eps=epsilon);
 bool Equal(const VectorVel& r1,const Vector& r2,double eps=epsilon);
 
+bool operator==(const VectorVel& r1,const VectorVel& r2);
+bool operator!=(const VectorVel& r1,const VectorVel& r2);
+bool operator==(const Vector& r1,const VectorVel& r2);
+bool operator!=(const Vector& r1,const VectorVel& r2);
+bool operator==(const VectorVel& r1,const Vector& r2);
+bool operator!=(const VectorVel& r1,const Vector& r2);
+
 VectorVel operator - (const VectorVel& r);
 doubleVel dot(const VectorVel& lhs,const VectorVel& rhs);
 doubleVel dot(const VectorVel& lhs,const Vector& rhs);
 doubleVel dot(const Vector& lhs,const VectorVel& rhs);
+
 
 class RotationVel
 {
@@ -177,7 +188,12 @@ bool Equal(const RotationVel& r1,const RotationVel& r2,double eps=epsilon);
 bool Equal(const Rotation& r1,const RotationVel& r2,double eps=epsilon);
 bool Equal(const RotationVel& r1,const Rotation& r2,double eps=epsilon);
 
-
+bool operator==(const RotationVel& r1,const RotationVel& r2);
+bool operator!=(const RotationVel& r1,const RotationVel& r2);
+bool operator==(const Rotation& r1,const RotationVel& r2);
+bool operator!=(const Rotation& r1,const RotationVel& r2);
+bool operator==(const RotationVel& r1,const Rotation& r2);
+bool operator!=(const RotationVel& r1,const Rotation& r2);
 
 
 class FrameVel
@@ -238,6 +254,14 @@ bool Equal(const FrameVel& r1,const FrameVel& r2,double eps=epsilon);
 bool Equal(const Frame& r1,const FrameVel& r2,double eps=epsilon);
 bool Equal(const FrameVel& r1,const Frame& r2,double eps=epsilon);
 
+bool operator==(const FrameVel& r1,const FrameVel& r2);
+bool operator!=(const FrameVel& r1,const FrameVel& r2);
+bool operator==(const Frame& r1,const FrameVel& r2);
+bool operator!=(const Frame& r1,const FrameVel& r2);
+bool operator==(const FrameVel& r1,const Frame& r2);
+bool operator!=(const FrameVel& r1,const Frame& r2);
+
+
 class TwistVel
 {
 %TypeHeaderCode
@@ -297,6 +321,13 @@ void SetToZero(TwistVel& v);
 bool Equal(const TwistVel& a,const TwistVel& b,double eps=epsilon);
 bool Equal(const Twist& a,const TwistVel& b,double eps=epsilon);
 bool Equal(const TwistVel& a,const Twist& b,double eps=epsilon);
+
+bool operator==(const TwistVel& r1,const TwistVel& r2);
+bool operator!=(const TwistVel& r1,const TwistVel& r2);
+bool operator==(const Twist& r1,const TwistVel& r2);
+bool operator!=(const Twist& r1,const TwistVel& r2);
+bool operator==(const TwistVel& r1,const Twist& r2);
+bool operator!=(const TwistVel& r1,const Twist& r2);
 
 
 VectorVel diff(const VectorVel& a,const VectorVel& b,double dt=1.0);
