@@ -27,7 +27,6 @@ class doubleVel
 using namespace KDL;
 %End
 public:
-    typedef Rall1d<double> doubleVel;
     double t;
     double grad;
     double value();
