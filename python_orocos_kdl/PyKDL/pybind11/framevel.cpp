@@ -36,6 +36,7 @@ void init_framevel(pybind11::module &m)
     // --------------------
     py::class_<doubleVel > double_vel(m, "doubleVel");
     double_vel.def(py::init<>());
+    double_vel.def(py::init<const doubleVel&>());
     double_vel.def_readwrite("t", &doubleVel::t);
     double_vel.def_readwrite("grad", &doubleVel::grad);
     double_vel.def("value", &doubleVel::value);
@@ -138,6 +139,7 @@ void init_framevel(pybind11::module &m)
     twist_vel.def(py::init<const VectorVel&, const VectorVel&>());
     twist_vel.def(py::init<const Twist&, const Twist&>());
     twist_vel.def(py::init<const Twist&>());
+    twist_vel.def(py::init<const TwistVel&>());
     twist_vel.def("value", &TwistVel::value);
     twist_vel.def("deriv", &TwistVel::deriv);
     twist_vel.def("__repr__", [](const TwistVel &tv)
