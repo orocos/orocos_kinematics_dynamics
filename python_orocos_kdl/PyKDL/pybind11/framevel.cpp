@@ -48,6 +48,9 @@ void init_framevel(pybind11::module &m)
         return oss.str();
     });
 
+    double_vel.def(py::self == py::self);
+    double_vel.def(py::self != py::self);
+
     m.def("diff", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::diff,
           py::arg("a"), py::arg("b"), py::arg("dt")=1.0);
     m.def("addDelta", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::addDelta,
@@ -97,6 +100,13 @@ void init_framevel(pybind11::module &m)
 
     vector_vel.def(py::self / double());
     vector_vel.def(py::self / doubleVel());
+
+    vector_vel.def(py::self == py::self);
+    vector_vel.def(py::self != py::self);
+    vector_vel.def(Vector() == py::self);
+    vector_vel.def(Vector() != py::self);
+    vector_vel.def(py::self == Vector());
+    vector_vel.def(py::self != Vector());
     vector_vel.def("__neg__", [](const VectorVel &a)
     {
         return operator-(a);
@@ -166,6 +176,13 @@ void init_framevel(pybind11::module &m)
 
     twist_vel.def(py::self + py::self);
     twist_vel.def(py::self - py::self);
+
+    twist_vel.def(py::self == py::self);
+    twist_vel.def(py::self != py::self);
+    twist_vel.def(Twist() == py::self);
+    twist_vel.def(Twist() != py::self);
+    twist_vel.def(py::self == Twist());
+    twist_vel.def(py::self != Twist());
     twist_vel.def("__neg__", [](const TwistVel &a)
     {
         return operator-(a);
@@ -239,6 +256,13 @@ void init_framevel(pybind11::module &m)
     rotation_vel.def(py::self * py::self);
     rotation_vel.def(Rotation() * py::self);
     rotation_vel.def(py::self * Rotation());
+
+    rotation_vel.def(py::self == py::self);
+    rotation_vel.def(py::self != py::self);
+    rotation_vel.def(Rotation() == py::self);
+    rotation_vel.def(Rotation() != py::self);
+    rotation_vel.def(py::self == Rotation());
+    rotation_vel.def(py::self != Rotation());
     rotation_vel.def(py::pickle(
             [](const RotationVel &rv)
             { // __getstate__
@@ -297,6 +321,13 @@ void init_framevel(pybind11::module &m)
     frame_vel.def(py::self * py::self);
     frame_vel.def(Frame() * py::self);
     frame_vel.def(py::self * Frame());
+
+    frame_vel.def(py::self == py::self);
+    frame_vel.def(py::self != py::self);
+    frame_vel.def(Frame() == py::self);
+    frame_vel.def(Frame() != py::self);
+    frame_vel.def(py::self == Frame());
+    frame_vel.def(py::self != Frame());
     frame_vel.def(py::pickle(
             [](const FrameVel &fv)
             { // __getstate__
