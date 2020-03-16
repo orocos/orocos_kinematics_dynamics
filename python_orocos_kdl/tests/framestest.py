@@ -373,7 +373,11 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(f.Inverse()*v, f.Inverse(v))
 
     def testPickle(self):
-        import cPickle as pickle
+        import sys
+        if sys.version_info < (3, 0):
+            import cPickle as pickle
+        else:
+            import pickle
         data = dict()
         data['v'] = Vector(1, 2, 3)
         data['rot'] = Rotation().EulerZYZ(1, 2, 3)

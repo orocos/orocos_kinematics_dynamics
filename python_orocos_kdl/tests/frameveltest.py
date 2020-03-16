@@ -89,11 +89,14 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(Equal(F.Inverse()*vt, F.Inverse(vt)))
 
     def testPickle(self):
-        rot = Rotation.RotX(1.3)
-        import cPickle as pickle
+        import sys
+        if sys.version_info < (3, 0):
+            import cPickle as pickle
+        else:
+            import pickle
         data = {}
         data['vv'] = VectorVel(Vector(1, 2, 3), Vector(4, 5, 6))
-        data['rv'] = RotationVel(rot, Vector(4.1, 5.1, 6.1))
+        data['rv'] = RotationVel(Rotation.RotX(1.3), Vector(4.1, 5.1, 6.1))
         data['fv'] = FrameVel(data['rv'], data['vv'])
         data['tv'] = TwistVel(data['vv'], data['vv'])
 
