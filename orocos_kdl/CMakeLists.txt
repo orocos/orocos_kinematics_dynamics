@@ -47,14 +47,14 @@ SET( KDL_CFLAGS "")
 
 find_package(Eigen 3 QUIET)
 if(NOT Eigen_FOUND)
-  include(${PROJ_SOURCE_DIR}/config/FindEigen3.cmake)
+  include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
   set(Eigen_INCLUDE_DIR "${EIGEN3_INCLUDE_DIR}")
 endif()
 include_directories(${Eigen_INCLUDE_DIR})
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I${Eigen_INCLUDE_DIR}")
 
 # Check the platform STL containers capabilities
-include(config/CheckSTLContainers.cmake)
+include(cmake/CheckSTLContainers.cmake)
 CHECK_STL_CONTAINERS()
 
 # Set the default option appropriately
@@ -75,7 +75,7 @@ if(KDL_USE_NEW_TREE_INTERFACE)
     set(KDL_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
 
-INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
+INCLUDE (${PROJ_SOURCE_DIR}/cmake/DependentOption.cmake)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
 IF( ENABLE_TESTS )
