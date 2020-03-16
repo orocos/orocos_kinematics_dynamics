@@ -381,13 +381,11 @@ class FramesTestFunctions(unittest.TestCase):
         data['tw'] = Twist(data['v'], Vector(4, 5, 6))
         data['wr'] = Wrench(Vector(0.1, 0.2, 0.3), data['v'])
 
-        f = open('/tmp/pickle_test', 'w')
-        pickle.dump(data, f, 2)
-        f.close()
+        with open('/tmp/pickle_test', 'w') as f:
+            pickle.dump(data, f, 2)
 
-        f = open('/tmp/pickle_test', 'r')
-        data1 = pickle.load(f)
-        f.close()
+        with open('/tmp/pickle_test', 'r') as f:
+            data1 = pickle.load(f)
 
         self.assertEqual(data, data1)
 
