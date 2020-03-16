@@ -20,9 +20,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-import unittest
+from math import radians
 from PyKDL import *
-from math import *
+import sys
+import unittest
 
 
 class FrameVelTestFunctions(unittest.TestCase):
@@ -89,7 +90,6 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(Equal(F.Inverse()*vt, F.Inverse(vt)))
 
     def testPickle(self):
-        import sys
         if sys.version_info < (3, 0):
             import cPickle as pickle
         else:
@@ -124,4 +124,9 @@ def suite():
 
 if __name__ == '__main__':
     suite = suite()
-    unittest.TextTestRunner(verbosity=3).run(suite)
+    result = unittest.TextTestRunner(verbosity=3).run(suite)
+
+    if result.wasSuccessful():
+        sys.exit(0)
+    else:
+        sys.exit(1)

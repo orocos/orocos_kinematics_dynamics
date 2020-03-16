@@ -24,6 +24,7 @@ import gc
 import psutil
 from PyKDL import *
 import random
+import sys
 import unittest
 
 
@@ -180,4 +181,9 @@ def suite():
 
 if __name__ == '__main__':
     suite = suite()
-    unittest.TextTestRunner(verbosity=3).run(suite)
+    result = unittest.TextTestRunner(verbosity=3).run(suite)
+
+    if result.wasSuccessful():
+        sys.exit(0)
+    else:
+        sys.exit(1)
