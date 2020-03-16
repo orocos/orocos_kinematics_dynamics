@@ -1252,18 +1252,8 @@ IMETHOD Twist addDelta(const Twist& a,const Twist&da,double dt=1);
 IMETHOD Wrench addDelta(const Wrench& a,const Wrench&da,double dt=1);
 
 #ifdef KDL_INLINE
-//    #include "vector.inl"
-//   #include "wrench.inl"
-    //#include "rotation.inl"
-    //#include "frame.inl"
-    //#include "twist.inl"
-    //#include "vector2.inl"
-    //#include "rotation2.inl"
-    //#include "frame2.inl"
 #include "frames.inl"
 #endif
-
-
 
 }
 
