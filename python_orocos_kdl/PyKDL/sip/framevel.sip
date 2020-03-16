@@ -30,6 +30,8 @@ public:
     typedef Rall1d<double> doubleVel;
     double t;
     double grad;
+    double value();
+    double deriv();
 };
 
 doubleVel diff(const doubleVel& a,const doubleVel& b,double dt=1.0);

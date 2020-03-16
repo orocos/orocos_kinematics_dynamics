@@ -38,6 +38,8 @@ void init_framevel(pybind11::module &m)
     double_vel.def(py::init<>());
     double_vel.def_readwrite("t", &doubleVel::t);
     double_vel.def_readwrite("grad", &doubleVel::grad);
+    double_vel.def("value", &doubleVel::value);
+    double_vel.def("deriv", &doubleVel::deriv);
 
     m.def("diff", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::diff,
           py::arg("a"), py::arg("b"), py::arg("dt")=1.0);
