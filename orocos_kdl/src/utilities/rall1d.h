@@ -56,7 +56,7 @@ class Rall1d
         T t;        //!< value
         V grad;     //!< gradient
     public :
-        INLINE Rall1d() {}
+        INLINE Rall1d():t(),grad() {};
 
         T value() const {
             return t;
