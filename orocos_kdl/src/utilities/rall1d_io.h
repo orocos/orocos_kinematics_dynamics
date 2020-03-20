@@ -27,7 +27,7 @@ namespace KDL {
 template <class T,class V,class S>
 inline std::ostream& operator << (std::ostream& os,const Rall1d<T,V,S>& r)
             {
-            os << "Rall1d<" << typeid(T).name() << ", "<< typeid(V).name() << ", " << typeid(S).name() << ", " <<"(" << r.t <<"," << r.grad <<")";
+            os << "Rall1d<" << typeid(T).name() << ", "<< typeid(V).name() << ", " << typeid(S).name() << ">(" << r.t <<"," << r.grad <<")";
             return os;
             }
 
