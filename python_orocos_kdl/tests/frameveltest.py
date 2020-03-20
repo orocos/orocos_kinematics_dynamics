@@ -89,6 +89,63 @@ class FrameVelTestFunctions(unittest.TestCase):
         v2 = VectorVel(Vector(-5, -6, -3), Vector(3, 4, 5))
         self.assertTrue(Equal(v*v2, -v2*v))
 
+    def testTwistVel(self):
+        t = TwistVel()
+        self.testTwistVelImpl(t)
+        v1 = Vector(1, 2, 3)
+        v2 = Vector(4, 5, 6)
+        vv1 = VectorVel(v1, v2)
+        vv2 = VectorVel(v2, v1)
+        t = TwistVel(vv1, vv2)
+        self.testTwistVelImpl(t)
+
+        # Alternative constructor
+        tw1 = Twist(v1, v2)
+        tw2 = Twist(v2, v1)
+        t2 = TwistVel(tw1, tw2)
+        self.assertEqual(t, t2)
+
+        # Members
+        self.assertEqual(t.vel, vv1)
+        self.assertEqual(t.rot, vv2)
+        self.assertEqual(t2.value(), tw1)
+        self.assertEqual(t2.deriv(), tw2)
+        self.assertEqual(t2.GetTwist(), tw1)
+        self.assertEqual(t2.GetTwistDot(), tw2)
+
+        # Equality
+        self.assertEqual(TwistVel(t).vel, t.vel)
+        self.assertEqual(TwistVel(t).rot, t.rot)
+        self.assertFalse(t == -t)  # Doesn't work for zero TwistVel
+        self.assertFalse(Equal(t, -t))  # Doesn't work for zero TwistVel
+        self.assertTrue(t != -t)  # Doesn't work for zero TwistVel
+        self.assertTrue(not Equal(t, -t))  # Doesn't work for zero TwistVel
+
+        t = TwistVel(VectorVel(v1), VectorVel(v2))
+        t2 = Twist(v1, v2)
+        self.assertEqual(t, t2)
+        self.assertEqual(t2, t)
+
+        # Zero
+        SetToZero(t)
+        self.assertEqual(t, TwistVel())
+        self.assertEqual(TwistVel.Zero(), TwistVel())
+
+    def testTwistVelImpl(self, t):
+        self.assertTrue(Equal(2*t-t, t))
+        self.assertTrue(Equal(t*2-t, t))
+        self.assertTrue(Equal(t+t+t-2*t, t))
+        t2 = TwistVel(t)
+        self.assertTrue(Equal(t, t2))
+        t2 += t
+        self.assertTrue(Equal(2*t, t2))
+        t2 -= t
+        self.assertTrue(Equal(t, t2))
+        t2.ReverseSign()
+        self.assertTrue(t, -t2)
+        self.assertTrue(t*doubleVel(), doubleVel()*t)
+        self.assertTrue(t*doubleVel(5), doubleVel(5)*t)
+
     def testRotationVel(self):
         v = VectorVel(Vector(9, 4, -2), Vector(-5, 6, -2))
         vt = Vector(2, 3, 4)
@@ -152,6 +209,7 @@ def suite():
     suite = unittest.TestSuite()
     suite.addTest(FrameVelTestFunctions('testdoubleVel'))
     suite.addTest(FrameVelTestFunctions('testVectorVel'))
+    suite.addTest(FrameVelTestFunctions('testTwistVel'))
     suite.addTest(FrameVelTestFunctions('testRotationVel'))
     suite.addTest(FrameVelTestFunctions('testFrameVel'))
     suite.addTest(FrameVelTestFunctions('testPickle'))
