@@ -29,12 +29,46 @@ import unittest
 class FrameVelTestFunctions(unittest.TestCase):
     def testdoubleVel(self):
         d = doubleVel()
-        self.assertEqual(d.t, d.value())
-        self.assertEqual(d.grad, d.deriv())
+        self.assertEqual(doubleVel(d), d)
+        self.assertEqual(d.t, 0)
+        self.assertEqual(d.grad, 0)
+        self.assertEqual(d.value(), 0)
+        self.assertEqual(d.deriv(), 0)
 
     def testVectorVel(self):
-        v = VectorVel(Vector(3, -4, 5), Vector(6, 3, -5))
+        v = VectorVel()
+        vt = Vector()
+        self.testVectorVelImpl(v, vt)
         vt = Vector(-4, -6, -8)
+        self.testVectorVelImpl(v, vt)
+        v1 = Vector(3, -4, 5)
+        v2 = Vector(6, 3, -5)
+        v = VectorVel(v1, v2)
+        self.testVectorVelImpl(v, vt)
+
+        self.assertEqual(VectorVel(v).p, v.p)
+        self.assertEqual(VectorVel(v).v, v.v)
+        self.assertFalse(v == -v)  # Doesn't work for zero VectorVel
+        self.assertFalse(Equal(v, -v))  # Doesn't work for zero VectorVel
+        self.assertTrue(v != -v)  # Doesn't work for zero VectorVel
+        self.assertTrue(not Equal(v, -v))  # Doesn't work for zero VectorVel
+
+        v = VectorVel(v1)
+        self.assertEqual(v, v1)
+        self.assertEqual(v1, v)
+
+        v = VectorVel(v1, v2)
+        SetToZero(v)
+        self.assertEqual(v, VectorVel())
+        self.assertEqual(VectorVel.Zero(), VectorVel())
+
+        v = VectorVel(v1, v2)
+        self.assertEqual(dot(v, v), doubleVel(dot(v.p, v.p), dot(v.p, v.v)+dot(v.v, v.p)))
+        dot_result = doubleVel(dot(v.p, v1), dot(v.v, v1))
+        self.assertEqual(dot(v, v1), dot_result)
+        self.assertEqual(dot(v1, v), dot_result)
+
+    def testVectorVelImpl(self, v, vt):
         self.assertTrue(Equal(2*v-v, v))
         self.assertTrue(Equal(v*2-v, v))
         self.assertTrue(Equal(v+v+v-2*v, v))
