@@ -110,7 +110,7 @@ VectorVel operator*(const Rotation& R,const VectorVel& x);
 
 VectorVel operator / (const VectorVel& r1,double r2);
 VectorVel operator / (const VectorVel& r2,const doubleVel& r1);
-
+void SetToZero(VectorVel& v);
 bool Equal(const VectorVel& r1,const VectorVel& r2,double eps=epsilon);
 bool Equal(const Vector& r1,const VectorVel& r2,double eps=epsilon);
 bool Equal(const VectorVel& r1,const Vector& r2,double eps=epsilon);
