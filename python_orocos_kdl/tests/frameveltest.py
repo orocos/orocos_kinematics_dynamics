@@ -46,11 +46,13 @@ class FrameVelTestFunctions(unittest.TestCase):
         v = VectorVel(v1, v2)
         self.testVectorVelImpl(v, vt)
 
+        # Members
         self.assertEqual(v.p, v1)
         self.assertEqual(v.v, v2)
         self.assertEqual(v.value(), v1)
         self.assertEqual(v.deriv(), v2)
 
+        # Equality
         self.assertEqual(VectorVel(v).p, v.p)
         self.assertEqual(VectorVel(v).v, v.v)
         self.assertFalse(v == -v)  # Doesn't work for zero VectorVel
@@ -62,11 +64,13 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(v, v1)
         self.assertEqual(v1, v)
 
+        # Zero
         v = VectorVel(v1, v2)
         SetToZero(v)
         self.assertEqual(v, VectorVel())
         self.assertEqual(VectorVel.Zero(), VectorVel())
 
+        # dot functions
         v = VectorVel(v1, v2)
         self.assertEqual(dot(v, v), doubleVel(dot(v.p, v.p), dot(v.p, v.v)+dot(v.v, v.p)))
         dot_result = doubleVel(dot(v.p, v1), dot(v.v, v1))

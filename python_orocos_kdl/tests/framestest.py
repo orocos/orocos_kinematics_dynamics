@@ -33,11 +33,13 @@ class FramesTestFunctions(unittest.TestCase):
         v = Vector()
         self.testVectorImpl(v)
 
+        # Equality
         v = Vector(3, 4, 5)
         self.assertFalse(v == -v)  # Doesn't work for zero vector
         self.assertFalse(Equal(v, -v))  # Doesn't work for zero vector
         self.assertTrue(v != -v)  # Doesn't work for zero vector
         self.assertTrue(not Equal(v, -v))  # Doesn't work for zero vector
+
         # Test member get and set functions
         self.assertEqual(v.x(), 3)
         v.x(1)
@@ -48,7 +50,8 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(v.z(), 5)
         v.z(1)
         self.assertEqual(v, Vector(1, 1, 1))
-        # Test __getitem__
+
+        # __getitem__
         self.assertEqual(v[0], 1)
         self.assertEqual(v[1], 1)
         self.assertEqual(v[2], 1)
@@ -56,7 +59,8 @@ class FramesTestFunctions(unittest.TestCase):
             _ = v[-1]
         with self.assertRaises(IndexError):
             _ = v[3]
-        # Test __setitem__
+
+        # __setitem__
         v[0] = 3
         self.assertEqual(v[0], 3)
         v[1] = 4
@@ -68,6 +72,7 @@ class FramesTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             v[3] = 1
 
+        # Zero
         SetToZero(v)
         self.assertEqual(v, Vector(0, 0, 0))
         self.assertEqual(Vector.Zero(), Vector(0, 0, 0))
@@ -102,12 +107,14 @@ class FramesTestFunctions(unittest.TestCase):
         t = Twist(Vector(0, -9, -3), Vector(1, -2, -4))
         self.testTwistImpl(t)
 
+        # Equality
         t = Twist(Vector(1, 2, 3), Vector(1, 2, 3))
         self.assertFalse(t == -t)  # Doesn't work for zero twist
         self.assertFalse(Equal(t, -t))  # Doesn't work for zero twist
         self.assertTrue(t != -t)  # Doesn't work for zero twist
         self.assertTrue(not Equal(t, -t))  # Doesn't work for zero twist
 
+        # Members
         v1 = Vector(1, 2, 3)
         v2 = Vector(4, 5, 6)
         t = Twist(v1, v2)
@@ -115,14 +122,16 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(t.rot, v2)
         self.assertEqual(Twist(t).vel, t.vel)
         self.assertEqual(Twist(t).rot, t.rot)
-        # Test __getitem__
+
+        # __getitem__
         for i in range(6):
             self.assertEqual(t[i], i+1)
         with self.assertRaises(IndexError):
             _ = t[-1]
         with self.assertRaises(IndexError):
             _ = t[6]
-        # Test __setitem__
+
+        # __setitem__
         for i in range(6):
             t[i] = i
         for i in range(6):
@@ -132,6 +141,7 @@ class FramesTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             t[6] = 1
 
+        # Zero
         SetToZero(t)
         self.assertEqual(t, Twist())
         self.assertEqual(Twist.Zero(), Twist())
@@ -171,12 +181,14 @@ class FramesTestFunctions(unittest.TestCase):
         w = Wrench(Vector(2, 1, 4), Vector(5, 3, 1))
         self.testWrenchImpl(w)
 
+        # Equality
         w = Wrench(Vector(1, 2, 3), Vector(1, 2, 3))
         self.assertFalse(w == -w)  # Doesn't work for zero wrench
         self.assertFalse(Equal(w, -w))  # Doesn't work for zero wrench
         self.assertTrue(w != -w)  # Doesn't work for zero wrench
         self.assertTrue(not Equal(w, -w))  # Doesn't work for zero wrench
 
+        # Members
         v1 = Vector(1, 2, 3)
         v2 = Vector(4, 5, 6)
         w = Wrench(v1, v2)
@@ -184,14 +196,16 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(w.torque, v2)
         self.assertEqual(Wrench(w).force, w.force)
         self.assertEqual(Wrench(w).torque, w.torque)
-        # Test __getitem__
+
+        # __getitem__
         for i in range(6):
             self.assertEqual(w[i], i+1)
         with self.assertRaises(IndexError):
             _ = w[-1]
         with self.assertRaises(IndexError):
             _ = w[6]
-        # Test __setitem__
+
+        # __setitem__
         for i in range(6):
             w[i] = i
         for i in range(6):
@@ -201,6 +215,7 @@ class FramesTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             w[6] = 1
 
+        # Zero
         SetToZero(w)
         self.assertEqual(w, Wrench())
         self.assertEqual(Wrench.Zero(), Wrench())
@@ -230,7 +245,8 @@ class FramesTestFunctions(unittest.TestCase):
         self.testRotationImpl(Vector(), radians(0), radians(0), radians(0))
 
         r = Rotation(*range(1, 10))
-        # Test __getitem__
+
+        # __getitem__
         for i in range(3):
             for j in range(3):
                 self.assertEqual(r[i, j], 3*i+j+1)
@@ -242,7 +258,8 @@ class FramesTestFunctions(unittest.TestCase):
             _ = r[3, 2]
         with self.assertRaises(IndexError):
             _ = r[2, 3]
-        # Test __setitem__
+
+        # __setitem__
         for i in range(3):
             for j in range(3):
                 r[i, j] = 3*i+j
@@ -317,9 +334,11 @@ class FramesTestFunctions(unittest.TestCase):
         f = Frame(r, v2)
         self.testFrameImpl(v, w, t, f)
 
+        # Equality
         f2 = Frame(f)
         self.assertEqual(f, f2)
 
+        # Members
         self.assertEqual(f.M, r)
         self.assertEqual(f.p, v2)
         self.assertEqual(Frame(f).M, f.M)
@@ -329,7 +348,7 @@ class FramesTestFunctions(unittest.TestCase):
                            5, 6, 7,
                            9, 10, 11),
                   Vector(4, 8, 12))
-        # Test __getitem__
+        # __getitem__
         for i in range(3):
             for j in range(4):
                 self.assertEqual(f[i, j], 4*i+j+1)
@@ -341,7 +360,8 @@ class FramesTestFunctions(unittest.TestCase):
             _ = f[3, 3]
         with self.assertRaises(IndexError):
             _ = f[2, 4]
-        # Test __setitem__
+
+        # __setitem__
         for i in range(3):
             for j in range(4):
                 f[i, j] = 4*i+j
