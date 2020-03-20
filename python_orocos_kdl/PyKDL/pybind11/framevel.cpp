@@ -53,6 +53,11 @@ void init_framevel(pybind11::module &m)
     double_vel.def(py::self == py::self);
     double_vel.def(py::self != py::self);
 
+    double_vel.def("__neg__", [](const doubleVel &a)
+    {
+        return operator-(a);
+    }, py::is_operator());
+
     m.def("diff", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::diff,
           py::arg("a"), py::arg("b"), py::arg("dt")=1.0);
     m.def("addDelta", (doubleVel (*)(const doubleVel&, const doubleVel&, double)) &KDL::addDelta,
