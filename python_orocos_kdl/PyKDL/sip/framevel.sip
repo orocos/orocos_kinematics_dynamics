@@ -28,6 +28,10 @@ class doubleVel
 using namespace KDL;
 %End
 public:
+    doubleVel();
+    doubleVel(const double c);
+    doubleVel(const double tn, const double afg);
+    doubleVel(const doubleVel& r);
     double t;
     double grad;
     double value();
