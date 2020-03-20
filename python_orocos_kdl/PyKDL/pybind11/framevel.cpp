@@ -36,6 +36,7 @@ void init_framevel(pybind11::module &m)
     // --------------------
     py::class_<doubleVel > double_vel(m, "doubleVel");
     double_vel.def(py::init<>());
+    double_vel.def(py::init<const double, const double>());
     double_vel.def(py::init<const doubleVel&>());
     double_vel.def_readwrite("t", &doubleVel::t);
     double_vel.def_readwrite("grad", &doubleVel::grad);
