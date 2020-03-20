@@ -127,6 +127,7 @@ void init_framevel(pybind11::module &m)
                 return vv;
             }));
 
+    m.def("SetToZero", (void (*)(VectorVel&)) &KDL::SetToZero);
     m.def("Equal", (bool (*)(const VectorVel&, const VectorVel&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
     m.def("Equal", (bool (*)(const Vector&, const VectorVel&, double)) &KDL::Equal,
