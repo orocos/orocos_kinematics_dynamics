@@ -268,7 +268,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(dot(r.UnitZ(), r.UnitZ()), 1.0)
         self.assertAlmostEqual(dot(r.UnitX(), r.UnitY()), 0.0, 15)
         self.assertAlmostEqual(dot(r.UnitX(), r.UnitZ()), 0.0, 15)
-        self.assertEqual(dot(r.UnitY(), r.UnitZ()), 0.0)
+        self.assertAlmostEqual(dot(r.UnitY(), r.UnitZ()), 0.0, 15)
         r2 = Rotation(r)
         self.assertEqual(r, r2)
         self.assertAlmostEqual((r*v).Norm(), v.Norm(), 14)
