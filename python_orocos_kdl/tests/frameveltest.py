@@ -34,6 +34,9 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(d.grad, 0)
         self.assertEqual(d.value(), 0)
         self.assertEqual(d.deriv(), 0)
+        d2 = -d
+        self.assertEqual(d2.t, -d.t)
+        self.assertEqual(d2.grad, -d.grad)
 
     def testVectorVel(self):
         v = VectorVel()
