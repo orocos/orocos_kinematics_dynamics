@@ -139,15 +139,15 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(TwistVel.Zero(), TwistVel())
 
     def testTwistVelImpl(self, t):
-        self.assertTrue(Equal(2*t-t, t))
-        self.assertTrue(Equal(t*2-t, t))
-        self.assertTrue(Equal(t+t+t-2*t, t))
+        self.assertEqual(2*t-t, t)
+        self.assertEqual(t*2-t, t)
+        self.assertEqual(t+t+t-2*t, t)
         t2 = TwistVel(t)
-        self.assertTrue(Equal(t, t2))
+        self.assertEqual(t, t2)
         t2 += t
-        self.assertTrue(Equal(2*t, t2))
+        self.assertEqual(2*t, t2)
         t2 -= t
-        self.assertTrue(Equal(t, t2))
+        self.assertEqual(t, t2)
         t2.ReverseSign()
         self.assertTrue(t, -t2)
         self.assertTrue(t*doubleVel(), doubleVel()*t)
