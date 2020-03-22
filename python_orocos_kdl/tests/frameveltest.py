@@ -149,10 +149,10 @@ class FrameVelTestFunctions(unittest.TestCase):
         t2 -= t
         self.assertEqual(t, t2)
         t2.ReverseSign()
-        self.assertTrue(t, -t2)
-        self.assertTrue(t*doubleVel(), doubleVel()*t)
-        self.assertTrue(t*doubleVel(5), doubleVel(5)*t)
-        self.assertTrue(t * doubleVel(3, 5), doubleVel(3, 5) * t)
+        self.assertEqual(t, -t2)
+        self.assertEqual(t*doubleVel(), doubleVel()*t)
+        self.assertEqual(t*doubleVel(5), doubleVel(5)*t)
+        self.assertEqual(t * doubleVel(3, 5), doubleVel(3, 5) * t)
 
     def testRotationVel(self):
         v = VectorVel(Vector(9, 4, -2), Vector(-5, 6, -2))
