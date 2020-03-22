@@ -81,20 +81,20 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(dot(v1, v), dot_result)
 
     def testVectorVelImpl(self, v, vt):
-        self.assertTrue(Equal(2*v-v, v))
-        self.assertTrue(Equal(v*2-v, v))
-        self.assertTrue(Equal(v+v+v-2*v, v))
+        self.assertEqual(2*v-v, v)
+        self.assertEqual(v*2-v, v)
+        self.assertEqual(v+v+v-2*v, v)
         v2 = VectorVel(v)
-        self.assertTrue(Equal(v, v2))
+        self.assertEqual(v, v2)
         v2 += v
-        self.assertTrue(Equal(2*v, v2))
+        self.assertEqual(2*v, v2)
         v2 -= v
-        self.assertTrue(Equal(v, v2))
+        self.assertEqual(v, v2)
         v2.ReverseSign()
-        self.assertTrue(Equal(v, -v2))
-        self.assertTrue(Equal(v*vt, -vt*v))
+        self.assertEqual(v, -v2)
+        self.assertEqual(v*vt, -vt*v)
         v2 = VectorVel(Vector(-5, -6, -3), Vector(3, 4, 5))
-        self.assertTrue(Equal(v*v2, -v2*v))
+        self.assertEqual(v*v2, -v2*v)
 
     def testTwistVel(self):
         t = TwistVel()
