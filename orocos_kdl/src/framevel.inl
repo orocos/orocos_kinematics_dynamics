@@ -352,7 +352,7 @@ void VectorVel::ReverseSign() {
 }
 doubleVel VectorVel::Norm() const {
     double n = p.Norm();
-    return doubleVel(n,dot(p,v)/n);
+    return doubleVel(n,n ? dot(p,v)/n : 0); // Setting norm of p to 0 in case norm of v is 0
 }
 
 bool Equal(const VectorVel& r1,const VectorVel& r2,double eps) {
