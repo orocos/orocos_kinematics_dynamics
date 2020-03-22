@@ -45,6 +45,8 @@ public:
 %End
 };
 
+doubleVel operator - (const doubleVel& r);
+
 doubleVel diff(const doubleVel& a,const doubleVel& b,double dt=1.0);
 doubleVel addDelta(const doubleVel& a,const doubleVel&da,double dt=1.0);
 
