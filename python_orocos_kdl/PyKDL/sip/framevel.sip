@@ -108,7 +108,7 @@ VectorVel operator * (const VectorVel& r1,double r2);
 VectorVel operator * (double r1,const VectorVel& r2);
 VectorVel operator * (const doubleVel& r1,const VectorVel& r2);
 VectorVel operator * (const VectorVel& r2,const doubleVel& r1);
-VectorVel operator*(const Rotation& R,const VectorVel& x);
+VectorVel operator * (const Rotation& R,const VectorVel& x);
 
 VectorVel operator / (const VectorVel& r1,double r2);
 VectorVel operator / (const VectorVel& r2,const doubleVel& r1);
