@@ -239,10 +239,10 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(w2.torque, w.torque + w.force*v)
 
     def testRotation(self):
-        self.testRotationImpl(Vector(3, 4, 5), radians(10), radians(20), radians(30))
-        self.testRotationImpl(Vector(), radians(10), radians(20), radians(30))
-        self.testRotationImpl(Vector(3, 4, 5), radians(0), radians(0), radians(0))
-        self.testRotationImpl(Vector(), radians(0), radians(0), radians(0))
+        self.testRotationImpl(Rotation.RPY(radians(10), radians(20), radians(30)), Vector(3, 4, 5))
+        self.testRotationImpl(Rotation.RPY(radians(10), radians(20), radians(30)), Vector())
+        self.testRotationImpl(Rotation(), Vector(3, 4, 5))
+        self.testRotationImpl(Rotation(), Vector())
 
         r = Rotation(*range(1, 10))
 
@@ -275,10 +275,10 @@ class FramesTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             r[2, 3] = 1
 
-    def testRotationImpl(self, v, a, b, c):
+    def testRotationImpl(self, r, v):
         w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
         t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
-        r = Rotation.RPY(a, b, c)
+        a, b, c = r.GetRPY()
 
         self.assertAlmostEqual(dot(r.UnitX(), r.UnitX()), 1.0, 15)
         self.assertEqual(dot(r.UnitY(), r.UnitY()), 1.0)
