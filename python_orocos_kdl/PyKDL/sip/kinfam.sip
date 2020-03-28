@@ -53,20 +53,19 @@ public:
 
     JointType getType() const;
     std::string getTypeName() const;
-    const std::string* __repr__();
-    %MethodCode
-        std::ostringstream oss;
-        oss<<(*sipCpp);
-        std::string s(oss.str());
-        sipRes=&s;
-    %End
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
 };
 
 class RotationalInertia
 {
 %TypeHeaderCode
 #include <kdl/rotationalinertia.hpp>
-#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -106,7 +105,6 @@ class RigidBodyInertia
 {
 %TypeHeaderCode
 #include <kdl/rigidbodyinertia.hpp>
-#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -136,11 +134,11 @@ public:
     Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Segment& in);
 
-    const std::string* __repr__();
+    const std::string* __repr__() const;
 %MethodCode
-    std::stringstream ss;
-    ss<<(*sipCpp);
-    std::string s(ss.str());
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
     sipRes=&s;
 %End
 
@@ -158,6 +156,7 @@ class Chain
 
 %TypeHeaderCode
 #include <kdl/chain.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 
@@ -171,6 +170,14 @@ public:
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
 
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
+
     const Segment& getSegment(unsigned int nr)const /Factory/;
 
 };
@@ -178,6 +185,7 @@ public:
 class Tree {
 %TypeHeaderCode
 #include <kdl/tree.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -185,6 +193,15 @@ public:
     bool addSegment(const Segment& segment, const std::string& hook_name);
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
+
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
+
     Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const /Factory/;
 %MethodCode
     Chain* chain = new Chain();
@@ -197,6 +214,7 @@ class JntArray{
 
 %TypeHeaderCode
 #include <kdl/jntarray.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 
@@ -229,11 +247,11 @@ public:
     }
 %End
 
-    const std::string* __repr__();
+    const std::string* __repr__() const;
 %MethodCode
-    std::stringstream ss;
-    ss<<sipCpp->data;
-    std::string s(ss.str());
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
     sipRes=&s;
 %End
 };
@@ -282,6 +300,7 @@ class Jacobian
 {
 %TypeHeaderCode
 #include <kdl/jntarray.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -317,11 +336,11 @@ public:
     }
 %End
 
-    const std::string* __repr__();
+    const std::string* __repr__() const;
 %MethodCode
-    std::stringstream ss;
-    ss<<sipCpp->data;
-    std::string s(ss.str());
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
     sipRes=&s;
 %End
     Twist getColumn(unsigned int i) const /Factory/;

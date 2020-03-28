@@ -23,6 +23,7 @@
 class JntSpaceInertiaMatrix {
 %TypeHeaderCode
 #include <kdl/jntspaceinertiamatrix.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -55,6 +56,13 @@ public:
     else {
         (*sipCpp)(i,j)=a1;
     }
+%End
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
 %End
     //JntSpaceInertiaMatrix& operator = ( const JntSpaceInertiaMatrix& arg);
     //double operator()(unsigned int i,unsigned int j)const;
