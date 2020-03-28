@@ -20,13 +20,14 @@
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-%Module(name = PyKDL,version=0,keyword_arguments="All")
+%Module(name = PyKDL, keyword_arguments="All")
 
-%License(type="LGPL",licensee="Ruben Smits",signature="ruben@intermodalics.eu",timestamp="2014")
+%License(type="LGPL", licensee="Ruben Smits", signature="ruben@intermodalics.eu", timestamp="2014")
 
 %Include std_string.sip
-%Include frames.sip
-%Include kinfam.sip
-%Include framevel.sip
+%Include std_vector.sip
 
+%Include frames.sip
+%Include framevel.sip
+%Include kinfam.sip
 %Include dynamics.sip
