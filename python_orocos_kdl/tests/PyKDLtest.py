@@ -22,6 +22,7 @@
 
 
 import unittest
+import dynamicstest
 import kinfamtest
 import framestest
 import frameveltest
@@ -29,6 +30,7 @@ import frameveltest
 import sys
 
 suite = unittest.TestSuite()
+suite.addTest(dynamicstest.suite())
 suite.addTest(framestest.suite())
 suite.addTest(frameveltest.suite())
 suite.addTest(kinfamtest.suite())
