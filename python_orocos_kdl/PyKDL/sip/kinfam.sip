@@ -299,7 +299,7 @@ bool Equal(const JntArrayVel& src1,const JntArrayVel& src2,double eps=epsilon);
 class Jacobian
 {
 %TypeHeaderCode
-#include <kdl/jntarray.hpp>
+#include <kdl/jacobian.hpp>
 #include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
