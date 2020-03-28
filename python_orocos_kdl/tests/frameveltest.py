@@ -155,24 +155,42 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(t * doubleVel(3, 5), doubleVel(3, 5) * t)
 
     def testRotationVel(self):
+        v = VectorVel()
+        vt = Vector()
+        r = RotationVel()
+        self.testRotationVelImpl(r, v, vt)
         v = VectorVel(Vector(9, 4, -2), Vector(-5, 6, -2))
         vt = Vector(2, 3, 4)
-        a = radians(-15)
-        b = radians(20)
-        c = radians(-80)
-        R = RotationVel(Rotation.RPY(a, b, c), Vector(2, 4, 1))
-        R2 = RotationVel(R)
-        self.assertTrue(Equal(R, R2))
-        self.assertTrue(Equal((R*v).Norm(), (v.Norm())))
-        self.assertTrue(Equal(R.Inverse(R*v), v))
-        self.assertTrue(Equal(R*R.Inverse(v), v))
-        self.assertTrue(Equal(R*Rotation.Identity(), R))
-        self.assertTrue(Equal(Rotation.Identity()*R, R))
-        self.assertTrue(Equal(R*(R*(R*v)), (R*R*R)*v))
-        self.assertTrue(Equal(R*(R*(R*vt)), (R*R*R)*vt))
-        self.assertTrue(Equal(R*R.Inverse(), RotationVel.Identity()))
-        self.assertTrue(Equal(R.Inverse()*R, RotationVel.Identity()))
-        self.assertTrue(Equal(R.Inverse()*v, R.Inverse(v)))
+        rot = Rotation.RPY(radians(-15), radians(20), radians(-80))
+        vec = Vector(2, 4, 1)
+        r = RotationVel(rot, vec)
+        self.testRotationVelImpl(r, v, vt)
+
+        # Members
+        self.assertEqual(r.R, rot)
+        self.assertEqual(r.w, vec)
+        self.assertEqual(r.value(), rot)
+        self.assertEqual(r.deriv(), vec)
+
+        # Equality
+        self.assertEqual(RotationVel(r).R, r.R)
+        self.assertEqual(RotationVel(r).w, r.w)
+        self.assertEqual(RotationVel(rot), rot)
+        self.assertEqual(rot, RotationVel(rot))
+
+    def testRotationVelImpl(self, r, v, vt):
+        r2 = RotationVel(r)
+        self.assertEqual(r, r2)
+        self.assertEqual((r*v).Norm(), v.Norm())
+        self.assertEqual(r.Inverse(r*v), v)
+        self.assertEqual(r*r.Inverse(v), v)
+        self.assertEqual(r*Rotation.Identity(), r)
+        self.assertEqual(Rotation.Identity()*r, r)
+        self.assertEqual(r*(r*(r*v)), (r*r*r)*v)
+        self.assertEqual(r*(r*(r*vt)), (r*r*r)*vt)
+        self.assertEqual(r*r.Inverse(), RotationVel.Identity())
+        self.assertEqual(r.Inverse()*r, RotationVel.Identity())
+        self.assertEqual(r.Inverse()*v, r.Inverse(v))
 
     def testFrameVel(self):
         v = VectorVel(Vector(3, 4, 5), Vector(-2, -4, -1))
