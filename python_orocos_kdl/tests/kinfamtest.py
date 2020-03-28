@@ -56,6 +56,82 @@ class KinfamTestFunctions(unittest.TestCase):
         self.iksolvervel = ChainIkSolverVel_pinv(self.chain)
         self.iksolverpos = ChainIkSolverPos_NR(self.chain, self.fksolverpos, self.iksolvervel)
 
+    def testRotationalInertia(self):
+        ri = RotationalInertia(1, 2, 3, 4, 7, 5)
+        # __getitem__
+        for i in range(3):
+            for j in range(3):
+                self.assertEqual(ri[3*i+j], 2*abs(i-j) + max(i, j) + 1)
+        with self.assertRaises(IndexError):
+            _ = ri[-1]
+        with self.assertRaises(IndexError):
+            _ = ri[9]
+
+        # __setitem__
+        for i in range(3):
+            for j in range(3):
+                ri[i] = i
+        for i in range(3):
+            for j in range(3):
+                self.assertEqual(ri[i], i)
+        with self.assertRaises(IndexError):
+            ri[-1] = 1
+        with self.assertRaises(IndexError):
+            ri[9] = 1
+
+    def testJacobian(self):
+        jac = Jacobian(3)
+        for i in range(jac.columns()):
+            jac.setColumn(i, Twist(Vector(6*i+1, 6*i+2, 6*i+3), Vector(6*i+4, 6*i+5, 6*i+6)))
+        # __getitem__
+        for i in range(6):
+            for j in range(3):
+                self.assertEqual(jac[i, j], 6*j+i+1)
+        with self.assertRaises(IndexError):
+            _ = jac[-1, 0]
+        with self.assertRaises(IndexError):
+            _ = jac[6, 0]
+        with self.assertRaises(IndexError):
+            _ = jac[5, -1]
+        with self.assertRaises(IndexError):
+            _ = jac[5, 3]
+
+        # __setitem__
+        for i in range(6):
+            for j in range(3):
+                jac[i, j] = 3*i+j
+        for i in range(6):
+            for j in range(3):
+                self.assertEqual(jac[i, j], 3*i+j)
+        with self.assertRaises(IndexError):
+            jac[-1, 0] = 1
+        with self.assertRaises(IndexError):
+            jac[6, 0] = 1
+        with self.assertRaises(IndexError):
+            jac[5, -1] = 1
+        with self.assertRaises(IndexError):
+            jac[5, 3] = 1
+
+    def testJntArray(self):
+        ja = JntArray(3)
+        # __getitem__
+        for i in range(3):
+            self.assertEqual(ja[i], 0)
+        with self.assertRaises(IndexError):
+            _ = ja[-1]
+        with self.assertRaises(IndexError):
+            _ = ja[3]
+
+        # __setitem__
+        for i in range(3):
+            ja[i] = 2*i
+        for i in range(3):
+            self.assertEqual(ja[i], 2*i)
+        with self.assertRaises(IndexError):
+            ja[-1] = 1
+        with self.assertRaises(IndexError):
+            ja[3] = 1
+
     def testFkPosAndJac(self):
         deltaq = 1E-4
         epsJ = 1E-4
@@ -171,6 +247,9 @@ class KinfamTestTree(unittest.TestCase):
 
 def suite():
     suite = unittest.TestSuite()
+    suite.addTest(KinfamTestFunctions('testRotationalInertia'))
+    suite.addTest(KinfamTestFunctions('testJacobian'))
+    suite.addTest(KinfamTestFunctions('testJntArray'))
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
