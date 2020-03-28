@@ -208,6 +208,7 @@ void init_kinfam(pybind11::module &m)
     // Jacobian
     // --------------------
     py::class_<Jacobian> jacobian(m, "Jacobian");
+    jacobian.def(py::init<>());
     jacobian.def(py::init<unsigned int>());
     jacobian.def(py::init<const Jacobian&>());
     jacobian.def("rows", &Jacobian::rows);
@@ -252,6 +253,7 @@ void init_kinfam(pybind11::module &m)
     // JntArray
     // --------------------
     py::class_<JntArray> jnt_array(m, "JntArray");
+    jnt_array.def(py::init<>());
     jnt_array.def(py::init<unsigned int>());
     jnt_array.def(py::init<const JntArray&>());
     jnt_array.def("rows", &JntArray::rows);
