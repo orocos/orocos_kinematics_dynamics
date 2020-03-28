@@ -25,6 +25,7 @@
 #include <iomanip>
 #include <kdl/chaindynparam.hpp>
 #include <kdl/jntspaceinertiamatrix.hpp>
+#include <kdl/kinfam_io.hpp>
 #include "PyKDL.h"
 
 namespace py = pybind11;
@@ -64,14 +65,7 @@ void init_dynamics(pybind11::module &m)
     jnt_space_inertia_matrix.def("__repr__", [](const JntSpaceInertiaMatrix &jm)
     {
         std::ostringstream oss;
-        for (size_t r = 0; r < jm.rows(); r++)
-        {
-            for (size_t c = 0; c < jm.columns(); c++)
-            {
-                oss << std::setw(KDL_FRAME_WIDTH) << jm(r, c);
-            }
-            oss << std::endl;
-        }
+        oss << jm;
         return oss.str();
     });
     jnt_space_inertia_matrix.def(py::self == py::self);

@@ -172,6 +172,12 @@ void init_kinfam(pybind11::module &m)
     chain.def("getNrOfSegments", &Chain::getNrOfSegments);
     chain.def("getSegment", (Segment& (Chain::*)(unsigned int)) &Chain::getSegment);
     chain.def("getSegment", (const Segment& (Chain::*)(unsigned int) const) &Chain::getSegment);
+    chain.def("__repr__", [](const Chain &c)
+    {
+        std::ostringstream oss;
+        oss << c;
+        return oss.str();
+    });
 
 
     // --------------------
@@ -189,6 +195,12 @@ void init_kinfam(pybind11::module &m)
         Chain* chain = new Chain();
         tree.getChain(chain_root, chain_tip, *chain);
         return chain;
+    });
+    tree.def("__repr__", [](const Tree &t)
+    {
+        std::ostringstream oss;
+        oss << t;
+        return oss.str();
     });
 
 
