@@ -222,7 +222,7 @@ void init_kinfam(pybind11::module &m)
     {
         int i = std::get<0>(idx);
         int j = std::get<1>(idx);
-        if (i < 0 || i > 5 || j < 0 || j > jac.columns())
+        if (i < 0 || i > 5 || j < 0 || j >= jac.columns())
             throw py::index_error("Jacobian index out of range");
         return jac((unsigned int)i, (unsigned int)j);
     });
@@ -230,7 +230,7 @@ void init_kinfam(pybind11::module &m)
     {
         int i = std::get<0>(idx);
         int j = std::get<1>(idx);
-        if (i < 0 || i > 5 || j < 0 || j > jac.columns())
+        if (i < 0 || i > 5 || j < 0 || j >= jac.columns())
             throw py::index_error("Jacobian index out of range");
 
         jac((unsigned int)i, (unsigned int)j) = value;
