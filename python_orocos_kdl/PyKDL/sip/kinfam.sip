@@ -219,6 +219,7 @@ using namespace KDL;
 %End
 
 public:
+    JntArray();
     JntArray(unsigned int size);
     JntArray(const JntArray& arg);
     unsigned int rows()const;
@@ -304,6 +305,7 @@ class Jacobian
 using namespace KDL;
 %End
 public:
+    Jacobian();
     Jacobian(unsigned int size);
     Jacobian(const Jacobian& arg);
     unsigned int rows()const;
