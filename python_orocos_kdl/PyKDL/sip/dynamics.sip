@@ -32,7 +32,6 @@ public:
     void resize(unsigned int newSize);
     unsigned int rows()const;
     unsigned int columns()const;
-    //JntSpaceInertiaMatrix& operator = ( const JntSpaceInertiaMatrix& arg);
     double __getitem__(SIP_PYTUPLE);
 %MethodCode
     int i,j;
@@ -45,6 +44,19 @@ public:
         sipRes=(*sipCpp)(i,j);
     }
 %End
+    void __setitem__(SIP_PYTUPLE,double value);
+%MethodCode
+    int i,j;
+    PyArg_ParseTuple(a0,"ii",&i,&j);
+    if (i < 0 || j < 0 || i > (int)sipCpp->rows() || j >= (int)sipCpp->columns()) {
+        PyErr_SetString(PyExc_IndexError, "Inertia index out of range");
+        sipError = sipErrorFail;
+    }
+    else {
+        (*sipCpp)(i,j)=a1;
+    }
+%End
+    //JntSpaceInertiaMatrix& operator = ( const JntSpaceInertiaMatrix& arg);
     //double operator()(unsigned int i,unsigned int j)const;
     //double& operator()(unsigned int i,unsigned int j);
     //bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2);
