@@ -37,7 +37,7 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
-    if (i < 0 || j < 0 || i > (int)sipCpp->rows() || j >= (int)sipCpp->columns()) {
+    if (i < 0 || j < 0 || i >= (int)sipCpp->rows() || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Inertia index out of range");
         sipError = sipErrorFail;
     }
@@ -49,7 +49,7 @@ public:
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
-    if (i < 0 || j < 0 || i > (int)sipCpp->rows() || j >= (int)sipCpp->columns()) {
+    if (i < 0 || j < 0 || i >= (int)sipCpp->rows() || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Inertia index out of range");
         sipError = sipErrorFail;
     }
