@@ -33,6 +33,7 @@ namespace KDL
     Jacobian::Jacobian(unsigned int nr_of_columns):
         data(6,nr_of_columns)
     {
+        data.setZero();
     }
     
     Jacobian::Jacobian(const Jacobian& arg):
