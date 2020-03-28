@@ -193,23 +193,56 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(r.Inverse()*v, r.Inverse(v))
 
     def testFrameVel(self):
+        v = VectorVel()
+        vt = Vector()
+        f = FrameVel()
+        self.testFrameVelImpl(f, v, vt)
+        fr_m = Rotation.EulerZYX(radians(10), radians(20), radians(-10))
+        fr_p = Vector(4, -2, 1)
+        tw_vel = Vector(2, -2, -2)
+        tw_rot = Vector(-5, -3, -2)
+        fr = Frame(fr_m, fr_p)
+        tw = Twist(tw_vel, tw_rot)
+        f = FrameVel(fr, tw)
+        self.testFrameVelImpl(f, v, vt)
         v = VectorVel(Vector(3, 4, 5), Vector(-2, -4, -1))
         vt = Vector(-1, 0, -10)
-        F = FrameVel(Frame(Rotation.EulerZYX(radians(10), radians(20), radians(-10)), Vector(4, -2, 1)),
-                     Twist(Vector(2, -2, -2), Vector(-5, -3, -2)))
-        F2 = FrameVel(F)
-        self.assertTrue(Equal(F, F2))
-        self.assertTrue(Equal(F.Inverse(F*v), v))
-        self.assertTrue(Equal(F.Inverse(F*vt), vt))
-        self.assertTrue(Equal(F*F.Inverse(v), v))
-        self.assertTrue(Equal(F*F.Inverse(vt), vt))
-        self.assertTrue(Equal(F*Frame.Identity(), F))
-        self.assertTrue(Equal(Frame.Identity()*F, F))
-        self.assertTrue(Equal(F*(F*(F*v)), (F*F*F)*v))
-        self.assertTrue(Equal(F*(F*(F*vt)), (F*F*F)*vt))
-        self.assertTrue(Equal(F*F.Inverse(), FrameVel.Identity()))
-        self.assertTrue(Equal(F.Inverse()*F, Frame.Identity()))
-        self.assertTrue(Equal(F.Inverse()*vt, F.Inverse(vt)))
+        self.testFrameVelImpl(f, v, vt)
+
+        # Alternative constructor
+        rv = RotationVel(fr_m, tw_rot)
+        vv = VectorVel(fr_p, tw_vel)
+        f2 = FrameVel(rv, vv)
+        self.assertEqual(f, f2)
+
+        # Members
+        self.assertEqual(f.M, rv)
+        self.assertEqual(f.p, vv)
+        self.assertEqual(f2.value(), fr)
+        self.assertEqual(f2.deriv(), tw)
+
+        # Equality
+        self.assertEqual(FrameVel(f).M, f.M)
+        self.assertEqual(FrameVel(f).p, f.p)
+
+        f = FrameVel(fr)
+        self.assertEqual(f, fr)
+        self.assertEqual(fr, f)
+
+    def testFrameVelImpl(self, f, v, vt):
+        f2 = FrameVel(f)
+        self.assertEqual(f, f2)
+        self.assertEqual(f.Inverse(f*v), v)
+        self.assertEqual(f.Inverse(f*vt), vt)
+        self.assertEqual(f*f.Inverse(v), v)
+        self.assertEqual(f*f.Inverse(vt), vt)
+        self.assertEqual(f*Frame.Identity(), f)
+        self.assertEqual(Frame.Identity()*f, f)
+        self.assertEqual(f*(f*(f*v)), (f*f*f)*v)
+        self.assertEqual(f*(f*(f*vt)), (f*f*f)*vt)
+        self.assertEqual(f*f.Inverse(), FrameVel.Identity())
+        self.assertEqual(f.Inverse()*f, Frame.Identity())
+        self.assertEqual(f.Inverse()*vt, f.Inverse(vt))
 
     def testPickle(self):
         if sys.version_info < (3, 0):
