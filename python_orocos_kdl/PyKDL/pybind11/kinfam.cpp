@@ -342,8 +342,9 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainFkSolverVel, SolverI> chain_fk_solver_vel(m, "ChainFkSolverVel");
     chain_fk_solver_vel.def("JntToCart", (int (ChainFkSolverVel::*)(const JntArrayVel&, FrameVel&, int)) &ChainFkSolverVel::JntToCart,
                             py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
-    chain_fk_solver_vel.def("JntToCart", (int (ChainFkSolverVel::*)(const JntArrayVel&, std::vector<FrameVel>&, int)) &ChainFkSolverVel::JntToCart,
-                            py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
+//    Argument by reference doesn't work for container types
+//    chain_fk_solver_vel.def("JntToCart", (int (ChainFkSolverVel::*)(const JntArrayVel&, std::vector<FrameVel>&, int)) &ChainFkSolverVel::JntToCart,
+//                            py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
 
 
     // ------------------------------
@@ -374,8 +375,9 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainIkSolverVel, SolverI> chain_ik_solver_vel(m, "ChainIkSolverVel");
     chain_ik_solver_vel.def("CartToJnt", (int (ChainIkSolverVel::*)(const JntArray&, const Twist&, JntArray&)) &ChainIkSolverVel::CartToJnt,
                             py::arg("q_in"), py::arg("v_in"), py::arg("qdot_out"));
-    chain_ik_solver_vel.def("CartToJnt", (int (ChainIkSolverVel::*)(const JntArray&, const FrameVel&, JntArrayVel&)) &ChainIkSolverVel::CartToJnt,
-                            py::arg("q_init"), py::arg("v_in"), py::arg("q_out"));
+//    Argument by reference doesn't work for container types
+//    chain_ik_solver_vel.def("CartToJnt", (int (ChainIkSolverVel::*)(const JntArray&, const FrameVel&, JntArrayVel&)) &ChainIkSolverVel::CartToJnt,
+//                            py::arg("q_init"), py::arg("v_in"), py::arg("q_out"));
 
 
     // ----------------------
