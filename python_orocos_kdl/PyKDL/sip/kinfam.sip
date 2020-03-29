@@ -377,7 +377,8 @@ class ChainFkSolverPos : SolverI
 using namespace KDL;
 %End
     virtual int JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr=-1)=0;
-    virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1)=0;
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1)=0;
 };
 
 class ChainFkSolverVel : SolverI
@@ -387,7 +388,8 @@ class ChainFkSolverVel : SolverI
 using namespace KDL;
 %End
     virtual int JntToCart(const JntArrayVel& q_in, FrameVel& p_out, int segmentNr=-1)=0;
-    virtual int JntToCart(const JntArrayVel& q_in, std::vector<FrameVel>& p_out, int segmentNr=-1)=0;
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArrayVel& q_in, std::vector<FrameVel>& p_out, int segmentNr=-1)=0;
 };
 
 class ChainFkSolverPos_recursive : ChainFkSolverPos
@@ -400,7 +402,8 @@ using namespace KDL;
 public:
     ChainFkSolverPos_recursive(const Chain& chain);
     virtual int JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr=-1);
-    virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1);
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1);
     virtual void updateInternalDataStructures();
 };
 
@@ -413,7 +416,8 @@ using namespace KDL;
 public:
     ChainFkSolverVel_recursive(const Chain& chain);
     virtual int JntToCart(const JntArrayVel& q_in, FrameVel& out, int segmentNr=-1);
-    virtual int JntToCart(const JntArrayVel& q_in, std::vector<FrameVel>& out, int segmentNr=-1 );
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArrayVel& q_in, std::vector<FrameVel>& out, int segmentNr=-1 );
     virtual void updateInternalDataStructures();
 };
 
