@@ -12,12 +12,6 @@ env:
   - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
   - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
 
-jobs:
-  fast_finish: true
-  allow_failures:
-    - env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
-    - env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
-
 before_script:
   - sudo apt-get -qq update
   - sudo apt-get install -y libeigen3-dev libcppunit-dev python-sip-dev python-psutil
