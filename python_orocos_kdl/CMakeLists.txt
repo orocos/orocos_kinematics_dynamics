@@ -23,6 +23,7 @@ set(LIBRARY_NAME "PyKDL")
 
 option(BUILD_PYKDL_PYBIND11 "Use PyBind11 instead of SIP" ON)
 if (BUILD_PYKDL_PYBIND11)
+  SET(PYTHON_MODULE_EXTENSION ".so")
   add_subdirectory(pybind11)
   pybind11_add_module(${LIBRARY_NAME}
     PyKDL/pybind11/PyKDL.h
