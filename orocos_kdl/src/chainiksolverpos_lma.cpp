@@ -144,7 +144,7 @@ void ChainIkSolverPos_LMA::compute_fwdpos(const VectorXq& q) {
 	T_base_head = Frame::Identity(); // frame w.r.t. base of head
 	for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
 		const Segment& segment = chain.getSegment(i);
-		if (segment.getJoint().getType()!=Joint::None) {
+        if (segment.getJoint().getType()!=Joint::Fixed) {
 			T_base_jointroot[jointndx] = T_base_head;
 			T_base_head = T_base_head * segment.pose(q(jointndx));
 			T_base_jointtip[jointndx] = T_base_head;
@@ -160,7 +160,7 @@ void ChainIkSolverPos_LMA::compute_jacobian(const VectorXq& q) {
 	unsigned int jointndx=0;
 	for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
 		const Segment& segment = chain.getSegment(i);
-		if (segment.getJoint().getType()!=Joint::None) {
+        if (segment.getJoint().getType()!=Joint::Fixed) {
 			// compute twist of the end effector motion caused by joint [jointndx]; expressed in base frame, with vel. ref. point equal to the end effector
 			KDL::Twist t = ( T_base_jointroot[jointndx].M * segment.twist(q(jointndx),1.0) ).RefPoint( T_base_head.p - T_base_jointtip[jointndx].p);
 			jac(0,jointndx)=t[0];

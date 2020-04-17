@@ -51,7 +51,7 @@ namespace KDL
             int j=0;
             for (unsigned int i=0;i<segmentNr;i++) {
                 //Calculate new Frame_base_ee
-                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                     out=out*FrameVel(chain.getSegment(i).pose(in.q(j)),
                                      chain.getSegment(i).twist(in.q(j),in.qdot(j)));
                     j++;//Only increase jointnr if the segment has a joint
@@ -85,7 +85,7 @@ namespace KDL
         else{
             int j=0;
             // Initialization
-            if(chain.getSegment(0).getJoint().getType()!=Joint::None){
+            if(chain.getSegment(0).getJoint().getType()!=Joint::Fixed) {
                 out[0] = FrameVel(chain.getSegment(0).pose(in.q(0)),
                                      chain.getSegment(0).twist(in.q(0),in.qdot(0)));
                 j++;
@@ -95,7 +95,7 @@ namespace KDL
             
             for (unsigned int i=1;i<segmentNr;i++) {
                 //Calculate new Frame_base_ee
-                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                     out[i]=out[i-1]*FrameVel(chain.getSegment(i).pose(in.q(j)),
                                     chain.getSegment(i).twist(in.q(j),in.qdot(j)));
                     j++;//Only increase jointnr if the segment has a joint

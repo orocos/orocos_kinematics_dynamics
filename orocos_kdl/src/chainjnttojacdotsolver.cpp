@@ -98,7 +98,7 @@ int ChainJntToJacDotSolver::JntToJacDot(const JntArrayVel& q_in, Jacobian& jdot,
     for(unsigned int i=0;i<segmentNr;++i)
     {
         //Only increase joint nr if the segment has a joint
-        if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+        if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
 
             for(unsigned int j=0;j<chain.getNrOfJoints();++j)
             {

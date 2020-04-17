@@ -44,12 +44,12 @@ namespace KDL {
      */
     class Joint {
     public:
-        typedef enum { RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None} JointType;
+        typedef enum { RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed,None=Fixed} JointType;
         /**
          * Constructor of a joint.
          *
          * @param name of the joint
-         * @param type type of the joint, default: Joint::None
+         * @param type type of the joint, default: Joint::Fixed
          * @param scale scale between joint input and actual geometric
          * movement, default: 1
          * @param offset offset between joint input and actual
@@ -59,12 +59,12 @@ namespace KDL {
          * @param stiffness 1D stiffness along the joint axis,
          * default: 0
          */
-        explicit Joint(const std::string& name, const JointType& type=None,const double& scale=1,const double& offset=0,
+        explicit Joint(const std::string& name, const JointType& type=Fixed,const double& scale=1,const double& offset=0,
               const double& inertia=0,const double& damping=0,const double& stiffness=0);
         /**
          * Constructor of a joint.
          *
-         * @param type type of the joint, default: Joint::None
+         * @param type type of the joint, default: Joint::Fixed
          * @param scale scale between joint input and actual geometric
          * movement, default: 1
          * @param offset offset between joint input and actual
@@ -74,7 +74,7 @@ namespace KDL {
          * @param stiffness 1D stiffness along the joint axis,
          * default: 0
          */
-        explicit Joint(const JointType& type=None,const double& scale=1,const double& offset=0,
+        explicit Joint(const JointType& type=Fixed,const double& scale=1,const double& offset=0,
                const double& inertia=0,const double& damping=0,const double& stiffness=0);
         /**
          * Constructor of a joint.
@@ -185,10 +185,10 @@ namespace KDL {
                 return "TransY";
             case TransZ:
                 return "TransZ";
-            case None:
-                return "None";
+            case Fixed:
+                return "Fixed";
             default:
-                return "None";
+                return "Fixed";
             }
         };
 

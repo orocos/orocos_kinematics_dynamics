@@ -46,7 +46,7 @@ namespace KDL {
         else{
             int j=0;
             for(unsigned int i=0;i<segmentNr;i++){
-                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                     p_out = p_out*chain.getSegment(i).pose(q_in(j));
                     j++;
                 }else{
@@ -74,14 +74,14 @@ namespace KDL {
         else{
             int j=0;
             // Initialization
-            if(chain.getSegment(0).getJoint().getType()!=Joint::None){
+            if(chain.getSegment(0).getJoint().getType()!=Joint::Fixed) {
                 p_out[0] = chain.getSegment(0).pose(q_in(j));
                 j++;
             }else
                 p_out[0] = chain.getSegment(0).pose(0.0);
             
             for(unsigned int i=1;i<segmentNr;i++){
-                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                     p_out[i] = p_out[i-1]*chain.getSegment(i).pose(q_in(j));
                     j++;
                 }else{

@@ -97,7 +97,7 @@ namespace KDL {
             return Frame(Vector(0.0,scale*q+offset,0.0));
         case TransZ:
             return Frame(Vector(0.0,0.0,scale*q+offset));
-        case None:
+        case Fixed:
             return Frame::Identity();
         }
         return Frame::Identity();
@@ -122,7 +122,7 @@ namespace KDL {
             return Twist(Vector(0.0,scale*qdot,0.0),Vector(0.0,0.0,0.0));
         case TransZ:
             return Twist(Vector(0.0,0.0,scale*qdot),Vector(0.0,0.0,0.0));
-        case None:
+        case Fixed:
             return Twist::Zero();
         }
         return Twist::Zero();
@@ -148,7 +148,7 @@ namespace KDL {
         return Vector(0.,1.,0.);
       case TransZ:
         return Vector(0.,0.,1.);
-      case None:
+      case Fixed:
         return Vector::Zero();
       }
     return Vector::Zero();

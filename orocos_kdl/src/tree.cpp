@@ -59,7 +59,7 @@ bool Tree::addSegment(const Segment& segment, const std::string& hook_name) {
         return false;
     pair<SegmentMap::iterator, bool> retval;
     //insert new element
-    unsigned int q_nr = segment.getJoint().getType() != Joint::None ? nrOfJoints : 0;
+    unsigned int q_nr = segment.getJoint().getType() != Joint::Fixed ? nrOfJoints : 0;
 
 #ifdef KDL_USE_NEW_TREE_INTERFACE
     retval = segments.insert(make_pair(segment.getName(), TreeElementType( new TreeElement(segment, parent, q_nr))));
@@ -75,7 +75,7 @@ bool Tree::addSegment(const Segment& segment, const std::string& hook_name) {
     //increase number of segments
     nrOfSegments++;
     //increase number of joints
-    if (segment.getJoint().getType() != Joint::None)
+    if (segment.getJoint().getType() != Joint::Fixed)
         nrOfJoints++;
     return true;
 }

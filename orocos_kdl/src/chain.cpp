@@ -55,7 +55,7 @@ namespace KDL {
     {
         segments.push_back(segment);
         nrOfSegments++;
-        if(segment.getJoint().getType()!=Joint::None)
+        if(segment.getJoint().getType()!=Joint::Fixed)
             nrOfJoints++;
     }
 

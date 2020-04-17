@@ -70,7 +70,7 @@ namespace KDL
         Frame total;
         for (unsigned int i=0;i<segmentNr;i++) {
             //Calculate new Frame_base_ee
-            if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+            if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
             	//pose of the new end-point expressed in the base
                 total = T_tmp*chain.getSegment(i).pose(q_in(j));
                 //changing base of new segment's twist to base frame if it is not locked
@@ -86,7 +86,7 @@ namespace KDL
             changeRefPoint(jac,total.p-T_tmp.p,jac);
 
             //Only increase jointnr if the segment has a joint
-            if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+            if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                 //Only put the twist inside if it is not locked
                 if(!locked_joints_[j])
                     jac.setColumn(k++,t_tmp);

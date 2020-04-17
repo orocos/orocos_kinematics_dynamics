@@ -54,7 +54,7 @@ namespace KDL{
         //Sweep from root to leaf
         for(unsigned int i=0;i<ns;i++){
             double q_,qdot_,qdotdot_;
-            if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+            if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                 q_=q(j);
                 qdot_=q_dot(j);
                 qdotdot_=q_dotdot(j);
@@ -87,7 +87,7 @@ namespace KDL{
         //Sweep from leaf to root
         j=nj-1;
         for(int i=ns-1;i>=0;i--){
-            if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+            if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                 torques(j)=dot(S[i],f[i]);
                 torques(j)+=chain.getSegment(i).getJoint().getInertia()*q_dotdot(j);  // add torque from joint inertia
                 --j;

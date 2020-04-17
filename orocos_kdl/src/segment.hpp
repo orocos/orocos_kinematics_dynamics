@@ -57,22 +57,22 @@ namespace KDL {
          *
          * @param name name of the segment
          * @param joint joint of the segment, default:
-         * Joint(Joint::None)
+         * Joint(Joint::Fixed)
          * @param f_tip frame from the end of the joint to the tip of
          * the segment, default: Frame::Identity()
          * @param M rigid body inertia of the segment, default: Inertia::Zero()
          */
-        explicit Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+        explicit Segment(const std::string& name, const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
         /**
          * Constructor of the segment
          *
          * @param joint joint of the segment, default:
-         * Joint(Joint::None)
+         * Joint(Joint::Fixed)
          * @param f_tip frame from the end of the joint to the tip of
          * the segment, default: Frame::Identity()
          * @param M rigid body inertia of the segment, default: Inertia::Zero()
          */
-        explicit Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+        explicit Segment(const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
         Segment(const Segment& in);
         Segment& operator=(const Segment& arg);
 

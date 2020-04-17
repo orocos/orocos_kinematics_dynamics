@@ -71,7 +71,7 @@ namespace KDL {
 	{
 	  //Collect RigidBodyInertia
           Ic[i]=chain.getSegment(i).getInertia();
-          if(chain.getSegment(i).getJoint().getType()!=Joint::None)
+          if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed)
 	  {
 	      q_=q(k);
 	      k++;
@@ -96,7 +96,7 @@ namespace KDL {
 	    } 
 
 	  F=Ic[i]*S[i];
-	  if(chain.getSegment(i).getJoint().getType()!=Joint::None)
+      if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed)
 	  {
           H(k,k)=dot(S[i],F);
           H(k,k)+=chain.getSegment(i).getJoint().getInertia();  // add joint inertia
@@ -108,7 +108,7 @@ namespace KDL {
 		  F=X[l]*F; //calculate the unit force (cfr S) for every segment: F[l-1]=X[l]*F[l]
 		  l--; //go down a segment
 		  
-		  if(chain.getSegment(l).getJoint().getType()!=Joint::None) //if the joint connected to segment is not a fixed joint
+          if(chain.getSegment(l).getJoint().getType()!=Joint::Fixed) //if the joint connected to segment is not a fixed joint
 		  {    
 		    j--;
 		    H(k,j)=dot(F,S[l]); //here you actually match a certain not fixed joint with a segment 
