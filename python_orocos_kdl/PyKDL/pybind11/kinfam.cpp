@@ -62,15 +62,18 @@ void init_kinfam(pybind11::module &m)
         joint_type.value("TransX", Joint::JointType::TransX);
         joint_type.value("TransY", Joint::JointType::TransY);
         joint_type.value("TransZ", Joint::JointType::TransZ);
+        joint_type.value("Fixed", Joint::JointType::Fixed);
+#if PY_VERSION_HEX < 0x03000000
         joint_type.value("None", Joint::JointType::None);
+#endif
         joint_type.export_values();
 
     joint.def(py::init<>());
     joint.def(py::init<std::string, Joint::JointType, double, double, double, double, double>(),
-              py::arg("name"), py::arg("type")=Joint::JointType::None, py::arg("scale")=1, py::arg("offset")=0,
+              py::arg("name"), py::arg("type")=Joint::JointType::Fixed, py::arg("scale")=1, py::arg("offset")=0,
               py::arg("inertia")=0, py::arg("damping")=0, py::arg("stiffness")=0);
     joint.def(py::init<Joint::JointType, double, double, double, double, double>(),
-              py::arg("type")=Joint::JointType::None, py::arg("scale")=1, py::arg("offset")=0,
+              py::arg("type")=Joint::JointType::Fixed, py::arg("scale")=1, py::arg("offset")=0,
               py::arg("inertia")=0, py::arg("damping")=0, py::arg("stiffness")=0);
     joint.def(py::init<std::string, Vector, Vector, Joint::JointType, double, double, double, double, double>(),
               py::arg("name"), py::arg("origin"), py::arg("axis"), py::arg("type"), py::arg("scale")=1, py::arg("offset")=0,
