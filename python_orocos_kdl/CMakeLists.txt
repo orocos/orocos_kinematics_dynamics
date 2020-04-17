@@ -44,7 +44,11 @@ else (BUILD_PYKDL_PYBIND11)
 
   file(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${LIBRARY_NAME}/sip/*.sip")
   set(SIP_INCLUDES ${SIP_FILES})
-  set(SIP_EXTRA_OPTIONS "-o")
+  if (${PYTHON_VERSION_MAJOR} GREATER_EQUAL "3")
+    set(SIP_EXTRA_OPTIONS "-o;-x;PYTHON2") # '-x' disables the feature
+  else()
+    set(SIP_EXTRA_OPTIONS "-o")
+  endif()
   add_sip_python_module(${LIBRARY_NAME} ${LIBRARY_NAME}/sip/${LIBRARY_NAME}.sip ${orocos_kdl_LIBRARIES})
 endif(BUILD_PYKDL_PYBIND11)
 

@@ -20,6 +20,8 @@
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+%Feature PYTHON2
+
 class Joint{
 
 %TypeHeaderCode
@@ -30,10 +32,15 @@ using namespace KDL;
 
 
 public:
-    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None};
-    Joint(std::string name, JointType type=None,double scale=1,double offset=0,
+%If (!PYTHON2)
+    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed};
+%End
+%If (PYTHON2)
+    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed,None};
+%End
+    Joint(std::string name, JointType type=Fixed,double scale=1,double offset=0,
               double inertia=0,double damping=0,double stiffness=0);
-    Joint(JointType type=None,double scale=1,double offset=0,
+    Joint(JointType type=Fixed,double scale=1,double offset=0,
           double inertia=0,const double damping=0,double stiffness=0);
     Joint(std::string name, Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
           double inertia=0, double damping=0, double stiffness=0);
@@ -130,8 +137,8 @@ class Segment
 using namespace KDL;
 %End
 public:
-    Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
-    Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+    Segment(const std::string& name, const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+    Segment(const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Segment& in);
 
     const std::string* __repr__() const;
