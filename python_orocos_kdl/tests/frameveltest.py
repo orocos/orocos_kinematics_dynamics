@@ -255,10 +255,10 @@ class FrameVelTestFunctions(unittest.TestCase):
         data['fv'] = FrameVel(data['rv'], data['vv'])
         data['tv'] = TwistVel(data['vv'], data['vv'])
 
-        with open('/tmp/pickle_test_kdl_framevel', 'w') as f:
+        with open('/tmp/pickle_test_kdl_framevel', 'wb') as f:
             pickle.dump(data, f, 2)
 
-        with open('/tmp/pickle_test_kdl_framevel', 'r') as f:
+        with open('/tmp/pickle_test_kdl_framevel', 'rb') as f:
             data1 = pickle.load(f)
 
         self.assertEqual(data, data1)
