@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! /usr/bin/env python
 # Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
 
 # Version: 1.0
