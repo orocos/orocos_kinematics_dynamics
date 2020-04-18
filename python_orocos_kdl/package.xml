@@ -20,6 +20,8 @@
   <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-sip</exec_depend>
   <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-sip</exec_depend>
 
+  <test_depend condition="$ROS_PYTHON_VERSION == 2">python-future</test_depend>
+  <test_depend condition="$ROS_PYTHON_VERSION == 3">python3-future</test_depend>
   <test_depend condition="$ROS_PYTHON_VERSION == 2">python-psutil</test_depend>
   <test_depend condition="$ROS_PYTHON_VERSION == 3">python3-psutil</test_depend>
 
