@@ -1,4 +1,5 @@
-<package>
+<?xml version="1.0"?>
+<package format="3">
   <name>orocos_kdl</name>
   <version>1.4.0</version>
   <description>
@@ -12,11 +13,12 @@
   <buildtool_depend>cmake</buildtool_depend>
   <build_depend>eigen</build_depend>
 
-  <run_depend>catkin</run_depend>
-  <run_depend>eigen</run_depend>
-  <run_depend>pkg-config</run_depend>
+  <exec_depend>catkin</exec_depend>
+  <exec_depend>eigen</exec_depend>
+  <exec_depend>pkg-config</exec_depend>
 
   <test_depend>cppunit</test_depend>
+
   <export>
     <build_type>cmake</build_type>
   </export>
