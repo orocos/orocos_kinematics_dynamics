@@ -20,6 +20,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+from builtins import range
+
 import gc
 import psutil
 from PyKDL import *
@@ -238,7 +240,7 @@ class KinfamTestTree(unittest.TestCase):
         mem_before = process.memory_info().vms
         # needs at least 2000 iterations on my system to cause a detectable
         # difference in memory usage
-        for _ in xrange(10000):
+        for _ in range(10000):
             self.tree.getChain("foo", "bar")
         gc.collect()
         mem_after = process.memory_info().vms
