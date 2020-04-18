@@ -31,3 +31,10 @@
 %Include framevel.sip
 %Include kinfam.sip
 %Include dynamics.sip
+
+const std::string __version__;
+
+%ModuleCode
+#include <kdl/config.h>
+const std::string __version__ = KDL_VERSION_STRING;
+%End
