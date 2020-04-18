@@ -4,7 +4,7 @@
   <version>1.4.0</version>
   <description>
     This package contains a recent version of the Kinematics and Dynamics
-    Library (KDL), distributed by the Orocos Project. 
+    Library (KDL), distributed by the Orocos Project.
   </description>
   <maintainer email="ruben@intermodalics.eu">Ruben Smits</maintainer>
   <url>http://wiki.ros.org/orocos_kdl</url>
@@ -18,6 +18,8 @@
   <exec_depend>pkg-config</exec_depend>
 
   <test_depend>cppunit</test_depend>
+
+  <doc_depend>doxygen</doc_depend>
 
   <export>
     <build_type>cmake</build_type>
