@@ -1,8 +1,8 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -128,16 +128,16 @@ namespace KDL {
          */
         Twist twist(const double& qdot)const;
 
-        /**                                                                     
-         * Request the Vector corresponding to the axis of a revolute joint.    
-         *                                                                      
-         * @return Vector. e.g (1,0,0) for RotX etc.                            
+        /**
+         * Request the Vector corresponding to the axis of a revolute joint.
+         *
+         * @return Vector. e.g (1,0,0) for RotX etc.
          */
         Vector JointAxis() const;
 
-        /**                                                                     
-         * Request the Vector corresponding to the origin of a revolute joint.    
-         *                                                                      
+        /**
+         * Request the Vector corresponding to the origin of a revolute joint.
+         *
          * @return Vector
          */
         Vector JointOrigin() const;
@@ -160,8 +160,8 @@ namespace KDL {
         {
             return type;
         };
-      
-        /** 
+
+        /**
          * Request the stringified type of the joint.
          *
          * @return const string
@@ -239,7 +239,7 @@ namespace KDL {
         mutable double q_previous;
 
 
-      
+
       class joint_type_exception: public std::exception{
 	virtual const char* what() const throw(){
 	  return "Joint Type excption";}

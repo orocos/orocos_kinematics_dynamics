@@ -1,8 +1,8 @@
-// Copyright  (C)  2009  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include "frames_io.hpp"
 
 namespace KDL{
-    
+
     ChainIdSolver_RNE::ChainIdSolver_RNE(const Chain& chain_,Vector grav):
         chain(chain_),nj(chain.getNrOfJoints()),ns(chain.getNrOfSegments()),
         X(ns),S(ns),v(ns),a(ns),f(ns)
@@ -61,10 +61,10 @@ namespace KDL{
                 j++;
             }else
                 q_=qdot_=qdotdot_=0.0;
-            
+
             //Calculate segment properties: X,S,vj,cj
-            X[i]=chain.getSegment(i).pose(q_);//Remark this is the inverse of the 
-                                                //frame for transformations from 
+            X[i]=chain.getSegment(i).pose(q_);//Remark this is the inverse of the
+                                                //frame for transformations from
                                                 //the parent to the current coord frame
             //Transform velocity and unit velocity to segment frame
             Twist vj=X[i].M.Inverse(chain.getSegment(i).twist(q_,qdot_));

@@ -5,7 +5,7 @@
 
 /**************************************************************************
     begin                : May 2012
-    copyright            : (C) 2012 Erwin Aertbelien
+    copyright            : (C) 2020 Erwin Aertbelien
     email                : firstname.lastname@mech.kuleuven.ac.be
 
  History (only major changes)( AUTHOR-Description ) :
@@ -187,7 +187,7 @@ void ChainIkSolverPos_LMA::display_jac(const KDL::JntArray& jval) {
 int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& T_base_goal, KDL::JntArray& q_out) {
   if (nj != chain.getNrOfJoints())
     return (error = E_NOT_UP_TO_DATE);
-  
+
   if (nj != q_init.rows() || nj != q_out.rows())
     return (error = E_SIZE_MISMATCH);
 

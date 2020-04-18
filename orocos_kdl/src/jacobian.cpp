@@ -1,8 +1,8 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -35,14 +35,14 @@ namespace KDL
     {
         data.setZero();
     }
-    
+
     Jacobian::Jacobian(const Jacobian& arg):
         data(arg.data)
     {
     }
 
     Jacobian& Jacobian::operator = (const Jacobian& arg)
-    { 
+    {
         this->data=arg.data;
         return *this;
     }
@@ -50,7 +50,7 @@ namespace KDL
 
     Jacobian::~Jacobian()
     {
-        
+
     }
 
     void Jacobian::resize(unsigned int new_nr_of_columns)
@@ -96,7 +96,7 @@ namespace KDL
             dest.setColumn(i,src1.getColumn(i).RefPoint(base_AB));
         return true;
     }
-    
+
     void Jacobian::changeBase(const Rotation& rot){
         for(unsigned int i=0;i<data.cols();i++)
             this->setColumn(i,rot*this->getColumn(i));;
@@ -115,7 +115,7 @@ namespace KDL
         for(unsigned int i=0;i<data.cols();i++)
             this->setColumn(i,frame*this->getColumn(i));
     }
-    
+
     bool changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest)
     {
         if(src1.columns()!=dest.columns())
@@ -129,12 +129,12 @@ namespace KDL
     {
         return Equal((*this),arg);
     }
-    
+
     bool Jacobian::operator!=(const Jacobian& arg)const
     {
         return !Equal((*this),arg);
     }
-    
+
     bool Equal(const Jacobian& a,const Jacobian& b,double eps)
     {
         if(a.rows()==b.rows()&&a.columns()==b.columns()){
@@ -142,11 +142,11 @@ namespace KDL
         }else
             return false;
     }
-    
+
     Twist Jacobian::getColumn(unsigned int i) const{
         return Twist(Vector(data(0,i),data(1,i),data(2,i)),Vector(data(3,i),data(4,i),data(5,i)));
     }
-    
+
     void Jacobian::setColumn(unsigned int i,const Twist& t){
         data.col(i).head<3>()=Eigen::Map<const Vector3d>(t.vel.data);
         data.col(i).tail<3>()=Eigen::Map<const Vector3d>(t.rot.data);

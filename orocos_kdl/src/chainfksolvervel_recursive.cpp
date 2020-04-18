@@ -1,9 +1,9 @@
-// Copyright  (C)  2007  Francois Cauwe <francois at cauwe dot org>
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Francois Cauwe <francois at cauwe dot org>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -92,7 +92,7 @@ namespace KDL
             }else
                 out[0] = FrameVel(chain.getSegment(0).pose(0.0),
                                      chain.getSegment(0).twist(0.0,0.0));
-            
+
             for (unsigned int i=1;i<segmentNr;i++) {
                 //Calculate new Frame_base_ee
                 if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {

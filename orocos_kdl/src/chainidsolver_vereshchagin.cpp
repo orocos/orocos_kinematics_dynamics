@@ -1,8 +1,10 @@
-// Copyright  (C)  2009, 2011
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits, Herman Bruyninckx, Azamat Shakhimardanov
-// Maintainer: Ruben Smits, Azamat Shakhimardanov
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Author: Herman Bruyninckx
+// Author: Azamat Shakhimardanov
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
