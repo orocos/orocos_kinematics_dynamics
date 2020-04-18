@@ -35,6 +35,10 @@ suite.addTest(framestest.suite())
 suite.addTest(frameveltest.suite())
 suite.addTest(kinfamtest.suite())
 
+if sys.version_info < (3, 0):
+    import jointtypetest
+    suite.addTest(jointtypetest.suite())
+
 result = unittest.TextTestRunner(verbosity=3).run(suite)
 
 if result.wasSuccessful():
