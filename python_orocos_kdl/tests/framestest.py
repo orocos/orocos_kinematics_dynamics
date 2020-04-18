@@ -2,6 +2,7 @@
 
 # Version: 1.0
 # Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+# Author: Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
 # Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 # URL: http://www.orocos.org/kdl
 
