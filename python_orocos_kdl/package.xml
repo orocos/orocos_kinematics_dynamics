@@ -4,7 +4,7 @@
   <version>1.4.0</version>
   <description>
     This package contains the python bindings PyKDL for the Kinematics and Dynamics
-    Library (KDL), distributed by the Orocos Project. 
+    Library (KDL), distributed by the Orocos Project.
   </description>
   <maintainer email="ruben@intermodalics.eu">Ruben Smits</maintainer>
   <url>http://wiki.ros.org/python_orocos_kdl</url>
@@ -25,8 +25,11 @@
   <test_depend condition="$ROS_PYTHON_VERSION == 2">python-psutil</test_depend>
   <test_depend condition="$ROS_PYTHON_VERSION == 3">python3-psutil</test_depend>
 
+  <doc_depend>python-sphinx</doc_depend>
+
   <export>
     <build_type>cmake</build_type>
+    <rosdoc config="rosdoc.yaml"/>
   </export>
 
 </package>
