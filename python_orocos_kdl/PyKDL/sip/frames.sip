@@ -79,7 +79,7 @@ public:
 
     static Vector Zero()/Factory/;
 
-    double Norm();
+    double Norm(double eps=epsilon) const;
     double Normalize(double eps=epsilon);
 
 %PickleCode

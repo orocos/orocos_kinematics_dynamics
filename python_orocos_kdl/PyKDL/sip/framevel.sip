@@ -86,7 +86,7 @@ public:
     VectorVel& operator -= (const VectorVel& arg);
     static VectorVel Zero();
     void ReverseSign();
-    doubleVel Norm() const;
+    doubleVel Norm(double eps=epsilon) const;
 
 %PickleCode
     const sipTypeDef *vector_type = sipFindType("Vector");
