@@ -104,7 +104,7 @@ public:
     IMETHOD VectorVel& operator -= (const VectorVel& arg);
     IMETHOD static VectorVel Zero();
     IMETHOD void ReverseSign();
-    IMETHOD doubleVel Norm() const;
+    IMETHOD doubleVel Norm(double eps=epsilon) const;
     IMETHOD friend VectorVel operator + (const VectorVel& r1,const VectorVel& r2);
     IMETHOD friend VectorVel operator - (const VectorVel& r1,const VectorVel& r2);
     IMETHOD friend VectorVel operator + (const Vector& r1,const VectorVel& r2);

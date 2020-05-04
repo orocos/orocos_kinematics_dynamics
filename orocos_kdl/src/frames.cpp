@@ -85,13 +85,13 @@ namespace KDL {
                      );
     }
 
-    double Vector2::Norm() const
+    double Vector2::Norm(double eps) const
     {
         double tmp1 = fabs(data[0]);
         double tmp2 = fabs(data[1]);
         
-        if (tmp1 == 0.0 && tmp2 == 0.0)
-            return 0.0;
+        if (tmp1 < eps && tmp2 < eps)
+            return 0;
 
         if (tmp1 > tmp2) {
             return tmp1*sqrt(1+sqr(data[1]/data[0]));
@@ -115,7 +115,7 @@ namespace KDL {
 
 
     // do some effort not to lose precision
-    double Vector::Norm() const
+    double Vector::Norm(double eps) const
     {
         double tmp1;
         double tmp2;
@@ -124,7 +124,7 @@ namespace KDL {
         if (tmp1 >= tmp2) {
             tmp2=fabs(data[2]);
             if (tmp1 >= tmp2) {
-                if (tmp1 == 0) {
+                if (tmp1 < eps) {
                     // only to everything exactly zero case, all other are handled correctly
                     return 0;
                 }
