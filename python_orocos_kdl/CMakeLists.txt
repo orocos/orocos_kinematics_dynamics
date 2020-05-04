@@ -22,6 +22,8 @@ find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} REQUIRED
 set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages")
 set(LIBRARY_NAME "PyKDL")
 
+message(DEPRECATION "PyKDL has been moved to PyBin11. PyKDL based on SIP might become depracted in the (near) future. To keep using the SIP based version set 'BUILD_PYKDL_PYBIND11' to OFF.")
+
 option(BUILD_PYKDL_PYBIND11 "Use PyBind11 instead of SIP" ON)
 if (BUILD_PYKDL_PYBIND11)
   SET(PYTHON_MODULE_EXTENSION ".so")
