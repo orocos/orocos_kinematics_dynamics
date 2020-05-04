@@ -100,13 +100,13 @@ namespace KDL {
         }
     }
     // makes v a unitvector and returns the norm of v.
-    // if v is smaller than eps, Vector(1,0,0) is returned with norm 0.
+    // if v is smaller than eps, Vector(1,0) is returned with norm 0.
     // if this is not good, check the return value of this method.
     double Vector2::Normalize(double eps) {
         double v = this->Norm();
         if (v < eps) {
             *this = Vector2(1,0);
-            return v;
+            return 0;
         } else {
             *this = (*this)/v;
             return v;
@@ -149,7 +149,7 @@ namespace KDL {
         double v = this->Norm();
         if (v < eps) {
             *this = Vector(1,0,0);
-            return v;
+            return 0;
         } else {
             *this = (*this)/v;
             return v;
