@@ -87,7 +87,7 @@ void init_framevel(pybind11::module &m)
     });
     vector_vel.def_static("Zero", &VectorVel::Zero);
     vector_vel.def("ReverseSign", &VectorVel::ReverseSign);
-    vector_vel.def("Norm", &VectorVel::Norm);
+    vector_vel.def("Norm", &VectorVel::Norm, py::arg("eps")=epsilon);
     vector_vel.def(py::self += py::self);
     vector_vel.def(py::self -= py::self);
     vector_vel.def(py::self + py::self);
