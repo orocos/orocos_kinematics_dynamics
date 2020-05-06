@@ -1,8 +1,7 @@
-#! /usr/bin/env python
 # Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 # Version: 1.0
-# Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+# Author: Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
 # Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 # URL: http://www.orocos.org/kdl
 
@@ -21,27 +20,29 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+from PyKDL import Joint
 import unittest
-import dynamicstest
-import kinfamtest
-import framestest
-import frameveltest
 
-import sys
 
-suite = unittest.TestSuite()
-suite.addTest(dynamicstest.suite())
-suite.addTest(framestest.suite())
-suite.addTest(frameveltest.suite())
-suite.addTest(kinfamtest.suite())
+class JointTypeNoneTest(unittest.TestCase):
+    def testJointType(self):
+        self.assertEqual(Joint.Fixed, Joint.None)
+        self.assertEqual(str(Joint.Fixed), str(Joint.None))
+        self.assertEqual(int(Joint.Fixed), int(Joint.None))
 
-if sys.version_info < (3, 0):
-    import jointtypetest
-    suite.addTest(jointtypetest.suite())
 
-result = unittest.TextTestRunner(verbosity=3).run(suite)
+def suite():
+    suite = unittest.TestSuite()
+    suite.addTest(JointTypeNoneTest('testJointType'))
+    return suite
 
-if result.wasSuccessful():
-    sys.exit(0)
-else:
-    sys.exit(1)
+
+if __name__ == '__main__':
+    import sys
+    suite = suite()
+    result = unittest.TextTestRunner(verbosity=3).run(suite)
+
+    if result.wasSuccessful():
+        sys.exit(0)
+    else:
+        sys.exit(1)

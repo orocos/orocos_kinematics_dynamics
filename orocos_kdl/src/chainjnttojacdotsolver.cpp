@@ -1,6 +1,6 @@
 /*
     Computes the Jacobian time derivative
-    Copyright (C) 2015  Antoine Hoarau <hoarau [at] isir.upmc.fr>
+    Copyright (C) 2020  Antoine Hoarau <hoarau [at] isir.upmc.fr>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -98,7 +98,7 @@ int ChainJntToJacDotSolver::JntToJacDot(const JntArrayVel& q_in, Jacobian& jdot,
     for(unsigned int i=0;i<segmentNr;++i)
     {
         //Only increase joint nr if the segment has a joint
-        if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+        if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
 
             for(unsigned int j=0;j<chain.getNrOfJoints();++j)
             {
@@ -114,9 +114,9 @@ int ChainJntToJacDotSolver::JntToJacDot(const JntArrayVel& q_in, Jacobian& jdot,
     return (error = E_NOERROR);
 }
 
-const Twist& ChainJntToJacDotSolver::getPartialDerivative(const KDL::Jacobian& J, 
-                                                          const unsigned int& joint_idx, 
-                                                          const unsigned int& column_idx, 
+const Twist& ChainJntToJacDotSolver::getPartialDerivative(const KDL::Jacobian& J,
+                                                          const unsigned int& joint_idx,
+                                                          const unsigned int& column_idx,
                                                           const int& representation)
 {
     switch(representation)
@@ -133,8 +133,8 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivative(const KDL::Jacobian& J
     }
 }
 
-const Twist& ChainJntToJacDotSolver::getPartialDerivativeHybrid(const KDL::Jacobian& bs_J_ee, 
-                                                                const unsigned int& joint_idx, 
+const Twist& ChainJntToJacDotSolver::getPartialDerivativeHybrid(const KDL::Jacobian& bs_J_ee,
+                                                                const unsigned int& joint_idx,
                                                                 const unsigned int& column_idx)
 {
     int j=joint_idx;
@@ -164,8 +164,8 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivativeHybrid(const KDL::Jacob
     return t_djdq_;
 }
 
-const Twist& ChainJntToJacDotSolver::getPartialDerivativeBodyFixed(const Jacobian& ee_J_ee, 
-                                                            const unsigned int& joint_idx, 
+const Twist& ChainJntToJacDotSolver::getPartialDerivativeBodyFixed(const Jacobian& ee_J_ee,
+                                                            const unsigned int& joint_idx,
                                                             const unsigned int& column_idx)
 {
     int j=joint_idx;
@@ -186,8 +186,8 @@ const Twist& ChainJntToJacDotSolver::getPartialDerivativeBodyFixed(const Jacobia
 
     return t_djdq_;
 }
-const Twist& ChainJntToJacDotSolver::getPartialDerivativeInertial(const KDL::Jacobian& bs_J_bs, 
-                                                                  const unsigned int& joint_idx, 
+const Twist& ChainJntToJacDotSolver::getPartialDerivativeInertial(const KDL::Jacobian& bs_J_bs,
+                                                                  const unsigned int& joint_idx,
                                                                   const unsigned int& column_idx)
 {
     int j=joint_idx;
@@ -211,7 +211,7 @@ void ChainJntToJacDotSolver::setRepresentation(const int& representation)
 {
     if(representation == HYBRID ||
         representation == BODYFIXED ||
-        representation == INERTIAL)   
+        representation == INERTIAL)
     this->representation_ = representation;
 }
 

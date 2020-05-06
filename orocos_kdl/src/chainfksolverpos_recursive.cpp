@@ -1,9 +1,9 @@
-// Copyright  (C)  2007  Francois Cauwe <francois at cauwe dot org>
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Francois Cauwe <francois at cauwe dot org>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ namespace KDL {
         else{
             int j=0;
             for(unsigned int i=0;i<segmentNr;i++){
-                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                     p_out = p_out*chain.getSegment(i).pose(q_in(j));
                     j++;
                 }else{
@@ -74,14 +74,14 @@ namespace KDL {
         else{
             int j=0;
             // Initialization
-            if(chain.getSegment(0).getJoint().getType()!=Joint::None){
+            if(chain.getSegment(0).getJoint().getType()!=Joint::Fixed) {
                 p_out[0] = chain.getSegment(0).pose(q_in(j));
                 j++;
             }else
                 p_out[0] = chain.getSegment(0).pose(0.0);
-            
+
             for(unsigned int i=1;i<segmentNr;i++){
-                if(chain.getSegment(i).getJoint().getType()!=Joint::None){
+                if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
                     p_out[i] = p_out[i-1]*chain.getSegment(i).pose(q_in(j));
                     j++;
                 }else{

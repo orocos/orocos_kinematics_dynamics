@@ -1,8 +1,8 @@
-// Copyright  (C)  2009  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
 // Author: Franco Fusco <franco dot fusco at ls2n dot fr>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -83,7 +83,7 @@ namespace KDL{
       //Do forward calculations involving velocity & acceleration of this segment
       double q_, qdot_, qdotdot_;
       unsigned int j = GetTreeElementQNr(segment->second);
-      if(seg.getJoint().getType()!=Joint::None){
+      if(seg.getJoint().getType()!=Joint::Fixed) {
         q_ = q(j);
         qdot_ = q_dot(j);
         qdotdot_ = q_dotdot(j);
@@ -127,7 +127,7 @@ namespace KDL{
       //do backward calculations involving wrenches and joint efforts
 
       //If there is a moving joint, evaluate its effort
-      if(seg.getJoint().getType()!=Joint::None){
+      if(seg.getJoint().getType()!=Joint::Fixed) {
         torques(j) = dot(S.at(segname), f.at(segname));
         torques(j) += seg.getJoint().getInertia()*q_dotdot(j);  // add torque from joint inertia
       }
