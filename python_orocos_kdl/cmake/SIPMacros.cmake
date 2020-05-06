@@ -103,11 +103,11 @@ MACRO(ADD_SIP_PYTHON_MODULE MODULE_NAME MODULE_SIP)
         ENDFOREACH(filename ${_sip_output_files})
     ENDIF(NOT WIN32)
     ADD_CUSTOM_COMMAND(
-        OUTPUT ${_sip_output_files} 
+        OUTPUT ${_sip_output_files}
         COMMAND ${CMAKE_COMMAND} -E echo ${message}
         COMMAND ${TOUCH_COMMAND} ${_sip_output_files} 
         COMMAND ${SIP_EXECUTABLE} ${_sip_tags} ${_sip_x} ${SIP_EXTRA_OPTIONS} -j ${SIP_CONCAT_PARTS} -c ${CMAKE_CURRENT_SIP_OUTPUT_DIR} ${_sip_includes} ${_abs_module_sip}
-        DEPENDS ${_abs_module_sip} ${SIP_EXTRA_FILES_DEPEND}
+        DEPENDS ${SIP_INCLUDES} ${SIP_EXTRA_FILES_DEPEND}
     )
     # not sure if type MODULE could be uses anywhere, limit to cygwin for now
     IF (CYGWIN OR APPLE)

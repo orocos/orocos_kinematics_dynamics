@@ -1,8 +1,9 @@
-// Copyright  (C)  2009  Dominick Vanthienen <dominick dot vanthienen at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
 // Author: Dominick Vanthienen <dominick dot vanthienen at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -65,13 +66,13 @@ namespace KDL {
             return (error = E_SIZE_MISMATCH);
         unsigned int k=0;
 	double q_;
-	
+
 	//Sweep from root to leaf
         for(unsigned int i=0;i<ns;i++)
 	{
 	  //Collect RigidBodyInertia
           Ic[i]=chain.getSegment(i).getInertia();
-          if(chain.getSegment(i).getJoint().getType()!=Joint::None)
+          if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed)
 	  {
 	      q_=q(k);
 	      k++;
@@ -81,22 +82,22 @@ namespace KDL {
 	    q_=0.0;
 	  }
 	  X[i]=chain.getSegment(i).pose(q_);//Remark this is the inverse of the frame for transformations from the parent to the current coord frame
-	  S[i]=X[i].M.Inverse(chain.getSegment(i).twist(q_,1.0));  
+	  S[i]=X[i].M.Inverse(chain.getSegment(i).twist(q_,1.0));
         }
 	//Sweep from leaf to root
         int j,l;
 	k=nj-1; //reset k
         for(int i=ns-1;i>=0;i--)
 	{
-	  
+
 	  if(i!=0)
 	    {
 	      //assumption that previous segment is parent
 	      Ic[i-1]=Ic[i-1]+X[i]*Ic[i];
-	    } 
+	    }
 
 	  F=Ic[i]*S[i];
-	  if(chain.getSegment(i).getJoint().getType()!=Joint::None)
+      if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed)
 	  {
 	      H(k,k)=dot(S[i],F);
 	      j=k; //countervariable for the joints
@@ -106,14 +107,14 @@ namespace KDL {
 		  //assumption that previous segment is parent
 		  F=X[l]*F; //calculate the unit force (cfr S) for every segment: F[l-1]=X[l]*F[l]
 		  l--; //go down a segment
-		  
-		  if(chain.getSegment(l).getJoint().getType()!=Joint::None) //if the joint connected to segment is not a fixed joint
-		  {    
+
+          if(chain.getSegment(l).getJoint().getType()!=Joint::Fixed) //if the joint connected to segment is not a fixed joint
+		  {
 		    j--;
-		    H(k,j)=dot(F,S[l]); //here you actually match a certain not fixed joint with a segment 
+		    H(k,j)=dot(F,S[l]); //here you actually match a certain not fixed joint with a segment
 		    H(j,k)=H(k,j);
 		  }
-		} 
+		}
 	      k--; //this if-loop should be repeated nj times (k=nj-1 to k=0)
 	  }
 
@@ -127,10 +128,10 @@ namespace KDL {
     //make a null matrix with the size of q_dotdot and a null wrench
 	SetToZero(jntarraynull);
 
-	
+
 	//the calculation of coriolis matrix C
 	return chainidsolver_coriolis.CartToJnt(q, q_dot, jntarraynull, wrenchnull, coriolis);
-	
+
     }
 
     //calculate gravity matrix G
@@ -138,7 +139,7 @@ namespace KDL {
     {
 
 	//make a null matrix with the size of q_dotdot and a null wrench
-	
+
 	SetToZero(jntarraynull);
 	//the calculation of coriolis matrix C
 	return chainidsolver_gravity.CartToJnt(q, jntarraynull, jntarraynull, wrenchnull, gravity);
