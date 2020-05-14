@@ -414,6 +414,31 @@ class FramesTestFunctions(unittest.TestCase):
 
         self.assertEqual(data, data1)
 
+    def testCopyImpl(self, copy):
+        v1 = Vector(1, 2, 3)
+        v2 = copy(v1)
+        self.assertEqual(v1, v2)
+        r1 = Rotation().EulerZYZ(1, 2, 3)
+        r2 = copy(r1)
+        self.assertEqual(r1, r2)
+        f1 = Frame(r1, v1)
+        f2 = copy(f1)
+        self.assertEqual(f1, f2)
+        t1 = Twist(v1, Vector(4, 5, 6))
+        t2 = copy(t1)
+        self.assertEqual(t1, t2)
+        w1 = Wrench(Vector(0.1, 0.2, 0.3), v1)
+        w2 = copy(w1)
+        self.assertEqual(w1, w2)
+
+    def testCopy(self):
+        from copy import copy
+        self.testCopyImpl(copy)
+
+    def testDeepCopy(self):
+        from copy import deepcopy
+        self.testCopyImpl(deepcopy)
+
 
 def suite():
     suite = unittest.TestSuite()
@@ -423,6 +448,8 @@ def suite():
     suite.addTest(FramesTestFunctions('testRotation'))
     suite.addTest(FramesTestFunctions('testFrame'))
     suite.addTest(FramesTestFunctions('testPickle'))
+    suite.addTest(FramesTestFunctions('testCopy'))
+    suite.addTest(FramesTestFunctions('testDeepCopy'))
     return suite
 
 
