@@ -264,6 +264,28 @@ class FrameVelTestFunctions(unittest.TestCase):
 
         self.assertEqual(data, data1)
 
+    def testCopyImpl(self, copy):
+        vv1 = VectorVel(Vector(1, 2, 3), Vector(4, 5, 6))
+        vv2 = copy(vv1)
+        self.assertEqual(vv1, vv2)
+        rv1 = RotationVel(Rotation.RotX(1.3), Vector(4.1, 5.1, 6.1))
+        rv2 = copy(rv1)
+        self.assertEqual(rv1, rv2)
+        fv1 = FrameVel(rv1, vv1)
+        fv2 = copy(fv1)
+        self.assertEqual(fv1, fv2)
+        tv1 = TwistVel(vv1, vv1)
+        tv2 = copy(tv1)
+        self.assertEqual(tv1, tv2)
+
+    def testCopy(self):
+        from copy import copy
+        self.testCopyImpl(copy)
+
+    def testDeepCopy(self):
+        from copy import deepcopy
+        self.testCopyImpl(deepcopy)
+
 
 def suite():
     suite = unittest.TestSuite()
@@ -273,6 +295,8 @@ def suite():
     suite.addTest(FrameVelTestFunctions('testRotationVel'))
     suite.addTest(FrameVelTestFunctions('testFrameVel'))
     suite.addTest(FrameVelTestFunctions('testPickle'))
+    suite.addTest(FrameVelTestFunctions('testCopy'))
+    suite.addTest(FrameVelTestFunctions('testDeepCopy'))
     return suite
 
 
