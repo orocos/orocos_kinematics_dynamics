@@ -50,6 +50,14 @@ void init_framevel(pybind11::module &m)
         oss << d;
         return oss.str();
     });
+    double_vel.def("__copy__", [](const doubleVel& self)
+    {
+        return doubleVel(self);
+    });
+    double_vel.def("__deepcopy__", [](const doubleVel& self, py::dict)
+    {
+        return doubleVel(self);
+    }, py::arg("memo"));
 
     double_vel.def(py::self == py::self);
     double_vel.def(py::self != py::self);
@@ -85,6 +93,14 @@ void init_framevel(pybind11::module &m)
         oss << vv;
         return oss.str();
     });
+    vector_vel.def("__copy__", [](const VectorVel& self)
+    {
+        return VectorVel(self);
+    });
+    vector_vel.def("__deepcopy__", [](const VectorVel& self, py::dict)
+    {
+        return VectorVel(self);
+    }, py::arg("memo"));
     vector_vel.def_static("Zero", &VectorVel::Zero);
     vector_vel.def("ReverseSign", &VectorVel::ReverseSign);
     vector_vel.def("Norm", &VectorVel::Norm, py::arg("eps")=epsilon);
@@ -167,6 +183,14 @@ void init_framevel(pybind11::module &m)
         oss << tv;
         return oss.str();
     });
+    twist_vel.def("__copy__", [](const TwistVel& self)
+    {
+        return TwistVel(self);
+    });
+    twist_vel.def("__deepcopy__", [](const TwistVel& self, py::dict)
+    {
+        return TwistVel(self);
+    }, py::arg("memo"));
     twist_vel.def_static("Zero", &TwistVel::Zero);
     twist_vel.def("ReverseSign", &TwistVel::ReverseSign);
     twist_vel.def("RefPoint", &TwistVel::RefPoint);
@@ -239,6 +263,14 @@ void init_framevel(pybind11::module &m)
         oss << rv;
         return oss.str();
     });
+    rotation_vel.def("__copy__", [](const RotationVel& self)
+    {
+        return RotationVel(self);
+    });
+    rotation_vel.def("__deepcopy__", [](const RotationVel& self, py::dict)
+    {
+        return RotationVel(self);
+    }, py::arg("memo"));
     rotation_vel.def("UnitX", &RotationVel::UnitX);
     rotation_vel.def("UnitY", &RotationVel::UnitY);
     rotation_vel.def("UnitZ", &RotationVel::UnitZ);
@@ -315,6 +347,14 @@ void init_framevel(pybind11::module &m)
         oss << fv;
         return oss.str();
     });
+    frame_vel.def("__copy__", [](const FrameVel& self)
+    {
+        return FrameVel(self);
+    });
+    frame_vel.def("__deepcopy__", [](const FrameVel& self, py::dict)
+    {
+        return FrameVel(self);
+    }, py::arg("memo"));
     frame_vel.def_static("Identity", &FrameVel::Identity);
     frame_vel.def("Inverse", (FrameVel (FrameVel::*)() const) &FrameVel::Inverse);
     frame_vel.def("Inverse", (VectorVel (FrameVel::*)(const VectorVel&) const) &FrameVel::Inverse);

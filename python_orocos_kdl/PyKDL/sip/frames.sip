@@ -72,6 +72,16 @@ public:
     sipRes=&s;
 %End
 
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Vector(*sipCpp), sipFindType("Vector"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Vector(*sipCpp), sipFindType("Vector"), NULL);
+%End
+
     void ReverseSign();
 
     Vector& operator-=(const Vector& arg);
@@ -148,6 +158,16 @@ public:
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Rotation(*sipCpp), sipFindType("Rotation"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Rotation(*sipCpp), sipFindType("Rotation"), NULL);
 %End
 
     void SetInverse();
@@ -258,6 +278,16 @@ public:
     sipRes=&s;
 %End
 
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Frame(*sipCpp), sipFindType("Frame"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Frame(*sipCpp), sipFindType("Frame"), NULL);
+%End
+
     Frame DH_Craig1989(double a,double alpha,double d,double theta);
     Frame DH(double a,double alpha,double d,double theta);
     Frame Inverse()/Factory/;
@@ -332,6 +362,16 @@ public:
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Twist(*sipCpp), sipFindType("Twist"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Twist(*sipCpp), sipFindType("Twist"), NULL);
 %End
 
     static Twist Zero() /Factory/;
@@ -409,6 +449,16 @@ public:
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Wrench(*sipCpp), sipFindType("Wrench"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Wrench(*sipCpp), sipFindType("Wrench"), NULL);
 %End
 
     static Wrench Zero() /Factory/;
