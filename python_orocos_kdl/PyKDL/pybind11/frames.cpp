@@ -80,6 +80,14 @@ void init_frames(py::module &m)
     {
         return operator-(a);
     }, py::is_operator());
+    vector.def("__copy__", [](const Vector& self)
+    {
+        return Vector(self);
+    });
+    vector.def("__deepcopy__", [](const Vector& self, py::dict)
+    {
+        return Vector(self);
+    }, py::arg("memo"));
     vector.def_static("Zero", &Vector::Zero);
     vector.def("Norm", &Vector::Norm, py::arg("eps")=epsilon);
     vector.def("Normalize", &Vector::Normalize, py::arg("eps")=epsilon);
@@ -134,6 +142,14 @@ void init_frames(py::module &m)
         oss << t;
         return oss.str();
     });
+    wrench.def("__copy__", [](const Wrench& self)
+    {
+        return Wrench(self);
+    });
+    wrench.def("__deepcopy__", [](const Wrench& self, py::dict)
+    {
+        return Wrench(self);
+    }, py::arg("memo"));
     wrench.def_static("Zero", &Wrench::Zero);
     wrench.def("ReverseSign", &Wrench::ReverseSign);
     wrench.def("RefPoint", &Wrench::RefPoint);
@@ -200,6 +216,14 @@ void init_frames(py::module &m)
         oss << t;
         return oss.str();
     });
+    twist.def("__copy__", [](const Twist& self)
+    {
+        return Twist(self);
+    });
+    twist.def("__deepcopy__", [](const Twist& self, py::dict)
+    {
+        return Twist(self);
+    }, py::arg("memo"));
     twist.def_static("Zero", &Twist::Zero);
     twist.def("ReverseSign", &Twist::ReverseSign);
     twist.def("RefPoint", &Twist::RefPoint);
@@ -271,6 +295,14 @@ void init_frames(py::module &m)
             oss << r;
             return oss.str();
     });
+    rotation.def("__copy__", [](const Rotation& self)
+    {
+        return Rotation(self);
+    });
+    rotation.def("__deepcopy__", [](const Rotation& self, py::dict)
+    {
+        return Rotation(self);
+    }, py::arg("memo"));
     rotation.def("SetInverse", &Rotation::SetInverse);
     rotation.def("Inverse", (Rotation (Rotation::*)(void) const) &Rotation::Inverse);
     rotation.def("Inverse", (Vector (Rotation::*)(const Vector&) const) &Rotation::Inverse);
@@ -391,6 +423,14 @@ void init_frames(py::module &m)
         oss << frm;
         return oss.str();
     });
+    frame.def("__copy__", [](const Frame& self)
+    {
+        return Frame(self);
+    });
+    frame.def("__deepcopy__", [](const Frame& self, py::dict)
+    {
+        return Frame(self);
+    }, py::arg("memo"));
     frame.def("DH_Craig1989", &Frame::DH_Craig1989);
     frame.def("DH", &Frame::DH);
     frame.def("Inverse", (Frame (Frame::*)() const) &Frame::Inverse);
