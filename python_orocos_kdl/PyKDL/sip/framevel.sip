@@ -37,12 +37,23 @@ public:
     double grad;
     double value();
     double deriv();
+
     const std::string* __repr__() const;
 %MethodCode
     std::ostringstream oss;
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new doubleVel(*sipCpp), sipFindType("doubleVel"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new doubleVel(*sipCpp), sipFindType("doubleVel"), NULL);
 %End
 };
 
@@ -80,6 +91,16 @@ public:
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new VectorVel(*sipCpp), sipFindType("VectorVel"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new VectorVel(*sipCpp), sipFindType("VectorVel"), NULL);
 %End
 
     VectorVel& operator += (const VectorVel& arg);
@@ -157,6 +178,15 @@ public:
     sipRes=&s;
 %End
 
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new RotationVel(*sipCpp), sipFindType("RotationVel"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new RotationVel(*sipCpp), sipFindType("RotationVel"), NULL);
+%End
 
     VectorVel UnitX() const;
     VectorVel UnitY() const;
@@ -232,6 +262,15 @@ public:
     sipRes=&s;
 %End
 
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new FrameVel(*sipCpp), sipFindType("FrameVel"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new FrameVel(*sipCpp), sipFindType("FrameVel"), NULL);
+%End
 
     static FrameVel Identity();
     FrameVel Inverse() const;
@@ -295,6 +334,16 @@ public:
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new TwistVel(*sipCpp), sipFindType("TwistVel"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new TwistVel(*sipCpp), sipFindType("TwistVel"), NULL);
 %End
 
     TwistVel& operator-=(const TwistVel& arg);
