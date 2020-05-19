@@ -471,6 +471,7 @@ void init_kinfam(pybind11::module &m)
                                 py::arg("q_in"), py::arg("jac"), py::arg("seg_nr")=-1);
     chain_jnt_to_jac_solver.def("setLockedJoints", &ChainJntToJacSolver::setLockedJoints);
 
+
     // ------------------------------
     // ChainJntToJacDotSolver
     // ------------------------------
@@ -478,7 +479,24 @@ void init_kinfam(pybind11::module &m)
     chain_jnt_to_jac_dot_solver.def(py::init<const Chain&>());
     chain_jnt_to_jac_dot_solver.def("JntToJacDot", (int (ChainJntToJacDotSolver::*)(const JntArrayVel&, Jacobian&, int)) &ChainJntToJacDotSolver::JntToJacDot,
                                     py::arg("q_in"), py::arg("jdot"), py::arg("seg_nr")=-1);
-    chain_jnt_to_jac_dot_solver.def("setLockedJoints", &ChainJntToJacDotSolver::setLockedJoints);
+    chain_jnt_to_jac_dot_solver.def("JntToJacDot", (int (ChainJntToJacDotSolver::*)(const JntArrayVel&, Twist&, int)) &ChainJntToJacDotSolver::JntToJacDot,
+                                    py::arg("q_in"), py::arg("jac_dot_q_dot"), py::arg("seg_nr")=-1);
+    chain_jnt_to_jac_dot_solver.def("setLockedJoints", &ChainJntToJacDotSolver::setLockedJoints,
+                                    py::arg("locked_joints"));
+
+    chain_jnt_to_jac_dot_solver.def_readonly_static("E_JAC_DOT_FAILED", &ChainJntToJacDotSolver::E_JAC_DOT_FAILED);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("E_JACSOLVER_FAILED", &ChainJntToJacDotSolver::E_JACSOLVER_FAILED);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("E_FKSOLVERPOS_FAILED", &ChainJntToJacDotSolver::E_FKSOLVERPOS_FAILED);
+
+    chain_jnt_to_jac_dot_solver.def_readonly_static("HYBRID", &ChainJntToJacDotSolver::HYBRID);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("BODYFIXED", &ChainJntToJacDotSolver::BODYFIXED);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("INERTIAL", &ChainJntToJacDotSolver::INERTIAL);
+
+    chain_jnt_to_jac_dot_solver.def("setHybridRepresentation", &ChainJntToJacDotSolver::setHybridRepresentation);
+    chain_jnt_to_jac_dot_solver.def("setBodyFixedRepresentation", &ChainJntToJacDotSolver::setBodyFixedRepresentation);
+    chain_jnt_to_jac_dot_solver.def("setInertialRepresentation", &ChainJntToJacDotSolver::setInertialRepresentation);
+    chain_jnt_to_jac_dot_solver.def("setRepresentation", &ChainJntToJacDotSolver::setRepresentation,
+                                    py::arg("representation"));
 
 
     // ------------------------------
