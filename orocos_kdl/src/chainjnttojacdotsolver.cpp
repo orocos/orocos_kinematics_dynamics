@@ -23,6 +23,14 @@
 namespace KDL
 {
 
+const int ChainJntToJacDotSolver::E_JAC_DOT_FAILED;
+const int ChainJntToJacDotSolver::E_JACSOLVER_FAILED;
+const int ChainJntToJacDotSolver::E_FKSOLVERPOS_FAILED;
+
+const int ChainJntToJacDotSolver:: HYBRID;
+const int ChainJntToJacDotSolver::BODYFIXED;
+const int ChainJntToJacDotSolver::INERTIAL;
+
 ChainJntToJacDotSolver::ChainJntToJacDotSolver(const Chain& _chain):
     chain(_chain),
     locked_joints_(chain.getNrOfJoints(),false),
