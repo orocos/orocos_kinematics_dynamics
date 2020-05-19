@@ -47,14 +47,14 @@ SET( KDL_CFLAGS "")
 
 find_package(Eigen 3 QUIET)
 if(NOT Eigen_FOUND)
-  include(${PROJ_SOURCE_DIR}/config/FindEigen3.cmake)
+  include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
   set(Eigen_INCLUDE_DIR "${EIGEN3_INCLUDE_DIR}")
 endif()
 include_directories(${Eigen_INCLUDE_DIR})
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I${Eigen_INCLUDE_DIR}")
 
 # Check the platform STL containers capabilities
-include(config/CheckSTLContainers.cmake)
+include(cmake/CheckSTLContainers.cmake)
 CHECK_STL_CONTAINERS()
 
 # Set the default option appropriately
@@ -67,6 +67,12 @@ endif(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
 # Allow the user to select the Tree API version to use
 set(KDL_USE_NEW_TREE_INTERFACE ${KDL_USE_NEW_TREE_INTERFACE_DEFAULT} CACHE BOOL "Use the new KDL Tree interface")
 
+#Sanity check, inform the user
+if(NOT HAVE_STL_CONTAINER_INCOMPLETE_TYPES AND NOT KDL_USE_NEW_TREE_INTERFACE)
+    message(WARNING "You have chosen to use the current Tree Interface, but your platform doesn't support containers of "
+        "incomplete types, this configuration is likely invalid")
+endif()
+
 # The new interface requires the use of shared pointers
 if(KDL_USE_NEW_TREE_INTERFACE)
     # We need shared_ptr from boost since not all compilers are c++11 capable
@@ -74,8 +80,6 @@ if(KDL_USE_NEW_TREE_INTERFACE)
     include_directories(${Boost_INCLUDE_DIRS})
     set(KDL_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
-
-INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
 IF( ENABLE_TESTS )

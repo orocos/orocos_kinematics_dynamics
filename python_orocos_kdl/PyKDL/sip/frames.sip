@@ -1,8 +1,8 @@
-//Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+//Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 //
 //Version: 1.0
-//Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-//Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+//Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+//Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 //URL: http://www.orocos.org/kdl
 //
 //This library is free software; you can redistribute it and/or
@@ -45,19 +45,23 @@ public:
     double __getitem__ (int index) const;
 %MethodCode
     if (a0 < 0 || a0 > 2) {
-	    PyErr_SetString(PyExc_IndexError, "Vector index out of range");
-	    return 0;
+        PyErr_SetString(PyExc_IndexError, "Vector index out of range");
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
 
     void __setitem__(int index, double value);
 %MethodCode
     if (a0 < 0 || a0 > 2) {
         PyErr_SetString(PyExc_IndexError, "Vector index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -68,6 +72,16 @@ public:
     sipRes=&s;
 %End
 
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Vector(*sipCpp), sipFindType("Vector"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Vector(*sipCpp), sipFindType("Vector"), NULL);
+%End
+
     void ReverseSign();
 
     Vector& operator-=(const Vector& arg);
@@ -75,7 +89,7 @@ public:
 
     static Vector Zero()/Factory/;
 
-    double Norm();
+    double Norm(double eps=epsilon) const;
     double Normalize(double eps=epsilon);
 
 %PickleCode
@@ -111,16 +125,18 @@ public:
              double Xy,double Yy,double Zy,
              double Xz,double Yz,double Zz);
     Rotation(const Vector& x,const Vector& y,const Vector& z);
-    
+
     double __getitem__(SIP_PYTUPLE) const;
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0, "ii", &i, &j);
     if (i < 0 || j < 0 || i > 2 || j > 2) {
         PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=((const Rotation)(*sipCpp))(i,j);
+    else {
+        sipRes=((const Rotation)(*sipCpp))(i,j);
+    }
 %End
 
     void __setitem__(SIP_PYTUPLE,double value);
@@ -129,9 +145,11 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 2 || j > 2) {
         PyErr_SetString(PyExc_IndexError, "Rotation index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(i,j)=a1;
+    else {
+        (*sipCpp)(i,j)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -141,13 +159,23 @@ public:
     std::string s(oss.str());
     sipRes=&s;
 %End
-    
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Rotation(*sipCpp), sipFindType("Rotation"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Rotation(*sipCpp), sipFindType("Rotation"), NULL);
+%End
+
     void SetInverse();
     Rotation Inverse() const /Factory/;
     Vector Inverse(const Vector& v) const /Factory/;
     Wrench Inverse(const Wrench& w) const /Factory/;
     Twist Inverse(const Twist& t) const /Factory/;
-    
+
     static Rotation Identity()/Factory/;
     static Rotation RotX(double angle)/Factory/;
     static Rotation RotY(double angle)/Factory/;
@@ -158,12 +186,12 @@ public:
     static Rotation RPY(double roll,double pitch,double yaw)/Factory/;
     static Rotation EulerZYX(double Alfa,double Beta,double Gamma)/Factory/;
     static Rotation Quaternion(double x, double y, double z, double w)/Factory/;
-    
+
 
     void DoRotX(double angle);
     void DoRotY(double angle);
     void DoRotZ(double angle);
-    
+
     Vector GetRot() const /Factory/;
     double GetRotAngle(Vector& axis /Out/,double eps=epsilon) const;
     void GetEulerZYZ(double& alfa /Out/,double& beta /Out/,double& gamma /Out/) const;
@@ -171,11 +199,11 @@ public:
     void GetEulerZYX(double& Alfa /Out/,double& Beta /Out/,double& Gamma /Out/) const;
     void GetQuaternion(double& x /Out/,double& y /Out/,double& z /Out/, double& w) const;
 
-    
+
     Vector operator*(const Vector& v) const /Numeric,Factory/;
     Twist operator*(const Twist& arg) const /Numeric,Factory/;
     Wrench operator*(const Wrench& arg) const /Numeric,Factory/;
-    
+
     Vector UnitX() const /Factory/;
     Vector UnitY() const /Factory/;
     Vector UnitZ() const /Factory/;
@@ -209,19 +237,21 @@ public:
     Frame(const Vector& V);
     Frame(const Rotation& R);
     Frame();
-    
+
     Vector p;
     Rotation M;
-    
+
     double __getitem__ (SIP_PYTUPLE) const;
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 2 || j > 3) {
         PyErr_SetString(PyExc_IndexError, "Frame index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(i,j);
+    else {
+        sipRes=(*sipCpp)(i,j);
+    }
 %End
 
     void __setitem__(SIP_PYTUPLE,double value);
@@ -230,12 +260,14 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 2 || j > 3) {
         PyErr_SetString(PyExc_IndexError, "Frame index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    if(j==3)
-        (*sipCpp).p(i)=a1;
-    else
-        (*sipCpp).M(i,j)=a1;
+    else {
+        if(j==3)
+            (*sipCpp).p(i)=a1;
+        else
+            (*sipCpp).M(i,j)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -244,6 +276,16 @@ public:
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Frame(*sipCpp), sipFindType("Frame"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Frame(*sipCpp), sipFindType("Frame"), NULL);
 %End
 
     Frame DH_Craig1989(double a,double alpha,double d,double theta);
@@ -256,9 +298,8 @@ public:
     Vector operator*(const Vector& arg) const /Numeric,Factory/;
     Wrench operator * (const Wrench& arg) const /Numeric,Factory/;
     Twist operator * (const Twist& arg) const /Numeric,Factory/;
-    
+
     static Frame Identity() /Factory/;
-    
     void Integrate(const Twist& t_this,double frequency);
 
 %PickleCode
@@ -274,7 +315,7 @@ bool Equal(const Frame& a,const Frame& b,double eps=epsilon);
 bool operator==(const Frame& a,const Frame& b);
 bool operator!=(const Frame& a,const Frame& b);
 
-class Twist 
+class Twist
 {
 
 %TypeHeaderCode
@@ -286,10 +327,10 @@ using namespace KDL;
 public:
     Vector vel;
     Vector rot;
-    
+
     Twist();
     Twist(const Vector& _vel,const Vector& _rot);
-    
+
     Twist& operator-=(const Twist& arg);
     Twist& operator+=(const Twist& arg);
 
@@ -297,18 +338,22 @@ public:
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Twist index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Twist index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -319,11 +364,21 @@ public:
     sipRes=&s;
 %End
 
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Twist(*sipCpp), sipFindType("Twist"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Twist(*sipCpp), sipFindType("Twist"), NULL);
+%End
+
     static Twist Zero() /Factory/;
     void ReverseSign();
-    
+
     Twist RefPoint(const Vector& v_base_AB) const /Factory/;
-    
+
 %PickleCode
     const sipTypeDef *vector_type = sipFindType("Vector");
     sipRes = Py_BuildValue("OO", sipConvertFromType(&(sipCpp->vel), vector_type, Py_None),
@@ -347,7 +402,7 @@ bool operator!=(const Twist& a,const Twist& b);
 
 class Wrench
 {
-    
+
 %TypeHeaderCode
 #include <kdl/frames.hpp>
 #include <kdl/frames_io.hpp>
@@ -358,10 +413,10 @@ using namespace KDL;
 public:
     Vector force;
     Vector torque;
-    
+
     Wrench();
     Wrench(const Vector& force,const Vector& torque);
-    
+
     Wrench& operator-=(const Wrench& arg);
     Wrench& operator+=(const Wrench& arg);
 
@@ -370,18 +425,22 @@ public:
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 > 5) {
         PyErr_SetString(PyExc_IndexError, "Wrench index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
     const std::string* __repr__() const;
@@ -390,6 +449,16 @@ public:
     oss<<(*sipCpp);
     std::string s(oss.str());
     sipRes=&s;
+%End
+
+    SIP_PYOBJECT __copy__() const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Wrench(*sipCpp), sipFindType("Wrench"), NULL);
+%End
+
+    SIP_PYOBJECT __deepcopy__(SIP_PYOBJECT) const;
+%MethodCode
+    sipRes = sipConvertFromNewType(new Wrench(*sipCpp), sipFindType("Wrench"), NULL);
 %End
 
     static Wrench Zero() /Factory/;
