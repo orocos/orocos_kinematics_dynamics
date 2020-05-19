@@ -40,6 +40,7 @@
 #include <kdl/chainiksolvervel_pinv_nso.hpp>
 #include <kdl/chainiksolvervel_pinv_givens.hpp>
 #include <kdl/chainjnttojacsolver.hpp>
+#include <kdl/chainjnttojacdotsolver.hpp>
 #include <kdl/chainidsolver_recursive_newton_euler.hpp>
 #include <kdl/kinfam_io.hpp>
 #include "PyKDL.h"
@@ -469,6 +470,15 @@ void init_kinfam(pybind11::module &m)
     chain_jnt_to_jac_solver.def("JntToJac", &ChainJntToJacSolver::JntToJac,
                                 py::arg("q_in"), py::arg("jac"), py::arg("segmentNR")=-1);
     chain_jnt_to_jac_solver.def("setLockedJoints", &ChainJntToJacSolver::setLockedJoints);
+
+    // ------------------------------
+    // ChainJntToJacDotSolver
+    // ------------------------------
+    py::class_<ChainJntToJacDotSolver, SolverI> chain_jnt_to_jac_dot_solver(m, "ChainJntToJacDotSolver");
+    chain_jnt_to_jac_dot_solver.def(py::init<const Chain&>());
+    chain_jnt_to_jac_dot_solver.def("JntToJacDot", (int (ChainJntToJacDotSolver::*)(const JntArrayVel&, Jacobian&, int)) &ChainJntToJacDotSolver::JntToJacDot,
+                                py::arg("q_in"), py::arg("jdot"), py::arg("seg_nr")=-1);
+    chain_jnt_to_jac_dot_solver.def("setLockedJoints", &ChainJntToJacDotSolver::setLockedJoints);
 
 
     // ------------------------------
