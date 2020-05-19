@@ -673,8 +673,23 @@ using namespace KDL;
 %End
 public:
     ChainJntToJacDotSolver(const Chain& chain);
-    int JntToJacDot(const JntArrayVel& q_in,Jacobian& jac, int seg_nr=-1);
+    int JntToJacDot(const JntArrayVel& q_in, Jacobian& jac, int seg_nr=-1);
+    int JntToJacDot(const JntArrayVel& q_in, Twist& jac_dot_q_dot, int seg_nr=-1);
     virtual void updateInternalDataStructures();
+    int setLockedJoints(const std::vector<bool>& locked_joints);
+
+    static const int E_JAC_DOT_FAILED;
+    static const int E_JACSOLVER_FAILED;
+    static const int E_FKSOLVERPOS_FAILED;
+
+    static const int HYBRID;
+    static const int BODYFIXED;
+    static const int INERTIAL;
+
+    void setHybridRepresentation();
+    void setBodyFixedRepresentation();
+    void setInertialRepresentation();
+    void setRepresentation(const int& representation);
 };
 
 class ChainIdSolver : SolverI
