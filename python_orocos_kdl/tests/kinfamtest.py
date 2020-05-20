@@ -242,8 +242,9 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertEqual(q, q_solved)
 
     def compare_Jdot_Diff_vs_Solver(self, dt, representation):
-        q = JntArray(self.chain.getNrOfJoints())
-        qdot = JntArray(self.chain.getNrOfJoints())
+        NrOfJoints = self.chain.getNrOfJoints()
+        q = JntArray(NrOfJoints)
+        qdot = JntArray(NrOfJoints)
         for i in range(q.rows()):
             q[i] = random.uniform(-3.14, 3.14)
             qdot[i] = random.uniform(-3.14, 3.14)
@@ -255,9 +256,9 @@ class KinfamTestFunctions(unittest.TestCase):
         F_bs_ee_q = Frame.Identity()
         F_bs_ee_q_dqdt = Frame.Identity()
 
-        jac_q = Jacobian(self.chain.getNrOfJoints())
-        jac_q_dqdt = Jacobian(self.chain.getNrOfJoints())
-        jdot_by_diff = Jacobian(self.chain.getNrOfJoints())
+        jac_q = Jacobian(NrOfJoints)
+        jac_q_dqdt = Jacobian(NrOfJoints)
+        jdot_by_diff = Jacobian(NrOfJoints)
 
         self.jacsolver.JntToJac(q, jac_q)
         self.jacsolver.JntToJac(q_dqdt, jac_q_dqdt)
@@ -270,7 +271,7 @@ class KinfamTestFunctions(unittest.TestCase):
         
         Jdot_diff(jac_q, jac_q_dqdt, dt, jdot_by_diff)
 
-        jdot_by_solver = Jacobian(self.chain.getNrOfJoints())
+        jdot_by_solver = Jacobian(NrOfJoints)
         self.jacdotsolver.setRepresentation(representation)
         self.jacdotsolver.JntToJacDot(JntArrayVel(q_dqdt, qdot), jdot_by_solver)
         
@@ -286,15 +287,23 @@ class KinfamTestFunctions(unittest.TestCase):
 
     def testJacDot(self):
         dt = 1e-6
-        eps_diff_vs_solver = 4.0*dt
-        representations = [ChainJntToJacDotSolver.HYBRID, 
-                           ChainJntToJacDotSolver.INERTIAL, 
-                           ChainJntToJacDotSolver.BODYFIXED]
+        success = True
+        while dt <= 0.1:
+            eps_diff_vs_solver = 4*dt
+            representations = [ChainJntToJacDotSolver.HYBRID,
+                               ChainJntToJacDotSolver.INERTIAL,
+                               ChainJntToJacDotSolver.BODYFIXED]
 
-        for representation in representations:
-            err, jdot_qdot_solver, jdot_qdot_diff = self.compare_Jdot_Diff_vs_Solver(dt, representation)
-            success = err <= eps_diff_vs_solver
-            self.assertTrue(success, "{} != {}".format(jdot_qdot_solver, jdot_qdot_diff))
+            for representation in representations:
+                err, jdot_qdot_solver, jdot_qdot_diff = self.compare_Jdot_Diff_vs_Solver(dt, representation)
+                success &= err <= eps_diff_vs_solver
+                self.assertTrue(success, "{} != {}\n"
+                                         "representation: {}\n"
+                                         "dt: {}\n"
+                                         "eps_diff_vs_solver: {}\n"
+                                         "err: {}".format(jdot_qdot_solver, jdot_qdot_diff, representation, dt,
+                                                          eps_diff_vs_solver, err))
+            dt *= 10
         
 
 class KinfamTestTree(unittest.TestCase):
