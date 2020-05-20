@@ -246,8 +246,8 @@ class KinfamTestFunctions(unittest.TestCase):
         q = JntArray(NrOfJoints)
         qdot = JntArray(NrOfJoints)
         for i in range(q.rows()):
-            q[i] = random.uniform(-3.14, 3.14)
-            qdot[i] = random.uniform(-3.14, 3.14)
+            q[i] = random.random()
+            qdot[i] = random.random()
 
         q_dqdt = JntArray(q)
         for i in range(q.rows()):
