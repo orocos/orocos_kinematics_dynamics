@@ -27,7 +27,7 @@ const int ChainJntToJacDotSolver::E_JAC_DOT_FAILED;
 const int ChainJntToJacDotSolver::E_JACSOLVER_FAILED;
 const int ChainJntToJacDotSolver::E_FKSOLVERPOS_FAILED;
 
-const int ChainJntToJacDotSolver:: HYBRID;
+const int ChainJntToJacDotSolver::HYBRID;
 const int ChainJntToJacDotSolver::BODYFIXED;
 const int ChainJntToJacDotSolver::INERTIAL;
 
