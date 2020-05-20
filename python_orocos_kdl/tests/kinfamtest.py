@@ -31,6 +31,23 @@ import sys
 import unittest
 
 
+def changeJacRepresentation(J, F_bs_ee, representation):
+        if representation == ChainJntToJacDotSolver.HYBRID:
+            pass
+        elif representation == ChainJntToJacDotSolver.BODYFIXED:
+            J.changeBase(F_bs_ee.M.Inverse())
+        elif representation == ChainJntToJacDotSolver.INERTIAL:
+            J.changeRefPoint(-F_bs_ee.p)
+
+
+def Jdot_diff(J_q, J_qdt, dt, Jdot):
+    assert J_q.columns() == J_qdt.columns()
+    assert J_q.columns() == Jdot.columns()
+    for l in range(J_q.rows()):
+        for c in range(J_q.columns()):
+            Jdot[l, c] = (J_qdt[l, c] - J_q[l, c]) / dt
+
+
 class KinfamTestFunctions(unittest.TestCase):
     def setUp(self):
         self.chain = Chain()
@@ -54,6 +71,7 @@ class KinfamTestFunctions(unittest.TestCase):
                                       Frame(Vector(0.0, 0.0, 0.0))))
 
         self.jacsolver = ChainJntToJacSolver(self.chain)
+        self.jacdotsolver = ChainJntToJacDotSolver(self.chain)
         self.fksolverpos = ChainFkSolverPos_recursive(self.chain)
         self.fksolvervel = ChainFkSolverVel_recursive(self.chain)
         self.iksolvervel = ChainIkSolverVel_pinv(self.chain)
@@ -223,6 +241,61 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertEqual(F1, F2)
         self.assertEqual(q, q_solved)
 
+    def compare_Jdot_Diff_vs_Solver(self, dt, representation):
+        q = JntArray(self.chain.getNrOfJoints())
+        qdot = JntArray(self.chain.getNrOfJoints())
+        for i in range(q.rows()):
+            q[i] = random.uniform(-3.14, 3.14)
+            qdot[i] = random.uniform(-3.14, 3.14)
+
+        q_dqdt = JntArray(q)
+        for i in range(q.rows()):
+            q_dqdt[i] += dt * qdot[i]
+        
+        F_bs_ee_q = Frame.Identity()
+        F_bs_ee_q_dqdt = Frame.Identity()
+
+        jac_q = Jacobian(self.chain.getNrOfJoints())
+        jac_q_dqdt = Jacobian(self.chain.getNrOfJoints())
+        jdot_by_diff = Jacobian(self.chain.getNrOfJoints())
+
+        self.jacsolver.JntToJac(q, jac_q)
+        self.jacsolver.JntToJac(q_dqdt, jac_q_dqdt)
+
+        self.fksolverpos.JntToCart(q, F_bs_ee_q)
+        self.fksolverpos.JntToCart(q_dqdt, F_bs_ee_q_dqdt)
+
+        changeJacRepresentation(jac_q, F_bs_ee_q, representation)
+        changeJacRepresentation(jac_q_dqdt, F_bs_ee_q_dqdt, representation)
+        
+        Jdot_diff(jac_q, jac_q_dqdt, dt, jdot_by_diff)
+
+        jdot_by_solver = Jacobian(self.chain.getNrOfJoints())
+        self.jacdotsolver.setRepresentation(representation)
+        self.jacdotsolver.JntToJacDot(JntArrayVel(q_dqdt, qdot), jdot_by_solver)
+        
+        jdot_qdot_by_solver = Twist()
+        MultiplyJacobian(jdot_by_solver, qdot, jdot_qdot_by_solver)
+
+        jdot_qdot_by_diff = Twist()
+        MultiplyJacobian(jdot_by_diff, qdot, jdot_qdot_by_diff)
+
+        err = (jdot_qdot_by_diff.vel.Norm() - jdot_qdot_by_solver.vel.Norm()
+               + jdot_qdot_by_diff.rot.Norm() - jdot_qdot_by_solver.rot.Norm())
+        return abs(err), jdot_qdot_by_solver, jdot_qdot_by_diff
+
+    def testJacDot(self):
+        dt = 1e-6
+        eps_diff_vs_solver = 4.0*dt
+        representations = [ChainJntToJacDotSolver.HYBRID, 
+                           ChainJntToJacDotSolver.INERTIAL, 
+                           ChainJntToJacDotSolver.BODYFIXED]
+
+        for representation in representations:
+            err, jdot_qdot_solver, jdot_qdot_diff = self.compare_Jdot_Diff_vs_Solver(dt, representation)
+            success = err <= eps_diff_vs_solver
+            self.assertTrue(success, f'{jdot_qdot_solver} is not {jdot_qdot_diff}')
+        
 
 class KinfamTestTree(unittest.TestCase):
 
@@ -257,6 +330,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
+    suite.addTest(KinfamTestFunctions('testJacDot'))
     suite.addTest(KinfamTestTree('testTreeGetChainMemLeak'))
     return suite
 
