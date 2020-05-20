@@ -294,7 +294,7 @@ class KinfamTestFunctions(unittest.TestCase):
         for representation in representations:
             err, jdot_qdot_solver, jdot_qdot_diff = self.compare_Jdot_Diff_vs_Solver(dt, representation)
             success = err <= eps_diff_vs_solver
-            self.assertTrue(success, f'{jdot_qdot_solver} is not {jdot_qdot_diff}')
+            self.assertTrue(success, "{} is not {}".format(jdot_qdot_solver, jdot_qdot_diff))
         
 
 class KinfamTestTree(unittest.TestCase):
