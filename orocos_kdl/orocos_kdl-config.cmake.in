@@ -4,14 +4,22 @@
 #  orocos_kdl_LIBRARIES    - libraries to link against for Orocos KDL
 #  orocos_kdl_PKGCONFIG_DIR - directory containing the .pc pkgconfig files
 
+# Find dependencies
+find_package(Boost REQUIRED)
+find_package(Eigen3 QUIET)
+if(NOT EIGEN3_FOUND)
+  include(${CMAKE_CURRENT_LIST_DIR}/FindEigen3.cmake)
+endif()
+
 # Compute paths
-set(orocos_kdl_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/../../../include;@Boost_INCLUDE_DIRS@;@Eigen_INCLUDE_DIR@")
+get_filename_component(orocos_kdl_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 
 if(NOT TARGET orocos-kdl)
   include("${CMAKE_CURRENT_LIST_DIR}/OrocosKDLTargets.cmake")
 endif()
 
+set(orocos_kdl_INCLUDE_DIRS "${orocos_kdl_PREFIX}/include;${Boost_INCLUDE_DIRS};${EIGEN3_INCLUDE_DIR}")
 set(orocos_kdl_LIBRARIES orocos-kdl)
 
 # where the .pc pkgconfig files are installed
-set(orocos_kdl_PKGCONFIG_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../lib/pkgconfig")
+set(orocos_kdl_PKGCONFIG_DIR "${orocos_kdl_PREFIX}/lib/pkgconfig")

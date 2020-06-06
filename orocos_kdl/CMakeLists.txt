@@ -45,13 +45,12 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
 
 SET( KDL_CFLAGS "")
 
-find_package(Eigen 3 QUIET)
-if(NOT Eigen_FOUND)
+find_package(Eigen3 QUIET)
+if(NOT EIGEN3_FOUND)
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
-  set(Eigen_INCLUDE_DIR "${EIGEN3_INCLUDE_DIR}")
 endif()
-include_directories(${Eigen_INCLUDE_DIR})
-SET(KDL_CFLAGS "${KDL_CFLAGS} -I${Eigen_INCLUDE_DIR}")
+include_directories(${EIGEN3_INCLUDE_DIR})
+SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
 
 # Check the platform STL containers capabilities
 include(cmake/CheckSTLContainers.cmake)
@@ -110,11 +109,12 @@ export(TARGETS orocos-kdl
 export(PACKAGE orocos_kdl)
 
 # Generate CMake package configuration
-CONFIGURE_FILE(KDLConfig.cmake.in
+CONFIGURE_FILE(orocos_kdl-config.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(KDLConfigVersion.cmake.in
+CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
 
+INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
