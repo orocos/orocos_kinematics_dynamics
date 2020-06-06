@@ -78,7 +78,6 @@ if(KDL_USE_NEW_TREE_INTERFACE)
     # We need shared_ptr from boost since not all compilers are c++11 capable
     find_package(Boost REQUIRED)
     include_directories(${Boost_INCLUDE_DIRS})
-    set(KDL_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
@@ -110,8 +109,7 @@ export(TARGETS orocos-kdl
 
 export(PACKAGE orocos_kdl)
 
-set(KDL_INCLUDE_DIRS ${KDL_INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
-
+# Generate CMake package configuration
 CONFIGURE_FILE(KDLConfig.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
 CONFIGURE_FILE(KDLConfigVersion.cmake.in
@@ -121,4 +119,12 @@ INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/or
 INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
 
+# Generate pkg-config package configuration
+CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
+CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
+
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+
+# Install package manifest (for catkin compatibility)
 INSTALL(FILES package.xml DESTINATION share/orocos_kdl)
