@@ -18,6 +18,7 @@ addons:
     packages:
       - cppunit
       - eigen
+      - python3
       - sip
 
 jobs:
