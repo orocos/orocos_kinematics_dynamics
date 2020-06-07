@@ -24,6 +24,7 @@ addons:
       - eigen
       - python3
       - sip
+    update: true #required in xcode10 and older https://changelog.travis-ci.com/xcode-11-3-1-xcode-11-2-1-xcode-11-1-and-xcode11-images-updated-142286
 
 jobs:
   include:
