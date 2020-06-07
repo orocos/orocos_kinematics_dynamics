@@ -14,6 +14,11 @@ addons:
       - python3-psutil
       - python3-sip-dev
       - sip-dev
+  homebrew:
+    packages:
+      - cppunit
+      - eigen
+      - sip
 
 jobs:
   include:
@@ -78,8 +83,6 @@ virtualenv:
   system_site_packages: true
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --force cppunit eigen sip; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install future psutil; fi
 
 before_script:
