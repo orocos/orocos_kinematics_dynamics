@@ -200,11 +200,11 @@ double compare_Jdot_Diff_vs_Solver(const Chain& chain,const double& dt,const int
     MultiplyJacobian(jdot_by_diff,qdot,jdot_qdot_by_diff);
     
     if(verbose){
-        std::cout << "Jdot diff:" << std::endl << jdot_by_diff << std::endl
-                  << "Jdot solver:" << std::endl << jdot_by_solver << std::endl
-                  << "Error:" << std::endl
-                  << jdot_qdot_by_diff-jdot_qdot_by_solver << std::endl
-                  << q << std::endl
+        std::cout << "Jdot diff:\n" << jdot_by_diff << "\n"
+                  << "Jdot solver:\n" << jdot_by_solver << "\n"
+                  << "Error:\n"
+                  << jdot_qdot_by_diff-jdot_qdot_by_solver << "\n"
+                  << q << "\n"
                   << qdot <<std::endl;
     }
     double err = jdot_qdot_by_diff.vel.Norm() - jdot_qdot_by_solver.vel.Norm()
@@ -235,10 +235,10 @@ double compare_d2_Jdot_Symbolic_vs_Solver(bool verbose)
     MultiplyJacobian(jdot_sym,qdot,jdot_qdot_sym);
     
     if(verbose){
-        std::cout << "Jdot symbolic:" << std::endl << jdot_sym <<std::endl
-                  << "Jdot solver:" << std::endl << jdot_by_solver <<std::endl
-                  << "Error:" << std::endl << jdot_qdot_sym-jdot_qdot_by_solver << std::endl
-                  << q << std::endl
+        std::cout << "Jdot symbolic:\n" << jdot_sym << "\n"
+                  << "Jdot solver:\n" << jdot_by_solver << "\n"
+                  << "Error:\n" << jdot_qdot_sym-jdot_qdot_by_solver << "\n"
+                  << q << "\n"
                   << qdot << std::endl;
     }
     double err = jdot_qdot_sym.vel.Norm() - jdot_qdot_by_solver.vel.Norm()
@@ -264,8 +264,8 @@ bool runTest(const Chain& chain,const int& representation)
             success &= err<=eps_diff_vs_solver;
 
             if(!success || print_err){
-                std::cout << "dt: "<< dt << std::endl
-                          << "err: "<< err << std::endl
+                std::cout << "dt: "<< dt << "\n"
+                          << "err: "<< err << "\n"
                           << "eps_diff_vs_solver: " << eps_diff_vs_solver << std::endl;
                 if(!success)
                     break;
@@ -321,7 +321,7 @@ void JacobianDotTest::testD2Symbolic(){
         success &= err_d2_sym <= eps_sym_vs_solver;
         
         if(!success || print_err){
-            std::cout << "err_d2_sym: " << err_d2_sym << std::endl
+            std::cout << "err_d2_sym: " << err_d2_sym << "\n"
             << "eps_sym_vs_solver: "<< eps_sym_vs_solver <<std::endl;
             if(!success)
                 break;
