@@ -59,7 +59,7 @@ namespace KDL {
 
     private:
         const Chain& chain;
-	int nr;
+	int nr;  // unused, remove in a future version
 	unsigned int nj;
         unsigned int ns;	
 	Vector grav;

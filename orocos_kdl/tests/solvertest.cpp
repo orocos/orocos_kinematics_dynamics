@@ -965,8 +965,8 @@ void SolverTest::FdSolverDevelopmentTest()
         {0.,0.199,-0.553,0.788,-0.615,0.162,-0.816},
         {0.,-0.980,-0.112,-0.392,-0.536,-0.803,-0.436},
         {1.,0.,0.825,0.475,0.578,-0.573,0.381}};
-    for ( int i=0; i<6; i++ ) {
-        for ( int j=0; j<nj; j++ ) {
+    for ( unsigned int i=0; i<6; i++ ) {
+        for ( unsigned int j=0; j<nj; j++ ) {
             CPPUNIT_ASSERT(Equal(jac(i,j), Jac[i][j], eps));
         }
     }
@@ -1007,8 +1007,8 @@ void SolverTest::FdSolverDevelopmentTest()
         {0.0638,0.0003,0.1150,-0.0201,1.1234,0.0029,0.0955},
         {-0.0054,-0.0242,-0.0243,0.0087,0.0029,1.1425,0},
         {0.0381,0.0265,0.0814,-0.0291,0.0955,0,1.1000}};
-    for ( int i=0; i<nj; i++ ) {
-        for ( int j=0; j<nj; j++ ) {
+    for ( unsigned int i=0; i<nj; i++ ) {
+        for ( unsigned int j=0; j<nj; j++ ) {
             CPPUNIT_ASSERT(Equal(H(i,j), Hexp[i][j], eps));
         }
     }
@@ -1027,7 +1027,7 @@ void SolverTest::FdSolverDevelopmentTest()
     Wrench f_tool(f,n);
     // In local link coordinates
     Wrenches f_ext(ns);
-    for(int i=0;i<ns;i++){
+    for(unsigned int i=0;i<ns;i++){
         SetToZero(f_ext[i]);
     }
     f_ext[ns-1]=f_tool;
@@ -1047,14 +1047,14 @@ void SolverTest::FdSolverDevelopmentTest()
     // get acceleration using inverse symmetric matrix times vector
     Eigen::MatrixXd H_eig(nj,nj), L(nj,nj);
     Eigen::VectorXd Tnon_eig(nj), D(nj), r(nj), acc_eig(nj);
-    for(int i=0;i<nj;i++){
+    for(unsigned int i=0;i<nj;i++){
         Tnon_eig(i) =  -Tnoninertial(i);
-        for(int j=0;j<nj;j++){
+        for(unsigned int j=0;j<nj;j++){
             H_eig(i,j) =  H(i,j);
         }
     }
     ldl_solver_eigen(H_eig, Tnon_eig, L, D, r, acc_eig);
-    for(int i=0;i<nj;i++){
+    for(unsigned int i=0;i<nj;i++){
         qdd(i) = acc_eig(i);
     }
     CPPUNIT_ASSERT(Equal(2.998, qdd(0), eps));
@@ -1119,7 +1119,7 @@ void SolverTest::FdSolverConsistencyTest()
     KDL::Wrench f_tool(f,n);
     // In local link coordinates
     KDL::Wrenches f_ext(ns);
-    for(int i=0;i<ns;i++){
+    for(unsigned int i=0;i<ns;i++){
         SetToZero(f_ext[i]);
     }
     f_ext[ns-1]=f_tool;
@@ -1139,7 +1139,7 @@ void SolverTest::FdSolverConsistencyTest()
     KDL::ChainIdSolver_RNE IdSolver = KDL::ChainIdSolver_RNE(motomansia10dyn, gravity);
     KDL::JntArray torque(nj);
     IdSolver.CartToJnt(q, qd, qdd, f_ext, torque);
-    for ( int i=0; i<nj; i++ )
+    for ( unsigned int i=0; i<nj; i++ )
     {
         CPPUNIT_ASSERT(Equal(torque(i), tau(i), eps));
     }
