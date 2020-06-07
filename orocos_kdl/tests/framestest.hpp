@@ -57,6 +57,10 @@ private:
     void TestRangeArbitraryRotation(const std::string& msg,
                                     const KDL::Vector& v,
                                     const KDL::Vector& expectedVector);
+    void TestOneRotationDiff(const std::string& msg,
+                             const KDL::Rotation& R_a_b1,
+                             const KDL::Rotation& R_a_b2,
+                             const KDL::Vector& expectedDiff);
  
 };
 
