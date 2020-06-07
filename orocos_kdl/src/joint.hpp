@@ -1,8 +1,8 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -44,12 +44,12 @@ namespace KDL {
      */
     class Joint {
     public:
-        typedef enum { RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None} JointType;
+        typedef enum { RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed,None=Fixed} JointType;
         /**
          * Constructor of a joint.
          *
          * @param name of the joint
-         * @param type type of the joint, default: Joint::None
+         * @param type type of the joint, default: Joint::Fixed
          * @param scale scale between joint input and actual geometric
          * movement, default: 1
          * @param offset offset between joint input and actual
@@ -59,12 +59,12 @@ namespace KDL {
          * @param stiffness 1D stiffness along the joint axis,
          * default: 0
          */
-        explicit Joint(const std::string& name, const JointType& type=None,const double& scale=1,const double& offset=0,
+        explicit Joint(const std::string& name, const JointType& type=Fixed,const double& scale=1,const double& offset=0,
               const double& inertia=0,const double& damping=0,const double& stiffness=0);
         /**
          * Constructor of a joint.
          *
-         * @param type type of the joint, default: Joint::None
+         * @param type type of the joint, default: Joint::Fixed
          * @param scale scale between joint input and actual geometric
          * movement, default: 1
          * @param offset offset between joint input and actual
@@ -74,7 +74,7 @@ namespace KDL {
          * @param stiffness 1D stiffness along the joint axis,
          * default: 0
          */
-        explicit Joint(const JointType& type=None,const double& scale=1,const double& offset=0,
+        explicit Joint(const JointType& type=Fixed,const double& scale=1,const double& offset=0,
                const double& inertia=0,const double& damping=0,const double& stiffness=0);
         /**
          * Constructor of a joint.
@@ -128,16 +128,16 @@ namespace KDL {
          */
         Twist twist(const double& qdot)const;
 
-        /**                                                                     
-         * Request the Vector corresponding to the axis of a revolute joint.    
-         *                                                                      
-         * @return Vector. e.g (1,0,0) for RotX etc.                            
+        /**
+         * Request the Vector corresponding to the axis of a revolute joint.
+         *
+         * @return Vector. e.g (1,0,0) for RotX etc.
          */
         Vector JointAxis() const;
 
-        /**                                                                     
-         * Request the Vector corresponding to the origin of a revolute joint.    
-         *                                                                      
+        /**
+         * Request the Vector corresponding to the origin of a revolute joint.
+         *
          * @return Vector
          */
         Vector JointOrigin() const;
@@ -160,8 +160,8 @@ namespace KDL {
         {
             return type;
         };
-      
-        /** 
+
+        /**
          * Request the stringified type of the joint.
          *
          * @return const string
@@ -185,10 +185,10 @@ namespace KDL {
                 return "TransY";
             case TransZ:
                 return "TransZ";
-            case None:
-                return "None";
+            case Fixed:
+                return "Fixed";
             default:
-                return "None";
+                return "Fixed";
             }
         };
 
@@ -239,7 +239,7 @@ namespace KDL {
         mutable double q_previous;
 
 
-      
+
       class joint_type_exception: public std::exception{
 	virtual const char* what() const throw(){
 	  return "Joint Type excption";}

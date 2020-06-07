@@ -1,26 +1,76 @@
 language: cpp
-sudo: false
 
 addons:
   apt:
     packages:
-      - libeigen3-dev
       - libcppunit-dev
+      - libeigen3-dev
+      - python-future
       - python-psutil
       - python-sip-dev
+      - python3-future
+      - python3-psutil
+      - python3-sip-dev
       - sip-dev
 
 matrix:
   include:
     - os: linux
       dist: xenial
-      env: LIB_EXT=so PYTHON=/usr/bin/python
+      compiler: gcc
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
+    - os: linux
+      dist: xenial
+      compiler: gcc
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=ON
+    - os: linux
+      dist: xenial
+      compiler: gcc
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
+    - os: linux
+      dist: xenial
+      compiler: gcc
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
+    - os: linux
+      dist: xenial
+      compiler: clang
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
+    - os: linux
+      dist: xenial
+      compiler: clang
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=ON
+    - os: linux
+      dist: xenial
+      compiler: clang
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
+    - os: linux
+      dist: xenial
+      compiler: clang
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
     - os: osx
       osx_image: xcode8.3
-      env: LIB_EXT=dylib PYTHON=/usr/local/bin/python3
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
+    - os: osx
+      osx_image: xcode8.3
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=ON
+    - os: osx
+      osx_image: xcode8.3
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
+    - os: osx
+      osx_image: xcode8.3
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
     - os: osx
       osx_image: xcode10.1
-      env: LIB_EXT=dylib PYTHON=/usr/local/bin/python3
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
+    - os: osx
+      osx_image: xcode10.1
+      env: OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=ON
+    - os: osx
+      osx_image: xcode10.1
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
+    - os: osx
+      osx_image: xcode10.1
+      env: OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
 
 virtualenv:
   system_site_packages: true
@@ -28,38 +78,53 @@ virtualenv:
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --force cppunit eigen sip; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install psutil; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip3 install future psutil; fi
 
 before_script:
-  #build orocos_kdl
+  # build orocos_kdl
   - cd orocos_kdl
   - mkdir build
   - cd build
-  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install ./..
+  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install ./..
   # compile and install orocos_kdl
   - make VERBOSE=1
   - make install
   - cd ../..
-  #build python bindings
+
+  # build python bindings python 2
   - cd python_orocos_kdl
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_PREFIX_PATH=$TRAVIS_BUILD_DIR/install -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install \
-    -DPYTHON_EXECUTABLE=$PYTHON \
-    -DPYTHON_LIBRARY=$($PYTHON -c "import os; from distutils import sysconfig; print(os.path.join(sysconfig.get_config_var('LIBDIR'),'libpython'+sysconfig.get_config_var('VERSION')))").$LIB_EXT \
-    -DPYTHON_INCLUDE_DIR=$($PYTHON -c "from distutils import sysconfig; print(sysconfig.get_python_inc())") ./..
-  #compile and install python bindings
-  - make VERBOSE=1
-  - make install
-  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRAVIS_BUILD_DIR/install/lib
+  - mkdir build2
+  - cd build2
+  - export ROS_PYTHON_VERSION=2
+  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
+  # compile and install python bindings python 2
+  - make
+  - sudo make install
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRAVIS_BUILD_DIR/install
+  - sudo ldconfig
+  - cd ../..
+
+  # build python bindings python 3
+  - cd python_orocos_kdl
+  - mkdir build3
+  - cd build3
+  - export ROS_PYTHON_VERSION=3
+  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
+  # compile and install python bindings python 3
+  - make
+  - sudo make install
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRAVIS_BUILD_DIR/install
+  - sudo ldconfig
   - cd ../..
 
 script:
-  #execute orocos_kdl tests
+  # execute orocos_kdl tests
   - cd orocos_kdl/build
   - make check
   - cd ../..
-  #execute python bindings tests
-  - cd python_orocos_kdl/build
-  - export PYTHONPATH=$(ls -1d ${TRAVIS_BUILD_DIR}/install/lib/python*/*-packages):${PYTHONPATH}
-  - $PYTHON ../tests/PyKDLtest.py
+  # execute python bindings tests
+  - cd python_orocos_kdl
+  # python 2
+  - PYTHONPATH=$(ls -1d ${TRAVIS_BUILD_DIR}/install/lib/python2*/*-packages):${PYTHONPATH} python2 tests/PyKDLtest.py
+  # python 3
+  - PYTHONPATH=$(ls -1d ${TRAVIS_BUILD_DIR}/install/lib/python3*/*-packages):${PYTHONPATH} python3 tests/PyKDLtest.py

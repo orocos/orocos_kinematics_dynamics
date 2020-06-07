@@ -126,9 +126,9 @@ void VectorAcc::ReverseSign() {
     dv.ReverseSign();
 }
 
-doubleAcc VectorAcc::Norm() {
+doubleAcc VectorAcc::Norm(double eps) {
     doubleAcc res;
-    res.t  = p.Norm();
+    res.t  = p.Norm(eps);
     res.d  = dot(p,v)/res.t;
     res.dd = (dot(p,dv)+dot(v,v)-res.d*res.d)/res.t;
     return res;
