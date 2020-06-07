@@ -1,4 +1,6 @@
 language: cpp
+os: linux
+dist: bionic
 
 addons:
   apt:
@@ -13,7 +15,7 @@ addons:
       - python3-sip-dev
       - sip-dev
 
-matrix:
+jobs:
   include:
     - os: linux
       dist: xenial
