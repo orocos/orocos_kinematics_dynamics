@@ -52,10 +52,10 @@ namespace KDL
          *
          * @param q_in input joint positions
          * @param jac output jacobian
-         *
+         * @param seg_nr The final segment to compute
          * @return success/error code
          */
-        virtual int JntToJac(const JntArray& q_in, Jacobian& jac, int segmentNR=-1);
+        virtual int JntToJac(const JntArray& q_in, Jacobian& jac, int seg_nr=-1);
 
         /**
          *

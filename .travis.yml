@@ -2,6 +2,10 @@ language: cpp
 os: linux
 dist: bionic
 
+env:
+  global:
+    - CXXFLAGS="-Wall -Wextra -Wno-unused-parameter"
+
 addons:
   apt:
     packages:
@@ -91,7 +95,7 @@ before_script:
   - cd orocos_kdl
   - mkdir build
   - cd build
-  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install ./..
+  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install ./..
   # compile and install orocos_kdl
   - make VERBOSE=1
   - sudo make install
@@ -102,7 +106,8 @@ before_script:
   - mkdir build2
   - cd build2
   - export ROS_PYTHON_VERSION=2
-  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_PREFIX_PATH=$TRAVIS_BUILD_DIR/install -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
+  - cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_PREFIX_PATH=$TRAVIS_BUILD_DIR/install -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
+  - cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
   # compile and install python bindings python 2
   - make
   - sudo make install
@@ -115,7 +120,7 @@ before_script:
   - mkdir build3
   - cd build3
   - export ROS_PYTHON_VERSION=3
-  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_PREFIX_PATH=$TRAVIS_BUILD_DIR/install -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
+  - cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DCMAKE_PREFIX_PATH=$TRAVIS_BUILD_DIR/install -DCMAKE_INSTALL_PREFIX=$TRAVIS_BUILD_DIR/install -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
   # compile and install python bindings python 3
   - make
   - sudo make install
