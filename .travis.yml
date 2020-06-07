@@ -7,10 +7,13 @@ compiler:
   - clang
 
 env:
-  - OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
-  - OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=ON
-  - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
-  - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
+  global:
+    - CXXFLAGS="-Wall -Wextra -Wno-unused-parameter"
+  jobs:
+    - OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=OFF
+    - OROCOS_KDL_BUILD_TYPE=Debug BUILD_PYKDL_PYBIND11=ON
+    - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=OFF
+    - OROCOS_KDL_BUILD_TYPE=Release BUILD_PYKDL_PYBIND11=ON
 
 before_script:
   - sudo apt-get -qq update
@@ -19,7 +22,7 @@ before_script:
   - cd orocos_kdl
   - mkdir build
   - cd build
-  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
+  - cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
   # compile and install orocos_kdl
   - make
   - sudo make install
@@ -30,7 +33,7 @@ before_script:
   - mkdir build2
   - cd build2
   - export ROS_PYTHON_VERSION=2
-  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
+  - cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
   # compile and install python bindings python 2
   - make
   - sudo make install
@@ -43,7 +46,7 @@ before_script:
   - mkdir build3
   - cd build3
   - export ROS_PYTHON_VERSION=3
-  - cmake -DCMAKE_CXX_FLAGS:STRING="-Wall -Wextra" -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
+  - cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} -DBUILD_PYKDL_PYBIND11=${BUILD_PYKDL_PYBIND11} ./..
   # compile and install python bindings python 3
   - make
   - sudo make install
