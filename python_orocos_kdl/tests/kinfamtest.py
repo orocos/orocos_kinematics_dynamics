@@ -221,6 +221,7 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertEqual(qvel.qdot, qdot_solved)
 
     def testFkPosAndIkPos(self):
+        eps_j = 5e-6
         q = JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
             q[i] = random.uniform(-3.14, 3.14)
@@ -239,7 +240,7 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertTrue(0 == self.fksolverpos.JntToCart(q_solved, F2))
 
         self.assertEqual(F1, F2)
-        self.assertEqual(q, q_solved)
+        self.assertTrue(Equal(q, q_solved, eps_j), "{} != {}".format(q, q_solved))
 
     def compare_Jdot_Diff_vs_Solver(self, dt, representation):
         NrOfJoints = self.chain.getNrOfJoints()
