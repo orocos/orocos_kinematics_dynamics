@@ -112,7 +112,7 @@ namespace KDL
     {
         if(src1.rows()!=src2.rows()||src1.columns()!=src2.columns())
             return false;
-        return src1.data.isApprox(src2.data,eps);
+        return (src1.data-src2.data).isZero(eps);
     }
 
     bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2){return Equal(src1,src2);}
