@@ -635,50 +635,63 @@ void FramesTest::TestFrame() {
 	CPPUNIT_ASSERT_EQUAL(F.Inverse()*v,F.Inverse(v));
 }
 
+JntArray CreateRandomJntArray(int size)
+{
+    JntArray j(size);
+    for (int i = 0; i<size; ++i)
+        random(j(i));
+    return j;
+}
+
 void FramesTest::TestJntArray()
 {
-    JntArray a1(4);
-    random(a1(0));
-    random(a1(1));
-    random(a1(2));
-    random(a1(3));
-    JntArray a2(a1);
-    CPPUNIT_ASSERT(Equal(a2,a1));
+    JntArray random = CreateRandomJntArray(4);
+    JntArray random_copy(random);
+    CPPUNIT_ASSERT(Equal(random_copy,random));
 
-    SetToZero(a2);
-    CPPUNIT_ASSERT(!Equal(a1,a2));
-    
-    JntArray a3(4);
-    CPPUNIT_ASSERT(Equal(a2,a3));
-    
-    a1=a2;
-    CPPUNIT_ASSERT(Equal(a1,a3));
+    JntArray zero_set_to_zero(4);
+    SetToZero(zero_set_to_zero);
+    CPPUNIT_ASSERT(!Equal(random,zero_set_to_zero));
 
-    random(a1(0));
-    random(a1(1));
-    random(a1(2));
-    random(a1(3));
-    
-    Add(a1,a2,a3);
-    CPPUNIT_ASSERT(Equal(a1,a3));
-    
-    random(a2(0));
-    random(a2(1));
-    random(a2(2));
-    random(a2(3));
-    Add(a1,a2,a3);
-    Subtract(a3,a2,a3);
-    CPPUNIT_ASSERT(Equal(a1,a3));
-    
-    Multiply(a1,2,a3);
-    Add(a1,a1,a2);
-    CPPUNIT_ASSERT(Equal(a2,a3));
-    
+    JntArray zero(4);
+    CPPUNIT_ASSERT(Equal(zero_set_to_zero,zero));
+
+    JntArray almost_zero = CreateRandomJntArray(4);
+    almost_zero(0) = almost_zero(0)*1e-7;
+    almost_zero(1) = almost_zero(1)*1e-7;
+    almost_zero(2) = almost_zero(2)*1e-7;
+    almost_zero(3) = almost_zero(3)*1e-7;
+
+    // This should obviously be equal, but fails in old buggy implementation
+    CPPUNIT_ASSERT(Equal(almost_zero,zero,1));
+    CPPUNIT_ASSERT(Equal(almost_zero,zero,1e-6));
+    CPPUNIT_ASSERT(!Equal(almost_zero,zero,1e-8));
+
+    JntArray sum_random_zero(4);
+
+    Add(random,zero_set_to_zero,sum_random_zero);
+    CPPUNIT_ASSERT(Equal(random,sum_random_zero));
+
+    JntArray add_subtract(4);
+    JntArray random2 = CreateRandomJntArray(4);
+
+    Add(random,random2,add_subtract);
+    Subtract(add_subtract,random2,add_subtract);
+    CPPUNIT_ASSERT(Equal(random,add_subtract));
+
+    JntArray random_multiply_by_2(4);
+    JntArray sum_random_same_random(4);
+    Multiply(random,2,random_multiply_by_2);
+    Add(random,random,sum_random_same_random);
+    CPPUNIT_ASSERT(Equal(sum_random_same_random,random_multiply_by_2));
+
     double a;
     random(a);
-    Multiply(a1,a,a3);
-    Divide(a3,a,a2);
-    CPPUNIT_ASSERT(Equal(a2,a1));
+
+    JntArray random_multiply_devide(4);
+    Multiply(random,a,random_multiply_devide);
+    Divide(random_multiply_devide,a,random_multiply_devide);
+    CPPUNIT_ASSERT(Equal(random_multiply_devide,random));
 }
 
  
