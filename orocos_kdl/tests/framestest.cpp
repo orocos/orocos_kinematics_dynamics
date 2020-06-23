@@ -645,13 +645,13 @@ JntArray CreateRandomJntArray(int size)
 
 void FramesTest::TestJntArray()
 {
-    JntArray random = CreateRandomJntArray(4);
-    JntArray random_copy(random);
-    CPPUNIT_ASSERT(Equal(random_copy,random));
+    JntArray random1 = CreateRandomJntArray(4);
+    JntArray random1_copy(random1);
+    CPPUNIT_ASSERT(Equal(random1_copy,random1));
 
     JntArray zero_set_to_zero(4);
     SetToZero(zero_set_to_zero);
-    CPPUNIT_ASSERT(!Equal(random,zero_set_to_zero));
+    CPPUNIT_ASSERT(!Equal(random1,zero_set_to_zero));
 
     JntArray zero(4);
     CPPUNIT_ASSERT(Equal(zero_set_to_zero,zero));
@@ -669,29 +669,29 @@ void FramesTest::TestJntArray()
 
     JntArray sum_random_zero(4);
 
-    Add(random,zero_set_to_zero,sum_random_zero);
-    CPPUNIT_ASSERT(Equal(random,sum_random_zero));
+    Add(random1,zero_set_to_zero,sum_random_zero);
+    CPPUNIT_ASSERT(Equal(random1,sum_random_zero));
 
     JntArray add_subtract(4);
     JntArray random2 = CreateRandomJntArray(4);
 
-    Add(random,random2,add_subtract);
+    Add(random1,random2,add_subtract);
     Subtract(add_subtract,random2,add_subtract);
-    CPPUNIT_ASSERT(Equal(random,add_subtract));
+    CPPUNIT_ASSERT(Equal(random1,add_subtract));
 
     JntArray random_multiply_by_2(4);
     JntArray sum_random_same_random(4);
-    Multiply(random,2,random_multiply_by_2);
-    Add(random,random,sum_random_same_random);
+    Multiply(random1,2,random_multiply_by_2);
+    Add(random1,random1,sum_random_same_random);
     CPPUNIT_ASSERT(Equal(sum_random_same_random,random_multiply_by_2));
 
     double a;
     random(a);
 
     JntArray random_multiply_devide(4);
-    Multiply(random,a,random_multiply_devide);
+    Multiply(random1,a,random_multiply_devide);
     Divide(random_multiply_devide,a,random_multiply_devide);
-    CPPUNIT_ASSERT(Equal(random_multiply_devide,random));
+    CPPUNIT_ASSERT(Equal(random_multiply_devide,random1));
 }
 
  
