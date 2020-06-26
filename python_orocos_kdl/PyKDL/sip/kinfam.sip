@@ -409,6 +409,9 @@ public:
 //    Argument by reference doesn't work for container types
 //    virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainFkSolverPos_recursive& operator=(const ChainFkSolverPos_recursive&);
 };
 
 class ChainFkSolverVel_recursive : ChainFkSolverVel
@@ -423,6 +426,9 @@ public:
 //    Argument by reference doesn't work for container types
 //    virtual int JntToCart(const JntArrayVel& q_in, std::vector<FrameVel>& out, int segmentNr=-1 );
     virtual void updateInternalDataStructures();
+
+private:
+    ChainFkSolverVel_recursive& operator=(const ChainFkSolverVel_recursive&);
 };
 
 class ChainIkSolverPos : SolverI {
@@ -458,6 +464,9 @@ public:
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverPos_NR& operator=(const ChainIkSolverPos_NR&);
 };
 
 class ChainIkSolverPos_NR_JL : ChainIkSolverPos
@@ -473,6 +482,9 @@ public:
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverPos_NR_JL& operator=(const ChainIkSolverPos_NR_JL&);
 };
 
 class ChainIkSolverVel_pinv : ChainIkSolverVel
@@ -486,6 +498,9 @@ public:
 
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverVel_pinv& operator=(const ChainIkSolverVel_pinv&);
 };
 
 class ChainIkSolverVel_wdls : ChainIkSolverVel
@@ -595,6 +610,8 @@ public:
 
     void setLambda(const double& lambda);
 
+private:
+    ChainIkSolverVel_wdls& operator=(const ChainIkSolverVel_wdls&);
 };
 
 
@@ -609,6 +626,9 @@ public:
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverPos_LMA& operator=(const ChainIkSolverPos_LMA&);
 };
 
 
@@ -635,6 +655,9 @@ public:
     const JntArray& getOptPos()const /Factory/;
 
     const double& getAlpha()const /Factory/;
+
+private:
+    ChainIkSolverVel_pinv_nso& operator=(const ChainIkSolverVel_pinv_nso&);
 };
 
 class ChainIkSolverVel_pinv_givens : ChainIkSolverVel
@@ -648,6 +671,9 @@ public:
 
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverVel_pinv_givens& operator=(const ChainIkSolverVel_pinv_givens&);
 };
 
 class ChainJntToJacSolver : SolverI
@@ -660,6 +686,9 @@ public:
     ChainJntToJacSolver(const Chain& chain);
     int JntToJac(const JntArray& q_in,Jacobian& jac, int seg_nr=-1);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainJntToJacSolver& operator=(const ChainJntToJacSolver&);
 };
 
 class ChainJntToJacDotSolver : SolverI
@@ -672,6 +701,23 @@ public:
     ChainJntToJacDotSolver(const Chain& chain);
     int JntToJacDot(const JntArrayVel& q_in,Jacobian& jac, int seg_nr=-1);
     virtual void updateInternalDataStructures();
+    int setLockedJoints(const std::vector<bool>& locked_joints);
+
+    static const int E_JAC_DOT_FAILED;
+    static const int E_JACSOLVER_FAILED;
+    static const int E_FKSOLVERPOS_FAILED;
+
+    static const int HYBRID;
+    static const int BODYFIXED;
+    static const int INERTIAL;
+
+    void setHybridRepresentation();
+    void setBodyFixedRepresentation();
+    void setInertialRepresentation();
+    void setRepresentation(const int& representation);
+
+private:
+    ChainJntToJacDotSolver& operator=(const ChainJntToJacDotSolver&);
 };
 
 class ChainIdSolver : SolverI
@@ -694,4 +740,7 @@ public:
     ChainIdSolver_RNE(const Chain& chain,Vector grav);
     int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const std::vector<Wrench>& f_ext,JntArray &torques);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIdSolver_RNE& operator=(const KDL::ChainIdSolver_RNE&);
 };
