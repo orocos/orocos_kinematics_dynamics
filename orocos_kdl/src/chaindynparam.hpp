@@ -56,6 +56,9 @@ namespace KDL {
 
     /// @copydoc KDL::SolverI::updateInternalDataStructures()
     virtual void updateInternalDataStructures();
+    
+    protected:
+	ChainDynParam& operator=(ChainDynParam& other) = delete;
 
     private:
         const Chain& chain;
