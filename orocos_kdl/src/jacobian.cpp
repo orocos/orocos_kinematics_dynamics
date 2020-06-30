@@ -138,7 +138,7 @@ namespace KDL
     bool Equal(const Jacobian& a,const Jacobian& b,double eps)
     {
         if(a.rows()==b.rows()&&a.columns()==b.columns()){
-            return a.data.isApprox(b.data,eps);
+            return (a.data-b.data).isZero(eps);
         }else
             return false;
     }
