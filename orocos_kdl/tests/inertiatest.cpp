@@ -25,14 +25,14 @@ void InertiaTest::TestRotationalInertia() {
     CPPUNIT_ASSERT(Map<Matrix3d>(I0.data).isZero());
     RotationalInertia I1;
     CPPUNIT_ASSERT(Map<Matrix3d>(I1.data).isZero());
-    CPPUNIT_ASSERT(Map<Matrix3d>(I0.data).isApprox(Map<Matrix3d>(I1.data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I0.data)-Map<Matrix3d>(I1.data)).isZero());
     RotationalInertia I2(1,2,3,4,5,6);
     
     //Check if copying works fine
     RotationalInertia I3=I2;
-    CPPUNIT_ASSERT(Map<Matrix3d>(I3.data).isApprox(Map<Matrix3d>(I2.data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I3.data)-Map<Matrix3d>(I2.data)).isZero());
     I2.data[0]=0.0;
-    CPPUNIT_ASSERT(!Map<Matrix3d>(I3.data).isApprox(Map<Matrix3d>(I2.data)));
+    CPPUNIT_ASSERT(!(Map<Matrix3d>(I3.data)-Map<Matrix3d>(I2.data)).isZero());
 
     //Check if addition and multiplication works fine
     Map<Matrix3d>(I0.data).setRandom();
@@ -42,15 +42,14 @@ void InertiaTest::TestRotationalInertia() {
     CPPUNIT_ASSERT(Map<Matrix3d>(I1.data).isZero());
 
     //Check if matrix is symmetric
-    CPPUNIT_ASSERT(Map<Matrix3d>(I2.data).isApprox(Map<Matrix3d>(I2.data).transpose()));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I2.data)-Map<Matrix3d>(I2.data).transpose()).isZero());
 
     //Check if angular momentum is correctly calculated:
     Vector omega;
     random(omega);
     Vector momentum=I2*omega;
-    
-    CPPUNIT_ASSERT(Map<Vector3d>(momentum.data).isApprox(Map<Matrix3d>(I2.data)*Map<Vector3d>(omega.data)));
 
+    CPPUNIT_ASSERT((Map<Vector3d>(momentum.data)-(Map<Matrix3d>(I2.data)*Map<Vector3d>(omega.data))).isZero());
 }
 
 void InertiaTest::TestRigidBodyInertia() {
@@ -68,13 +67,13 @@ void InertiaTest::TestRigidBodyInertia() {
     CPPUNIT_ASSERT_EQUAL(I2.getMass(),mass);
     CPPUNIT_ASSERT(!Map<Matrix3d>(I2.getRotationalInertia().data).isZero());
     CPPUNIT_ASSERT_EQUAL(I2.getCOG(),c);
-    CPPUNIT_ASSERT(Map<Matrix3d>(I2.getRotationalInertia().data).isApprox(Map<Matrix3d>(Ic.data)-mass*(Map<Vector3d>(c.data)*Map<Vector3d>(c.data).transpose()-(Map<Vector3d>(c.data).dot(Map<Vector3d>(c.data))*Matrix3d::Identity()))));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I2.getRotationalInertia().data)-(Map<Matrix3d>(Ic.data)-mass*(Map<Vector3d>(c.data)*Map<Vector3d>(c.data).transpose()-(Map<Vector3d>(c.data).dot(Map<Vector3d>(c.data))*Matrix3d::Identity())))).isZero());
     
     RigidBodyInertia I3=I2;
     //check if copying works fine
     CPPUNIT_ASSERT_EQUAL(I2.getMass(),I3.getMass());
     CPPUNIT_ASSERT_EQUAL(I2.getCOG(),I3.getCOG());
-    CPPUNIT_ASSERT(Map<Matrix3d>(I2.getRotationalInertia().data).isApprox(Map<Matrix3d>(I3.getRotationalInertia().data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I2.getRotationalInertia().data)-Map<Matrix3d>(I3.getRotationalInertia().data)).isZero());
     //Check if multiplication and addition works fine
     RigidBodyInertia I4=-2*I2 +I3+I3;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I4.getMass(),0.0,epsilon);
@@ -90,13 +89,13 @@ void InertiaTest::TestRigidBodyInertia() {
     I4 = R.Inverse()*I3;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I2.getMass(),I4.getMass(), epsilon);
     CPPUNIT_ASSERT_EQUAL(I2.getCOG(),I4.getCOG());
-    CPPUNIT_ASSERT(Map<Matrix3d>(I2.getRotationalInertia().data).isApprox(Map<Matrix3d>(I4.getRotationalInertia().data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I2.getRotationalInertia().data)-Map<Matrix3d>(I4.getRotationalInertia().data)).isZero());
     //rotation and total with p=0
     Frame T(R);
     I4 = T*I2;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I3.getMass(),I4.getMass(), epsilon);
     CPPUNIT_ASSERT_EQUAL(I3.getCOG(),I4.getCOG());
-    CPPUNIT_ASSERT(Map<Matrix3d>(I3.getRotationalInertia().data).isApprox(Map<Matrix3d>(I4.getRotationalInertia().data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I3.getRotationalInertia().data)-Map<Matrix3d>(I4.getRotationalInertia().data)).isZero());
     
     //Check only transformation
     Vector p;
@@ -105,12 +104,12 @@ void InertiaTest::TestRigidBodyInertia() {
     I4 = I3.RefPoint(-p);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I2.getMass(),I4.getMass(),epsilon);
     CPPUNIT_ASSERT_EQUAL(I2.getCOG(),I4.getCOG());
-    CPPUNIT_ASSERT(Map<Matrix3d>(I2.getRotationalInertia().data).isApprox(Map<Matrix3d>(I4.getRotationalInertia().data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I2.getRotationalInertia().data)-Map<Matrix3d>(I4.getRotationalInertia().data)).isZero());
     T=Frame(-p);
     I4 = T*I2;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I3.getMass(),I4.getMass(),epsilon);
     CPPUNIT_ASSERT_EQUAL(I3.getCOG(),I4.getCOG());
-    CPPUNIT_ASSERT(Map<Matrix3d>(I3.getRotationalInertia().data).isApprox(Map<Matrix3d>(I4.getRotationalInertia().data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I3.getRotationalInertia().data)-Map<Matrix3d>(I4.getRotationalInertia().data)).isZero());
     
     random(T);
     I3=T*I2;
@@ -126,7 +125,7 @@ void InertiaTest::TestRigidBodyInertia() {
     I4 = T.Inverse()*I3;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I2.getMass(),I4.getMass(),epsilon);
     CPPUNIT_ASSERT_EQUAL(I2.getCOG(),I4.getCOG());
-    CPPUNIT_ASSERT(Map<Matrix3d>(I2.getRotationalInertia().data).isApprox(Map<Matrix3d>(I4.getRotationalInertia().data)));
+    CPPUNIT_ASSERT((Map<Matrix3d>(I2.getRotationalInertia().data)-Map<Matrix3d>(I4.getRotationalInertia().data)).isZero());
 
 }
 void InertiaTest::TestArticulatedBodyInertia() {
@@ -150,18 +149,18 @@ void InertiaTest::TestArticulatedBodyInertia() {
 
     CPPUNIT_ASSERT_EQUAL(I2.M,(Matrix3d::Identity()*mass).eval());
     CPPUNIT_ASSERT(!I2.I.isZero());
-    //CPPUNIT_ASSERT(I2.I.isApprox(Map<Matrix3d>(Ic.data)-mass*(Map<Vector3d>(c.data)*Map<Vector3d>(c.data).transpose()-(Map<Vector3d>(c.data).dot(Map<Vector3d>(c.data))*Matrix3d::Identity())),epsilon));
-    //CPPUNIT_ASSERT(I2.H.isApprox(Map<Vector3d>(c.data)*Map<Vector3d>(c.data).transpose()-(Map<Vector3d>(c.data).dot(Map<Vector3d>(c.data))*Matrix3d::Identity()),epsilon));
+//    CPPUNIT_ASSERT((I2.I-(Map<Matrix3d>(Ic.data)-mass*(Map<Vector3d>(c.data)*Map<Vector3d>(c.data).transpose()-(Map<Vector3d>(c.data).dot(Map<Vector3d>(c.data))*Matrix3d::Identity())))).isZero());
+//    CPPUNIT_ASSERT((I2.H-(Map<Vector3d>(c.data)*Map<Vector3d>(c.data).transpose()-(Map<Vector3d>(c.data).dot(Map<Vector3d>(c.data))*Matrix3d::Identity()))).isZero());
     ArticulatedBodyInertia I3=I2;
     //check if copying works fine
-    CPPUNIT_ASSERT(I2.M.isApprox(I3.M));
-    CPPUNIT_ASSERT(I2.H.isApprox(I3.H));
-    CPPUNIT_ASSERT(I2.I.isApprox(I3.I));
+    CPPUNIT_ASSERT((I2.M-I3.M).isZero());
+    CPPUNIT_ASSERT((I2.H-I3.H).isZero());
+    CPPUNIT_ASSERT((I2.I-I3.I).isZero());
     //Check if multiplication and addition works fine
     ArticulatedBodyInertia I4=-2*I2 +I3+I3;
-    CPPUNIT_ASSERT(I4.M.isApprox(Matrix3d::Zero().eval()));
-    CPPUNIT_ASSERT(I4.H.isApprox(Matrix3d::Zero().eval()));
-    CPPUNIT_ASSERT(I4.I.isApprox(Matrix3d::Zero().eval()));
+    CPPUNIT_ASSERT(I4.M.isZero());
+    CPPUNIT_ASSERT(I4.H.isZero());
+    CPPUNIT_ASSERT(I4.I.isZero());
     
     //Check if transformations work fine
     //Check only rotation transformation
@@ -171,36 +170,36 @@ void InertiaTest::TestArticulatedBodyInertia() {
     I3 = R*I2;
     Map<Matrix3d> E(R.data);
     Matrix3d tmp = E.transpose()*I2.M*E;
-    CPPUNIT_ASSERT(I3.M.isApprox(tmp));
+    CPPUNIT_ASSERT((I3.M-tmp).isZero());
     tmp = E.transpose()*I2.H*E;
-    CPPUNIT_ASSERT(I3.H.isApprox(tmp));
+    CPPUNIT_ASSERT((I3.H-tmp).isZero());
     tmp = E.transpose()*I2.I*E;
-    CPPUNIT_ASSERT(I3.I.isApprox(tmp));
+    CPPUNIT_ASSERT((I3.I-tmp).isZero());
 
     I4 = R.Inverse()*I3;
-    CPPUNIT_ASSERT(I2.M.isApprox(I4.M));
-    CPPUNIT_ASSERT(I2.H.isApprox(I4.H));
-    CPPUNIT_ASSERT(I2.I.isApprox(I4.I));
+    CPPUNIT_ASSERT((I2.M-I4.M).isZero());
+    CPPUNIT_ASSERT((I2.H-I4.H).isZero());
+    CPPUNIT_ASSERT((I2.I-I4.I).isZero());
     //rotation and total with p=0
     Frame T(R);
     I4 = T*I2;
-    CPPUNIT_ASSERT(I3.M.isApprox(I4.M));
-    CPPUNIT_ASSERT(I3.H.isApprox(I4.H));
-    CPPUNIT_ASSERT(I3.I.isApprox(I4.I));
+    CPPUNIT_ASSERT((I3.M-I4.M).isZero());
+    CPPUNIT_ASSERT((I3.H-I4.H).isZero());
+    CPPUNIT_ASSERT((I3.I-I4.I).isZero());
 
     //Check only transformation
     Vector p;
     random(p);
     I3 = I2.RefPoint(p);
     I4 = I3.RefPoint(-p);
-    CPPUNIT_ASSERT(I2.M.isApprox(I4.M));
-    CPPUNIT_ASSERT(I2.H.isApprox(I4.H));
-    CPPUNIT_ASSERT(I2.I.isApprox(I4.I));
+    CPPUNIT_ASSERT((I2.M-I4.M).isZero());
+    CPPUNIT_ASSERT((I2.H-I4.H).isZero());
+    CPPUNIT_ASSERT((I2.I-I4.I).isZero());
     T=Frame(-p);
     I4 = T*I2;
-    CPPUNIT_ASSERT(I3.M.isApprox(I4.M));
-    CPPUNIT_ASSERT(I3.H.isApprox(I4.H));
-    CPPUNIT_ASSERT(I3.I.isApprox(I4.I));
+    CPPUNIT_ASSERT((I3.M-I4.M).isZero());
+    CPPUNIT_ASSERT((I3.H-I4.H).isZero());
+    CPPUNIT_ASSERT((I3.I-I4.I).isZero());
 
     
     random(T);
@@ -215,7 +214,7 @@ void InertiaTest::TestArticulatedBodyInertia() {
     random(T);
     I3 = T*I2;
     I4 = T.Inverse()*I3;
-    CPPUNIT_ASSERT(I2.M.isApprox(I4.M));
-    CPPUNIT_ASSERT(I2.H.isApprox(I4.H));
-    CPPUNIT_ASSERT(I2.I.isApprox(I4.I));
+    CPPUNIT_ASSERT((I2.M-I4.M).isZero());
+    CPPUNIT_ASSERT((I2.H-I4.H).isZero());
+    CPPUNIT_ASSERT((I2.I-I4.I).isZero());
 }

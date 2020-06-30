@@ -114,7 +114,7 @@ namespace KDL
     {
         if(src1.rows()!=src2.rows())
             return false;
-        return src1.data.isApprox(src2.data,eps);
+        return (src1.data-src2.data).isZero(eps);
     }
 
     bool operator==(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);}

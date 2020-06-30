@@ -13,7 +13,7 @@ class JacobianTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestChangeRefFrame);
     CPPUNIT_TEST(TestChangeBase);
     CPPUNIT_TEST(TestConstructor);
-    CPPUNIT_TEST(TestGetSetColumn);
+    CPPUNIT_TEST(TestEqual);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -24,7 +24,7 @@ public:
     void TestChangeRefFrame();
     void TestChangeBase();
     void TestConstructor();
-    void TestGetSetColumn();
+    void TestEqual();
 };
 
 #endif
