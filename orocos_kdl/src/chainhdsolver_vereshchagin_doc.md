@@ -1,6 +1,6 @@
 
-# Documentation on the Vereshchagin solver
-### Author of this document:  Djordje Vukcevic (GitHub account: `djoleMNE`)
+# Documentation on the Vereshchagin Hybrid Dynamics solver
+#### Author of this document:  Djordje Vukcevic (GitHub account: `djoleMNE`)
 
 ## This solver is also known under the following names:
 * Acceleration Constrained Hybrid Dynamics (ACHD) solver
@@ -38,8 +38,7 @@ For computing solutions to the constrained hybrid dynamics problem, this origina
 ------------------------------------
 
 
-
- The following outlines the above-listed task interfaces in more detail.
+The following outlines the above-listed task interfaces in more detail.
 
 #### **Cartesian Acceleration Constraints: alpha & beta** 
 This first type of motion driver can be used for specifying **physical** constraints such as contacts with environment [3], or **artificial** constraints defined by the operational space task definition for the end-effector (tool-tip) segment. To use this interface, a user should define **i)** the active constraint directions via **alpha** parameter, which is a **6 x m** matrix of spatial unit constraint forces, and **ii)** acceleration energy setpoints via **beta**, which is a **m x 1** vector. Here, the number of constraints **m**, or in another words number of spatial unit constraint forces is not required to always be equal to **m**, which means that a human programmer can leave some of the degrees of freedom unspecified [2] for this motion driver, and still produce valid control commands [5]. For example, if we want to constrain the motion of the end-effector segment in only one direction, namely linear **x**-direction, we can define the constraint as [3]:
@@ -58,6 +57,8 @@ This first type of motion driver can be used for specifying **physical** constra
 
 
 Note that here, the first three rows of matrix **alpha** represent linear elements and the last three rows represent angular elements,  of the spatial unit force defined in Plücker coordinates [4]. By giving zero value to acceleration energy setpoint (**beta**), we are defining that the end-effector is not allowed to have linear acceleration in **x** direction. Or in other words, we are restricting the robot from producing any acceleration energy in that specified direction.
+
+-------------
 
 Another example includes the specification of constraints in **5 DOFs**. We can constrain the motion of robot's end-effector, such that it is only allowed to  **freely** move in the linear **z**-direction, without performing linear motions in **x** and **y** and angular motions in **x**, **y** and **z** directions:
 
@@ -104,6 +105,7 @@ Moreover, the motion specification in the second example is equivalent to:
 | 0 | 
 | 0 |
 | 0 |
+----
 
 The last example involves the specification of desired end-effector motion (in this case, non-zero accelerations) in all 6 **DOFs**:
 
@@ -118,12 +120,15 @@ The last example involves the specification of desired end-effector motion (in t
 | 0 | 0 | 0 | 0 | 0 | 1 |
 
 **beta** = **alpha^T * X_dotdot_N**
+
 Here, **N** stands for the index of the last robot's segment, end-effector (tool-tip).
 The reader should note that we can directly assign values (magnitudes) of spatial acceleration **6 x 1** vector **X_dotdot_N** to the **6 x 1** vector of acceleration energy (**beta**) [3]. Even though physical dimensions (units) of these two vectors are not the same, the property of matrix **alpha** (it contains **unit** vectors), permits that we can assign values of desired accelerations to acceleration energy setpoints, in respective directions. Namely, each column of matrix **alpha** has the value of **1** in the respective direction in which constraint force works, thus it follows that the value of acceleration energy setpoint is the same as the value of Cartesian acceleration, in the respective direction. 
 
+------------------------------
 #### **External Forces: f_ext**
 This type of driver can be used for specifying **physical** Cartesian forces acting on each of the robot's segments. Examples for a **physical** force on a segment can be: **i)** a known weight at the robot's gripper, for instance, a grasped cup or **ii)** a force from a human pushing the robot [5]. Note that the implementation of Vereshchagin solver in KDL expects the provided **f_ext** is expressed w.r.t. robot's base frame, which is in contrast to the case of KDL's RNE solver.
 
+---------------------------------------------
 #### **Feed-Forward Joint Torques: ff_torque**
 This type of motion driver can be used for specifying **physical** joint torques, for example, spring and/or damper-based torques (e.g. friction effects) in robot's joints. 
 
