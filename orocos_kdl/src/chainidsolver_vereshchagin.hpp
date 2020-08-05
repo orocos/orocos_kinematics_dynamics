@@ -138,6 +138,7 @@ private:
     Eigen::VectorXd nu_sum;
     Eigen::VectorXd Sm;
     Eigen::VectorXd tmpm;
+    Eigen::VectorXd d; //joint inertia, see equation a) in Vereshchagin89
     Wrench qdotdot_sum;
     Frame F_total;
 

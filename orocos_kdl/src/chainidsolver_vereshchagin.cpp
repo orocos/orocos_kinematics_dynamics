@@ -47,6 +47,20 @@ ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twis
     Vm = MatrixXd::Identity(nc, nc);
     Sm = VectorXd::Ones(nc);
     tmpm = VectorXd::Ones(nc);
+
+    // Provide the necessary memory for storing joint effective inertia
+    d.resize(nj);
+
+    // Store joint effective inertia
+    int j = nj - 1;
+    for (int i = ns - 1; i >= 0; i--)
+    {
+        if (chain.getSegment(i).getJoint().getType() != Joint::Fixed)
+        {
+            d(j) = chain.getSegment(i).getJoint().getInertia();
+            j--;
+        }
+    }
 }
 
 void ChainIdSolver_Vereshchagin::updateInternalDataStructures() {
@@ -230,7 +244,14 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
 
             //needed for next recursion
             s.PZ = s.P * s.Z;
-            s.D = dot(s.Z, s.PZ);
+
+            /**
+             * Djordje Vukcevic: Additionally adding joint inertia to s.D, see:
+             * - equation a) in Vereshchagin89
+             * - equation 9.28, page 188, Featherstone book 2008
+             */
+            s.D = d(j) + dot(s.Z, s.PZ);
+
             s.PC = s.P * s.C;
 
             //u=(Q-Z(R+PC)=sum of external forces along the joint axes,

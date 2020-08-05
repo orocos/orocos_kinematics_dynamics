@@ -122,7 +122,7 @@ void SolverTest::setUp()
 
     // Motoman SIA10 Chain with Mass Parameters (for forward dynamics tests)
 
-    //  effective motor inertia is included as joint inertia
+    // Effective motor inertia is included as joint inertia
     static const double scale=1.0;
     static const double offset=0.0;
     static const double inertiamotorA=5.0;      // effective motor inertia kg-m^2
@@ -172,51 +172,55 @@ void SolverTest::setUp()
                                        Frame(Rotation::Identity(),Vector(0.0,0.0,0.155))));
 
 
-    // KUKA LWR 4 Chain with Dynamics Parameters (for Forward Dynamics and Vereshchagin tests)
+    /** 
+     * KUKA LWR 4 Chain with Dynamics Parameters (for Forward Dynamics and Vereshchagin solver tests)
+     * Necessary test model for the Vereshchagin solver: KDL's implementation of the Vereshchagin solver 
+     * can only work with the robot chains that have equal number of joint and segments.
+     */
 	//joint 1
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												 Vector::Zero(),
 												 RotationalInertia(0.0,0.0,0.0115343,0.0,0.0,0.0))));
 
 	//joint 2 
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.4, 0.0),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.4, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,-0.3120511,-0.0038871),
 												   RotationalInertia(-0.5471572,-0.0000302,-0.5423253,0.0,0.0,0.0018828))));
 
 	//joint 3
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,-0.0015515,0.0),
 												   RotationalInertia(0.0063507,0.0,0.0107804,0.0,0.0,-0.0005147))));
 
 	//joint 4
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.39, 0.0),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.39, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,0.5216809,0.0),
 												   RotationalInertia(-1.0436952,0.0,-1.0392780,0.0,0.0,0.0005324))));
 
 	//joint 5
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,0.0119891,0.0),
 												   RotationalInertia(0.0036654,0.0,0.0060429,0.0,0.0,0.0004226))));
 
 	//joint 6
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,0.0080787,0.0),
 												   RotationalInertia(0.0010431,0.0,0.0036376,0.0,0.0,0.0000101))));
 
     //joint 7
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
 				               Frame::Identity(),
 				               RigidBodyInertia(2, Vector::Zero(), RotationalInertia(0.000001,0.0,0.0001203,0.0,0.0,0.0))));
 }
@@ -1271,6 +1275,10 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     unsigned int nj = kukaLWR.getNrOfJoints();
     unsigned int ns = kukaLWR.getNrOfSegments();
 
+    // Necessary test for the used robot model: KDL's implementation of the Vereshchagin solver 
+    // can only work with the robot chains that have equal number of joint and segments
+    CPPUNIT_ASSERT(Equal(nj, ns));
+
     // Joint position, velocity, and acceleration
     KDL::JntArray q(nj);
     KDL::JntArray qd(nj);
@@ -1344,17 +1352,15 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     Vector linearAcc(0.0, 0.0, 9.81); Vector angularAcc(0.0, 0.0, 0.0);
     Twist root_Acc(linearAcc, angularAcc);
 
-    ChainIdSolver_Vereshchagin constraintSolver(kukaLWR, root_Acc, numberOfConstraints);
-
-    fksolverpos.JntToCart(q, end_effector_pose, kukaLWR.getNrOfSegments());
-
-    // External Wrench acting on the end-effector, this time expressed in base link coordinates
-    // Vereshchagin solver expects that external wrenches are expressed w.r.t. robot's base frame
-    f_ext[ns-1]= end_effector_pose.M * f_tool;
-
     JntArray jointTorques(tau);
     JntArray q_dd_Ver(nj);
 
+    fksolverpos.JntToCart(q, end_effector_pose, kukaLWR.getNrOfSegments());
+    // External Wrench acting on the end-effector, this time expressed in base link coordinates
+    // Vereshchagin solver expects that external wrenches are expressed w.r.t. robot's base frame
+    f_ext[ns - 1] = end_effector_pose.M * f_tool;
+
+    ChainIdSolver_Vereshchagin constraintSolver(kukaLWR, root_Acc, numberOfConstraints);
     ret = constraintSolver.CartToJnt(q, qd, q_dd_Ver, alpha, beta, f_ext, jointTorques);
     if (ret < 0) std::cout << "KDL: Vereshchagin solver ERROR: " << ret << std::endl;
 
