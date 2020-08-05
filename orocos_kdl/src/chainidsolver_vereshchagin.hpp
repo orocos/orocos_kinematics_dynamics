@@ -76,6 +76,10 @@ public:
 
     /// @copydoc KDL::SolverI::updateInternalDataStructures
     virtual void updateInternalDataStructures();
+
+    //Returns cartesian acceleration of links in base coordinates
+    void getTransformedLinkAcceleration(Twists& xDotdot);
+
     /*
     //Returns cartesian positions of links in base coordinates
     void getLinkCartesianPose(Frames& x_base);

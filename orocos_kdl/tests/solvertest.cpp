@@ -175,7 +175,7 @@ void SolverTest::setUp()
     /** 
      * KUKA LWR 4 Chain with Dynamics Parameters (for Forward Dynamics and Vereshchagin solver tests)
      * Necessary test model for the Vereshchagin solver: KDL's implementation of the Vereshchagin solver 
-     * can only work with the robot chains that have equal number of joint and segments.
+     * can only work with the robot chains that have equal number of joints and segments.
      */
 	//joint 1
 	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
@@ -808,7 +808,153 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
 
 void SolverTest::VereshchaginTest()
 {
+    std::cout << "KDL Vereshchagin Hybrid Dynamics Tests" <<std::endl;
 
+    // ########################################################################################
+    // Vereshchagin solver test 1
+    // ########################################################################################
+
+    /**
+     * Compute Hybrid Dynamics for KUKA LWR 4.
+     * 
+     * Test setup is the following:
+     * - Operational-space task imposes acceleration constraints on the end-effector
+     * - External forces and feedforward joint torques are acting on the robot's structure, 
+     *   as disturbances from the environment
+     * 
+     * Expected result:
+     * - The solver computes required joint torque commands that satisfy imposed acceleration 
+     *   constraints and at the same time, compensate for the above mentioned disturbances
+     * 
+     * Method to evaluate:
+     * - Compare the _resultant_ Cartesian accelerations of the end-effector's segment with 
+     *   the task-specified acceleration constraints
+     */
+    int solver_return = 0;
+    double eps = 1.e-3;
+
+    unsigned int nj = kukaLWR.getNrOfJoints();
+    unsigned int ns = kukaLWR.getNrOfSegments();
+
+    // Necessary test for the used robot model: KDL's implementation of the Vereshchagin solver 
+    // can only work with the robot chains that have equal number of joints and segments
+    CPPUNIT_ASSERT(Equal(nj, ns));
+
+    // Joint position, velocity, and acceleration
+    KDL::JntArray q(nj);
+    KDL::JntArray qd(nj);
+    KDL::JntArray qdd(nj);
+    KDL::JntArray ff_tau(nj);
+
+    // Random configuration
+    q(0) =  1.6;
+    q(1) =  0.0;
+    q(2) = -1.6;
+    q(3) = -1.57;
+    q(4) =  0.0;
+    q(5) =  1.57;
+    q(6) = -0.8;
+
+    qd(0) =  1.0;
+    qd(1) = -2.0;
+    qd(2) =  3.0;
+    qd(3) = -4.0;
+    qd(4) =  5.0;
+    qd(5) = -6.0;
+    qd(6) =  7.0;
+
+    // Random feedforwad torques acting on robot joints
+    ff_tau(0) =  5.0;
+    ff_tau(1) =  0.0;
+    ff_tau(2) =  0.0;
+    ff_tau(3) =  0.0;
+    ff_tau(4) =  0.0;
+    ff_tau(5) = -6.0;
+    ff_tau(6) =  0.0;
+
+    // External Wrench acting on the end-effector, expressed in base link coordinates
+    // Vereshchagin solver expects that external wrenches are expressed w.r.t. robot's base frame
+    KDL::Vector f(10.0, 15.0, 0.0);
+    KDL::Vector n(0.0, 0.0, 5.0);
+    KDL::Wrench f_tool(f, n);
+    KDL::Wrenches f_ext(ns);
+    f_ext[ns - 1] = f_tool;
+
+    // Constraint Unit forces for the end-effector
+    int number_of_constraints = 6;
+    Jacobian alpha_unit_force(number_of_constraints);
+
+    // Set directions in which the constraint force should work. Alpha in the solver 
+    Twist unit_force_x_l(
+        Vector(1.0, 0.0, 0.0), 
+        Vector(0.0, 0.0, 0.0)); // constraint active
+    alpha_unit_force.setColumn(0, unit_force_x_l);
+
+    Twist unit_force_y_l(
+        Vector(0.0, 1.0, 0.0),
+        Vector(0.0, 0.0, 0.0)); // constraint active
+    alpha_unit_force.setColumn(1, unit_force_y_l);
+
+    Twist unit_force_z_l(
+        Vector(0.0, 0.0, 1.0),
+        Vector(0.0, 0.0, 0.0)); // constraint active
+    alpha_unit_force.setColumn(2, unit_force_z_l);
+
+    Twist unit_force_x_a(
+        Vector(0.0, 0.0, 0.0),
+        Vector(0.0, 0.0, 0.0)); // constraint diabled... In this direction, end-effector's motion will emerge naturally
+    alpha_unit_force.setColumn(3, unit_force_x_a);
+
+    Twist unit_force_y_a(
+        Vector(0.0, 0.0, 0.0),
+        Vector(0.0, 0.0, 0.0)); // constraint diabled... In this direction, end-effector's motion will emerge naturally
+    alpha_unit_force.setColumn(4, unit_force_y_a);
+
+    Twist unit_force_z_a(
+        Vector(0.0, 0.0, 0.0),
+        Vector(0.0, 0.0, 1.0)); // constraint active
+    alpha_unit_force.setColumn(5, unit_force_z_a);
+
+    // Acceleration energy for the end-effector. 
+    JntArray beta_energy(number_of_constraints);
+    beta_energy(0) = -0.5;
+    beta_energy(1) = -0.5;
+    beta_energy(2) =  0.0;
+    beta_energy(3) =  0.0; // this value has no impact on computations, since its corresponding constraint is disabled
+    beta_energy(4) =  0.0; // this value has no impact on computations, since its corresponding constraint is disabled
+    beta_energy(5) =  0.2;
+
+    // Arm root acceleration (robot's base mounted on an even surface)
+    // Note: Vereshchagin solver takes root acc. with opposite sign comparead to the KDL's FD and RNE solvers
+    Twist root_Acc(Vector(0.0, 0.0, 9.81), Vector(0.0, 0.0, 0.0));
+
+    ChainIdSolver_Vereshchagin vereshchaginSolver(kukaLWR, root_Acc, number_of_constraints);
+    solver_return = vereshchaginSolver.CartToJnt(q, qd, qdd, alpha_unit_force, beta_energy, f_ext, ff_tau);
+    if (solver_return < 0) std::cout << "KDL: Vereshchagin solver ERROR: " << solver_return << std::endl;
+
+
+
+    // ##################################################################################
+    // Final comparison of _resultant_ Cartesian accelerations of the end-effector segment 
+    // and the task-specified acceleration constraints
+
+    // Number of frames on the robot = ns + 1
+    std::vector<Twist> xDotdot(ns + 1);
+    vereshchaginSolver.getTransformedLinkAcceleration(xDotdot);
+
+    // std::cout << "Segment (including root) acceleration: " << std::endl;
+    // for (int i = 0; i < ns + 1 ; i++)
+    //     std::cout << xDotdot[i] << std::endl;
+
+    CPPUNIT_ASSERT(Equal(beta_energy(0), xDotdot[ns].vel(0), eps));
+    CPPUNIT_ASSERT(Equal(beta_energy(1), xDotdot[ns].vel(1), eps));
+    CPPUNIT_ASSERT(Equal(beta_energy(2), xDotdot[ns].vel(2), eps));
+    CPPUNIT_ASSERT(Equal(beta_energy(5), xDotdot[ns].rot(2), eps));
+
+
+    // ########################################################################################
+    // Vereshchagin solver test 2
+    // ########################################################################################
     Vector constrainXLinear(1.0, 0.0, 0.0);
     Vector constrainXAngular(0.0, 0.0, 0.0);
     Vector constrainYLinear(0.0, 0.0, 0.0);
@@ -1276,7 +1422,7 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     unsigned int ns = kukaLWR.getNrOfSegments();
 
     // Necessary test for the used robot model: KDL's implementation of the Vereshchagin solver 
-    // can only work with the robot chains that have equal number of joint and segments
+    // can only work with the robot chains that have equal number of joints and segments
     CPPUNIT_ASSERT(Equal(nj, ns));
 
     // Joint position, velocity, and acceleration
@@ -1347,8 +1493,8 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     JntArray beta(numberOfConstraints); //set to zero
     KDL::SetToZero(beta);
 
-    // Arm root acceleration (Robot base mounted on a even surface)
-    // Note: Vereshchagin solver takes root acc. with oposite sign comparead to the above FD and RNE solvers
+    // Arm root acceleration (robot's base mounted on an even surface)
+    // Note: Vereshchagin solver takes root acc. with opposite sign comparead to the above FD and RNE solvers
     Vector linearAcc(0.0, 0.0, 9.81); Vector angularAcc(0.0, 0.0, 0.0);
     Twist root_Acc(linearAcc, angularAcc);
 

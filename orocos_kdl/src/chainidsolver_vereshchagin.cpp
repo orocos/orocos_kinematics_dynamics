@@ -357,6 +357,15 @@ void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
     }
 }
 
+// Returns Cartesian acceleration of links in robot base coordinates
+void ChainIdSolver_Vereshchagin::getTransformedLinkAcceleration(Twists& xDotdot)
+{
+    assert(xDotdot.size() == ns + 1);
+    xDotdot[0] = acc_root;
+    for (int i = 1; (unsigned)i < ns + 1; i++)
+        xDotdot[i] = results[i].F_base.M * results[i].acc;
+}
+
 /*
 void ChainIdSolver_Vereshchagin::getLinkCartesianPose(Frames& x_base)
 {
