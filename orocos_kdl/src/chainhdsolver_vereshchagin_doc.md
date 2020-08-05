@@ -58,7 +58,6 @@ This first type of motion driver can be used for specifying **physical** constra
 
 Note that here, the first three rows of matrix **alpha** represent linear elements and the last three rows represent angular elements,  of the spatial unit force defined in Plücker coordinates [4]. By giving zero value to acceleration energy setpoint (**beta**), we are defining that the end-effector is not allowed to have linear acceleration in **x** direction. Or in other words, we are restricting the robot from producing any acceleration energy in that specified direction.
 
--------------
 
 Another example includes the specification of constraints in **5 DOFs**. We can constrain the motion of robot's end-effector, such that it is only allowed to  **freely** move in the linear **z**-direction, without performing linear motions in **x** and **y** and angular motions in **x**, **y** and **z** directions:
 
@@ -105,7 +104,7 @@ Moreover, the motion specification in the second example is equivalent to:
 | 0 | 
 | 0 |
 | 0 |
-----
+
 
 The last example involves the specification of desired end-effector motion (in this case, non-zero accelerations) in all 6 **DOFs**:
 
@@ -134,7 +133,7 @@ This type of motion driver can be used for specifying **physical** joint torques
 
 Additional examples on using these input interfaces can be found in "../tests/solvertest.cpp":
 * VereshchaginTest() function - an example on how to use all interfaces of this solver for computing the solution to the Hybrid Dynamics (HD) problem.
-* FdSolverConsistencyTest() function - an example on how to this solver for computing only the solution to the Forward Dynamics (FD) problem.
+* FdAndVereshchaginSolversConsistencyTest() function - an example on how to use this solver for computing only the solution to the Forward Dynamics (FD) problem.
 
 -----------------------------------
 

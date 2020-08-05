@@ -123,13 +123,13 @@ void SolverTest::setUp()
     // Motoman SIA10 Chain with Mass Parameters (for forward dynamics tests)
 
     //  effective motor inertia is included as joint inertia
-    static const double scale=1;
-    static const double offset=0;
+    static const double scale=1.0;
+    static const double offset=0.0;
     static const double inertiamotorA=5.0;      // effective motor inertia kg-m^2
     static const double inertiamotorB=3.0;      // effective motor inertia kg-m^2
     static const double inertiamotorC=1.0;      // effective motor inertia kg-m^2
-    static const double damping=0;
-    static const double stiffness=0;
+    static const double damping=0.0;
+    static const double stiffness=0.0;
 
     //  Segment Inertias
     KDL::RigidBodyInertia inert1(15.0, KDL::Vector(0.0, -0.02, 0.0),                       // mass, CM
@@ -170,6 +170,55 @@ void SolverTest::setUp()
                                inert7));
     motomansia10dyn.addSegment(Segment(Joint(Joint::None),
                                        Frame(Rotation::Identity(),Vector(0.0,0.0,0.155))));
+
+
+    // KUKA LWR 4 Chain with Dynamics Parameters (for Forward Dynamics and Vereshchagin tests)
+	//joint 1
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0),
+				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
+												 Vector::Zero(),
+												 RotationalInertia(0.0,0.0,0.0115343,0.0,0.0,0.0))));
+
+	//joint 2 
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+				  Frame::DH_Craig1989(0.0, -1.5707963, 0.4, 0.0),
+				  Frame::DH_Craig1989(0.0, -1.5707963, 0.4, 0.0).Inverse()*RigidBodyInertia(2,
+												   Vector(0.0,-0.3120511,-0.0038871),
+												   RotationalInertia(-0.5471572,-0.0000302,-0.5423253,0.0,0.0,0.0018828))));
+
+	//joint 3
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0),
+				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
+												   Vector(0.0,-0.0015515,0.0),
+												   RotationalInertia(0.0063507,0.0,0.0107804,0.0,0.0,-0.0005147))));
+
+	//joint 4
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+				  Frame::DH_Craig1989(0.0, 1.5707963, 0.39, 0.0),
+				  Frame::DH_Craig1989(0.0, 1.5707963, 0.39, 0.0).Inverse()*RigidBodyInertia(2,
+												   Vector(0.0,0.5216809,0.0),
+												   RotationalInertia(-1.0436952,0.0,-1.0392780,0.0,0.0,0.0005324))));
+
+	//joint 5
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0),
+				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
+												   Vector(0.0,0.0119891,0.0),
+												   RotationalInertia(0.0036654,0.0,0.0060429,0.0,0.0,0.0004226))));
+
+	//joint 6
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0),
+				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
+												   Vector(0.0,0.0080787,0.0),
+												   RotationalInertia(0.0010431,0.0,0.0036376,0.0,0.0,0.0000101))));
+
+    //joint 7
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ),
+				               Frame::Identity(),
+				               RigidBodyInertia(2, Vector::Zero(), RotationalInertia(0.000001,0.0,0.0001203,0.0,0.0,0.0))));
 }
 
 void SolverTest::tearDown()
@@ -771,10 +820,10 @@ void SolverTest::VereshchaginTest()
     //alpha.setColumn(0, constraintForcesZ);
 
     //Acceleration energy at  the end-effector
-    JntArray betha(1); //set to zero
-    betha(0) = 0.0;
-    //betha(1) = 0.0;
-    //betha(2) = 0.0;
+    JntArray beta(1); //set to zero
+    beta(0) = 0.0;
+    //beta(1) = 0.0;
+    //beta(2) = 0.0;
 
     //arm root acceleration
     Vector linearAcc(0.0, 10, 0.0); //gravitational acceleration along Y
@@ -845,7 +894,7 @@ void SolverTest::VereshchaginTest()
 
     for (double t = 0.0; t <=simulationTime; t = t + timeDelta)
     {
-        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, constraintSolver.CartToJnt(jointPoses[0], jointRates[0], jointAccelerations[0], alpha, betha, externalNetForce, jointTorques[0]));
+        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, constraintSolver.CartToJnt(jointPoses[0], jointRates[0], jointAccelerations[0], alpha, beta, externalNetForce, jointTorques[0]));
 
         //Integration(robot joint values for rates and poses; actual) at the given "instanteneous" interval for joint position and velocity.
         jointRates[0](0) = jointRates[0](0) + jointAccelerations[0](0) * timeDelta; //Euler Forward
@@ -1199,6 +1248,131 @@ void SolverTest::LDLdecompTest()
             CPPUNIT_ASSERT(Equal(A(i,j), Aout(i,j), eps));
         }
     }
+
+    return;
+}
+
+void SolverTest::FdAndVereshchaginSolversConsistencyTest()
+{
+    int ret;
+    double eps=1.e-3;
+    ChainFkSolverPos_recursive fksolverpos(kukaLWR);
+    Frame end_effector_pose;
+
+    /**
+     * Compute the forward dynamics (joint accelearitions given actuator torques) 
+     * using both solvers and test for consistency
+     */
+    std::cout<<"KDL FD (inverse-inertia version) and Vereshchagin Solvers Consistency Test for KUKA LWR 4 robot"<<std::endl;
+
+    // ########################################################################################
+    // Experiment (common state) setup
+
+    unsigned int nj = kukaLWR.getNrOfJoints();
+    unsigned int ns = kukaLWR.getNrOfSegments();
+
+    // Joint position, velocity, and acceleration
+    KDL::JntArray q(nj);
+    KDL::JntArray qd(nj);
+    KDL::JntArray qdd(nj);
+    KDL::JntArray tau(nj);
+
+    // random
+    q(0) = 1.0;
+    q(1) = 0.0;
+    q(2) = 0.0;
+    q(3) = -1.57;
+    q(4) = 0.0;
+    q(5) = 1.57;
+    q(6) = -0.8;
+
+    qd(0) = 1.0;
+    qd(1) = -2.0;
+    qd(2) = 3.0;
+    qd(3) = -4.0;
+    qd(4) = 5.0;
+    qd(5) = -6.0;
+    qd(6) = 7.0;
+
+    // actuator torques
+    tau(0) = 50.0;
+    tau(1) = -20.0;
+    tau(2) = 10.0;
+    tau(3) = 40.0;
+    tau(4) = -60.0;
+    tau(5) = 15.0;
+    tau(6) = -10.0;
+
+    // External Wrench acting on the end-effector, expressed in local link coordinates
+    KDL::Vector f(10.0, -20.0, 30.0);
+    KDL::Vector n(3.0, -4.0, 5.0);
+    KDL::Wrench f_tool(f, n);
+
+    KDL::Wrenches f_ext(ns);
+    for(unsigned int i=0;i<ns;i++)
+        SetToZero(f_ext[i]);
+
+    f_ext[ns - 1] = f_tool;
+
+
+    // ########################################################################################
+    // Forward Dynamics Solver (inverse-inertia version)
+
+    Vector gravity(0.0, 0.0, -9.81);  // base frame (Robot base mounted on an even surface)
+    KDL::ChainFdSolver_RNE FdSolver = KDL::ChainFdSolver_RNE(kukaLWR, gravity);
+
+    // Call FD function
+    ret = FdSolver.CartToJnt(q, qd, tau, f_ext, qdd);
+    if (ret < 0) std::cout << "KDL: forward dynamics ERROR: " << ret << std::endl;
+
+
+
+    // ########################################################################################
+    // Vereshchagin Hybrid Dynamics solver
+
+    // Constraint Unit forces at the end-effector. Set to zero to deactivate all constraints
+    int numberOfConstraints = 6;
+    Jacobian alpha(numberOfConstraints);
+    KDL::SetToZero(alpha);
+
+    //Acceleration energy at the end-effector. Set to zero since all constraints are deactivated
+    JntArray beta(numberOfConstraints); //set to zero
+    KDL::SetToZero(beta);
+
+    // Arm root acceleration (Robot base mounted on a even surface)
+    // Note: Vereshchagin solver takes root acc. with oposite sign comparead to the above FD and RNE solvers
+    Vector linearAcc(0.0, 0.0, 9.81); Vector angularAcc(0.0, 0.0, 0.0);
+    Twist root_Acc(linearAcc, angularAcc);
+
+    ChainIdSolver_Vereshchagin constraintSolver(kukaLWR, root_Acc, numberOfConstraints);
+
+    fksolverpos.JntToCart(q, end_effector_pose, kukaLWR.getNrOfSegments());
+
+    // External Wrench acting on the end-effector, this time expressed in base link coordinates
+    // Vereshchagin solver expects that external wrenches are expressed w.r.t. robot's base frame
+    f_ext[ns-1]= end_effector_pose.M * f_tool;
+
+    JntArray jointTorques(tau);
+    JntArray q_dd_Ver(nj);
+
+    ret = constraintSolver.CartToJnt(q, qd, q_dd_Ver, alpha, beta, f_ext, jointTorques);
+    if (ret < 0) std::cout << "KDL: Vereshchagin solver ERROR: " << ret << std::endl;
+
+
+
+    // ########################################################################################
+    // Final comparison
+    CPPUNIT_ASSERT(Equal(q_dd_Ver(0), qdd(0), eps));
+    CPPUNIT_ASSERT(Equal(q_dd_Ver(1), qdd(1), eps));
+    CPPUNIT_ASSERT(Equal(q_dd_Ver(2), qdd(2), eps));
+    CPPUNIT_ASSERT(Equal(q_dd_Ver(3), qdd(3), eps));
+    CPPUNIT_ASSERT(Equal(q_dd_Ver(4), qdd(4), eps));
+    CPPUNIT_ASSERT(Equal(q_dd_Ver(5), qdd(5), eps));
+    CPPUNIT_ASSERT(Equal(q_dd_Ver(6), qdd(6), eps));
+
+    // std::cout << "Command torque: " << tau << std::endl;
+    // std::cout << "Matrix-Inverse-FD jnt. acc.: " << qdd.data.transpose() << std::endl;
+    // std::cout << "Vereshchagin jnt. acc.:      " << q_dd_Ver.data.transpose() << std::endl;
 
     return;
 }

@@ -40,6 +40,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(FdSolverDevelopmentTest );
     CPPUNIT_TEST(FdSolverConsistencyTest );
     CPPUNIT_TEST(LDLdecompTest);
+    CPPUNIT_TEST(FdAndVereshchaginSolversConsistencyTest );
     CPPUNIT_TEST(UpdateChainTest );
     CPPUNIT_TEST_SUITE_END();
 
@@ -52,18 +53,19 @@ public:
     void FkVelAndIkVelTest();
     void FkPosAndIkPosTest();
     void VereshchaginTest();
-    void IkSingularValueTest() ;
+    void IkSingularValueTest();
     void IkVelSolverWDLSTest();
     void FkPosVectTest();
     void FkVelVectTest();
     void FdSolverDevelopmentTest();
     void FdSolverConsistencyTest();
     void LDLdecompTest();
+    void FdAndVereshchaginSolversConsistencyTest();
     void UpdateChainTest();
 
 private:
 
-  Chain chain1, chain2, chain3, chain4, chaindyn, motomansia10, motomansia10dyn;
+  Chain chain1, chain2, chain3, chain4, chaindyn, motomansia10, motomansia10dyn, kukaLWR;
 
     void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
     void FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);
