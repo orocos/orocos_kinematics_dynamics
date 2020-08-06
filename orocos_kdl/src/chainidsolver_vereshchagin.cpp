@@ -34,7 +34,7 @@ namespace KDL
 {
 using namespace Eigen;
 
-ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twist root_acc, unsigned int _nc) :
+ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, Twist root_acc, unsigned int _nc) :
     chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(_nc),
     results(ns + 1, segment_info(nc))
 {
@@ -63,12 +63,12 @@ ChainIdSolver_Vereshchagin::ChainIdSolver_Vereshchagin(const Chain& chain_, Twis
     }
 }
 
-void ChainIdSolver_Vereshchagin::updateInternalDataStructures() {
+void ChainHdSolver_Vereshchagin::updateInternalDataStructures() {
     ns = chain.getNrOfSegments();
     results.resize(ns+1,segment_info(nc));
 }
 
-int ChainIdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, JntArray &torques)
+int ChainHdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, JntArray &torques)
 {
     nj = chain.getNrOfJoints();
     if(ns != chain.getNrOfSegments())
@@ -89,7 +89,7 @@ int ChainIdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_d
     return (error = E_NOERROR);
 }
 
-void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const JntArray &qdot, const JntArray &qdotdot, const Wrenches& f_ext)
+void ChainHdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const JntArray &qdot, const JntArray &qdotdot, const Wrenches& f_ext)
 {
     //if (q.rows() != nj || qdot.rows() != nj || qdotdot.rows() != nj || f_ext.size() != ns)
     //        return -1;
@@ -150,7 +150,7 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
 
 }
 
-void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const JntArray &torques)
+void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const JntArray &torques)
 {
     int j = nj - 1;
     for (int i = ns; i >= 0; i--)
@@ -246,7 +246,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             s.PZ = s.P * s.Z;
 
             /**
-             * Djordje Vukcevic: Additionally adding joint inertia to s.D, see:
+             * Additionally adding joint inertia to s.D, see:
              * - equation a) in Vereshchagin89
              * - equation 9.28, page 188, Featherstone book 2008
              */
@@ -273,7 +273,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
     }
 }
 
-void ChainIdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
+void ChainHdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
 {
     //equation f) nu = M_0_inverse*(beta_N - E0_tilde`*acc0 - G0)
     //M_0_inverse, always nc*nc symmetric matrix
@@ -308,7 +308,7 @@ void ChainIdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
     nu.noalias() = M_0_inverse * nu_sum;
 }
 
-void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArray &torques)
+void ChainHdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArray &torques)
 {
     unsigned int j = 0;
 
@@ -358,7 +358,7 @@ void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
 }
 
 // Returns Cartesian acceleration of links in robot base coordinates
-void ChainIdSolver_Vereshchagin::getTransformedLinkAcceleration(Twists& xDotdot)
+void ChainHdSolver_Vereshchagin::getTransformedLinkAcceleration(Twists& xDotdot)
 {
     assert(xDotdot.size() == ns + 1);
     xDotdot[0] = acc_root;
@@ -367,7 +367,7 @@ void ChainIdSolver_Vereshchagin::getTransformedLinkAcceleration(Twists& xDotdot)
 }
 
 /*
-void ChainIdSolver_Vereshchagin::getLinkCartesianPose(Frames& x_base)
+void ChainHdSolver_Vereshchagin::getLinkCartesianPose(Frames& x_base)
 {
     for (int i = 0; i < ns; i++)
     {
@@ -376,7 +376,7 @@ void ChainIdSolver_Vereshchagin::getLinkCartesianPose(Frames& x_base)
     return;
 }
 
-void ChainIdSolver_Vereshchagin::getLinkCartesianVelocity(Twists& xDot_base)
+void ChainHdSolver_Vereshchagin::getLinkCartesianVelocity(Twists& xDot_base)
 {
 
     for (int i = 0; i < ns; i++)
@@ -386,7 +386,7 @@ void ChainIdSolver_Vereshchagin::getLinkCartesianVelocity(Twists& xDot_base)
     return;
 }
 
-void ChainIdSolver_Vereshchagin::getLinkCartesianAcceleration(Twists& xDotDot_base)
+void ChainHdSolver_Vereshchagin::getLinkCartesianAcceleration(Twists& xDotDot_base)
 {
 
     for (int i = 0; i < ns; i++)
@@ -397,7 +397,7 @@ void ChainIdSolver_Vereshchagin::getLinkCartesianAcceleration(Twists& xDotDot_ba
     return;
 }
 
-void ChainIdSolver_Vereshchagin::getLinkPose(Frames& x_local)
+void ChainHdSolver_Vereshchagin::getLinkPose(Frames& x_local)
 {
     for (int i = 0; i < ns; i++)
     {
@@ -406,7 +406,7 @@ void ChainIdSolver_Vereshchagin::getLinkPose(Frames& x_local)
     return;
 }
 
-void ChainIdSolver_Vereshchagin::getLinkVelocity(Twists& xDot_local)
+void ChainHdSolver_Vereshchagin::getLinkVelocity(Twists& xDot_local)
 {
     for (int i = 0; i < ns; i++)
     {
@@ -416,7 +416,7 @@ void ChainIdSolver_Vereshchagin::getLinkVelocity(Twists& xDot_local)
 
 }
 
-void ChainIdSolver_Vereshchagin::getLinkAcceleration(Twists& xDotdot_local)
+void ChainHdSolver_Vereshchagin::getLinkAcceleration(Twists& xDotdot_local)
 {
      for (int i = 0; i < ns; i++)
     {
@@ -426,7 +426,7 @@ void ChainIdSolver_Vereshchagin::getLinkAcceleration(Twists& xDotdot_local)
 
 }
 
-void ChainIdSolver_Vereshchagin::getJointBiasAcceleration(JntArray& bias_q_dotdot)
+void ChainHdSolver_Vereshchagin::getJointBiasAcceleration(JntArray& bias_q_dotdot)
 {
     for (int i = 0; i < ns; i++)
     {
@@ -444,7 +444,7 @@ void ChainIdSolver_Vereshchagin::getJointBiasAcceleration(JntArray& bias_q_dotdo
 
 }
 
-void ChainIdSolver_Vereshchagin::getJointConstraintAcceleration(JntArray& constraint_q_dotdot)
+void ChainHdSolver_Vereshchagin::getJointConstraintAcceleration(JntArray& constraint_q_dotdot)
 {
     for (int i = 0; i < ns; i++)
     {
@@ -462,7 +462,7 @@ void ChainIdSolver_Vereshchagin::getJointConstraintAcceleration(JntArray& constr
 
 //Check the name it does not seem to be appropriate
 
-void ChainIdSolver_Vereshchagin::getJointNullSpaceAcceleration(JntArray& nullspace_q_dotdot)
+void ChainHdSolver_Vereshchagin::getJointNullSpaceAcceleration(JntArray& nullspace_q_dotdot)
 {
     for (int i = 0; i < ns; i++)
     {
@@ -482,7 +482,7 @@ void ChainIdSolver_Vereshchagin::getJointNullSpaceAcceleration(JntArray& nullspa
 //change type of parameter G
 //this method should return array of G's
 
-void ChainIdSolver_Vereshchagin::getLinkBiasForceAcceleratoinEnergy(Eigen::VectorXd& G)
+void ChainHdSolver_Vereshchagin::getLinkBiasForceAcceleratoinEnergy(Eigen::VectorXd& G)
 {
     for (int i = 0; i < ns; i++)
     {
@@ -499,7 +499,7 @@ void ChainIdSolver_Vereshchagin::getLinkBiasForceAcceleratoinEnergy(Eigen::Vecto
 
 //this method should return array of R's
 
-void ChainIdSolver_Vereshchagin::getLinkBiasForceMatrix(Wrenches& R_tilde)
+void ChainHdSolver_Vereshchagin::getLinkBiasForceMatrix(Wrenches& R_tilde)
 {
     for (int i = 0; i < ns; i++)
     {

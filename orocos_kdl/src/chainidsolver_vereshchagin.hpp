@@ -38,7 +38,7 @@ namespace KDL
  * For more details on this solver, see the documentation in "chainhdsolver_vereshchagin_doc.md".
  */
 
-class ChainIdSolver_Vereshchagin : KDL::SolverI
+class ChainHdSolver_Vereshchagin : KDL::SolverI
 {
     typedef std::vector<Twist> Twists;
     typedef std::vector<Frame> Frames;
@@ -53,9 +53,9 @@ public:
      * \param root_acc The acceleration vector of the root to use during the calculation.(most likely contains gravity)
      *
      */
-    ChainIdSolver_Vereshchagin(const Chain& chain, Twist root_acc, unsigned int nc);
+    ChainHdSolver_Vereshchagin(const Chain& chain, Twist root_acc, unsigned int nc);
 
-    ~ChainIdSolver_Vereshchagin()
+    ~ChainHdSolver_Vereshchagin()
     {
     };
 
