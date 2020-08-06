@@ -817,7 +817,7 @@ void SolverTest::VereshchaginTest()
     /**
      * Compute Hybrid Dynamics for KUKA LWR 4.
      * 
-     * Test setup is the following:
+     * Test setup:
      * - Operational-space task imposes acceleration constraints on the end-effector
      * - External forces and feedforward joint torques are acting on the robot's structure, 
      *   as disturbances from the environment
@@ -880,11 +880,17 @@ void SolverTest::VereshchaginTest()
     KDL::Wrenches f_ext(ns);
     f_ext[ns - 1] = f_tool;
 
-    // Constraint Unit forces for the end-effector
+    /**
+     * Definition of the Cartesian Acceleration Constraints imposed the end-effector
+     * Note: the Vereshchagin solver expects that the input Cartesian Acceleration Constraints,
+     * i.e. values in alpha and beta parameters, are expressed w.r.t. robot's base frame.
+    */
     int number_of_constraints = 6;
+
+    // Constraint Unit forces defined for the end-effector
     Jacobian alpha_unit_force(number_of_constraints);
 
-    // Set directions in which the constraint force should work. Alpha in the solver 
+    // Set directions in which the constraint force should work. Alpha in the solver
     Twist unit_force_x_l(
         Vector(1.0, 0.0, 0.0), 
         Vector(0.0, 0.0, 0.0)); // constraint active
@@ -915,7 +921,7 @@ void SolverTest::VereshchaginTest()
         Vector(0.0, 0.0, 1.0)); // constraint active
     alpha_unit_force.setColumn(5, unit_force_z_a);
 
-    // Acceleration energy for the end-effector. 
+    // Acceleration energy for the end-effector.
     JntArray beta_energy(number_of_constraints);
     beta_energy(0) = -0.5;
     beta_energy(1) = -0.5;
@@ -934,12 +940,13 @@ void SolverTest::VereshchaginTest()
 
 
 
-    // ##################################################################################
-    // Final comparison of _resultant_ Cartesian accelerations of the end-effector segment 
+    // ########################################################################################
+    // Final comparison of the _resultant_ end-effector's Cartesian accelerations
     // and the task-specified acceleration constraints
 
     // Number of frames on the robot = ns + 1
     std::vector<Twist> xDotdot(ns + 1);
+    // This solver's function returns Cartesian accelerations of links in robot base coordinates
     vereshchaginSolver.getTransformedLinkAcceleration(xDotdot);
 
     // std::cout << "Segment (including root) acceleration: " << std::endl;
@@ -1481,15 +1488,18 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
 
 
 
-    // ########################################################################################
+    // #########################################################################################
     // Vereshchagin Hybrid Dynamics solver
+    // When the Cartesian Acceleration Constraints are deactivated, the computations perfomed 
+    // in the Vereshchagin solver are completely the same as the computations perfomed in 
+    // the well-known FD Articulated Body Algorithm (ABA) developed by Featherstone 
 
     // Constraint Unit forces at the end-effector. Set to zero to deactivate all constraints
     int numberOfConstraints = 6;
     Jacobian alpha(numberOfConstraints);
     KDL::SetToZero(alpha);
 
-    //Acceleration energy at the end-effector. Set to zero since all constraints are deactivated
+    // Acceleration energy at the end-effector. Set to zero since all constraints are deactivated
     JntArray beta(numberOfConstraints); //set to zero
     KDL::SetToZero(beta);
 
@@ -1501,9 +1511,9 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     JntArray jointTorques(tau);
     JntArray q_dd_Ver(nj);
 
-    fksolverpos.JntToCart(q, end_effector_pose, kukaLWR.getNrOfSegments());
     // External Wrench acting on the end-effector, this time expressed in base link coordinates
     // Vereshchagin solver expects that external wrenches are expressed w.r.t. robot's base frame
+    fksolverpos.JntToCart(q, end_effector_pose, kukaLWR.getNrOfSegments());
     f_ext[ns - 1] = end_effector_pose.M * f_tool;
 
     ChainIdSolver_Vereshchagin constraintSolver(kukaLWR, root_Acc, numberOfConstraints);
