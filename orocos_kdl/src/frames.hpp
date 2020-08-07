@@ -237,7 +237,7 @@ public:
      double Normalize(double eps=epsilon);
 
      //!    @return the norm of the vector
-     double Norm() const;
+     double Norm(double eps=epsilon) const;
 
 
 
@@ -310,8 +310,8 @@ public:
                 double Xy,double Yy,double Zy,
                 double Xz,double Yz,double Zz);
     inline Rotation(const Vector& x,const Vector& y,const Vector& z);
-    // default copy constructor is sufficient
 
+    inline Rotation(const Rotation& arg);
 
      inline Rotation& operator=(const Rotation& arg);
 
@@ -1015,7 +1015,7 @@ public:
      double Normalize(double eps=epsilon);
 
      //!  @return the norm of the vector
-     double Norm() const;
+     double Norm(double eps=epsilon) const;
 
      //! projects v in its XY plane, and sets *this to these values
      inline void Set3DXY(const Vector& v);
@@ -1059,6 +1059,8 @@ public:
     explicit Rotation2(double angle_rad):s(sin(angle_rad)),c(cos(angle_rad)) {}
 
     Rotation2(double ca,double sa):s(sa),c(ca){}
+
+    Rotation2(const Rotation2& arg);
 
      inline Rotation2& operator=(const Rotation2& arg);
      inline Vector2 operator*(const Vector2& v) const;
@@ -1250,18 +1252,8 @@ IMETHOD Twist addDelta(const Twist& a,const Twist&da,double dt=1);
 IMETHOD Wrench addDelta(const Wrench& a,const Wrench&da,double dt=1);
 
 #ifdef KDL_INLINE
-//    #include "vector.inl"
-//   #include "wrench.inl"
-    //#include "rotation.inl"
-    //#include "frame.inl"
-    //#include "twist.inl"
-    //#include "vector2.inl"
-    //#include "rotation2.inl"
-    //#include "frame2.inl"
 #include "frames.inl"
 #endif
-
-
 
 }
 

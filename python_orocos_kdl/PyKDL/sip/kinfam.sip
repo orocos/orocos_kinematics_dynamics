@@ -1,8 +1,8 @@
-//Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+//Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 //
 //Version: 1.0
-//Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-//Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+//Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+//Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 //URL: http://www.orocos.org/kdl
 //
 //This library is free software; you can redistribute it and/or
@@ -20,90 +20,7 @@
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-template<TYPE>
-%MappedType std::vector<TYPE>
-{
-%TypeHeaderCode
-#include <vector>
-%End
-
-%ConvertFromTypeCode
-    PyObject *l = PyList_New(sipCpp -> size());
-
-    // Create the Python list of the correct length.
-    if (!l)
-        return NULL;
-
-    // Go through each element in the C++ instance and convert it to a
-    // wrapped P2d.
-    for (int i = 0; i < (int)sipCpp->size(); ++i) {
-        TYPE *cpp = new TYPE(sipCpp->at(i));
-        PyObject *pobj = sipConvertFromInstance(cpp, sipClass_TYPE, sipTransferObj);
-
-        // Get the Python wrapper for the Type instance, creating a new
-        // one if necessary, and handle any ownership transfer.
-        if (!pobj) {
-            // There was an error so garbage collect the Python list.
-            Py_DECREF(l);
-            return NULL;
-        }
-
-        // Add the wrapper to the list.
-        PyList_SET_ITEM(l, i, pobj);
-    }
-
-    // Return the Python list.
-    return l;
-%End
-
-%ConvertToTypeCode
-    // Check if type is compatible
-    if (!sipIsErr) {
-        // Must be any iterable
-        PyObject *i = PyObject_GetIter(sipPy);
-        bool iterable = (i != NULL);
-        Py_XDECREF(i);
-        return iterable;
-    }
-
-    // Iterate over the object
-    PyObject *iterator = PyObject_GetIter(sipPy);
-    PyObject *item;
-
-    std::vector<TYPE> *V = new std::vector<TYPE>();
-
-    while ((item = PyIter_Next(iterator)))
-    {
-        if (!sipCanConvertToInstance(item, sipClass_TYPE, SIP_NOT_NONE)) {
-            PyErr_Format(PyExc_TypeError, "object in iterable cannot be converted to TYPE");
-            *sipIsErr = 1;
-            break;
-        }
-
-        int state;
-        TYPE* p = reinterpret_cast<TYPE*>(
-             sipConvertToInstance(item, sipClass_TYPE, 0, SIP_NOT_NONE, &state, sipIsErr));
-
-        if (!*sipIsErr)
-            V->push_back(*p);
-
-        sipReleaseInstance(p, sipClass_TYPE, state);
-        Py_DECREF(item);
-    }
-
-    Py_DECREF(iterator);
-
-    if (*sipIsErr) {
-        delete V;
-        return 0;
-    }
-
-    *sipCppPtr = V;
-    return sipGetState(sipTransferObj);
-%End
-};
-
-
+%Feature PYTHON2
 
 class Joint{
 
@@ -115,63 +32,74 @@ using namespace KDL;
 
 
 public:
-    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,None};
-    Joint(std::string name, JointType type=None,double scale=1,double offset=0,
+%If (!PYTHON2)
+    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed};
+%End
+%If (PYTHON2)
+    enum JointType {RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed,None};
+%End
+    Joint(std::string name, JointType type=Fixed,double scale=1,double offset=0,
               double inertia=0,double damping=0,double stiffness=0);
-    Joint(JointType type=None,double scale=1,double offset=0,
+    Joint(JointType type=Fixed,double scale=1,double offset=0,
           double inertia=0,const double damping=0,double stiffness=0);
     Joint(std::string name, Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
-	      double inertia=0, double damping=0, double stiffness=0);
+          double inertia=0, double damping=0, double stiffness=0);
     Joint(Vector origin, Vector axis, JointType type, double scale=1, double offset=0,
-	      double inertia=0, double damping=0, double stiffness=0);
-    
+          double inertia=0, double damping=0, double stiffness=0);
+
     Joint(const Joint& in);
-    
+
     Frame pose(const double& q)const /Factory/ ;
     Twist twist(const double& qdot)const /Factory/ ;
     Vector JointAxis() const /Factory/;
     Vector JointOrigin() const /Factory/;
     std::string getName()const;
+    const double& getInertia()const;
+    const double& getDamping()const;
+    const double& getStiffness()const;
 
     JointType getType() const;
     std::string getTypeName() const;
-    const std::string* __repr__();
-    %MethodCode
-        std::ostringstream oss;
-        oss<<(*sipCpp);
-        std::string s(oss.str());
-        sipRes=&s;
-    %End
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
 };
 
 class RotationalInertia
 {
 %TypeHeaderCode
 #include <kdl/rotationalinertia.hpp>
-#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
     RotationalInertia(double Ixx=0,double Iyy=0,double Izz=0,double Ixy=0,double Ixz=0,double Iyz=0);
-        
+
     static RotationalInertia Zero()/Factory/;
 
     double __getitem__(int index);
 %MethodCode
     if (a0 < 0 || a0 >= 9) {
         PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp).data[a0];
+    else {
+        sipRes=(*sipCpp).data[a0];
+    }
 %End
 
     void __setitem__(int i, double value);
 %MethodCode
     if (a0 < 0 || a0 >= 9) {
         PyErr_SetString(PyExc_IndexError, "RotationalInertia index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp).data[a0]=a1;
+    else {
+        (*sipCpp).data[a0]=a1;
+    }
 %End
 
 };
@@ -184,14 +112,13 @@ class RigidBodyInertia
 {
 %TypeHeaderCode
 #include <kdl/rigidbodyinertia.hpp>
-#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
     RigidBodyInertia(double m=0, const Vector& oc=Vector::Zero(), const RotationalInertia& Ic=RotationalInertia::Zero());
-    static RigidBodyInertia Zero() /Factory/;        
+    static RigidBodyInertia Zero() /Factory/;
     RigidBodyInertia RefPoint(const Vector& p) /Factory/;
-    double getMass()const /Factory/;        
+    double getMass()const /Factory/;
     Vector getCOG() const /Factory/;
     RotationalInertia getRotationalInertia() const /Factory/;
 };
@@ -203,25 +130,25 @@ RigidBodyInertia operator*(const Rotation& R,const RigidBodyInertia& I) /Factory
 
 class Segment
 {
-    
+
 %TypeHeaderCode
 #include <kdl/segment.hpp>
 #include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
-    Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
-    Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+    Segment(const std::string& name, const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+    Segment(const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
     Segment(const Segment& in);
 
-    const std::string* __repr__();
+    const std::string* __repr__() const;
 %MethodCode
-    std::stringstream ss;
-    ss<<(*sipCpp);
-    std::string s(ss.str());
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
     sipRes=&s;
 %End
-    
+
     const Frame& getFrameToTip()const /Factory/;
     Frame pose(const double& q)const /Factory/ ;
     Twist twist(const double& q,const double& qdot)const /Factory/ ;
@@ -233,22 +160,31 @@ public:
 
 class Chain
 {
-    
+
 %TypeHeaderCode
 #include <kdl/chain.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 
 public:
     Chain();
     Chain(const Chain& in);
-    
+
     void addSegment(const Segment& segment);
     void addChain(const Chain& chain);
-        
+
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
-        
+
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
+
     const Segment& getSegment(unsigned int nr)const /Factory/;
 
 };
@@ -256,6 +192,7 @@ public:
 class Tree {
 %TypeHeaderCode
 #include <kdl/tree.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
@@ -263,7 +200,16 @@ public:
     bool addSegment(const Segment& segment, const std::string& hook_name);
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
-    Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const;
+
+    const std::string* __repr__() const;
+%MethodCode
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
+    sipRes=&s;
+%End
+
+    Chain* getChain(const std::string& chain_root, const std::string& chain_tip)const /Factory/;
 %MethodCode
     Chain* chain = new Chain();
     sipCpp->getChain(*a0, *a1, *chain);
@@ -275,10 +221,12 @@ class JntArray{
 
 %TypeHeaderCode
 #include <kdl/jntarray.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 
 public:
+    JntArray();
     JntArray(unsigned int size);
     JntArray(const JntArray& arg);
     unsigned int rows()const;
@@ -289,25 +237,29 @@ public:
 %MethodCode
     if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(a0);
+    else {
+        sipRes=(*sipCpp)(a0);
+    }
 %End
-    
+
     void __setitem__(int index, double value);
 %MethodCode
     if (a0 < 0 || a0 >= (int)sipCpp->rows()) {
         PyErr_SetString(PyExc_IndexError, "JntArray index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(a0)=a1;
+    else {
+        (*sipCpp)(a0)=a1;
+    }
 %End
 
-    const std::string* __repr__();
+    const std::string* __repr__() const;
 %MethodCode
-    std::stringstream ss;
-    ss<<sipCpp->data;
-    std::string s(ss.str());
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
     sipRes=&s;
 %End
 };
@@ -336,7 +288,7 @@ public:
     JntArrayVel(const JntArray& q,const JntArray& qdot);
     JntArrayVel(const JntArray& q);
     void resize(unsigned int newSize);
-    
+
     JntArray value()const /Factory/;
     JntArray deriv()const /Factory/;
 };
@@ -355,10 +307,12 @@ bool Equal(const JntArrayVel& src1,const JntArrayVel& src2,double eps=epsilon);
 class Jacobian
 {
 %TypeHeaderCode
-#include <kdl/jntarray.hpp>
+#include <kdl/jacobian.hpp>
+#include <kdl/kinfam_io.hpp>
 using namespace KDL;
 %End
 public:
+    Jacobian();
     Jacobian(unsigned int size);
     Jacobian(const Jacobian& arg);
     unsigned int rows()const;
@@ -371,39 +325,43 @@ public:
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    sipRes=(*sipCpp)(i,j);
+    else {
+        sipRes=(*sipCpp)(i,j);
+    }
 %End
-    
+
     void __setitem__(SIP_PYTUPLE,double value);
 %MethodCode
     int i,j;
     PyArg_ParseTuple(a0,"ii",&i,&j);
     if (i < 0 || j < 0 || i > 5 || j >= (int)sipCpp->columns()) {
         PyErr_SetString(PyExc_IndexError, "Jacobian index out of range");
-        return 0;
+        sipError = sipErrorFail;
     }
-    (*sipCpp)(i,j)=a1;
+    else {
+        (*sipCpp)(i,j)=a1;
+    }
 %End
 
-    const std::string* __repr__();
+    const std::string* __repr__() const;
 %MethodCode
-    std::stringstream ss;
-    ss<<sipCpp->data;
-    std::string s(ss.str());
+    std::ostringstream oss;
+    oss<<(*sipCpp);
+    std::string s(oss.str());
     sipRes=&s;
 %End
     Twist getColumn(unsigned int i) const /Factory/;
     void setColumn(unsigned int i,const Twist& t);
-    
+
     void changeRefPoint(const Vector& base_AB);
     void changeBase(const Rotation& rot);
     void changeRefFrame(const Frame& frame);
 
 };
 void SetToZero(Jacobian& jac);
-    
+
 void changeRefPoint(const Jacobian& src1, const Vector& base_AB, Jacobian& dest);
 void changeBase(const Jacobian& src1, const Rotation& rot, Jacobian& dest);
 void changeRefFrame(const Jacobian& src1,const Frame& frame, Jacobian& dest);
@@ -425,7 +383,9 @@ class ChainFkSolverPos : SolverI
 #include <kdl/chainfksolver.hpp>
 using namespace KDL;
 %End
-    virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1)=0;
+    virtual int JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr=-1)=0;
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1)=0;
 };
 
 class ChainFkSolverVel : SolverI
@@ -434,8 +394,9 @@ class ChainFkSolverVel : SolverI
 #include <kdl/chainfksolver.hpp>
 using namespace KDL;
 %End
-    virtual int JntToCart(const JntArrayVel& q_in, FrameVel& p_out,int
-    segmentNr=-1)=0;
+    virtual int JntToCart(const JntArrayVel& q_in, FrameVel& p_out, int segmentNr=-1)=0;
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArrayVel& q_in, std::vector<FrameVel>& p_out, int segmentNr=-1)=0;
 };
 
 class ChainFkSolverPos_recursive : ChainFkSolverPos
@@ -447,8 +408,13 @@ using namespace KDL;
 
 public:
     ChainFkSolverPos_recursive(const Chain& chain);
-    virtual int JntToCart(const JntArray& q_in, Frame& p_out,int segmentNr=-1);
+    virtual int JntToCart(const JntArray& q_in, Frame& p_out, int segmentNr=-1);
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArray& q_in, std::vector<Frame>& p_out, int segmentNr=-1);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainFkSolverPos_recursive& operator=(const ChainFkSolverPos_recursive&);
 };
 
 class ChainFkSolverVel_recursive : ChainFkSolverVel
@@ -459,9 +425,13 @@ using namespace KDL;
 %End
 public:
     ChainFkSolverVel_recursive(const Chain& chain);
-    virtual int JntToCart(const JntArrayVel& q_in ,FrameVel& out,int
-    segmentNr=-1 );
+    virtual int JntToCart(const JntArrayVel& q_in, FrameVel& out, int segmentNr=-1);
+//    Argument by reference doesn't work for container types
+//    virtual int JntToCart(const JntArrayVel& q_in, std::vector<FrameVel>& out, int segmentNr=-1 );
     virtual void updateInternalDataStructures();
+
+private:
+    ChainFkSolverVel_recursive& operator=(const ChainFkSolverVel_recursive&);
 };
 
 class ChainIkSolverPos : SolverI {
@@ -494,9 +464,12 @@ using namespace KDL;
 public:
     ChainIkSolverPos_NR(const Chain& chain,ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
                         unsigned int maxiter=100,double eps=epsilon);
-    
+
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverPos_NR& operator=(const ChainIkSolverPos_NR&);
 };
 
 class ChainIkSolverPos_NR_JL : ChainIkSolverPos
@@ -506,12 +479,15 @@ class ChainIkSolverPos_NR_JL : ChainIkSolverPos
 using namespace KDL;
 %End
 public:
-    ChainIkSolverPos_NR_JL(const Chain& chain,const JntArray &q_min,const JntArray &q_max, 
+    ChainIkSolverPos_NR_JL(const Chain& chain,const JntArray &q_min,const JntArray &q_max,
                         ChainFkSolverPos& fksolver,ChainIkSolverVel& iksolver,
                         unsigned int maxiter=100,double eps=epsilon);
-    
+
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverPos_NR_JL& operator=(const ChainIkSolverPos_NR_JL&);
 };
 
 class ChainIkSolverVel_pinv : ChainIkSolverVel
@@ -522,9 +498,12 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_pinv(const Chain& chain,double eps=0.00001,int maxiter=150);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverVel_pinv& operator=(const ChainIkSolverVel_pinv&);
 };
 
 class ChainIkSolverVel_wdls : ChainIkSolverVel
@@ -535,7 +514,7 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_wdls(const Chain& chain,double eps=0.00001,int maxiter=150);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
 
@@ -552,28 +531,41 @@ public:
     temp1=PyList_GetItem(list,0);
     numCols=PyList_Size(temp1);
     if (numRows!=numCols) {
-       sipIsErr=1; //todo: raise exception
+        std::ostringstream oss;
+        oss << "Number of rows(" << numRows << ") and columns(" << numCols << ") don't match" << std::endl;
+        PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+        sipError = sipErrorFail;
     }
-    if (numRows!=6) {
-       sipIsErr=1; //todo: raise exception
+    if (sipError==sipErrorNone && numRows!=6) {
+        std::ostringstream oss;
+        oss << "Number of rows != 6, but " << numRows << std::endl;
+        PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+        sipError = sipErrorFail;
     }
-    Eigen::MatrixXd Mx;
-    Mx=Eigen::MatrixXd::Identity(numRows,numCols);
-    
-    for (Py_ssize_t r=0;r<numRows;r++) {
-        PyObject *row;
-        row=PyList_GetItem(list,r);
-        if (numCols!=PyList_Size(row)) {
-           sipIsErr=1; //todo: raise exception
+    if (sipError==sipErrorNone) {
+        Eigen::MatrixXd Mx;
+        Mx=Eigen::MatrixXd::Identity(numRows,numCols);
+
+        for (Py_ssize_t r=0;r<numRows;r++) {
+            PyObject *row;
+            row=PyList_GetItem(list,r);
+            if (numCols!=PyList_Size(row)) {
+                std::ostringstream oss;
+                oss << "Number of colums(" << PyList_Size(row) << ") of column(" << r << ") doesn't match with the expected number of columns(" << numCols << ")" << std::endl;
+                PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+                sipError = sipErrorFail;
+                break;
+            }
+            for (Py_ssize_t c=0;c<numCols;c++) {
+                PyObject *item;
+                item=PyList_GetItem(row,c);
+                c_item=PyFloat_AsDouble(item);
+                Mx(r,c)= c_item;
+            }
         }
-        for (Py_ssize_t c=0;c<numCols;c++) {
-            PyObject *item;
-            item=PyList_GetItem(row,c);
-            c_item=PyFloat_AsDouble(item);
-            Mx(r,c)= c_item;
-        }
+        if (sipError==sipErrorNone)
+            sipCpp->setWeightTS(Mx);
     }
-    sipCpp->setWeightTS(Mx);
 %End
 
     void setWeightJS(SIP_PYLIST);
@@ -589,28 +581,40 @@ public:
     temp1=PyList_GetItem(list,0);
     numCols=PyList_Size(temp1);
     if (numRows!=numCols) {
-       sipIsErr=1; //todo: raise exception
+        std::ostringstream oss;
+        oss << "Number of rows(" << numRows << ") and columns(" << numCols << ") don't match" << std::endl;
+        PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+        sipError = sipErrorFail;
     }
-    Eigen::MatrixXd Mq;
-    Mq=Eigen::MatrixXd::Identity(numRows,numCols);
-    for (Py_ssize_t r=0;r<numRows;r++) {
-        PyObject *row;
-        row=PyList_GetItem(list,r);
-        if (numCols!=PyList_Size(row)) {
-           sipIsErr=1; //todo: raise exception
+    if (sipError==sipErrorNone) {
+        Eigen::MatrixXd Mq;
+        Mq=Eigen::MatrixXd::Identity(numRows,numCols);
+        for (Py_ssize_t r=0;r<numRows;r++) {
+            PyObject *row;
+            row=PyList_GetItem(list,r);
+            if (numCols!=PyList_Size(row)) {
+                std::ostringstream oss;
+                oss << "Number of colums(" << PyList_Size(row) << ") of column(" << r << ") doesn't match with the expected number of columns(" << numCols << ")" << std::endl;
+                PyErr_SetString(PyExc_ValueError, oss.str().c_str());
+                sipError = sipErrorFail;
+                break;
+            }
+            for (Py_ssize_t c=0;c<numCols;c++) {
+                PyObject *item;
+                item=PyList_GetItem(row,c);
+                c_item=PyFloat_AsDouble(item);
+                Mq(r,c)= c_item;
+            }
         }
-        for (Py_ssize_t c=0;c<numCols;c++) {
-            PyObject *item;
-            item=PyList_GetItem(row,c);
-            c_item=PyFloat_AsDouble(item);
-            Mq(r,c)= c_item;
-        }
+        if (sipError==sipErrorNone)
+            sipCpp->setWeightJS(Mq);
     }
-    sipCpp->setWeightJS(Mq);
 %End
 
     void setLambda(const double& lambda);
 
+private:
+    ChainIkSolverVel_wdls& operator=(const ChainIkSolverVel_wdls&);
 };
 
 
@@ -625,6 +629,9 @@ public:
 
     virtual int CartToJnt(const JntArray& q_init , const Frame& p_in ,JntArray& q_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverPos_LMA& operator=(const ChainIkSolverPos_LMA&);
 };
 
 
@@ -636,7 +643,7 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_pinv_nso(const Chain& chain,double eps=0.00001,int maxiter=150, double alpha=0.25);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
 
@@ -651,6 +658,9 @@ public:
     const JntArray& getOptPos()const /Factory/;
 
     const double& getAlpha()const /Factory/;
+
+private:
+    ChainIkSolverVel_pinv_nso& operator=(const ChainIkSolverVel_pinv_nso&);
 };
 
 class ChainIkSolverVel_pinv_givens : ChainIkSolverVel
@@ -661,9 +671,12 @@ using namespace KDL;
 %End
 public:
     ChainIkSolverVel_pinv_givens(const Chain& chain);
-        
+
     virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainIkSolverVel_pinv_givens& operator=(const ChainIkSolverVel_pinv_givens&);
 };
 
 class ChainJntToJacSolver : SolverI
@@ -674,10 +687,42 @@ using namespace KDL;
 %End
 public:
     ChainJntToJacSolver(const Chain& chain);
-    int JntToJac(const JntArray& q_in,Jacobian& jac);
+    int JntToJac(const JntArray& q_in,Jacobian& jac, int seg_nr=-1);
     virtual void updateInternalDataStructures();
+
+private:
+    ChainJntToJacSolver& operator=(const ChainJntToJacSolver&);
 };
 
+class ChainJntToJacDotSolver : SolverI
+{
+%TypeHeaderCode
+#include <kdl/chainjnttojacdotsolver.hpp>
+using namespace KDL;
+%End
+public:
+    ChainJntToJacDotSolver(const Chain& chain);
+    int JntToJacDot(const JntArrayVel& q_in, Jacobian& jac, int seg_nr=-1);
+    int JntToJacDot(const JntArrayVel& q_in, Twist& jac_dot_q_dot, int seg_nr=-1);
+    virtual void updateInternalDataStructures();
+    int setLockedJoints(const std::vector<bool>& locked_joints);
+
+    static const int E_JAC_DOT_FAILED;
+    static const int E_JACSOLVER_FAILED;
+    static const int E_FKSOLVERPOS_FAILED;
+
+    static const int HYBRID;
+    static const int BODYFIXED;
+    static const int INERTIAL;
+
+    void setHybridRepresentation();
+    void setBodyFixedRepresentation();
+    void setInertialRepresentation();
+    void setRepresentation(const int& representation);
+
+private:
+    ChainJntToJacDotSolver& operator=(const ChainJntToJacDotSolver&);
+};
 
 class ChainIdSolver : SolverI
 {
@@ -696,7 +741,10 @@ using namespace KDL;
 %End
 
 public:
-	ChainIdSolver_RNE(const Chain& chain,Vector grav);
-	int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const std::vector<Wrench>& f_ext,JntArray &torques);
-	virtual void updateInternalDataStructures();
+    ChainIdSolver_RNE(const Chain& chain,Vector grav);
+    int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const std::vector<Wrench>& f_ext,JntArray &torques);
+    virtual void updateInternalDataStructures();
+
+private:
+    ChainIdSolver_RNE& operator=(const KDL::ChainIdSolver_RNE&);
 };

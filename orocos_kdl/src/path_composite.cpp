@@ -42,6 +42,7 @@
 
 #include "path_composite.hpp"
 #include "utilities/error.h"
+#include "utilities/scoped_ptr.hpp"
 #include <memory>
 
 namespace KDL {
@@ -110,7 +111,7 @@ Twist Path_Composite::Acc(double s,double sd,double sdd) const {
 }
 
 Path* Path_Composite::Clone()  {
-	std::auto_ptr<Path_Composite> comp( new Path_Composite() );
+	scoped_ptr<Path_Composite> comp( new Path_Composite() );
 	for (unsigned int i = 0; i < dv.size(); ++i) {
 		comp->Add(gv[i].first->Clone(), gv[i].second);
 	}
@@ -127,18 +128,18 @@ void Path_Composite::Write(std::ostream& os)  {
 }
 
 int Path_Composite::GetNrOfSegments() {
-	return dv.size();
+	return static_cast<int>(dv.size());
 }
 
 Path* Path_Composite::GetSegment(int i) {
 	assert(i>=0);
-	assert(i<dv.size());
+	assert(i<static_cast<int>(dv.size()));
 	return gv[i].first;
 }
 
 double Path_Composite::GetLengthToEndOfSegment(int i) {
 	assert(i>=0);
-	assert(i<dv.size());
+	assert(i<static_cast<int>(dv.size()));
 	return dv[i];
 }
 

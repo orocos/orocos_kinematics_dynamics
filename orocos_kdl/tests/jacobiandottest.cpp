@@ -100,7 +100,7 @@ void changeRepresentation(Jacobian& J,const Frame& F_bs_ee,const int& representa
             // Ref Frame {ee}, Ref Point {ee}
             J.changeBase(F_bs_ee.M.Inverse());
             break;
-        case ChainJntToJacDotSolver::INTERTIAL:
+        case ChainJntToJacDotSolver::INERTIAL:
             // Ref Frame {bs}, Ref Point {bs}
             J.changeRefPoint(-F_bs_ee.p);
             break;
@@ -113,8 +113,8 @@ void Jdot_diff(const Jacobian& J_q,
 {
     assert(J_q.columns() == J_qdt.columns());
     assert(J_q.columns() == Jdot.columns());
-    for(int l=0;l<6;l++)
-    for(int c=0;c<J_q.columns();c++)
+    for(unsigned int l=0;l<6;l++)
+    for(unsigned int c=0;c<J_q.columns();c++)
         Jdot(l,c) = (J_qdt(l,c) - J_q(l,c))/dt;
 }
 
@@ -130,7 +130,7 @@ Jacobian Jdot_d2_symbolic(const JntArray& q,const JntArray& qdot)
     return Jdot;
 }
 
-Jacobian J_d2_symbolic(const JntArray& q,const JntArray& qdot)
+Jacobian J_d2_symbolic(const JntArray& q,const JntArray& /*qdot*/)
 {
     // Returns J for the simple 2DOF arm
     Jacobian J(q.rows());
@@ -146,14 +146,14 @@ Jacobian J_d2_symbolic(const JntArray& q,const JntArray& qdot)
 JntArray diff(const JntArray& q,const JntArray& qdot,const double& dt)
 {
     JntArray q_qdqt(q);
-    for(int i=0; i<q.rows(); i++)
+    for(unsigned int i=0; i<q.rows(); i++)
         q_qdqt(i) += dt*qdot(i);
     return q_qdqt;
 }
 
 void random(JntArray& q)
 {
-    for(int i=0; i<q.rows(); i++)
+    for(unsigned int i=0; i<q.rows(); i++)
         random(q(i));
 }
 
@@ -200,10 +200,12 @@ double compare_Jdot_Diff_vs_Solver(const Chain& chain,const double& dt,const int
     MultiplyJacobian(jdot_by_diff,qdot,jdot_qdot_by_diff);
     
     if(verbose){
-        std::cout << "Jdot diff : \n" << jdot_by_diff<<std::endl;
-        std::cout << "Jdot solver:\n"<<jdot_by_solver<<std::endl;
-        
-        std::cout << "Error : " <<jdot_qdot_by_diff-jdot_qdot_by_solver<<q<<qdot<<std::endl;
+        std::cout << "Jdot diff:\n" << jdot_by_diff << "\n"
+                  << "Jdot solver:\n" << jdot_by_solver << "\n"
+                  << "Error:\n"
+                  << jdot_qdot_by_diff-jdot_qdot_by_solver << "\n"
+                  << q << "\n"
+                  << qdot <<std::endl;
     }
     double err = jdot_qdot_by_diff.vel.Norm() - jdot_qdot_by_solver.vel.Norm()
                   + jdot_qdot_by_diff.rot.Norm() - jdot_qdot_by_solver.rot.Norm();
@@ -233,9 +235,11 @@ double compare_d2_Jdot_Symbolic_vs_Solver(bool verbose)
     MultiplyJacobian(jdot_sym,qdot,jdot_qdot_sym);
     
     if(verbose){
-        std::cout << "Jdot symbolic : \n" << jdot_sym<<std::endl;
-        std::cout << "Jdot solver:\n"<<jdot_by_solver<<std::endl;
-        std::cout << "Error : " <<jdot_qdot_sym-jdot_qdot_by_solver<<q<<qdot<<std::endl;
+        std::cout << "Jdot symbolic:\n" << jdot_sym << "\n"
+                  << "Jdot solver:\n" << jdot_by_solver << "\n"
+                  << "Error:\n" << jdot_qdot_sym-jdot_qdot_by_solver << "\n"
+                  << q << "\n"
+                  << qdot << std::endl;
     }
     double err = jdot_qdot_sym.vel.Norm() - jdot_qdot_by_solver.vel.Norm()
                   + jdot_qdot_sym.rot.Norm() - jdot_qdot_by_solver.rot.Norm();
@@ -244,7 +248,7 @@ double compare_d2_Jdot_Symbolic_vs_Solver(bool verbose)
 
 bool runTest(const Chain& chain,const int& representation)
 {
-    bool success=true;
+    bool success = true;
     bool verbose = false;
     double err;
     bool print_err = false;
@@ -253,16 +257,16 @@ bool runTest(const Chain& chain,const int& representation)
     {
         double eps_diff_vs_solver = 4.0*dt; // Apparently :)
 
-        for(int i=0;i<100;i++)
+        for(int i=0; i<100 ; ++i)
         {
             err = compare_Jdot_Diff_vs_Solver(chain,dt,representation,verbose);
 
             success &= err<=eps_diff_vs_solver;
 
             if(!success || print_err){
-                std::cout<<" dt:"<< dt<<" err:"<<err
-                <<" eps_diff_vs_solver:"<<eps_diff_vs_solver
-                <<std::endl;
+                std::cout << "dt: "<< dt << "\n"
+                          << "err: "<< err << "\n"
+                          << "eps_diff_vs_solver: " << eps_diff_vs_solver << std::endl;
                 if(!success)
                     break;
             }
@@ -303,24 +307,24 @@ void JacobianDotTest::testKukaDiffBodyFixed(){
 
 void JacobianDotTest::testD2Symbolic(){
     // This test verifies if the solvers gives the same result as the symbolic Jdot (Hybrid only)
-    bool success=true;
+    bool success = true;
     bool verbose = false;
     double err_d2_sym;
     bool print_err = false;
     
     double eps_sym_vs_solver = 1e-10;
     
-    for(int i=0;i<100;i++)
+    for(int i=0; i<100; ++i)
     {
-        err_d2_sym =    compare_d2_Jdot_Symbolic_vs_Solver(verbose);
+        err_d2_sym = compare_d2_Jdot_Symbolic_vs_Solver(verbose);
         
-        success &= err_d2_sym<=eps_sym_vs_solver;
+        success &= err_d2_sym <= eps_sym_vs_solver;
         
         if(!success || print_err){
-            std::cout <<" err_d2_sym:"<<err_d2_sym
-            <<" eps_sym_vs_solver:"<<eps_sym_vs_solver<<std::endl;
+            std::cout << "err_d2_sym: " << err_d2_sym << "\n"
+            << "eps_sym_vs_solver: "<< eps_sym_vs_solver <<std::endl;
             if(!success)
-            break;
+                break;
         }
             
     }

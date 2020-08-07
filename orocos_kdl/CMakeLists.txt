@@ -2,6 +2,9 @@
 # Test CMake version
 #
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+IF(POLICY CMP0048)
+  CMAKE_POLICY(SET CMP0048 NEW)
+ENDIF()
 #MARK_AS_ADVANCED( FORCE CMAKE_BACKWARDS_COMPATIBILITY )
 
 
@@ -42,37 +45,39 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
 
 SET( KDL_CFLAGS "")
 
-find_package(Eigen 3 QUIET)
-if(NOT Eigen_FOUND)
-  include(${PROJ_SOURCE_DIR}/config/FindEigen3.cmake)
-  set(Eigen_INCLUDE_DIR "${EIGEN3_INCLUDE_DIR}")
+find_package(Eigen3 QUIET)
+if(NOT EIGEN3_FOUND)
+  include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
 endif()
-include_directories(${Eigen_INCLUDE_DIR})
-SET(KDL_CFLAGS "${KDL_CFLAGS} -I${Eigen_INCLUDE_DIR}")
+include_directories(${EIGEN3_INCLUDE_DIR})
+SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
 
 # Check the platform STL containers capabilities
-include(config/CheckSTLContainers.cmake)
+include(cmake/CheckSTLContainers.cmake)
 CHECK_STL_CONTAINERS()
 
 # Set the default option appropriately
 if(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
-    set(KDL_USE_NEW_TREE_INTERFACE_DEFAULT Off)
+    set(KDL_USE_NEW_TREE_INTERFACE_DEFAULT OFF)
 else(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
-    set(KDL_USE_NEW_TREE_INTERFACE_DEFAULT On)
+    set(KDL_USE_NEW_TREE_INTERFACE_DEFAULT ON)
 endif(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
 
 # Allow the user to select the Tree API version to use
 set(KDL_USE_NEW_TREE_INTERFACE ${KDL_USE_NEW_TREE_INTERFACE_DEFAULT} CACHE BOOL "Use the new KDL Tree interface")
+
+#Sanity check, inform the user
+if(NOT HAVE_STL_CONTAINER_INCOMPLETE_TYPES AND NOT KDL_USE_NEW_TREE_INTERFACE)
+    message(WARNING "You have chosen to use the current Tree Interface, but your platform doesn't support containers of "
+        "incomplete types, this configuration is likely invalid")
+endif()
 
 # The new interface requires the use of shared pointers
 if(KDL_USE_NEW_TREE_INTERFACE)
     # We need shared_ptr from boost since not all compilers are c++11 capable
     find_package(Boost REQUIRED)
     include_directories(${Boost_INCLUDE_DIRS})
-    set(KDL_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
-
-INCLUDE (${PROJ_SOURCE_DIR}/config/DependentOption.cmake)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
 IF( ENABLE_TESTS )
@@ -103,15 +108,23 @@ export(TARGETS orocos-kdl
 
 export(PACKAGE orocos_kdl)
 
-set(KDL_INCLUDE_DIRS ${KDL_INCLUDE_DIRS} ${Eigen_INCLUDE_DIR})
-
-CONFIGURE_FILE(KDLConfig.cmake.in
+# Generate CMake package configuration
+CONFIGURE_FILE(orocos_kdl-config.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(KDLConfigVersion.cmake.in
+CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
 
+INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
 
+# Generate pkg-config package configuration
+CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
+CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
+
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+
+# Install package manifest (for catkin compatibility)
 INSTALL(FILES package.xml DESTINATION share/orocos_kdl)

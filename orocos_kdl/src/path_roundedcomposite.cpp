@@ -44,6 +44,7 @@
 #include "path_line.hpp"
 #include "path_circle.hpp"
 #include "utilities/error.h"
+#include "utilities/scoped_ptr.hpp"
 #include <memory>
 
 
@@ -85,7 +86,7 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 		if (bcdist < eps) {
 			throw Error_MotionPlanning_Not_Feasible(3);
 		}
-		// Clamp to avoid rounding errors (acos is defineed between [-1 ; 1])
+		// Clamp to avoid rounding errors (acos is defined between [-1 ; 1])
 		double alpha = acos(std::max(-1., std::min(dot(ab, bc) / abdist / bcdist, 1.)));
 		if ((PI - alpha) < eps) {
 			throw Error_MotionPlanning_Not_Feasible(4);
@@ -105,11 +106,11 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 			if (d >= bcdist)
 				throw Error_MotionPlanning_Not_Feasible(6);
 
-			std::auto_ptr < Path
+			scoped_ptr < Path
 					> line1(
 							new Path_Line(F_base_start, F_base_via,
 									orient->Clone(), eqradius));
-			std::auto_ptr < Path
+			scoped_ptr < Path
 					> line2(
 							new Path_Line(F_base_via, F_base_point,
 									orient->Clone(), eqradius));
@@ -188,8 +189,8 @@ void Path_RoundedComposite::GetCurrentSegmentLocation(double s,
 
 
 Path_RoundedComposite::~Path_RoundedComposite() {
-    if (aggregate)
-        delete orient;
+	if (aggregate)
+		delete orient;
 	delete comp;
 }
 
