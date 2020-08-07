@@ -57,7 +57,9 @@ class KinfamTestFunctions(unittest.TestCase):
         self.fksolverpos = ChainFkSolverPos_recursive(self.chain)
         self.fksolvervel = ChainFkSolverVel_recursive(self.chain)
         self.iksolvervel = ChainIkSolverVel_pinv(self.chain)
+        self.iksolvervel_givens = ChainIkSolverVel_pinv_givens(self.chain)
         self.iksolverpos = ChainIkSolverPos_NR(self.chain, self.fksolverpos, self.iksolvervel)
+        self.iksolverpos_givens = ChainIkSolverPos_NR(self.chain, self.fksolverpos, self.iksolvervel_givens)
 
     def testRotationalInertia(self):
         ri = RotationalInertia(1, 2, 3, 4, 7, 5)
@@ -183,9 +185,7 @@ class KinfamTestFunctions(unittest.TestCase):
         MultiplyJacobian(jac, qvel.qdot, t)
         self.assertEqual(cart.deriv(), t)
 
-    def testFkVelAndIkVel(self):
-        epsJ = 1E-7
-
+    def testFkVelAndIkVelImpl(self, fksolvervel, iksolvervel, epsJ):
         q = JntArray(self.chain.getNrOfJoints())
         qdot = JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
@@ -197,12 +197,20 @@ class KinfamTestFunctions(unittest.TestCase):
 
         cart = FrameVel()
 
-        self.assertTrue(0 == self.fksolvervel.JntToCart(qvel, cart))
-        self.assertTrue(0 == self.iksolvervel.CartToJnt(qvel.q, cart.deriv(), qdot_solved))
+        self.assertTrue(0 == fksolvervel.JntToCart(qvel, cart))
+        self.assertTrue(0 == iksolvervel.CartToJnt(qvel.q, cart.deriv(), qdot_solved))
 
         self.assertTrue(Equal(qvel.qdot, qdot_solved, 1e-4))
 
-    def testFkPosAndIkPos(self):
+    def testFkVelAndIkVel(self):
+        epsJ = 1e-7
+        self.testFkVelAndIkVelImpl(self.fksolvervel, self.iksolvervel, epsJ)
+
+    def testFkVelAndIkVelGivens(self):
+        epsJ = 1e-7
+        self.testFkVelAndIkVelImpl(self.fksolvervel, self.iksolvervel_givens, epsJ)
+
+    def testFkPosAndIkPosImpl(self, fksolverpos, iksolverpos, epsJ):
         q = JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
             q[i] = random.uniform(-3.14, 3.14)
@@ -216,12 +224,20 @@ class KinfamTestFunctions(unittest.TestCase):
         F1 = Frame.Identity()
         F2 = Frame.Identity()
 
-        self.assertTrue(0 == self.fksolverpos.JntToCart(q, F1))
-        self.assertTrue(0 == self.iksolverpos.CartToJnt(q_init, F1, q_solved))
-        self.assertTrue(0 == self.fksolverpos.JntToCart(q_solved, F2))
+        self.assertTrue(0 == fksolverpos.JntToCart(q, F1))
+        self.assertTrue(0 == iksolverpos.CartToJnt(q_init, F1, q_solved))
+        self.assertTrue(0 == fksolverpos.JntToCart(q_solved, F2))
 
         self.assertEqual(F1, F2)
-        self.assertTrue(Equal(q, q_solved, 1e-4))
+        self.assertTrue(Equal(q, q_solved, epsJ), "{} != {}".format(q, q_solved))
+
+    def testFkPosAndIkPos(self):
+        epsJ = 1e-3
+        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos, epsJ)
+
+    def testFkPosAndIkPosGivens(self):
+        epsJ = 1e-3
+        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens, epsJ)
 
 
 class KinfamTestTree(unittest.TestCase):
@@ -256,7 +272,11 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
+    suite.addTest(KinfamTestFunctions('testFkVelAndIkVelGivens'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
+    suite.addTest(KinfamTestFunctions('testFkPosAndIkPosGivens'))
+    suite.addTest(KinfamTestFunctions('testJacDot'))
+    suite.addTest(KinfamTestTree('testTreeGetChainMemLeak'))
     return suite
 
 
