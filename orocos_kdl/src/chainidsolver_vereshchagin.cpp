@@ -347,12 +347,12 @@ void ChainHdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
 }
 
 // Returns Cartesian acceleration of links in robot base coordinates
-void ChainHdSolver_Vereshchagin::getTransformedLinkAcceleration(Twists& xDotdot)
+void ChainHdSolver_Vereshchagin::getTransformedLinkAcceleration(Twists& x_dotdot)
 {
-    assert(xDotdot.size() == ns + 1);
-    xDotdot[0] = acc_root;
-    for (int i = 1; (unsigned)i < ns + 1; i++)
-        xDotdot[i] = results[i].F_base.M * results[i].acc;
+    assert(x_dotdot.size() == ns + 1);
+    x_dotdot[0] = acc_root;
+    for (unsigned int i = 1; i < ns + 1; i++)
+        x_dotdot[i] = results[i].F_base.M * results[i].acc;
 }
 
 /*

@@ -78,7 +78,7 @@ public:
     virtual void updateInternalDataStructures();
 
     //Returns cartesian acceleration of links in base coordinates
-    void getTransformedLinkAcceleration(Twists& xDotdot);
+    void getTransformedLinkAcceleration(Twists& x_dotdot);
 
     /*
     //Returns cartesian positions of links in base coordinates
