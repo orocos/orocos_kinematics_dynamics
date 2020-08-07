@@ -44,7 +44,7 @@ namespace KDL {
      * (expressed in the segments reference frame) and the dynamical
      * parameters of the segments.
      */
-    class ChainDynParam : SolverI
+    class ChainDynParam : public SolverI
     {
     public:
         ChainDynParam(const Chain& chain, Vector _grav);
@@ -59,7 +59,7 @@ namespace KDL {
 
     private:
         const Chain& chain;
-	int nr;
+	int nr;  // unused, remove in a future version
 	unsigned int nj;
         unsigned int ns;	
 	Vector grav;

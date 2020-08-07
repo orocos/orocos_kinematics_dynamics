@@ -40,6 +40,7 @@
 #include <kdl/chainiksolvervel_pinv_nso.hpp>
 #include <kdl/chainiksolvervel_pinv_givens.hpp>
 #include <kdl/chainjnttojacsolver.hpp>
+#include <kdl/chainjnttojacdotsolver.hpp>
 #include <kdl/chainidsolver_recursive_newton_euler.hpp>
 #include <kdl/kinfam_io.hpp>
 #include "PyKDL.h"
@@ -227,7 +228,7 @@ void init_kinfam(pybind11::module &m)
     {
         int i = std::get<0>(idx);
         int j = std::get<1>(idx);
-        if (i < 0 || i > 5 || j < 0 || j >= jac.columns())
+        if (i < 0 || i > 5 || j < 0 || (unsigned int)j >= jac.columns())
             throw py::index_error("Jacobian index out of range");
         return jac((unsigned int)i, (unsigned int)j);
     });
@@ -235,7 +236,7 @@ void init_kinfam(pybind11::module &m)
     {
         int i = std::get<0>(idx);
         int j = std::get<1>(idx);
-        if (i < 0 || i > 5 || j < 0 || j >= jac.columns())
+        if (i < 0 || i > 5 || j < 0 || (unsigned int)j >= jac.columns())
             throw py::index_error("Jacobian index out of range");
 
         jac((unsigned int)i, (unsigned int)j) = value;
@@ -265,14 +266,14 @@ void init_kinfam(pybind11::module &m)
     jnt_array.def("resize", &JntArray::resize);
     jnt_array.def("__getitem__", [](const JntArray &ja, int i)
     {
-        if (i < 0 || i >= ja.rows())
+        if (i < 0 || (unsigned int)i >= ja.rows())
             throw py::index_error("JntArray index out of range");
 
         return ja(i);
     });
     jnt_array.def("__setitem__", [](JntArray &ja, int i, double value)
     {
-        if (i < 0 || i >= ja.rows())
+        if (i < 0 || (unsigned int)i >= ja.rows())
             throw py::index_error("JntArray index out of range");
 
         ja(i) = value;
@@ -467,8 +468,35 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainJntToJacSolver, SolverI> chain_jnt_to_jac_solver(m, "ChainJntToJacSolver");
     chain_jnt_to_jac_solver.def(py::init<const Chain&>());
     chain_jnt_to_jac_solver.def("JntToJac", &ChainJntToJacSolver::JntToJac,
-                                py::arg("q_in"), py::arg("jac"), py::arg("segmentNR")=-1);
+                                py::arg("q_in"), py::arg("jac"), py::arg("seg_nr")=-1);
     chain_jnt_to_jac_solver.def("setLockedJoints", &ChainJntToJacSolver::setLockedJoints);
+
+
+    // ------------------------------
+    // ChainJntToJacDotSolver
+    // ------------------------------
+    py::class_<ChainJntToJacDotSolver, SolverI> chain_jnt_to_jac_dot_solver(m, "ChainJntToJacDotSolver");
+    chain_jnt_to_jac_dot_solver.def(py::init<const Chain&>());
+    chain_jnt_to_jac_dot_solver.def("JntToJacDot", (int (ChainJntToJacDotSolver::*)(const JntArrayVel&, Jacobian&, int)) &ChainJntToJacDotSolver::JntToJacDot,
+                                    py::arg("q_in"), py::arg("jdot"), py::arg("seg_nr")=-1);
+    chain_jnt_to_jac_dot_solver.def("JntToJacDot", (int (ChainJntToJacDotSolver::*)(const JntArrayVel&, Twist&, int)) &ChainJntToJacDotSolver::JntToJacDot,
+                                    py::arg("q_in"), py::arg("jac_dot_q_dot"), py::arg("seg_nr")=-1);
+    chain_jnt_to_jac_dot_solver.def("setLockedJoints", &ChainJntToJacDotSolver::setLockedJoints,
+                                    py::arg("locked_joints"));
+
+    chain_jnt_to_jac_dot_solver.def_readonly_static("E_JAC_DOT_FAILED", &ChainJntToJacDotSolver::E_JAC_DOT_FAILED);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("E_JACSOLVER_FAILED", &ChainJntToJacDotSolver::E_JACSOLVER_FAILED);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("E_FKSOLVERPOS_FAILED", &ChainJntToJacDotSolver::E_FKSOLVERPOS_FAILED);
+
+    chain_jnt_to_jac_dot_solver.def_readonly_static("HYBRID", &ChainJntToJacDotSolver::HYBRID);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("BODYFIXED", &ChainJntToJacDotSolver::BODYFIXED);
+    chain_jnt_to_jac_dot_solver.def_readonly_static("INERTIAL", &ChainJntToJacDotSolver::INERTIAL);
+
+    chain_jnt_to_jac_dot_solver.def("setHybridRepresentation", &ChainJntToJacDotSolver::setHybridRepresentation);
+    chain_jnt_to_jac_dot_solver.def("setBodyFixedRepresentation", &ChainJntToJacDotSolver::setBodyFixedRepresentation);
+    chain_jnt_to_jac_dot_solver.def("setInertialRepresentation", &ChainJntToJacDotSolver::setInertialRepresentation);
+    chain_jnt_to_jac_dot_solver.def("setRepresentation", &ChainJntToJacDotSolver::setRepresentation,
+                                    py::arg("representation"));
 
 
     // ------------------------------

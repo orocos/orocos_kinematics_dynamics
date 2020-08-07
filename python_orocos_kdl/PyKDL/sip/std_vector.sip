@@ -92,6 +92,87 @@ template<TYPE>
 %End
 };
 
+
+// ****************************************************
+// Specialization for std::vector<bool>
+// ****************************************************
+
+%MappedType std::vector<bool>
+{
+%TypeHeaderCode
+#include <vector>
+%End
+
+%ConvertFromTypeCode
+    PyObject *l;
+
+    // Create the Python list of the correct length.
+    if ((l = PyList_New(sipCpp -> size())) == NULL)
+        return NULL;
+
+    // Go through each element in the C++ instance and convert it to a
+    // wrapped object.
+    for (int i = 0; i < (int)sipCpp -> size(); ++i)
+    {
+        // Add the wrapper to the list.
+        PyList_SET_ITEM(l, i, PyBool_FromLong((long)(sipCpp -> at(i))));
+    }
+
+    // Return the Python list.
+    return l;
+%End
+
+%ConvertToTypeCode
+    // Check if type is compatible
+    if (sipIsErr == NULL)
+    {
+        // Must be any iterable
+        PyObject *i = PyObject_GetIter(sipPy);
+        bool iterable = (i != NULL);
+        Py_XDECREF(i);
+        return iterable;
+    }
+
+    // Iterate over the object
+    PyObject *iterator = PyObject_GetIter(sipPy);
+    PyObject *item;
+
+    // Maximum number of elements
+    int len = PyObject_Size(sipPy);
+    std::vector<bool> *V = new std::vector<bool>();
+    V->reserve(len);
+
+    if (len)
+    {
+        while ((item = PyIter_Next(iterator)))
+        {
+            if (!PyBool_Check(item))
+            {
+                PyErr_Format(PyExc_TypeError, "object in iterable can not be converted to a bool");
+                *sipIsErr = 1;
+                break;
+            }
+
+            V->push_back(item == Py_True);
+
+            Py_DECREF(item);
+        }
+
+        Py_DECREF(iterator);
+
+        if (*sipIsErr)
+        {
+            delete V;
+            return 0;
+        }
+    }
+
+    *sipCppPtr = V;
+    return sipGetState(sipTransferObj);
+%End
+};
+
+
 // ****************************************************
 // Specialization for std::vector<double>
 // ****************************************************
@@ -172,6 +253,7 @@ template<TYPE>
     return sipGetState(sipTransferObj);
 %End
 };
+
 
 // ****************************************************
 // Specialization for std::vector<int>

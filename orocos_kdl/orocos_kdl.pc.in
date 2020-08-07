@@ -1,5 +1,5 @@
-prefix=@CMAKE_INSTALL_PREFIX@
-libdir=${prefix}/lib
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib@LIB_SUFFIX@
 includedir=${prefix}/include
 
 Name: orocos-kdl
@@ -8,4 +8,3 @@ Requires:
 Version: @KDL_VERSION@
 Libs: -L${libdir} -lorocos-kdl
 Cflags: -I${includedir} @KDL_CFLAGS@
-

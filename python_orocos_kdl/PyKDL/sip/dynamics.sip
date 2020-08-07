@@ -93,4 +93,7 @@ public:
     int JntToCoriolis(const JntArray &q, const JntArray &q_dot, JntArray &coriolis);
     int JntToMass(const JntArray &q, JntSpaceInertiaMatrix& H);
     int JntToGravity(const JntArray &q,JntArray &gravity);
+
+private:
+    ChainDynParam& operator=(const ChainDynParam&);
 };
