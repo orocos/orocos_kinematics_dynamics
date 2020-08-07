@@ -47,20 +47,6 @@ ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, Twis
     Vm = MatrixXd::Identity(nc, nc);
     Sm = VectorXd::Ones(nc);
     tmpm = VectorXd::Ones(nc);
-
-    // Provide the necessary memory for storing joint effective inertia
-    d.resize(nj);
-
-    // Store joint effective inertia
-    int j = nj - 1;
-    for (int i = ns - 1; i >= 0; i--)
-    {
-        if (chain.getSegment(i).getJoint().getType() != Joint::Fixed)
-        {
-            d(j) = chain.getSegment(i).getJoint().getInertia();
-            j--;
-        }
-    }
 }
 
 void ChainHdSolver_Vereshchagin::updateInternalDataStructures() {
@@ -250,7 +236,10 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
              * - equation a) in Vereshchagin89
              * - equation 9.28, page 188, Featherstone book 2008
              */
-            s.D = d(j) + dot(s.Z, s.PZ);
+            if (chain.getSegment(i - 1).getJoint().getType() != Joint::Fixed)
+                s.D = chain.getSegment(i - 1).getJoint().getInertia() + dot(s.Z, s.PZ);
+            else
+                s.D = dot(s.Z, s.PZ);
 
             s.PC = s.P * s.C;
 
