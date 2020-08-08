@@ -51,6 +51,7 @@ ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, Twis
 
 void ChainHdSolver_Vereshchagin::updateInternalDataStructures() {
     ns = chain.getNrOfSegments();
+    nj = chain.getNrOfJoints();
     results.resize(ns+1,segment_info(nc));
 }
 
