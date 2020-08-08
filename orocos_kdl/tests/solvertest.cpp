@@ -813,7 +813,6 @@ void SolverTest::VereshchaginTest()
     // ########################################################################################
     // Vereshchagin solver test 1
     // ########################################################################################
-
     /**
      * Compute Hybrid Dynamics for KUKA LWR 4.
      * 
@@ -951,11 +950,32 @@ void SolverTest::VereshchaginTest()
     std::vector<Twist> xDotdot(ns + 1);
     // This solver's function returns Cartesian accelerations of links in robot base coordinates
     vereshchaginSolver.getTransformedLinkAcceleration(xDotdot);
-
     CPPUNIT_ASSERT(Equal(beta_energy(0), xDotdot[ns].vel(0), eps));
     CPPUNIT_ASSERT(Equal(beta_energy(1), xDotdot[ns].vel(1), eps));
     CPPUNIT_ASSERT(Equal(beta_energy(2), xDotdot[ns].vel(2), eps));
     CPPUNIT_ASSERT(Equal(beta_energy(5), xDotdot[ns].rot(2), eps));
+
+    // Additional getters for the intermediate solver's outputs: Useful for state- simulation and estimation purposes
+    // Magnitude of the constraint forces acting on the end-effector: Lagrange Multiplier
+    Eigen::VectorXd nu(number_of_constraints);
+    vereshchaginSolver.getContraintForceMagnitude(nu);
+    CPPUNIT_ASSERT(Equal(nu(0), 669693.30355, eps));
+    CPPUNIT_ASSERT(Equal(nu(1), 5930.60826, eps));
+    CPPUNIT_ASSERT(Equal(nu(2), -639.5238, eps));
+    CPPUNIT_ASSERT(Equal(nu(3), 0.000, eps)); // constraint was not active in the task specification
+    CPPUNIT_ASSERT(Equal(nu(4), 0.000, eps)); // constraint was not active in the task specification
+    CPPUNIT_ASSERT(Equal(nu(5), 573.90485, eps));
+
+    // Total torque acting on each joint
+    JntArray total_tau(nj);
+    vereshchaginSolver.getTotalTorque(total_tau);
+    CPPUNIT_ASSERT(Equal(total_tau(0), 2013.3541, eps));
+    CPPUNIT_ASSERT(Equal(total_tau(1), -6073.4999, eps));
+    CPPUNIT_ASSERT(Equal(total_tau(2), 2227.4487, eps));
+    CPPUNIT_ASSERT(Equal(total_tau(3), 56.87456, eps));
+    CPPUNIT_ASSERT(Equal(total_tau(4), -11.3789, eps));
+    CPPUNIT_ASSERT(Equal(total_tau(5), -6.05957, eps));
+    CPPUNIT_ASSERT(Equal(total_tau(6), 569.0776, eps));
 
     // ########################################################################################
     // Vereshchagin solver test 2

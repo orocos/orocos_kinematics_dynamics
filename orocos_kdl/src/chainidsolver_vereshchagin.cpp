@@ -47,11 +47,15 @@ ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, cons
     Vm = MatrixXd::Identity(nc, nc);
     Sm = VectorXd::Ones(nc);
     tmpm = VectorXd::Ones(nc);
+
+    // Provide the necessary memory for storing the total torque acting on each joint
+    total_torques = VectorXd::Zero(nj);
 }
 
 void ChainHdSolver_Vereshchagin::updateInternalDataStructures() {
     ns = chain.getNrOfSegments();
     nj = chain.getNrOfJoints();
+    total_torques = VectorXd::Zero(nj);
     results.resize(ns+1,segment_info(nc));
 }
 
@@ -334,6 +338,10 @@ void ChainHdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
         constraint_torques(j) = -dot(s.Z, constraint_force);
         //The result should be the torque originating from the end-effector constraints
 
+        // Total torque on the joint resulting from the parent forces, constraint forces and nullspace forces.
+        total_torques(j) = s.u + parent_forceProjection + constraint_torques(j);
+        // q_dotdot(j) is also equal to: total_torques(j) / s.D
+
         s.constAccComp = constraint_torques(j) / s.D;
         s.nullspaceAccComp = s.u / s.D;
 
@@ -353,6 +361,20 @@ void ChainHdSolver_Vereshchagin::getTransformedLinkAcceleration(Twists& x_dotdot
     x_dotdot[0] = acc_root;
     for (unsigned int i = 1; i < ns + 1; i++)
         x_dotdot[i] = results[i].F_base.M * results[i].acc;
+}
+
+// Returns total torque acting on each joint (constraints + nature + external forces)
+void ChainHdSolver_Vereshchagin::getTotalTorque(JntArray &total_tau)
+{
+    assert(total_tau.data.size() == total_torques.size());
+    total_tau.data = total_torques;
+}
+
+// Returns magnitude of the constraint forces acting on the end-effector: Lagrange Multiplier
+void ChainHdSolver_Vereshchagin::getContraintForceMagnitude(Eigen::VectorXd &nu_)
+{
+    assert(nu_.size() == nu.size());
+    nu_ = nu;
 }
 
 /*

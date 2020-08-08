@@ -84,6 +84,12 @@ public:
     //Returns cartesian acceleration of links in base coordinates
     void getTransformedLinkAcceleration(Twists& x_dotdot);
 
+    // Returns total torque acting on each joint (constraints + nature + external forces)
+    void getTotalTorque(JntArray &total_tau);
+
+    // Returns magnitude of the constraint forces acting on the end-effector: Lagrange Multiplier
+    void getContraintForceMagnitude(Eigen::VectorXd &nu_);
+
     /*
     //Returns cartesian positions of links in base coordinates
     void getLinkCartesianPose(Frames& x_base);
@@ -146,6 +152,7 @@ private:
     Eigen::VectorXd nu_sum;
     Eigen::VectorXd Sm;
     Eigen::VectorXd tmpm;
+    Eigen::VectorXd total_torques; // all the contributions that are felt at the joint: constraints + nature + external forces
     Wrench qdotdot_sum;
     Frame F_total;
 
