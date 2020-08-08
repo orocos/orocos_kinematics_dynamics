@@ -171,56 +171,52 @@ void SolverTest::setUp()
     motomansia10dyn.addSegment(Segment(Joint(Joint::None),
                                        Frame(Rotation::Identity(),Vector(0.0,0.0,0.155))));
 
-
     /** 
      * KUKA LWR 4 Chain with Dynamics Parameters (for Forward Dynamics and Vereshchagin solver tests)
      * Necessary test model for the Vereshchagin solver: KDL's implementation of the Vereshchagin solver 
      * can only work with the robot chains that have equal number of joints and segments.
+     * Note: Joint effective inertia values in this model are closely aligned with the joint inertia
+     * of the real robot. These parameters are published in: Jubien, A., Gautier, M. and Janot, A., 
+     * "Dynamic identification of the Kuka LWR robot using motor torques and joint torque sensors data.",
+     * IFAC Proceedings Volumes, 2014., 47(3), pp.8391-8396.
      */
-	//joint 1
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, 3.19, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												 Vector::Zero(),
 												 RotationalInertia(0.0,0.0,0.0115343,0.0,0.0,0.0))));
 
-	//joint 2 
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, 3.05, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.4, 0.0),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.4, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,-0.3120511,-0.0038871),
 												   RotationalInertia(-0.5471572,-0.0000302,-0.5423253,0.0,0.0,0.0018828))));
 
-	//joint 3
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, 1.98, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,-0.0015515,0.0),
 												   RotationalInertia(0.0063507,0.0,0.0107804,0.0,0.0,-0.0005147))));
 
-	//joint 4
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, 2.05, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.39, 0.0),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.39, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,0.5216809,0.0),
 												   RotationalInertia(-1.0436952,0.0,-1.0392780,0.0,0.0,0.0005324))));
 
-	//joint 5
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, 0.787, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, 1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,0.0119891,0.0),
 												   RotationalInertia(0.0036654,0.0,0.0060429,0.0,0.0,0.0004226))));
 
-	//joint 6
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, 0.391, damping, stiffness),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0),
 				  Frame::DH_Craig1989(0.0, -1.5707963, 0.0, 0.0).Inverse()*RigidBodyInertia(2,
 												   Vector(0.0,0.0080787,0.0),
 												   RotationalInertia(0.0010431,0.0,0.0036376,0.0,0.0,0.0000101))));
 
-    //joint 7
-	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
+	kukaLWR.addSegment(Segment(Joint(Joint::RotZ, scale, offset, 0.394, damping, stiffness),
 				               Frame::Identity(),
 				               RigidBodyInertia(2, Vector::Zero(), RotationalInertia(0.000001,0.0,0.0001203,0.0,0.0,0.0))));
 }
