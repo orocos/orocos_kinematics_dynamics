@@ -53,7 +53,7 @@ public:
     void FkVelAndIkVelTest();
     void FkPosAndIkPosTest();
     void VereshchaginTest();
-    void IkSingularValueTest();
+    void IkSingularValueTest() ;
     void IkVelSolverWDLSTest();
     void FkPosVectTest();
     void FkVelVectTest();

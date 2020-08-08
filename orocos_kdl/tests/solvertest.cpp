@@ -123,13 +123,13 @@ void SolverTest::setUp()
     // Motoman SIA10 Chain with Mass Parameters (for forward dynamics tests)
 
     // Effective motor inertia is included as joint inertia
-    static const double scale=1.0;
-    static const double offset=0.0;
+    static const double scale=1;
+    static const double offset=0;
     static const double inertiamotorA=5.0;      // effective motor inertia kg-m^2
     static const double inertiamotorB=3.0;      // effective motor inertia kg-m^2
     static const double inertiamotorC=1.0;      // effective motor inertia kg-m^2
-    static const double damping=0.0;
-    static const double stiffness=0.0;
+    static const double damping=0;
+    static const double stiffness=0;
 
     //  Segment Inertias
     KDL::RigidBodyInertia inert1(15.0, KDL::Vector(0.0, -0.02, 0.0),                       // mass, CM
