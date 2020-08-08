@@ -823,8 +823,9 @@ void SolverTest::VereshchaginTest()
      *   as disturbances from the environment
      * 
      * Expected result:
-     * - The solver computes required joint torque commands that satisfy imposed acceleration 
-     *   constraints and at the same time, compensate for the above mentioned disturbances
+     * - The solver computes the required joint torque commands (joint constraint torques)
+     *   that satisfy imposed acceleration constraints and at the same time, compensate for 
+     *   the above mentioned disturbances
      * 
      * Method to evaluate:
      * - Compare the _resultant_ Cartesian accelerations of the end-effector's segment with 
@@ -879,12 +880,15 @@ void SolverTest::VereshchaginTest()
     KDL::Vector n(0.0, 0.0, 5.0);
     KDL::Wrench f_tool(f, n);
     KDL::Wrenches f_ext(ns);
-    f_ext[ns - 1] = f_tool;
+    f_ext[ns - 1] = f_tool; //input
 
     /**
-     * Definition of the Cartesian Acceleration Constraints imposed the end-effector
-     * Note: the Vereshchagin solver expects that the input Cartesian Acceleration Constraints,
-     * i.e. values in alpha and beta parameters, are expressed w.r.t. robot's base frame.
+     * Definition of the Cartesian Acceleration Constraints imposed on the end-effector.
+     * Note: the Vereshchagin solver expects that the input values in alpha parameters 
+     * (unit constraint forces) are expressed w.r.t. robot's base frame. 
+     * However, the acceleration energy setpoints, i.e. beta parameters, are expressed w.r.t. above
+     * defined unit constraint forces. More specifically, each DOF (element) in beta parameter corresponds
+     * to its respective DOF (column) of the unit constraint force matrix (alpha).
     */
     int number_of_constraints = 6;
 
@@ -894,33 +898,33 @@ void SolverTest::VereshchaginTest()
     // Set directions in which the constraint force should work. Alpha in the solver
     Twist unit_force_x_l(
         Vector(1.0, 0.0, 0.0), 
-        Vector(0.0, 0.0, 0.0)); // constraint active
-    alpha_unit_force.setColumn(0, unit_force_x_l);
+        Vector(0.0, 0.0, 0.0));
+    alpha_unit_force.setColumn(0, unit_force_x_l); // constraint active
 
     Twist unit_force_y_l(
         Vector(0.0, 1.0, 0.0),
-        Vector(0.0, 0.0, 0.0)); // constraint active
-    alpha_unit_force.setColumn(1, unit_force_y_l);
+        Vector(0.0, 0.0, 0.0));
+    alpha_unit_force.setColumn(1, unit_force_y_l); // constraint active
 
     Twist unit_force_z_l(
         Vector(0.0, 0.0, 1.0),
-        Vector(0.0, 0.0, 0.0)); // constraint active
-    alpha_unit_force.setColumn(2, unit_force_z_l);
+        Vector(0.0, 0.0, 0.0));
+    alpha_unit_force.setColumn(2, unit_force_z_l); // constraint active
 
     Twist unit_force_x_a(
         Vector(0.0, 0.0, 0.0),
-        Vector(0.0, 0.0, 0.0)); // constraint diabled... In this direction, end-effector's motion will emerge naturally
-    alpha_unit_force.setColumn(3, unit_force_x_a);
+        Vector(0.0, 0.0, 0.0));
+    alpha_unit_force.setColumn(3, unit_force_x_a); // constraint diabled... In this direction, end-effector's motion is left to emerge naturally
 
     Twist unit_force_y_a(
         Vector(0.0, 0.0, 0.0),
-        Vector(0.0, 0.0, 0.0)); // constraint diabled... In this direction, end-effector's motion will emerge naturally
-    alpha_unit_force.setColumn(4, unit_force_y_a);
+        Vector(0.0, 0.0, 0.0));
+    alpha_unit_force.setColumn(4, unit_force_y_a); // constraint diabled... In this direction, end-effector's motion is left to emerge naturally
 
     Twist unit_force_z_a(
         Vector(0.0, 0.0, 0.0),
-        Vector(0.0, 0.0, 1.0)); // constraint active
-    alpha_unit_force.setColumn(5, unit_force_z_a);
+        Vector(0.0, 0.0, 1.0));
+    alpha_unit_force.setColumn(5, unit_force_z_a); // constraint active
 
     // Acceleration energy for the end-effector.
     JntArray beta_energy(number_of_constraints);

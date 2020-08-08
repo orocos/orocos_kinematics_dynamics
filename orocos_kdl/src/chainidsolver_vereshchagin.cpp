@@ -57,21 +57,21 @@ void ChainHdSolver_Vereshchagin::updateInternalDataStructures() {
 
 int ChainHdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, const JntArray &ff_torques, JntArray &constraint_torques)
 {
+    //Check sizes always
     nj = chain.getNrOfJoints();
     if(ns != chain.getNrOfSegments())
         return (error = E_NOT_UP_TO_DATE);
-    //Check sizes always
     if (q.rows() != nj || q_dot.rows() != nj || q_dotdot.rows() != nj || ff_torques.rows() != nj || constraint_torques.rows() != nj || f_ext.size() != ns)
         return (error = E_SIZE_MISMATCH);
     if (alfa.columns() != nc || beta.rows() != nc)
         return (error = E_SIZE_MISMATCH);
-    //do an upward recursion for position and velocities
+    //do an upward recursion for position, velocities and rigid-body bias forces
     this->initial_upwards_sweep(q, q_dot, q_dotdot, f_ext);
-    //do an inward recursion for inertia, forces and constraints
+    //do an inward recursion for inertia, articulated bias forces and constraints
     this->downwards_sweep(alfa, ff_torques);
     //Solve for the constraint forces
     this->constraint_calculation(beta);
-    //do an upward recursion to propagate the result
+    //do an upward recursion to propagate the result and compute final output
     this->final_upwards_sweep(q_dotdot, constraint_torques);
     return (error = E_NOERROR);
 }
@@ -337,10 +337,10 @@ void ChainHdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
         s.constAccComp = constraint_torques(j) / s.D;
         s.nullspaceAccComp = s.u / s.D;
 
-        //total joint space acceleration resulting from accelerations of parent joints, constraint forces and
-        // nullspace forces.
+        // Total joint space acceleration resulting from accelerations of parent joints, constraint forces and nullspace forces.
         q_dotdot(j) = (s.nullspaceAccComp + parentAccComp + s.constAccComp);
-        s.acc = s.F.Inverse(a_p + s.Z * q_dotdot(j) + s.C);//returns acceleration in link distal tip coordinates. For use needs to be transformed
+        // Returns segment's spatial acceleration in link distal-tip coordinates. For use needs to be transformed
+        s.acc = s.F.Inverse(a_p + s.Z * q_dotdot(j) + s.C);
         if (chain.getSegment(i - 1).getJoint().getType() != Joint::Fixed)
             j++;
     }

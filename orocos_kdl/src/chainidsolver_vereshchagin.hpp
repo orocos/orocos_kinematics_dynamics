@@ -31,10 +31,10 @@
 namespace KDL
 {
 /**
- * \brief Dynamics calculations by constraints based on Vereshchagin 1989.
- * for a chain. This class creates instance of hybrid dynamics solver.
- * The solver calculates total joint space accelerations in a chain when a constraint force(s) is applied
- * to the chain's end-effector (task space/cartesian space).
+ * \brief Acceleration Constrained Hybrid Dynamics calculations based on Vereshchagin 1989. for a chain. 
+ * This class creates an instance of the hybrid dynamics solver.
+ * The solver calculates total joint space torques & accelerations, and joint space constraint torques 
+ * in a chain when a constraint force(s) is applied to the chain's end-effector (task space / cartesian space).
  * For more details on this solver, see the documentation in "chainhdsolver_vereshchagin_doc.md".
  */
 
@@ -49,9 +49,10 @@ class ChainHdSolver_Vereshchagin : KDL::SolverI
 public:
     /**
      * Constructor for the solver, it will allocate all the necessary memory
-     * \param chain The kinematic chain to calculate the inverse dynamics for, an internal copy will be made.
-     * \param root_acc The acceleration vector of the root to use during the calculation.(most likely contains gravity)
-     *
+     * \param chain The kinematic chain to calculate the hybrid dynamics for, an internal copy will be made.
+     * \param root_acc The acceleration vector of the root to use during the calculation. (Usually contains gravity)
+     * Note: This solver takes gravity acceleration with opposite sign comparead to the KDL's FD and RNE solvers
+     * \param nc Number of constraints imposed on the robot's end-effector. Max is 6. 
      */
     ChainHdSolver_Vereshchagin(const Chain& chain, const Twist &root_acc, const unsigned int nc);
 
@@ -60,15 +61,18 @@ public:
     };
 
     /**
-     * This method calculates joint space constraint torques and total joint space acceleration.
-     * It returns 0 when it succeeds, otherwise -1 or -2 for unmatching matrix and array sizes.
+     * This method calculates joint space constraint torques and total joint space torques and acceleration.
+     * It returns 0 when it succeeds, otherwise -1 or -2 for nonmatching matrix and array sizes.
      * Input parameters;
      * \param q The current joint positions
      * \param q_dot The current joint velocities
-     * \param f_ext The external forces (no gravity, it is given in root acceleration) on the segments.
+     * \param alpha The active constraint directions (unit constraint forces expressed w.r.t. robot's base frame)
+     * \param beta The acceleration energy setpoints (expressed w.r.t. above-defined unit constraint forces)
+     * \param f_ext The external forces (no gravity, it is given in root acceleration) on the segments
+     * \param ff_torques The feed-forward joint space torques
      * Output parameters:
-     * \param q_dotdot The joint accelerations
-     * \param torques the resulting constraint torques for the joints
+     * \param q_dotdot The resulting joint accelerations
+     * \param constraint_torques The resulting joint constraint torques (what each joint feels due to the constraints forces acting on end-effector)
      *
      * @return error/success code
      */
