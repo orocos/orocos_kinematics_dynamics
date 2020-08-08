@@ -34,7 +34,7 @@ namespace KDL
 {
 using namespace Eigen;
 
-ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, Twist root_acc, unsigned int _nc) :
+ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, const Twist &root_acc, const unsigned int _nc) :
     chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(_nc),
     results(ns + 1, segment_info(nc))
 {
@@ -55,24 +55,24 @@ void ChainHdSolver_Vereshchagin::updateInternalDataStructures() {
     results.resize(ns+1,segment_info(nc));
 }
 
-int ChainHdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, JntArray &torques)
+int ChainHdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, const JntArray &ff_torques, JntArray &constraint_torques)
 {
     nj = chain.getNrOfJoints();
     if(ns != chain.getNrOfSegments())
         return (error = E_NOT_UP_TO_DATE);
     //Check sizes always
-    if (q.rows() != nj || q_dot.rows() != nj || q_dotdot.rows() != nj || torques.rows() != nj || f_ext.size() != ns)
+    if (q.rows() != nj || q_dot.rows() != nj || q_dotdot.rows() != nj || ff_torques.rows() != nj || constraint_torques.rows() != nj || f_ext.size() != ns)
         return (error = E_SIZE_MISMATCH);
     if (alfa.columns() != nc || beta.rows() != nc)
         return (error = E_SIZE_MISMATCH);
     //do an upward recursion for position and velocities
     this->initial_upwards_sweep(q, q_dot, q_dotdot, f_ext);
     //do an inward recursion for inertia, forces and constraints
-    this->downwards_sweep(alfa, torques);
+    this->downwards_sweep(alfa, ff_torques);
     //Solve for the constraint forces
     this->constraint_calculation(beta);
     //do an upward recursion to propagate the result
-    this->final_upwards_sweep(q_dotdot, torques);
+    this->final_upwards_sweep(q_dotdot, constraint_torques);
     return (error = E_NOERROR);
 }
 
@@ -137,7 +137,7 @@ void ChainHdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
 
 }
 
-void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const JntArray &torques)
+void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const JntArray &ff_torques)
 {
     int j = nj - 1;
     for (int i = ns; i >= 0; i--)
@@ -250,7 +250,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
 
             //projection of coriolis and centrepital forces into joint subspace (0 0 Z)
             s.totalBias = -dot(s.Z, s.R + s.PC);
-            s.u = torques(j) + s.totalBias;
+            s.u = ff_torques(j) + s.totalBias;
 
             //Matrix form of Z, put rotations above translations
             Vector6d vZ;
@@ -298,7 +298,7 @@ void ChainHdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
     nu.noalias() = M_0_inverse * nu_sum;
 }
 
-void ChainHdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArray &torques)
+void ChainHdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArray &constraint_torques)
 {
     unsigned int j = 0;
 
@@ -331,13 +331,12 @@ void ChainHdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
         double parentAccComp = parent_forceProjection / s.D;
 
         //The constraint force and acceleration force projected on the joint axes -> axis torque/force
-        double constraint_torque = -dot(s.Z, constraint_force);
-        //The result should be the torque at this joint
+        constraint_torques(j) = -dot(s.Z, constraint_force);
+        //The result should be the torque originating from the end-effector constraints
 
-        torques(j) = constraint_torque;
-        //s.constAccComp = torques(j) / s.D;
-        s.constAccComp = constraint_torque / s.D;
+        s.constAccComp = constraint_torques(j) / s.D;
         s.nullspaceAccComp = s.u / s.D;
+
         //total joint space acceleration resulting from accelerations of parent joints, constraint forces and
         // nullspace forces.
         q_dotdot(j) = (s.nullspaceAccComp + parentAccComp + s.constAccComp);

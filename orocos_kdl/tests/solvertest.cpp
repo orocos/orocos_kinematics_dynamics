@@ -258,6 +258,8 @@ void SolverTest::UpdateChainTest()
     }
     JntArray q_out(chain2.getNrOfJoints());
     JntArray q_out2(chain2.getNrOfJoints());
+    JntArray ff_tau(chain2.getNrOfJoints());
+    JntArray constraint_tau(chain2.getNrOfJoints());
     Jacobian jac(chain2.getNrOfJoints());
     Frame T;
     Twist t;
@@ -285,7 +287,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, iksolverpos3.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToMass(q_in, m));
@@ -316,7 +318,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
@@ -333,24 +335,26 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, iksolverpos3.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
     q_in2.resize(chain2.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     wrenches.resize(chain2.getNrOfSegments());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     q_out2.resize(chain2.getNrOfSegments());
+    ff_tau.resize(chain2.getNrOfSegments());
+    constraint_tau.resize(chain2.getNrOfSegments());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     alpha.resize(nr_of_constraints);
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     beta.resize(nr_of_constraints);
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     jac.resize(chain2.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacdotsolver1.JntToJacDot(q_in3, jac, chain2.getNrOfSegments()));
     q_out.resize(chain2.getNrOfJoints());
@@ -371,7 +375,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos2.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= iksolverpos3.CartToJnt(q_in,T,q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
-    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches,q_out2));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToMass(q_in, m));
@@ -836,11 +840,12 @@ void SolverTest::VereshchaginTest()
     // can only work with the robot chains that have equal number of joints and segments
     CPPUNIT_ASSERT(Equal(nj, ns));
 
-    // Joint position, velocity, and acceleration
-    KDL::JntArray q(nj);
-    KDL::JntArray qd(nj);
-    KDL::JntArray qdd(nj);
-    KDL::JntArray ff_tau(nj);
+    // Joint position, velocity, acceleration, feed-forward and constraint torques
+    KDL::JntArray q(nj); //input
+    KDL::JntArray qd(nj); //input
+    KDL::JntArray qdd(nj); //output
+    KDL::JntArray ff_tau(nj); //input
+    KDL::JntArray constraint_tau(nj); //output
 
     // Random configuration
     q(0) =  1.6;
@@ -931,10 +936,8 @@ void SolverTest::VereshchaginTest()
     Twist root_Acc(Vector(0.0, 0.0, 9.81), Vector(0.0, 0.0, 0.0));
 
     ChainHdSolver_Vereshchagin vereshchaginSolver(kukaLWR, root_Acc, number_of_constraints);
-    solver_return = vereshchaginSolver.CartToJnt(q, qd, qdd, alpha_unit_force, beta_energy, f_ext, ff_tau);
+    solver_return = vereshchaginSolver.CartToJnt(q, qd, qdd, alpha_unit_force, beta_energy, f_ext, ff_tau, constraint_tau);
     if (solver_return < 0) std::cout << "KDL: Vereshchagin solver ERROR: " << solver_return << std::endl;
-
-
 
     // ########################################################################################
     // Final comparison of the _resultant_ end-effector's Cartesian accelerations
@@ -945,15 +948,10 @@ void SolverTest::VereshchaginTest()
     // This solver's function returns Cartesian accelerations of links in robot base coordinates
     vereshchaginSolver.getTransformedLinkAcceleration(xDotdot);
 
-    // std::cout << "Segment (including root) acceleration: " << std::endl;
-    // for (int i = 0; i < ns + 1 ; i++)
-    //     std::cout << xDotdot[i] << std::endl;
-
     CPPUNIT_ASSERT(Equal(beta_energy(0), xDotdot[ns].vel(0), eps));
     CPPUNIT_ASSERT(Equal(beta_energy(1), xDotdot[ns].vel(1), eps));
     CPPUNIT_ASSERT(Equal(beta_energy(2), xDotdot[ns].vel(2), eps));
     CPPUNIT_ASSERT(Equal(beta_energy(5), xDotdot[ns].rot(2), eps));
-
 
     // ########################################################################################
     // Vereshchagin solver test 2
@@ -973,10 +971,10 @@ void SolverTest::VereshchaginTest()
     //alpha.setColumn(0, constraintForcesZ);
 
     //Acceleration energy at  the end-effector
-    JntArray beta(1); //set to zero
-    beta(0) = 0.0;
-    //beta(1) = 0.0;
-    //beta(2) = 0.0;
+    JntArray betha(1); //set to zero
+    betha(0) = 0.0;
+    //betha(1) = 0.0;
+    //betha(2) = 0.0;
 
     //arm root acceleration
     Vector linearAcc(0.0, 10, 0.0); //gravitational acceleration along Y
@@ -1011,14 +1009,16 @@ void SolverTest::VereshchaginTest()
     JntArray jointPoses[k];
     JntArray jointRates[k];
     JntArray jointAccelerations[k];
-    JntArray jointTorques[k];
+    JntArray jointFFTorques[k];
+    JntArray jointConstraintTorques[k];
     for (int i = 0; i < k; i++)
     {
         JntArray jointValues(chaindyn.getNrOfJoints());
         jointPoses[i] = jointValues;
         jointRates[i] = jointValues;
         jointAccelerations[i] = jointValues;
-        jointTorques[i] = jointValues;
+        jointFFTorques[i] = jointValues;
+        jointConstraintTorques[i] = jointValues;
     }
 
     // Initial arm position configuration/constraint
@@ -1047,15 +1047,16 @@ void SolverTest::VereshchaginTest()
 
     for (double t = 0.0; t <=simulationTime; t = t + timeDelta)
     {
-        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, constraintSolver.CartToJnt(jointPoses[0], jointRates[0], jointAccelerations[0], alpha, beta, externalNetForce, jointTorques[0]));
+        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, constraintSolver.CartToJnt(jointPoses[0], jointRates[0], jointAccelerations[0], alpha, betha, externalNetForce, jointFFTorques[0], jointConstraintTorques[0]));
 
         //Integration(robot joint values for rates and poses; actual) at the given "instanteneous" interval for joint position and velocity.
         jointRates[0](0) = jointRates[0](0) + jointAccelerations[0](0) * timeDelta; //Euler Forward
         jointPoses[0](0) = jointPoses[0](0) + (jointRates[0](0) - jointAccelerations[0](0) * timeDelta / 2.0) * timeDelta; //Trapezoidal rule
         jointRates[0](1) = jointRates[0](1) + jointAccelerations[0](1) * timeDelta; //Euler Forward
         jointPoses[0](1) = jointPoses[0](1) + (jointRates[0](1) - jointAccelerations[0](1) * timeDelta / 2.0) * timeDelta;
+        jointFFTorques[0] = jointConstraintTorques[0];
         //printf("time, j0_pose, j1_pose, j0_rate, j1_rate, j0_acc, j1_acc, j0_constraintTau, j1_constraintTau \n");
-        printf("%f          %f      %f       %f     %f       %f      %f     %f      %f\n", t, jointPoses[0](0), jointPoses[0](1), jointRates[0](0), jointRates[0](1), jointAccelerations[0](0), jointAccelerations[0](1), jointTorques[0](0), jointTorques[0](1));
+        printf("%f          %f      %f       %f     %f       %f      %f     %f      %f\n", t, jointPoses[0](0), jointPoses[0](1), jointRates[0](0), jointRates[0](1), jointAccelerations[0](0), jointAccelerations[0](1), jointConstraintTorques[0](0), jointConstraintTorques[0](1));
     }
 }
 
@@ -1420,7 +1421,6 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
 
     // ########################################################################################
     // Experiment (common state) setup
-
     unsigned int nj = kukaLWR.getNrOfJoints();
     unsigned int ns = kukaLWR.getNrOfSegments();
 
@@ -1428,13 +1428,13 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     // can only work with the robot chains that have equal number of joints and segments
     CPPUNIT_ASSERT(Equal(nj, ns));
 
-    // Joint position, velocity, and acceleration
+    // Joint position, velocity, acceleration and torques
     KDL::JntArray q(nj);
     KDL::JntArray qd(nj);
     KDL::JntArray qdd(nj);
-    KDL::JntArray tau(nj);
+    KDL::JntArray ff_tau(nj);
 
-    // random
+    // random input state
     q(0) = 1.0;
     q(1) = 0.0;
     q(2) = 0.0;
@@ -1452,13 +1452,13 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     qd(6) = 7.0;
 
     // actuator torques
-    tau(0) = 50.0;
-    tau(1) = -20.0;
-    tau(2) = 10.0;
-    tau(3) = 40.0;
-    tau(4) = -60.0;
-    tau(5) = 15.0;
-    tau(6) = -10.0;
+    ff_tau(0) = 50.0;
+    ff_tau(1) = -20.0;
+    ff_tau(2) = 10.0;
+    ff_tau(3) = 40.0;
+    ff_tau(4) = -60.0;
+    ff_tau(5) = 15.0;
+    ff_tau(6) = -10.0;
 
     // External Wrench acting on the end-effector, expressed in local link coordinates
     KDL::Vector f(10.0, -20.0, 30.0);
@@ -1468,21 +1468,16 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     KDL::Wrenches f_ext(ns);
     for(unsigned int i=0;i<ns;i++)
         SetToZero(f_ext[i]);
-
     f_ext[ns - 1] = f_tool;
-
 
     // ########################################################################################
     // Forward Dynamics Solver (inverse-inertia version)
-
     Vector gravity(0.0, 0.0, -9.81);  // base frame (Robot base mounted on an even surface)
     KDL::ChainFdSolver_RNE FdSolver = KDL::ChainFdSolver_RNE(kukaLWR, gravity);
 
     // Call FD function
-    ret = FdSolver.CartToJnt(q, qd, tau, f_ext, qdd);
+    ret = FdSolver.CartToJnt(q, qd, ff_tau, f_ext, qdd);
     if (ret < 0) std::cout << "KDL: forward dynamics ERROR: " << ret << std::endl;
-
-
 
     // #########################################################################################
     // Vereshchagin Hybrid Dynamics solver
@@ -1504,8 +1499,9 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     Vector linearAcc(0.0, 0.0, 9.81); Vector angularAcc(0.0, 0.0, 0.0);
     Twist root_Acc(linearAcc, angularAcc);
 
-    JntArray jointTorques(tau);
-    JntArray q_dd_Ver(nj);
+    // Torques felt in robot's joints due to constrait forces acting on the end-effector
+    JntArray constraint_tau(nj); // In this test, all elements of this array should result to zero
+    JntArray q_dd_Ver(nj); // Resultant joint accelerations
 
     // External Wrench acting on the end-effector, this time expressed in base link coordinates
     // Vereshchagin solver expects that external wrenches are expressed w.r.t. robot's base frame
@@ -1513,10 +1509,8 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     f_ext[ns - 1] = end_effector_pose.M * f_tool;
 
     ChainHdSolver_Vereshchagin constraintSolver(kukaLWR, root_Acc, numberOfConstraints);
-    ret = constraintSolver.CartToJnt(q, qd, q_dd_Ver, alpha, beta, f_ext, jointTorques);
+    ret = constraintSolver.CartToJnt(q, qd, q_dd_Ver, alpha, beta, f_ext, ff_tau, constraint_tau);
     if (ret < 0) std::cout << "KDL: Vereshchagin solver ERROR: " << ret << std::endl;
-
-
 
     // ########################################################################################
     // Final comparison
@@ -1527,10 +1521,6 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     CPPUNIT_ASSERT(Equal(q_dd_Ver(4), qdd(4), eps));
     CPPUNIT_ASSERT(Equal(q_dd_Ver(5), qdd(5), eps));
     CPPUNIT_ASSERT(Equal(q_dd_Ver(6), qdd(6), eps));
-
-    // std::cout << "Command torque: " << tau << std::endl;
-    // std::cout << "Matrix-Inverse-FD jnt. acc.: " << qdd.data.transpose() << std::endl;
-    // std::cout << "Vereshchagin jnt. acc.:      " << q_dd_Ver.data.transpose() << std::endl;
 
     return;
 }
