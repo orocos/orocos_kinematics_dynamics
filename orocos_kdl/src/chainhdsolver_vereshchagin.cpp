@@ -21,7 +21,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#include "chainidsolver_vereshchagin.hpp"
+#include "chainhdsolver_vereshchagin.hpp"
 #include "frames_io.hpp"
 #include "utilities/svd_eigen_HH.hpp"
 
@@ -34,8 +34,8 @@ namespace KDL
 {
 using namespace Eigen;
 
-ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, const Twist &root_acc, const unsigned int _nc) :
-    chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(_nc),
+ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, const Twist &root_acc, const unsigned int nc_) :
+    chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(nc_),
     results(ns + 1, segment_info(nc))
 {
     acc_root = root_acc;

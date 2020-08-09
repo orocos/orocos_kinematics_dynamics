@@ -15,7 +15,7 @@
 #include <chainiksolverpos_nr_jl.hpp>
 #include <chainjnttojacsolver.hpp>
 #include <chainjnttojacdotsolver.hpp>
-#include <chainidsolver_vereshchagin.hpp>
+#include <chainhdsolver_vereshchagin.hpp>
 #include <chainidsolver_recursive_newton_euler.hpp>
 #include <chaindynparam.hpp>
 #include <chainidsolver_recursive_newton_euler.hpp>

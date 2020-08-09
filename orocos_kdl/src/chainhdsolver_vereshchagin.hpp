@@ -1,8 +1,10 @@
-// Copyright  (C)  2009, 2011
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits, Herman Bruyninckx, Azamat Shakhimardanov
-// Maintainer: Ruben Smits, Azamat Shakhimardanov
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Author: Herman Bruyninckx
+// Author: Azamat Shakhimardanov
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -19,8 +21,8 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#ifndef KDL_CHAINIDSOLVER_VERESHCHAGIN_HPP
-#define KDL_CHAINIDSOLVER_VERESHCHAGIN_HPP
+#ifndef KDL_CHAINHDSOLVER_VERESHCHAGIN_HPP
+#define KDL_CHAINHDSOLVER_VERESHCHAGIN_HPP
 
 #include "chainidsolver.hpp"
 #include "frames.hpp"
@@ -206,4 +208,4 @@ private:
 };
 }
 
-#endif
+#endif // KDL_CHAINHDSOLVER_VERESHCHAGIN_HPP
