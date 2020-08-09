@@ -1,5 +1,6 @@
 #include <frames.hpp>
 #include <frames_io.hpp>
+#include <utilities/utility.h>
 
 int main()
 {
@@ -87,18 +88,18 @@ int main()
     //Creating an Identity rotation matrix
     KDL::Rotation r4=KDL::Rotation::Identity();
     //Creating a Rotation matrix from a rotation around X
-    KDL::Rotation r5=KDL::Rotation::RotX(M_PI/3);
+    KDL::Rotation r5=KDL::Rotation::RotX(PI/3);
     //Creating a Rotation matrix from a rotation around Y
-    KDL::Rotation r6=KDL::Rotation::RotY(M_PI/3);
+    KDL::Rotation r6=KDL::Rotation::RotY(PI/3);
     //Creating a Rotation matrix from a rotation around Z
-    KDL::Rotation r7=KDL::Rotation::RotZ(M_PI/3);
+    KDL::Rotation r7=KDL::Rotation::RotZ(PI/3);
     //Creating a Rotation matrix from a rotation around a arbitrary
     //vector, the vector should not be normalised
-    KDL::Rotation r8=KDL::Rotation::Rot(KDL::Vector(1.,2.,3.),M_PI/4);
+    KDL::Rotation r8=KDL::Rotation::Rot(KDL::Vector(1.,2.,3.),PI_4);
     //Creating a Rotation matrix from a rotation around a arbitrary
     //vector, the vector should be normalised
     KDL::Rotation r9=KDL::Rotation::Rot2(KDL::Vector(0.4472,0.5477,0.7071),
-                                         M_PI/4);
+                                         PI_4);
     //Creating a Rotation matrix from Euler ZYZ rotation angles
     KDL::Rotation r10=KDL::Rotation::EulerZYZ(1.,2.,3.);
     //Creating a Rotation matrix from Euler ZYX rotation angles
