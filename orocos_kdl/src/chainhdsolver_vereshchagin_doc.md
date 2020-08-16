@@ -12,11 +12,9 @@
 
 In 1970', researchers [1], [2] have developed a hybrid dynamics algorithm for evaluating robot behavior based on the input specification that is defined by the Cartesian acceleration constraints, feed-forward joint torques and external Cartesian wrenches. The solver is derived from a well-known principle of mechanics - **Gauss' principle of least constraint** [6] and provides an analytical (closed-form) solution to the hybrid dynamics problem with linear-time, **O(n)** complexity [3].
 
-In general, the Gauss' principle states that the true motion (acceleration) of a system/body is defined by the minimum of a quadratic function that is subject to linear geometric motion constraints [7], [6]. The result of this Gauss function represents the **acceleration energy** of a body, which is defined by the product of its mass and the squared distance between its allowed (constrained) acceleration and its free (unconstrained) acceleration [10]. In the case of originally derived Popov-Vereshchagin algorithm [1], geometric motion constraints are Cartesian acceleration constraints imposed on the robot's end-effector. This domain-specific solver minimizes the acceleration energy by performing computational (outward and inward) sweeps along the robot's kinematic chain [3]. Furthermore, by computing the minimum of Gauss function, the Popov-Vereshchagin solver resolves the kinematic redundancy of the robot, when a partial motion (task) specification is provided [2].
+In general, the Gauss' principle states that the true motion (acceleration) of a system/body is defined by the minimum of a quadratic function that is subject to linear geometric motion constraints [7], [6]. The result of this Gauss function represents the **acceleration energy** of a body, which is defined by the product of its mass and the squared distance between its allowed (constrained) acceleration and its free (unconstrained) acceleration [10]. In the case of originally derived Popov-Vereshchagin algorithm [1], geometric motion constraints are Cartesian acceleration constraints imposed on the robot's end-effector. This domain-specific solver minimizes the acceleration energy by performing computational (outward and inward) sweeps along the robot's kinematic chain [3]. Furthermore, by computing the minimum of Gauss function, the Popov-Vereshchagin solver resolves the kinematic redundancy of the robot, when a partial motion (task) specification is provided [2]. A necessary condition that enables this type of closed-form algorithm (an analytical solution to the above-described optimization problem) defines that the robot’s kinematic chain does not consist of closed loops, i.e. the robot’s kinematic chain must be constructed in a serial or tree structure. However, it is always possible to cut these loops and introduce explicit constrains.
 
-A necessary condition that enables this type of closed-form algorithm (an analytical solution to the above-described optimization problem) defines that the robot’s kinematic chain does not consist of closed loops, i.e. the robot’s kinematic chain must be constructed in a serial or tree structure. However, it is always possible to cut these loops and introduce explicit constrains.
-
-For evaluating robot dynamics, i.e. resolving its constrained motion, the Popov-Vereshchagin solver is performing three computational sweeps (recursions), along the kinematic chain [3]. More specifically, two sweeps in **outward** and one sweep in **inward** direction. In the case of robot dynamics algorithms, the outward sweep refers to a recursion that is covering a kinematic chain from proximal to distal segments, while the inward sweep is covering a kinematic chain from distal to proximal segments [5]. Additionally, after completing the recursion in the second sweep and before starting the recursion in the last sweep, the solver is computing magnitudes of constraint forces, i.e. the Langrage multiplier (noted as **nu** in the KDL's implementation and original solver's publication[2]). More specifically, this operation is performed when the algorithm reaches segment (link) **{0}**, namely the base segment. In this formulation of the solver, the gravity effects are taken into account by setting the base-link's acceleration equal to gravitational acceleration [3].
+For evaluating robot dynamics, i.e. resolving its constrained motion, the Popov-Vereshchagin solver is performing three computational sweeps (recursions), along the kinematic chain [3]. More specifically, two sweeps in **outward** and one sweep in **inward** direction. In the case of robot dynamics algorithms, the outward sweep refers to a recursion that is covering a kinematic chain from proximal to distal segments, while the inward sweep is covering a kinematic chain from distal to proximal segments [5]. Additionally, after completing the recursion in the second sweep and before starting the recursion in the last sweep, the solver is computing magnitudes of constraint forces, i.e. the Langrage multiplier (noted as **nu** in the KDL's solver implementation and original solver's publication[2]). More specifically, this operation is performed when the algorithm reaches segment (link) **{0}**, namely the base segment. In this formulation of the solver, the gravity effects are taken into account by setting the base-link's acceleration equal to gravitational acceleration [3].
 
 For more detailed description of the algorithm and its representation, the reader can refer to [3], [5].
 
@@ -26,19 +24,20 @@ For more detailed description of the algorithm and its representation, the reade
 
 For computing solutions to the constrained hybrid dynamics problem, this original derivation of the Popov-Vereshchagin solver [3] takes into account the following inputs:
 
-* The robot's **model** that is defined by: kinematic parameters of the robot chain, mass and rigid body inertia of each segment, and inertia of each joint rotor -> (**chain** parameter in solver's constructor)
+* Robot's **model** defined by: kinematic parameters of the chain, segments' mass and rigid-body
+ * inertia, and effective inertia of each joint rotor -> **chain** parameter in solver's constructor
 
-* **Gravitational (Root) acceleration** of the robot base segment-> (**root_acc** parameter in solver's constructor)
+* ****Root** acceleration of the robot base segment (usually gravitational) -> **root_acc** parameter in solver's constructor
 
-* Current joint configuration (positions)-> (**q** parameter in the **CartToJnt** function)
+* Current joint configuration (angles) -> **q** parameter in the **CartToJnt** function
 
-* Current joint velocities-> (**q_dot** parameter in the **CartToJnt** function)
+* Current joint velocities -> **q_dot** parameter in the **CartToJnt** function
 
-* Motion drivers (task input):
+* Motion drivers:
 
-  * **Cartesian Acceleration Constraints** imposed on the end-effector segment->(**alpha** and **beta** parameters in the **CartToJnt** function)
-  * **Cartesian External forces** acting on each segment-> (**f_ext** parameter in the **CartToJnt** function)
-  * **Feed-forward joint torques**-> (**ff_torques** parameter in the **CartToJnt** function)
+  * **Cartesian Acceleration Constraints** imposed on the end-effector segment -> **alpha** and **beta** parameters in the **CartToJnt** function
+  * **Cartesian External Wrench** acting on each segment -> **f_ext** parameter in the **CartToJnt** function
+  * **Feed-forward Torque** acting on each joint -> **ff_torques** parameter in the **CartToJnt** function
 
 The following outlines the above-listed task interfaces in more detail.
 
@@ -64,7 +63,7 @@ To use this interface, a user should define **i)** the active constraint directi
 
 Note that here, the first three rows of matrix **alpha** represent linear elements and the last three rows represent angular elements,  of the spatial unit force defined in Plücker coordinates [4]. By giving zero value to acceleration energy setpoint (**beta**), we are defining that the end-effector is not allowed to have linear acceleration in **x** direction. Or in other words, we are restricting the robot from producing any acceleration energy in that specified direction.
 
-Another example includes the specification of constraints in **5 DOFs**. We can constrain the motion of robot's end-effector, such that it is only allowed to  **freely** move in the linear **z**-direction, without performing linear motions in **x** and **y** and angular motions in **x**, **y** and **z** directions:
+Another example includes the specification of constraints in **5 DOFs**. We can constrain the motion of robot's end-effector such that it is only allowed to  **freely** move in the linear **z**-direction, without performing linear motions in **x** and **y** and angular motions in **x**, **y** and **z** directions:
 
 **alpha** =
 |   |   |   |   |   |
@@ -89,7 +88,7 @@ For both above-described task examples, the Acceleration Constrained Hybrid Dyna
 
 Moreover, the motion specification in the second example is equivalent to:
 
-**alpha** = (note that elements in the third column are all zeros, meaning z-linear constraint is deactivated)
+**alpha** =
 |   |   |   |   |   |   |
 | --| --| --| --| --| --|
 | 1 | 0 | 0 | 0 | 0 | 0 |
@@ -98,6 +97,7 @@ Moreover, the motion specification in the second example is equivalent to:
 | 0 | 0 | 0 | 1 | 0 | 0 |
 | 0 | 0 | 0 | 0 | 1 | 0 |
 | 0 | 0 | 0 | 0 | 0 | 1 |
+(note that elements in the third column are all zeros, meaning z-linear constraint is deactivated)
 
 **beta** =
 |   |
@@ -109,7 +109,7 @@ Moreover, the motion specification in the second example is equivalent to:
 | 0 |
 | 0 |
 
-The last example involves the specification of desired end-effector motion (in this case, non-zero accelerations) in all 6 **DOFs**:
+The last example involves the full specification of the desired end-effector motion (in this case, not necessarily zero accelerations), i.e. specification of constraints in all 6 **DOFs**:
 
 **alpha** =
 |   |   |   |   |   |   |
@@ -124,7 +124,7 @@ The last example involves the specification of desired end-effector motion (in t
 **beta** = **alpha^T * X_dotdot_N**
 
 Here, **N** stands for the index of the last robot's segment, end-effector (tool-tip).
-The reader should note that we can directly assign values (magnitudes) of spatial acceleration **6 x 1** vector **X_dotdot_N** to the **6 x 1** vector of acceleration energy (**beta**) [3]. Even though physical dimensions (units) of these two vectors are not the same, the property of matrix **alpha** (it contains **unit** vectors), permits that we can assign values of desired accelerations to acceleration energy setpoints, in respective directions. Namely, each column of matrix **alpha** has the value of **1** in the respective direction in which constraint force works, thus it follows that the value of acceleration energy setpoint is the same as the value of Cartesian acceleration, in the respective direction.
+The reader should note that we can directly assign values (magnitudes) of the desired (task-defined) spatial acceleration **6 x 1** vector **X_dotdot_N** to the **6 x 1** vector of acceleration energy (**beta**) [3]. Even though physical dimensions (units) of these two vectors are not the same, the property of matrix **alpha** (it contains **unit** vectors), permits that we can assign values of desired accelerations to acceleration energy setpoints, in respective directions. Namely, each column of matrix **alpha** has the value of **1** in the respective direction in which constraint force works, thus it follows that the value of acceleration energy setpoint is the same as the value of Cartesian acceleration, in the respective direction.
 
 #### **External Forces: f_ext**
 
@@ -142,17 +142,17 @@ Additional examples on using these input interfaces can be found in "../tests/so
 
 ### **Solver's Output**
 
-This recursive dynamics solver is computing several quantities that represent solutions to both, inverse and forward dynamics problems, or in other words solutions to the constrained hybrid dynamics problem. More specifically, the output interface of the original Popov-Vereshchagin algorithm consists of of [3], [5]:
+This recursive dynamics solver is computing several quantities that represent solutions to both, inverse and forward dynamics problems, or in other words solutions to the constrained hybrid dynamics problem. More specifically, the output interface of the original Popov-Vereshchagin algorithm consists of [3], [5]:
 
 * Magnitudes of constraint forces that act on the end-effector, denoted by the Lagrange multiplier **nu** in the solver's implementation and original solver's publication[2].
 
 * Joint constraint torques required for achieving the desired (acceleration-constraints-defined) behavior of the robot: **constraint_torque**. These torques represent control commands that should be sent to the robot's joint drivers.
 
-* Argument that defines the solution to the originally formulated optimization problem in **Gauss' principle**. In other words, a set of joint accelerations **q_dotdot** resulting from the aforementioned constraint torques and all natural and external forces acting on the system, i.e. **total_torque**.
+* Argument that defines the solution to the originally formulated optimization problem in **Gauss' principle**. In other words, the joint accelerations **q_dotdot** resulting from the total torque acting on each joint (**total_torque**), i.e from the aforementioned constraint torques and all natural and external forces acting on the system.
 
 * The resulting and complete spatial accelerations of each segment in the kinematic chain: **X_dotdot**
 
-Furthermore, a complete spatial vector of imposed constraint forces can be computed [3], from the following relation: **alpha * nu**.
+Furthermore, if necessary, a complete spatial vector of imposed constraint forces can be computed [3], from the following relation: **alpha * nu**.
 
 The reader should note that this **constraint_torque** is the **necessary** control command that a user is supposed to send to robot's joints, to achieve the motion that is computed (resolved) by the Popov-Vereshchagin solver. More specifically, here **constraint_torque** represent solution to the **Inverse Dynamics (ID)** problem. Nevertheless, the reason why a user is not supposed to use the **total_torque** values as the control commands for robot's joints, is the fact that the torque contributions that represent the difference between **total_torque** and **constraint_torque** already exist (act) on robot joints. More specifically, these **additional (residual)** contributions are produced on the joints by the already existing natural forces that act on the system.
 

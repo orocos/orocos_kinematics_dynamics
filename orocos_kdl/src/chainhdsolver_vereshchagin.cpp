@@ -25,11 +25,6 @@
 #include "frames_io.hpp"
 #include "utilities/svd_eigen_HH.hpp"
 
-/**
-* For more details on this solver, see the documentation in 
-* "chainhdsolver_vereshchagin_doc.md"
-*/
-
 namespace KDL
 {
 using namespace Eigen;
