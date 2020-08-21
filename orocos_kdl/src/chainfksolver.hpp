@@ -32,8 +32,8 @@
 
 namespace KDL {
     /**
-	  * \brief This <strong>abstract</strong> class encapsulates a
-	  * solver for the forward position kinematics for a KDL::Chain.
+     * \brief This <strong>abstract</strong> class encapsulates a
+     * solver for the forward position kinematics for a KDL::Chain.
      *
      * @ingroup KinematicFamily
      */
@@ -104,7 +104,6 @@ namespace KDL {
      *
      * @ingroup KinematicFamily
      */
-
     class ChainFkSolverAcc : public KDL::SolverI {
     public:
         /**
@@ -125,7 +124,7 @@ namespace KDL {
          *
          * @param q_in input joint coordinates (position, velocity and
          * acceleration
-         @param out output cartesian coordinates (position, velocity
+         * @param out output cartesian coordinates (position, velocity
          * and acceleration for all segments
          *
          * @return if < 0 something went wrong

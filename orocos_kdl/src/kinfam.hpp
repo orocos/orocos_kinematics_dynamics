@@ -25,7 +25,7 @@
  *
  * The Kinematic Families classes range from the basic building blocks
  * (KDL::Joint and KDL::Segment) and their interconnected kinematic
- * structures (KDL::Chain, KDL::Tree and KDL::Graph), to the solver
+ * structures (KDL::Chain and KDL::Tree), to the solver
  * algorithms for the kinematics and dynamics of particular kinematic
  * families.
  *
@@ -46,7 +46,7 @@
  * defined by a KDL::Frame), that represents the geometric pose
  * between the KDL::Joint on the previous segment and its own KDL::Joint.
  *
- * A list of all the classes is available on the modules page: \ref KinFam
+ * A list of all the classes is available on the modules page: \ref KinematicFamily
  *
  *
  */
