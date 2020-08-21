@@ -29,7 +29,7 @@
 namespace KDL
 {
 
-class ChainIdSolver_Vereshchagin : ChainHdSolver_Vereshchagin
+class ChainIdSolver_Vereshchagin : public ChainHdSolver_Vereshchagin
 {
 public:
     ChainIdSolver_Vereshchagin(const Chain& chain, const Twist &root_acc, const unsigned int nc);
