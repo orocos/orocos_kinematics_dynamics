@@ -357,6 +357,8 @@ namespace KDL
  * [9] E. P. Popov, "Control of robots-manipulators", Engineering Cybernetics, 1974.
  * 
  * [10] E. Ramm, “Principles of least action and of least constraint”, GAMM-Mitteilungen, vol. 34, pp. 164–182, 2011.
+ *
+ * @ingroup KinematicFamily
  */
 
 class ChainHdSolver_Vereshchagin : KDL::SolverI
