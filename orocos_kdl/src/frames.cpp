@@ -26,9 +26,8 @@
  ***************************************************************************/
 
 #include "frames.hpp"
+#include "utilities/utility.h"
 
-#define _USE_MATH_DEFINES  // For MSVC
-#include <math.h>
 #include <algorithm>
 
 namespace KDL {
@@ -251,7 +250,7 @@ void Rotation::GetRPY(double& roll,double& pitch,double& yaw) const
     {
 		double epsilon=1E-12;
 		pitch = atan2(-data[6], sqrt( sqr(data[0]) +sqr(data[3]) )  );
-        if ( fabs(pitch) > (M_PI/2.0-epsilon) ) {
+        if ( fabs(pitch) > (PI_2-epsilon) ) {
             yaw = atan2(	-data[1], data[4]);
             roll  = 0.0 ;
         } else {
@@ -384,7 +383,7 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
         }
 
         // otherwise this singularity is angle = 180
-        angle = M_PI;
+        angle = PI;
         double xx = (data[0] + 1) / 2;
         double yy = (data[4] + 1) / 2;
         double zz = (data[8] + 1) / 2;
