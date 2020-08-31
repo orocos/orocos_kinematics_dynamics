@@ -19,8 +19,19 @@ find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
 find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} REQUIRED)
 # get_python_lib in python3 produces path which isn't in sys.path: https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
 # execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(plat_specific=True, prefix=''))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages")
+set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages")  # This might be overridden below if built with catkin.
 set(LIBRARY_NAME "PyKDL")
+
+# catkin-specific configuration (optional)
+find_package(catkin QUIET)
+if(catkin_FOUND)
+  catkin_package(
+    SKIP_CMAKE_CONFIG_GENERATION
+    SKIP_PKG_CONFIG_GENERATION
+  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${PYTHON_INSTALL_DIR})
+  set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
+endif()
 
 message(DEPRECATION "PyKDL has been moved to PyBind11. PyKDL based on SIP might become depracted in the (near) future. To keep using the SIP based version set 'BUILD_PYKDL_PYBIND11' to OFF.")
 
@@ -53,10 +64,3 @@ else (BUILD_PYKDL_PYBIND11)
   endif()
   add_sip_python_module(${LIBRARY_NAME} ${LIBRARY_NAME}/sip/${LIBRARY_NAME}.sip ${orocos_kdl_LIBRARIES})
 endif(BUILD_PYKDL_PYBIND11)
-
-install(FILES package.xml DESTINATION share/python_orocos_kdl)
-
-find_package(catkin QUIET)
-if(catkin_FOUND)
-  catkin_add_env_hooks(python_orocos_kdl_site_packages SHELLS bash tcsh zsh DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/env-hooks)
-endif()
