@@ -1501,7 +1501,8 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
 
     // Call FD function
     ret = FdSolver.CartToJnt(q, qd, ff_tau, f_ext, qdd);
-    if (ret < 0) std::cout << "KDL: forward dynamics ERROR: " << ret << std::endl;
+    if (ret < 0)
+        std::cout << "KDL: forward dynamics ERROR: " << ret << std::endl;
 
     // #########################################################################################
     // Vereshchagin Hybrid Dynamics solver
