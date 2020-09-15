@@ -1490,7 +1490,7 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     KDL::Wrench f_tool(f, n);
 
     KDL::Wrenches f_ext(ns);
-    for(unsigned int i=0;i<ns;i++)
+    for(unsigned int i=0 ;i<ns; i++)
         SetToZero(f_ext[i]);
     f_ext[ns - 1] = f_tool;
 
