@@ -1441,7 +1441,7 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
      * Compute the forward dynamics (joint accelearitions given actuator torques) 
      * using both solvers and test for consistency
      */
-    std::cout<<"KDL FD (inverse-inertia version) and Vereshchagin Solvers Consistency Test for KUKA LWR 4 robot"<<std::endl;
+    std::cout << "KDL FD (inverse-inertia version) and Vereshchagin Solvers Consistency Test for KUKA LWR 4 robot" << std::endl;
 
     // ########################################################################################
     // Experiment (common state) setup
