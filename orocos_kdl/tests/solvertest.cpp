@@ -1535,7 +1535,8 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
 
     ChainHdSolver_Vereshchagin constraintSolver(kukaLWR, root_Acc, numberOfConstraints);
     ret = constraintSolver.CartToJnt(q, qd, q_dd_Ver, alpha, beta, f_ext, ff_tau, constraint_tau);
-    if (ret < 0) std::cout << "KDL: Vereshchagin solver ERROR: " << ret << std::endl;
+    if (ret < 0)
+        std::cout << "KDL: Vereshchagin solver ERROR: " << ret << std::endl;
 
     // ########################################################################################
     // Final comparison
