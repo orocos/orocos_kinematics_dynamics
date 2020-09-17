@@ -51,7 +51,7 @@ namespace KDL
  * by the minimum of a quadratic function that is subject to linear geometric motion constraints [7], [6].
  * The result of this Gauss function represents the **acceleration energy** of a body, which is defined by
  * the product of its mass and the squared distance between its allowed (constrained) acceleration and its free
- * (unconstrained) acceleration [10]. In the case of originally derived Popov-Vereshchagin algorithm [1],
+ * (unconstrained) acceleration [10], [11]. In the case of originally derived Popov-Vereshchagin algorithm [1],
  * geometric motion constraints are Cartesian acceleration constraints imposed on the robot's end-effector.
  * This domain-specific solver minimizes the acceleration energy by performing computational (outward and inward) 
  * sweeps along the robot's kinematic chain [3]. Furthermore, by computing the minimum of Gauss function,
@@ -59,7 +59,7 @@ namespace KDL
  * specification is provided [2]. A necessary condition that enables this type of closed-form algorithm
  * (an analytical solution to the above-described optimization problem) defines that the robot’s kinematic
  * chain does not consist of closed loops, i.e. the robot’s kinematic chain must be constructed in a serial
- * or tree structure. However, it is always possible to cut these loops and introduce explicit constrains.
+ * or tree structure [11]. However, it is always possible to cut these loops and introduce explicit constrains.
  *
  * For evaluating robot dynamics, i.e. resolving its constrained motion, the Popov-Vereshchagin solver is
  * performing three computational sweeps (recursions), along the kinematic chain [3]. More specifically,
@@ -73,7 +73,7 @@ namespace KDL
  * of the solver, the gravity effects are taken into account by setting the base-link's acceleration equal
  * to gravitational acceleration [3].
  *
- * For more detailed description of the algorithm and its representation, the reader can refer to [3], [5].
+ * For more detailed description of the algorithm and its representation, the reader can refer to [3], [5], [11].
  * 
  * ## INTERFACES
  *
@@ -107,7 +107,7 @@ namespace KDL
  * (tool-tip) segment. **Note**: the Vereshchagin solver expects that the input Cartesian Acceleration Constraints, i.e.
  * unit constraint forces in alpha parameters, are expressed w.r.t. robot's base frame. However, the acceleration energy
  * setpoints, i.e. beta parameters, are expressed w.r.t. above-defined unit constraint forces. More specifically, each DOF
- * (element) in beta parameter corresponds to its respective DOF (column) of the unit constraint force matrix (alpha).
+ * (element) in beta parameter corresponds to its respective DOF (column) of the unit constraint force matrix (alpha) [11].
  * 
  * To use this interface, a user should define **i)** the active constraint directions via **alpha** parameter, which is
  * a **6 x m** matrix of spatial unit constraint forces, and **ii)** acceleration energy setpoints via **beta**, which is
@@ -216,7 +216,7 @@ namespace KDL
  * #### External Forces: f_ext
  * 
  * This type of driver can be used for specifying **physical** (but not artificial, i.e. not task-introduced)
- * Cartesian wrenches acting on each of the robot's segments. Examples for a **physical** force on a segment can be:
+ * Cartesian wrenches acting on each of the robot's segments [11]. Examples for a **physical** force on a segment can be:
  * **i)** a known weight at the robot's gripper, for instance, a grasped cup or **ii)** a force from a human pushing
  * the robot [5]. Note that the implementation of Vereshchagin solver in KDL expects the provided **f_ext** is
  * expressed w.r.t. robot's base frame, which is in contrast to the case of KDL's RNE solver.
@@ -224,7 +224,7 @@ namespace KDL
  * ### Feed-Forward Joint Torques: ff_torque
  * 
  * This type of motion driver can be used for specifying **physical** (but not artificial, i.e. not task-introduced)
- * joint torques, for example, spring and/or damper-based torques (e.g. friction effects) in robot's joints.
+ * joint torques, for example, spring and/or damper-based torques (e.g. friction effects) in robot's joints [11].
  *
  * Additional examples on using these input interfaces can be found in "../tests/solvertest.cpp":
  *
@@ -262,14 +262,14 @@ namespace KDL
  * Nevertheless, the reason why a user is not supposed to use the **total_torque** values as the control commands
  * for robot's joints, is the fact that the torque contributions that represent the difference between **total_torque**
  * and **constraint_torque** already exist (act) on robot joints. More specifically, these **additional (residual)**
- * contributions are produced on the joints by the already existing natural forces that act on the system.
+ * contributions are produced on the joints by the already existing natural forces that act on the system [11].
  * 
  * On the other side, joint accelerations, namely **q_dotdot** provide solution to the **Forward Dynamics (FD)** problem
- * and these quantities can be used for both control (integrate to joint positions/velocities) and simulation purposes.
+ * and these quantities can be used for both control (integrate to joint positions/velocities) and simulation purposes [11].
  *
  * ## PRACTICAL INSIGHTS/CONSIDERATIONS
  * 
- * The Popov-Vereshchagin hybrid dynamics solver enables a user to achieve many types of operational space tasks.
+ * The Popov-Vereshchagin hybrid dynamics solver enables a user to achieve many types of operational space tasks [11].
  * In other words, various controllers can be implemented **around** the aforementioned interfaces of the algorithm.
  * Examples can be controllers for hybrid force/position control, impedance control, etc. However, there are some practical
  * insights about this algorithm that need to taken into account.
@@ -277,7 +277,7 @@ namespace KDL
  * ### Prioritizations between motion drivers (interfaces)
  * 
  * The original derivation of this solver, which is considered in this library, prioritizes Cartesian acceleration constrains
- * (specified for the end-effector segment) over other two motion drivers (Cartesian external wrenches and feedforward joint torques).
+ * (specified for the end-effector segment) over other two motion drivers (Cartesian external wrenches and feedforward joint torques) [11].
  * In practice, this means the following:
  *
  *  * If the external wrenches and/or feedforward joint torques contribute positively (i.e. assist) in producing Cartesian accelerations
@@ -357,6 +357,8 @@ namespace KDL
  * [9] E. P. Popov, "Control of robots-manipulators", Engineering Cybernetics, 1974.
  * 
  * [10] E. Ramm, “Principles of least action and of least constraint”, GAMM-Mitteilungen, vol. 34, pp. 164–182, 2011.
+ *
+ * [11] D. Vukcevic, "Lazy Robot Control by Relaxation of Motion and Force Constraints." Technical Report/Hochschule Bonn-Rhein-Sieg University of Applied Sciences, Department of Computer Science, 2020.
  *
  * @ingroup KinematicFamily
  */
