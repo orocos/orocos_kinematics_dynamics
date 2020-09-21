@@ -13,7 +13,7 @@
   <url>http://wiki.ros.org/orocos_kdl</url>
   <license>LGPL</license>
 
-  <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
   <build_depend>eigen</build_depend>
 
   <exec_depend>catkin</exec_depend>

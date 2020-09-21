@@ -13,7 +13,7 @@
   <url>http://wiki.ros.org/python_orocos_kdl</url>
   <license>LGPL</license>
 
-  <buildtool_depend>cmake</buildtool_depend>
+  <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>orocos_kdl</build_depend>
   <build_depend condition="$ROS_PYTHON_VERSION == 2">python-sip</build_depend>
@@ -32,7 +32,6 @@
   <doc_depend>python-sphinx</doc_depend>
 
   <export>
-    <build_type>cmake</build_type>
     <rosdoc config="rosdoc.yaml"/>
   </export>
 
