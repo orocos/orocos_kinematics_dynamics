@@ -1,8 +1,8 @@
-// Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -57,22 +57,22 @@ namespace KDL {
          *
          * @param name name of the segment
          * @param joint joint of the segment, default:
-         * Joint(Joint::None)
+         * Joint(Joint::Fixed)
          * @param f_tip frame from the end of the joint to the tip of
          * the segment, default: Frame::Identity()
          * @param M rigid body inertia of the segment, default: Inertia::Zero()
          */
-        explicit Segment(const std::string& name, const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+        explicit Segment(const std::string& name, const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
         /**
          * Constructor of the segment
          *
          * @param joint joint of the segment, default:
-         * Joint(Joint::None)
+         * Joint(Joint::Fixed)
          * @param f_tip frame from the end of the joint to the tip of
          * the segment, default: Frame::Identity()
          * @param M rigid body inertia of the segment, default: Inertia::Zero()
          */
-        explicit Segment(const Joint& joint=Joint(Joint::None), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
+        explicit Segment(const Joint& joint=Joint(Joint::Fixed), const Frame& f_tip=Frame::Identity(),const RigidBodyInertia& I = RigidBodyInertia::Zero());
         Segment(const Segment& in);
         Segment& operator=(const Segment& arg);
 
@@ -148,10 +148,17 @@ namespace KDL {
          */
         Frame getFrameToTip()const
         {
-            
+
             return joint.pose(0)*f_tip;
         }
 
+        /**
+         * Set the pose from the joint end to the tip of the
+         * segment.
+         *
+         * @param f_tip_new pose from the joint end to the tip of the segment
+         */
+        void setFrameToTip(const Frame& f_tip_new);
     };
 }//end of namespace KDL
 

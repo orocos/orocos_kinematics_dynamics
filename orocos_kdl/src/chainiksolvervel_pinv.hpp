@@ -77,7 +77,7 @@ namespace KDL
          * not (yet) implemented.
          *
          */
-        virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
+        virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return -1;};
 
         /**
          * Retrieve the number of singular values of the jacobian that are < eps;
@@ -95,8 +95,10 @@ namespace KDL
         /// @copydoc KDL::SolverI::strError()
         virtual const char* strError(const int error) const;
 
+        /// @copydoc KDL::SolverI::updateInternalDataStructures
+        virtual void updateInternalDataStructures();
     private:
-        const Chain chain;
+        const Chain& chain;
         ChainJntToJacSolver jnt2jac;
         unsigned int nj;
         Jacobian jac;

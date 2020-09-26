@@ -1,6 +1,7 @@
-#include <math.h>
 #include "framestest.hpp"
 #include <frames_io.hpp>
+#include <utilities/utility.h>
+
 CPPUNIT_TEST_SUITE_REGISTRATION( FramesTest );
 
 using namespace KDL;
@@ -38,6 +39,16 @@ void FramesTest::TestVector() {
 	CPPUNIT_ASSERT_EQUAL(nu.Norm(),0.0);
 	Vector nu2(10,0,0);
 	CPPUNIT_ASSERT_EQUAL(nu2.Norm(),10.0);
+}
+
+void FramesTest::TestVector2DNorm() {
+    Vector2 nu(0, 0);
+	CPPUNIT_ASSERT_EQUAL(nu.Norm(), 0.0);
+ 	
+	CPPUNIT_ASSERT_EQUAL(Vector2(1, 0).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(0, 1).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(-1, 0).Norm(), 1.0);
+	CPPUNIT_ASSERT_EQUAL(Vector2(0, -1).Norm(), 1.0);
 }
 
 void FramesTest::TestTwist2(Twist& t) {
@@ -227,37 +238,37 @@ void FramesTest::TestEuler() {
 	TESTEULERZYX(0.1,0,0)
 	TESTEULERZYX(0,0,0.3)
 	TESTEULERZYX(0,0,0)
-	TESTEULERZYX(0.3,0.999*M_PI/2,0.1)
-	// if beta== +/- M_PI/2 => multiple solutions available, gamma will be choosen to be zero !
+    TESTEULERZYX(0.3,0.999*PI_2,0.1)
+	// if beta== +/- PI/2 => multiple solutions available, gamma will be chosen to be zero !
 	// so we test with gamma==0 !
-	TESTEULERZYX(0.3,0.9999999999*M_PI/2,0)
-	TESTEULERZYX(0.3,0.99999999*M_PI/2,0)
-	TESTEULERZYX(0.3,0.999999*M_PI/2,0)
-	TESTEULERZYX(0.3,0.9999*M_PI/2,0)
-	TESTEULERZYX(0.3,0.99*M_PI/2,0)
-	//TESTEULERZYX(0.1,-M_PI/2,0.3)
-	TESTEULERZYX(0,M_PI/2,0)
+    TESTEULERZYX(0.3,0.9999999999*PI_2,0)
+    TESTEULERZYX(0.3,0.99999999*PI_2,0)
+    TESTEULERZYX(0.3,0.999999*PI_2,0)
+    TESTEULERZYX(0.3,0.9999*PI_2,0)
+    TESTEULERZYX(0.3,0.99*PI_2,0)
+    //TESTEULERZYX(0.1,-PI_2,0.3)
+    TESTEULERZYX(0,PI_2,0)
 
-	TESTEULERZYX(0.3,-M_PI/2,0)
-	TESTEULERZYX(0.3,-0.9999999999*M_PI/2,0)
-	TESTEULERZYX(0.3,-0.99999999*M_PI/2,0)
-	TESTEULERZYX(0.3,-0.999999*M_PI/2,0)
-	TESTEULERZYX(0.3,-0.9999*M_PI/2,0)
-	TESTEULERZYX(0.3,-0.99*M_PI/2,0)
-	TESTEULERZYX(0,-M_PI/2,0)
+    TESTEULERZYX(0.3,-PI_2,0)
+    TESTEULERZYX(0.3,-0.9999999999*PI_2,0)
+    TESTEULERZYX(0.3,-0.99999999*PI_2,0)
+    TESTEULERZYX(0.3,-0.999999*PI_2,0)
+    TESTEULERZYX(0.3,-0.9999*PI_2,0)
+    TESTEULERZYX(0.3,-0.99*PI_2,0)
+    TESTEULERZYX(0,-PI_2,0)
 
 	// extremes of the range:
-	TESTEULERZYX(M_PI,-M_PI/2,0)
-	TESTEULERZYX(-M_PI,-M_PI/2,0)
-	TESTEULERZYX(M_PI,1,0)
-	TESTEULERZYX(-M_PI,1,0)
-	//TESTEULERZYX(0,-M_PI/2,M_PI)  gamma will be chosen zero
-	//TESTEULERZYX(0,M_PI/2,-M_PI)  gamma will be chosen zero
-	TESTEULERZYX(0,1,M_PI)
+    TESTEULERZYX(PI,-PI_2,0)
+    TESTEULERZYX(-PI,-PI_2,0)
+	TESTEULERZYX(PI,1,0)
+	TESTEULERZYX(-PI,1,0)
+    //TESTEULERZYX(0,-PI_2,PI)  gamma will be chosen zero
+    //TESTEULERZYX(0,PI_2,-PI)  gamma will be chosen zero
+	TESTEULERZYX(0,1,PI)
 
 	TESTEULERZYZ(0.1,0.2,0.3)
 	TESTEULERZYZ(-0.1,0.2,0.3)
-	TESTEULERZYZ(0.1,0.9*M_PI,0.3)
+	TESTEULERZYZ(0.1,0.9*PI,0.3)
 	TESTEULERZYZ(0.1,0.2,-0.3)
 	TESTEULERZYZ(0,0,0)
 	TESTEULERZYZ(0,0,0)
@@ -267,22 +278,22 @@ void FramesTest::TestEuler() {
 	TESTEULERZYZ(0.4,PI,0)
 	TESTEULERZYZ(0,PI,0)
 	TESTEULERZYZ(PI,PI,0)
-	TESTEULERZYX(0.3,M_PI/2,0)
-	TESTEULERZYZ(0.3,0.9999999999*M_PI/2,0)
-	TESTEULERZYZ(0.3,0.99999999*M_PI/2,0)
-	TESTEULERZYZ(0.3,0.999999*M_PI/2,0)
-	TESTEULERZYZ(0.3,0.9999*M_PI/2,0)
-	TESTEULERZYZ(0.3,0.99*M_PI/2,0)
+    TESTEULERZYX(0.3,PI_2,0)
+    TESTEULERZYZ(0.3,0.9999999999*PI_2,0)
+    TESTEULERZYZ(0.3,0.99999999*PI_2,0)
+    TESTEULERZYZ(0.3,0.999999*PI_2,0)
+    TESTEULERZYZ(0.3,0.9999*PI_2,0)
+    TESTEULERZYZ(0.3,0.99*PI_2,0)
 
-	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  M_PI-0.2, 0.3+M_PI);
-	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  M_PI-0.2, 0.3-M_PI);
-	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  M_PI-0.2, 0.3+M_PI);
-	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  M_PI-0.2, 0.3-M_PI);
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1+PI,  PI-0.2, 0.3+PI);
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1-PI,  PI-0.2, 0.3-PI);
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1-PI,  PI-0.2, 0.3+PI);
+	TESTEULERZYX_INVARIANT(0.1,0.2,0.3,   0.1+PI,  PI-0.2, 0.3-PI);
 
-	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  -0.2, 0.3+M_PI);
-	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  -0.2, 0.3+M_PI);
-	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1+M_PI,  -0.2, 0.3-M_PI);
-	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1-M_PI,  -0.2, 0.3-M_PI);
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1+PI,  -0.2, 0.3+PI);
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1-PI,  -0.2, 0.3+PI);
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1+PI,  -0.2, 0.3-PI);
+	TESTEULERZYZ_INVARIANT(0.1,0.2,0.3,   0.1-PI,  -0.2, 0.3-PI);
 }
 
 void FramesTest::TestRangeArbitraryRotation(const std::string& msg,
@@ -375,8 +386,8 @@ void FramesTest::TestRotation() {
 
 	TestOneRotation("rot([1,1,0],180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 	// opposite of +180
-	TestOneRotation("rot([1,1,0],-180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),-180*deg2rad), 180*deg2rad, -Vector(1,1,0)/sqrt(2.0));
-	TestOneRotation("rot([-1,-1,0],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),180*deg2rad), 180*deg2rad, -Vector(1,1,0)/sqrt(2.0));
+	TestOneRotation("rot([1,1,0],-180)", KDL::Rotation::Rot(KDL::Vector(1,1,0),-180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
+	TestOneRotation("rot([-1,-1,0],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 	// opposite of +180
 	TestOneRotation("rot([-1,-1,0],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,0),-180*deg2rad), 180*deg2rad, Vector(1,1,0)/sqrt(2.0));
 
@@ -393,6 +404,64 @@ void FramesTest::TestRotation() {
 	TestOneRotation("rot([-1,-1,-1],180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
 	// same as +180
 	TestOneRotation("rot([-1,-1,-1],-180)", KDL::Rotation::Rot(KDL::Vector(-1,-1,-1),-180*deg2rad), 180*deg2rad, Vector(1,1,1)/sqrt(3.0));
+
+	TestOneRotation("rot([0.707107, 0, 0.707107", KDL::Rotation::RPY(-2.9811968953315162, -atan(1)*2, -0.1603957582582825), 180*deg2rad, Vector(0.707107,0,0.707107) );
+}
+
+void FramesTest::TestGetRotAngle() {
+    double roll = -2.9811968953315162;
+    double pitch = -PI_2;
+    double yaw = -0.1603957582582825;
+
+    // rpy -> rotation
+    KDL::Rotation kdlRotation1 = KDL::Rotation::RPY(roll, pitch, yaw);
+
+    // rotation -> angle-axis (with KDL::GetRotAngle)
+    KDL::Vector kdlAxis;
+    double theta = kdlRotation1.GetRotAngle(kdlAxis);
+
+
+    CPPUNIT_ASSERT(0==isnan(theta));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[0]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[1]));
+    CPPUNIT_ASSERT(0==isnan(kdlAxis[2]));
+
+  // Test GetRotAngle on slightly non-orthogonal rotation matrices
+  {
+    Vector axis;
+    double angle = KDL::Rotation( 1, 0, 0 + 1e-6, 0, 1, 0, 0, 0,  1 + 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, 0)", 0.0, angle, epsilon);
+  }
+
+  {
+    Vector axis;
+    double angle = KDL::Rotation(-1, 0, 0 + 1e-6, 0, 1, 0, 0, 0, -1 - 1e-6).GetRotAngle(axis);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, PI)", PI, angle, epsilon);
+  }
+
+  // Tests to show that GetRotAngle does not work for an improper rotation matrix which has a determinant of -1;
+  // an improper rotation matrix corresponds to a rotation between a right-hand and left-hand coordinate system
+  {
+    Vector axis;
+    double angle;
+    Rotation R, Rout;
+    double det;
+    // Improper Rotation Matrix for 120 deg rotation
+    R = KDL::Rotation( 0, -1, 0, 0, 0, -1, -1, 0, 0);
+    det = +R(0,0)*(R(1,1)*R(2,2)-R(2,1)*R(1,2))-R(0,1)*(R(1,0)*R(2,2)-R(2,0)*R(1,2))+R(0,2)*(R(1,0)*R(2,1)-R(2,0)*R(1,1));
+    CPPUNIT_ASSERT_EQUAL(det,-1.0);
+    angle = R.GetRotAngle(axis);
+    Rout = KDL::Rotation::Rot(axis, angle);
+    CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(R,Rout));
+    // Improper Rotation matrix for 180 deg rotation (singular)
+    R = KDL::Rotation( -1, 0, 0, 0, -1, 0, 0, 0, -1);
+    det = +R(0,0)*(R(1,1)*R(2,2)-R(2,1)*R(1,2))-R(0,1)*(R(1,0)*R(2,2)-R(2,0)*R(1,2))+R(0,2)*(R(1,0)*R(2,1)-R(2,0)*R(1,1));
+    CPPUNIT_ASSERT_EQUAL(det,-1.0);
+    angle = R.GetRotAngle(axis);
+    Rout = KDL::Rotation::Rot(axis, angle);
+    CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(R,Rout));
+  }
+
 }
 
 void FramesTest::TestQuaternion() {
@@ -437,60 +506,107 @@ void FramesTest::TestQuaternion() {
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(w, w2, epsilon);
 }
 
+void FramesTest::TestOneRotationDiff(
+        const std::string& msg,
+        const Rotation& R_a_b1,
+        const Rotation& R_a_b2,
+        const Vector& expectedDiff) {
+    CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, diff(R_a_b1, R_a_b2), expectedDiff);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, addDelta(R_a_b1, expectedDiff), R_a_b2);
+}
 
 void FramesTest::TestRotationDiff() {
 
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(0*deg2rad)), Vector(0,0,0));		// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(90*deg2rad)), Vector(M_PI/2,0,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(180*deg2rad)), Vector(M_PI,0,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(270*deg2rad)), Vector(-M_PI/2,0,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(360*deg2rad)), Vector(0,0,0));		// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(-360*deg2rad)), Vector(0,0,0));	// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(-270*deg2rad)), Vector(M_PI/2,0,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(-180*deg2rad)), Vector(M_PI,0,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(-90*deg2rad)), Vector(-M_PI/2,0,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotX(-0*deg2rad)), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(0*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(0*deg2rad), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(90*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(90*deg2rad), Vector(PI_2,0,0));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(180*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(180*deg2rad), Vector(PI,0,0));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(270*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(270*deg2rad), Vector(-PI_2,0,0));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(360*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(360*deg2rad), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(-360*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(-360*deg2rad), Vector(0,0,0));	// no rotation
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(-270*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(-270*deg2rad), Vector(PI_2,0,0));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(-180*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(-180*deg2rad), Vector(PI,0,0));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(-90*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(-90*deg2rad), Vector(-PI_2,0,0));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotX(-0*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotX(-0*deg2rad), Vector(0,0,0));		// no rotation
 
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(0*deg2rad)), Vector(0,0,0));		// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(90*deg2rad)), Vector(0,M_PI/2,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(180*deg2rad)), Vector(0,M_PI,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(270*deg2rad)), Vector(0,-M_PI/2,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(360*deg2rad)), Vector(0,0,0));		// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(-360*deg2rad)), Vector(0,0,0));	// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(-270*deg2rad)), Vector(0,M_PI/2,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(-180*deg2rad)), Vector(0,M_PI,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(-90*deg2rad)), Vector(0,-M_PI/2,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotY(-0*deg2rad)), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(0*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(0*deg2rad), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(90*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(90*deg2rad), Vector(0,PI_2,0));
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(180*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(180*deg2rad), Vector(0,PI,0));
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(270*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(270*deg2rad), Vector(0,-PI_2,0));
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(360*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(360*deg2rad), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(-360*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(-360*deg2rad), Vector(0,0,0));	// no rotation
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(-270*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(-270*deg2rad), Vector(0,PI_2,0));
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(-180*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(-180*deg2rad), Vector(0,PI,0));
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(-90*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(-90*deg2rad), Vector(0,-PI_2,0));
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotY(-0*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotY(-0*deg2rad), Vector(0,0,0));		// no rotation
 
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(0*deg2rad)), Vector(0,0,0));		// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(90*deg2rad)), Vector(0,0,M_PI/2));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(180*deg2rad)), Vector(0,0,M_PI));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(270*deg2rad)), Vector(0,0,-M_PI/2));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(360*deg2rad)), Vector(0,0,0));		// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(-360*deg2rad)), Vector(0,0,0));	// no rotation
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(-270*deg2rad)), Vector(0,0,M_PI/2));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(-180*deg2rad)), Vector(0,0,M_PI));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(-90*deg2rad)), Vector(0,0,-M_PI/2));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotZ(0*deg2rad), Rotation::RotZ(-0*deg2rad)), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(0*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(0*deg2rad), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(90*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(90*deg2rad), Vector(0,0,PI_2));
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(180*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(180*deg2rad), Vector(0,0,PI));
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(270*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(270*deg2rad), Vector(0,0,-PI_2));
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(360*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(360*deg2rad), Vector(0,0,0));		// no rotation
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(-360*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(-360*deg2rad), Vector(0,0,0));	// no rotation
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(-270*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(-270*deg2rad), Vector(0,0,PI_2));
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(-180*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(-180*deg2rad), Vector(0,0,PI));
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(-90*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(-90*deg2rad), Vector(0,0,-PI_2));
+    TestOneRotationDiff("diff(RotZ(0*deg2rad),RotZ(-0*deg2rad))",
+        Rotation::RotZ(0*deg2rad), Rotation::RotZ(-0*deg2rad), Vector(0,0,0));		// no rotation
 
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotZ(90*deg2rad)), Vector(0,0,M_PI/2));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotX(0*deg2rad), Rotation::RotY(90*deg2rad)), Vector(0,M_PI/2,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RotY(0*deg2rad), Rotation::RotZ(90*deg2rad)), Vector(0,0,M_PI/2));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotZ(90*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotZ(90*deg2rad), Vector(0,0,PI_2));
+    TestOneRotationDiff("diff(RotX(0*deg2rad),RotY(90*deg2rad))",
+        Rotation::RotX(0*deg2rad), Rotation::RotY(90*deg2rad), Vector(0,PI_2,0));
+    TestOneRotationDiff("diff(RotY(0*deg2rad),RotZ(90*deg2rad))",
+        Rotation::RotY(0*deg2rad), Rotation::RotZ(90*deg2rad), Vector(0,0,PI_2));
 
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::Identity(), Rotation::RotX(90*deg2rad)), Vector(M_PI/2,0,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::Identity(), Rotation::RotY(90*deg2rad)), Vector(0,M_PI/2,0));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::Identity(), Rotation::RotZ(90*deg2rad)), Vector(0,0,M_PI/2));
+    TestOneRotationDiff("diff(Identity(),RotX(90*deg2rad))",
+        Rotation::Identity(), Rotation::RotX(90*deg2rad), Vector(PI_2,0,0));
+    TestOneRotationDiff("diff(Identity(),RotY(0*deg2rad))",
+        Rotation::Identity(), Rotation::RotY(90*deg2rad), Vector(0,PI_2,0));
+    TestOneRotationDiff("diff(Identity(),RotZ(0*deg2rad))",
+        Rotation::Identity(), Rotation::RotZ(90*deg2rad), Vector(0,0,PI_2));
 
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RPY(+0*deg2rad,0,-90*deg2rad),
-								   Rotation::RPY(-0*deg2rad,0,+90*deg2rad)),
-						 Vector(0,0,M_PI));
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(Rotation::RPY(+5*deg2rad,0,-0*deg2rad),
-								   Rotation::RPY(-5*deg2rad,0,+0*deg2rad)),
-						 Vector(-10*deg2rad,0,0));
+    TestOneRotationDiff("diff(Rotation::RPY(+0*deg2rad,0,-90*deg2rad),Rotation::RPY(-0*deg2rad,0,+90*deg2rad))",
+        Rotation::RPY(+0*deg2rad,0,-90*deg2rad),
+        Rotation::RPY(-0*deg2rad,0,+90*deg2rad),
+        Vector(0,0,PI));
+    TestOneRotationDiff("diff(Rotation::RPY(+5*deg2rad,0,-0*deg2rad),Rotation::RPY(-5*deg2rad,0,+0*deg2rad))",
+        Rotation::RPY(+5*deg2rad,0,-0*deg2rad),
+        Rotation::RPY(-5*deg2rad,0,+0*deg2rad),
+        Vector(-10*deg2rad,0,0));
 
     KDL::Rotation R1 = Rotation::RPY(+5*deg2rad,0,-90*deg2rad);
-	CPPUNIT_ASSERT_EQUAL(KDL::diff(R1, Rotation::RPY(-5*deg2rad,0,+90*deg2rad)),
-						           R1*Vector(0, 0, 180*deg2rad));
+    TestOneRotationDiff("diff(Rotation::RPY(+5*deg2rad,0,-90*deg2rad),Rotation::RPY(-5*deg2rad,0,+90*deg2rad))",
+        R1, Rotation::RPY(-5*deg2rad,0,+90*deg2rad),
+        R1*Vector(0, 0, 180*deg2rad));
 }
 
 void FramesTest::TestFrame() {
@@ -519,50 +635,63 @@ void FramesTest::TestFrame() {
 	CPPUNIT_ASSERT_EQUAL(F.Inverse()*v,F.Inverse(v));
 }
 
+JntArray CreateRandomJntArray(int size)
+{
+    JntArray j(size);
+    for (int i = 0; i<size; ++i)
+        random(j(i));
+    return j;
+}
+
 void FramesTest::TestJntArray()
 {
-    JntArray a1(4);
-    random(a1(0));
-    random(a1(1));
-    random(a1(2));
-    random(a1(3));
-    JntArray a2(a1);
-    CPPUNIT_ASSERT(Equal(a2,a1));
+    JntArray random1 = CreateRandomJntArray(4);
+    JntArray random1_copy(random1);
+    CPPUNIT_ASSERT(Equal(random1_copy,random1));
 
-    SetToZero(a2);
-    CPPUNIT_ASSERT(!Equal(a1,a2));
-    
-    JntArray a3(4);
-    CPPUNIT_ASSERT(Equal(a2,a3));
-    
-    a1=a2;
-    CPPUNIT_ASSERT(Equal(a1,a3));
+    JntArray zero_set_to_zero(4);
+    SetToZero(zero_set_to_zero);
+    CPPUNIT_ASSERT(!Equal(random1,zero_set_to_zero));
 
-    random(a1(0));
-    random(a1(1));
-    random(a1(2));
-    random(a1(3));
-    
-    Add(a1,a2,a3);
-    CPPUNIT_ASSERT(Equal(a1,a3));
-    
-    random(a2(0));
-    random(a2(1));
-    random(a2(2));
-    random(a2(3));
-    Add(a1,a2,a3);
-    Subtract(a3,a2,a3);
-    CPPUNIT_ASSERT(Equal(a1,a3));
-    
-    Multiply(a1,2,a3);
-    Add(a1,a1,a2);
-    CPPUNIT_ASSERT(Equal(a2,a3));
-    
+    JntArray zero(4);
+    CPPUNIT_ASSERT(Equal(zero_set_to_zero,zero));
+
+    JntArray almost_zero = CreateRandomJntArray(4);
+    almost_zero(0) = almost_zero(0)*1e-7;
+    almost_zero(1) = almost_zero(1)*1e-7;
+    almost_zero(2) = almost_zero(2)*1e-7;
+    almost_zero(3) = almost_zero(3)*1e-7;
+
+    // This should obviously be equal, but fails in old buggy implementation
+    CPPUNIT_ASSERT(Equal(almost_zero,zero,1));
+    CPPUNIT_ASSERT(Equal(almost_zero,zero,1e-6));
+    CPPUNIT_ASSERT(!Equal(almost_zero,zero,1e-8));
+
+    JntArray sum_random_zero(4);
+
+    Add(random1,zero_set_to_zero,sum_random_zero);
+    CPPUNIT_ASSERT(Equal(random1,sum_random_zero));
+
+    JntArray add_subtract(4);
+    JntArray random2 = CreateRandomJntArray(4);
+
+    Add(random1,random2,add_subtract);
+    Subtract(add_subtract,random2,add_subtract);
+    CPPUNIT_ASSERT(Equal(random1,add_subtract));
+
+    JntArray random_multiply_by_2(4);
+    JntArray sum_random_same_random(4);
+    Multiply(random1,2,random_multiply_by_2);
+    Add(random1,random1,sum_random_same_random);
+    CPPUNIT_ASSERT(Equal(sum_random_same_random,random_multiply_by_2));
+
     double a;
     random(a);
-    Multiply(a1,a,a3);
-    Divide(a3,a,a2);
-    CPPUNIT_ASSERT(Equal(a2,a1));
+
+    JntArray random_multiply_devide(4);
+    Multiply(random1,a,random_multiply_devide);
+    Divide(random_multiply_devide,a,random_multiply_devide);
+    CPPUNIT_ASSERT(Equal(random_multiply_devide,random1));
 }
 
  

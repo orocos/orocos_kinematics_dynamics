@@ -1,5 +1,6 @@
 #include <frames.hpp>
 #include <frames_io.hpp>
+#include <utilities/utility.h>
 
 int main()
 {
@@ -74,31 +75,31 @@ int main()
     //Default constructor
     KDL::Rotation r1;
     //Creating a rotation matrix out of three unit vectors Vx, Vy,
-    //Vz. Be carefull, these vectors should be normalised and
+    //Vz. Be careful, these vectors should be normalised and
     //orthogonal. Otherwise this can result in an inconsistent
     //rotation matrix
     KDL::Rotation r2(KDL::Vector(0,0,1),
                      KDL::Vector(0,-1,0),
                      KDL::Vector(-1,0,0));
-    //Creating a rotation matrix out of 9 values, Be carefull, these
-    //values can result in an inconsisten rotation matrix if the
+    //Creating a rotation matrix out of 9 values, Be careful, these
+    //values can result in an inconsistent rotation matrix if the
     //resulting rows/columns are not orthogonal/normalized
     KDL::Rotation r3(0,0,-1,1,0,0,0,-1,0);
     //Creating an Identity rotation matrix
     KDL::Rotation r4=KDL::Rotation::Identity();
     //Creating a Rotation matrix from a rotation around X
-    KDL::Rotation r5=KDL::Rotation::RotX(M_PI/3);
+    KDL::Rotation r5=KDL::Rotation::RotX(PI/3);
     //Creating a Rotation matrix from a rotation around Y
-    KDL::Rotation r6=KDL::Rotation::RotY(M_PI/3);
+    KDL::Rotation r6=KDL::Rotation::RotY(PI/3);
     //Creating a Rotation matrix from a rotation around Z
-    KDL::Rotation r7=KDL::Rotation::RotZ(M_PI/3);
+    KDL::Rotation r7=KDL::Rotation::RotZ(PI/3);
     //Creating a Rotation matrix from a rotation around a arbitrary
     //vector, the vector should not be normalised
-    KDL::Rotation r8=KDL::Rotation::Rot(KDL::Vector(1.,2.,3.),M_PI/4);
+    KDL::Rotation r8=KDL::Rotation::Rot(KDL::Vector(1.,2.,3.),PI_4);
     //Creating a Rotation matrix from a rotation around a arbitrary
     //vector, the vector should be normalised
     KDL::Rotation r9=KDL::Rotation::Rot2(KDL::Vector(0.4472,0.5477,0.7071),
-                                         M_PI/4);
+                                         PI_4);
     //Creating a Rotation matrix from Euler ZYZ rotation angles
     KDL::Rotation r10=KDL::Rotation::EulerZYZ(1.,2.,3.);
     //Creating a Rotation matrix from Euler ZYX rotation angles

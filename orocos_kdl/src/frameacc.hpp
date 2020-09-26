@@ -4,7 +4,7 @@
  *      Rall Algebra of (subset of) the classes defined in frames,
  *      i.e. classes that contain a set (value,derivative,2nd derivative)
  *      and define operations on that set
- *      this classes are usefull for automatic differentiation ( <-> symbolic diff ,
+ *      this classes are useful for automatic differentiation ( <-> symbolic diff ,
  *      <-> numeric diff).
  *      Defines VectorAcc, RotationAcc, FrameAcc, doubleAcc.
  *      Look at the corresponding classes Vector Rotation Frame Twist and
@@ -76,7 +76,7 @@ public:
     IMETHOD VectorAcc& operator -= (const VectorAcc& arg);
     IMETHOD static VectorAcc Zero();
     IMETHOD void ReverseSign();
-    IMETHOD doubleAcc Norm();
+    IMETHOD doubleAcc Norm(double eps=epsilon);
     IMETHOD friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
     IMETHOD friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
     IMETHOD friend VectorAcc operator + (const Vector& r1,const VectorAcc& r2);

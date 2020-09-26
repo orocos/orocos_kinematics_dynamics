@@ -44,7 +44,7 @@ namespace KDL {
      * (expressed in the segments reference frame) and the dynamical
      * parameters of the segments.
      */
-    class ChainDynParam : SolverI
+    class ChainDynParam : public SolverI
     {
     public:
         ChainDynParam(const Chain& chain, Vector _grav);
@@ -54,9 +54,12 @@ namespace KDL {
 	virtual int JntToMass(const JntArray &q, JntSpaceInertiaMatrix& H);
 	virtual int JntToGravity(const JntArray &q,JntArray &gravity);
 
+    /// @copydoc KDL::SolverI::updateInternalDataStructures()
+    virtual void updateInternalDataStructures();
+
     private:
-        const Chain chain;
-	int nr;
+        const Chain& chain;
+	int nr;  // unused, remove in a future version
 	unsigned int nj;
         unsigned int ns;	
 	Vector grav;

@@ -23,7 +23,7 @@
 namespace KDL {
 
 // Trace of the call stack of the I/O routines to help user
-// interprete error messages from I/O
+// interpret error messages from I/O
 typedef std::stack<std::string>  ErrorStack;
 
 // should be in Thread Local Storage if this gets multithreaded one day...
@@ -31,7 +31,7 @@ static ErrorStack errorstack;
 
 
 void IOTrace(const std::string& description) {
-    errorstack.push(description);   
+    errorstack.push(description);
 }
 
 
@@ -48,11 +48,17 @@ void IOTraceOutput(std::ostream& os) {
 
 
 void IOTracePopStr(char* buffer,int size) {
+    if (size <= 0)
+    {
+        // TODO: all sizes everywhere should be of size_t!
+        return;
+    }
     if (errorstack.empty()) {
         *buffer = 0;
         return;
     }
     strncpy(buffer,errorstack.top().c_str(),size);
+    buffer[size - 1] = '\0';
     errorstack.pop();
 }
 

@@ -3,7 +3,7 @@
  *      This file contains the definition of classes for a
  *      Rall Algebra of (subset of) the classes defined in frames,
  *      i.e. classes that contain a pair (value,derivative) and define operations on that pair
- *      this classes are usefull for automatic differentiation ( <-> symbolic diff , <-> numeric diff)
+ *      this classes are useful for automatic differentiation ( <-> symbolic diff , <-> numeric diff)
  *      Defines VectorVel, RotationVel, FrameVel.  Look at Frames.h for details on how to work
  *      with Frame objects.
  *  \author
@@ -104,7 +104,7 @@ public:
     IMETHOD VectorVel& operator -= (const VectorVel& arg);
     IMETHOD static VectorVel Zero();
     IMETHOD void ReverseSign();
-    IMETHOD doubleVel Norm() const;
+    IMETHOD doubleVel Norm(double eps=epsilon) const;
     IMETHOD friend VectorVel operator + (const VectorVel& r1,const VectorVel& r2);
     IMETHOD friend VectorVel operator - (const VectorVel& r1,const VectorVel& r2);
     IMETHOD friend VectorVel operator + (const Vector& r1,const VectorVel& r2);
@@ -128,6 +128,14 @@ public:
     IMETHOD friend bool Equal(const VectorVel& r1,const VectorVel& r2,double eps);
     IMETHOD friend bool Equal(const Vector& r1,const VectorVel& r2,double eps);
     IMETHOD friend bool Equal(const VectorVel& r1,const Vector& r2,double eps);
+
+    IMETHOD friend bool operator==(const VectorVel& r1,const VectorVel& r2);
+    IMETHOD friend bool operator!=(const VectorVel& r1,const VectorVel& r2);
+    IMETHOD friend bool operator==(const Vector& r1,const VectorVel& r2);
+    IMETHOD friend bool operator!=(const Vector& r1,const VectorVel& r2);
+    IMETHOD friend bool operator==(const VectorVel& r1,const Vector& r2);
+    IMETHOD friend bool operator!=(const VectorVel& r1,const Vector& r2);
+
     IMETHOD friend VectorVel operator - (const VectorVel& r);
     IMETHOD friend doubleVel dot(const VectorVel& lhs,const VectorVel& rhs);
     IMETHOD friend doubleVel dot(const VectorVel& lhs,const Vector& rhs);
@@ -185,6 +193,13 @@ public:
     IMETHOD friend bool Equal(const Rotation& r1,const RotationVel& r2,double eps);
     IMETHOD friend bool Equal(const RotationVel& r1,const Rotation& r2,double eps);
 
+    IMETHOD friend bool operator==(const RotationVel& r1,const RotationVel& r2);
+    IMETHOD friend bool operator!=(const RotationVel& r1,const RotationVel& r2);
+    IMETHOD friend bool operator==(const Rotation& r1,const RotationVel& r2);
+    IMETHOD friend bool operator!=(const Rotation& r1,const RotationVel& r2);
+    IMETHOD friend bool operator==(const RotationVel& r1,const Rotation& r2);
+    IMETHOD friend bool operator!=(const RotationVel& r1,const Rotation& r2);
+
     IMETHOD TwistVel Inverse(const TwistVel& arg) const;
     IMETHOD TwistVel Inverse(const Twist& arg) const;
     IMETHOD TwistVel operator * (const TwistVel& arg) const;
@@ -238,6 +253,13 @@ public:
     IMETHOD friend bool Equal(const FrameVel& r1,const FrameVel& r2,double eps);
     IMETHOD friend bool Equal(const Frame& r1,const FrameVel& r2,double eps);
     IMETHOD friend bool Equal(const FrameVel& r1,const Frame& r2,double eps);
+
+    IMETHOD friend bool operator==(const FrameVel& a,const FrameVel& b);
+    IMETHOD friend bool operator!=(const FrameVel& a,const FrameVel& b);
+    IMETHOD friend bool operator==(const Frame& a,const FrameVel& b);
+    IMETHOD friend bool operator!=(const Frame& a,const FrameVel& b);
+    IMETHOD friend bool operator==(const FrameVel& a,const Frame& b);
+    IMETHOD friend bool operator!=(const FrameVel& a,const Frame& b);
 
     IMETHOD TwistVel  Inverse(const TwistVel& arg) const;
     IMETHOD TwistVel  Inverse(const Twist& arg) const;
@@ -310,6 +332,13 @@ public:
      IMETHOD friend bool Equal(const TwistVel& a,const TwistVel& b,double eps);
      IMETHOD friend bool Equal(const Twist& a,const TwistVel& b,double eps);
      IMETHOD friend bool Equal(const TwistVel& a,const Twist& b,double eps);
+
+     IMETHOD friend bool operator==(const TwistVel& a,const TwistVel& b);
+     IMETHOD friend bool operator!=(const TwistVel& a,const TwistVel& b);
+     IMETHOD friend bool operator==(const Twist& a,const TwistVel& b);
+     IMETHOD friend bool operator!=(const Twist& a,const TwistVel& b);
+     IMETHOD friend bool operator==(const TwistVel& a,const Twist& b);
+     IMETHOD friend bool operator!=(const TwistVel& a,const Twist& b);
 
 // = Conversion to other entities
      IMETHOD Twist GetTwist() const;

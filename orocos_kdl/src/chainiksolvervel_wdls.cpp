@@ -51,12 +51,32 @@ namespace KDL
     {
     }
     
+    void ChainIkSolverVel_wdls::updateInternalDataStructures() {
+        jnt2jac.updateInternalDataStructures();
+        nj = chain.getNrOfJoints();
+        jac.resize(nj);
+        MatrixXd z6nj = MatrixXd::Zero(6,nj);
+        VectorXd znj = VectorXd::Zero(nj);
+        MatrixXd znjnj = MatrixXd::Zero(nj,nj);
+        U.conservativeResizeLike(z6nj);
+        S.conservativeResizeLike(znj);
+        V.conservativeResizeLike(znjnj);
+        tmp.conservativeResizeLike(znj);
+        tmp_jac.conservativeResizeLike(z6nj);
+        tmp_jac_weight1.conservativeResizeLike(z6nj);
+        tmp_jac_weight2.conservativeResizeLike(z6nj);
+        tmp_js.conservativeResizeLike(znjnj);
+        weight_js.conservativeResizeLike(MatrixXd::Identity(nj,nj));
+    }
 
     ChainIkSolverVel_wdls::~ChainIkSolverVel_wdls()
     {
     }
     
     int ChainIkSolverVel_wdls::setWeightJS(const MatrixXd& Mq){
+        if(nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
+
         if (Mq.size() != weight_js.size())
             return (error = E_SIZE_MISMATCH);
         weight_js = Mq;
@@ -85,16 +105,27 @@ namespace KDL
         maxiter=maxiter_in;
     }
 
+    int ChainIkSolverVel_wdls::getSigma(Eigen::VectorXd& Sout)
+    {
+        if (Sout.size() != S.size())
+            return (error = E_SIZE_MISMATCH);
+        Sout=S;
+        return (error = E_NOERROR);
+    }
+
     int ChainIkSolverVel_wdls::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
+        if(nj != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
+
         if(nj != q_in.rows() || nj != qdot_out.rows())
             return (error = E_SIZE_MISMATCH);
         error = jnt2jac.JntToJac(q_in,jac);
         if ( error < E_NOERROR) return error;
-        
+
         double sum;
         unsigned int i,j;
-        
+
         // Initialize (internal) return values
         nrZeroSigmas = 0 ;
         sigmaMin = 0.;
@@ -106,11 +137,11 @@ namespace KDL
                 tmp_jac(i,j) = jac(i,j);
         }
         */
-        
+
         // Create the Weighted jacobian
         tmp_jac_weight1 = jac.data.lazyProduct(weight_js);
         tmp_jac_weight2 = weight_ts.lazyProduct(tmp_jac_weight1);
-   
+
         // Compute the SVD of the weighted jacobian
         svdResult = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
         if (0 != svdResult)
@@ -145,22 +176,22 @@ namespace KDL
             // Note:  singular values are always positive so sigmaMin >=0
             if ( sigmaMin < eps )
             {
-			    lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
+                lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
             }
-			if(fabs(S(i))<eps) {
-				if (i<6) {
-					// Scale lambda to size of singular value sigmaMin
-					tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda_scaled*lambda_scaled)));
-				}
-				else {
-					tmp(i)=0.0;  // S(i)=0 for i>=6 due to cols>rows
-				}
-				//  Count number of singular values near zero
-				++nrZeroSigmas ;
-			}
-			else {
+            if(fabs(S(i))<eps) {
+                if (i<6) {
+                    // Scale lambda to size of singular value sigmaMin
+                    tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda_scaled*lambda_scaled)));
+                }
+                else {
+                    tmp(i)=0.0;  // S(i)=0 for i>=6 due to cols>rows
+                }
+                //  Count number of singular values near zero
+                ++nrZeroSigmas ;
+            }
+            else {
                 tmp(i) = sum/S(i);
-			}
+            }
         }
 
         /*
@@ -177,7 +208,7 @@ namespace KDL
 
         // If number of near zero singular values is greater than the full rank
         // of jac, then wdls is active
-        if ( nrZeroSigmas > (jac.columns()-jac.rows()) )	{
+        if ( nrZeroSigmas > (jac.columns()-jac.rows()) ) {
             return (error = E_CONVERGE_PINV_SINGULAR);  // converged but pinv singular
         } else {
             return (error = E_NOERROR);                 // have converged

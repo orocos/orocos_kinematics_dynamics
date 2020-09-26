@@ -35,10 +35,10 @@ namespace KDL
      * KDL::Chain. It uses a svd-calculation based on householders
      * rotations.
      *
-     * In case of a redundant robot this solver optimizes the the following criterium:
+     * In case of a redundant robot this solver optimizes the following criterium:
      * g=0.5*sum(weight*(Desired_joint_positions - actual_joint_positions))^2 as described in 
      *  A. Liegeois. Automatic supervisory control of the configuration and 
-     * behavior of multibody mechnisms. IEEE Transactions on Systems, Man, and 
+     * behavior of multibody mechanisms. IEEE Transactions on Systems, Man, and 
      * Cybernetics, 7(12):868–871, 1977
      *
      * @ingroup KinematicFamily
@@ -69,7 +69,40 @@ namespace KDL
          * not (yet) implemented.
          *
          */
-        virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
+        virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return -1;};
+
+        /**
+         * Request the joint weights for optimization criterion
+         *
+         *
+         * @return const reference to the joint weights
+         */
+        const JntArray& getWeights()const
+        {
+            return weights;
+        }
+
+        /**
+         * Request the optimal joint positions
+         *
+         *
+         * @return const reference to the optimal joint positions
+         */
+        const JntArray& getOptPos()const
+        {
+            return opt_pos;
+        }
+
+        /**
+         * Request null space velocity gain
+         *
+         *
+         * @return const reference to the null space velocity gain
+         */
+        const double& getAlpha()const
+        {
+            return alpha;
+        }
 
         /**
          *Set joint weights for optimization criterion
@@ -88,7 +121,7 @@ namespace KDL
         virtual int setOptPos(const JntArray &opt_pos);
 
         /**
-         *Set null psace velocity gain
+         *Set null space velocity gain
          *
          *@param alpha NUllspace velocity cgain
          *
@@ -101,8 +134,11 @@ namespace KDL
          */
         int getSVDResult()const {return svdResult;};
 
+        /// @copydoc KDL::SolverI::updateInternalDataStructures
+        virtual void updateInternalDataStructures();
+
     private:
-        const Chain chain;
+        const Chain& chain;
         ChainJntToJacSolver jnt2jac;
         unsigned int nj;
         Jacobian jac;

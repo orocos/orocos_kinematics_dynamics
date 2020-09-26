@@ -5,7 +5,7 @@
 
 /**************************************************************************
     begin                : May 2012
-    copyright            : (C) 2012 Erwin Aertbelien
+    copyright            : (C) 2020 Erwin Aertbelien
     email                : firstname.lastname@mech.kuleuven.ac.be
 
  History (only major changes)( AUTHOR-Description ) :
@@ -119,6 +119,23 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 	L(5)=0.01;
 }
 
+void ChainIkSolverPos_LMA::updateInternalDataStructures() {
+    nj = chain.getNrOfJoints();
+    ns = chain.getNrOfSegments();
+    lastSV.conservativeResize(nj>6?6:nj);
+    jac.conservativeResize(Eigen::NoChange, nj);
+    grad.conservativeResize(nj);
+    T_base_jointroot.resize(nj);
+    T_base_jointtip.resize(nj);
+    q.conservativeResize(nj);
+    A.conservativeResize(nj, nj);
+    ldlt = Eigen::LDLT<MatrixXq>(nj);
+    svd = Eigen::JacobiSVD<MatrixXq>(6, nj,Eigen::ComputeThinU | Eigen::ComputeThinV);
+    diffq.conservativeResize(nj);
+    q_new.conservativeResize(nj);
+    original_Aii.conservativeResize(nj);
+}
+
 ChainIkSolverPos_LMA::~ChainIkSolverPos_LMA() {}
 
 void ChainIkSolverPos_LMA::compute_fwdpos(const VectorXq& q) {
@@ -127,7 +144,7 @@ void ChainIkSolverPos_LMA::compute_fwdpos(const VectorXq& q) {
 	T_base_head = Frame::Identity(); // frame w.r.t. base of head
 	for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
 		const Segment& segment = chain.getSegment(i);
-		if (segment.getJoint().getType()!=Joint::None) {
+        if (segment.getJoint().getType()!=Joint::Fixed) {
 			T_base_jointroot[jointndx] = T_base_head;
 			T_base_head = T_base_head * segment.pose(q(jointndx));
 			T_base_jointtip[jointndx] = T_base_head;
@@ -143,7 +160,7 @@ void ChainIkSolverPos_LMA::compute_jacobian(const VectorXq& q) {
 	unsigned int jointndx=0;
 	for (unsigned int i=0;i<chain.getNrOfSegments();i++) {
 		const Segment& segment = chain.getSegment(i);
-		if (segment.getJoint().getType()!=Joint::None) {
+        if (segment.getJoint().getType()!=Joint::Fixed) {
 			// compute twist of the end effector motion caused by joint [jointndx]; expressed in base frame, with vel. ref. point equal to the end effector
 			KDL::Twist t = ( T_base_jointroot[jointndx].M * segment.twist(q(jointndx),1.0) ).RefPoint( T_base_head.p - T_base_jointtip[jointndx].p);
 			jac(0,jointndx)=t[0];
@@ -168,8 +185,11 @@ void ChainIkSolverPos_LMA::display_jac(const KDL::JntArray& jval) {
 
 
 int ChainIkSolverPos_LMA::CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& T_base_goal, KDL::JntArray& q_out) {
-    if(nj != q_init.rows() || nj != q_out.rows())
-        return (error = E_SIZE_MISMATCH);
+  if (nj != chain.getNrOfJoints())
+    return (error = E_NOT_UP_TO_DATE);
+
+  if (nj != q_init.rows() || nj != q_out.rows())
+    return (error = E_SIZE_MISMATCH);
 
 	using namespace KDL;
 	double v      = 2;
@@ -301,4 +321,4 @@ const char* ChainIkSolverPos_LMA::strError(const int error) const
         else return SolverI::strError(error);
     }
 
-};//namespace KDL
+}//namespace KDL

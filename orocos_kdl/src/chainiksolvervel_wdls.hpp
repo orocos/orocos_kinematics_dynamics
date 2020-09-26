@@ -102,12 +102,12 @@ namespace KDL
          * not (yet) implemented.
          *
          */
-        virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return -1;};
+        virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return -1;};
 
         /**
          * Set the joint space weighting matrix
          *
-         * @param weight_js joint space weighting symetric matrix,
+         * @param weight_js joint space weighting symmetric matrix,
          * default : identity.  M_q : This matrix being used as a
          * weight for the norm of the joint space speed it HAS TO BE
          * symmetric and positive definite. We can actually deal with
@@ -126,14 +126,14 @@ namespace KDL
          * it gets an infinite weight in the norm computation.  For
          * more detailed explanation : vincent.padois@upmc.fr
          *
-         * @return succes/error code
+         * @return success/error code
          */
         int setWeightJS(const Eigen::MatrixXd& Mq);
 
         /**
          * Set the task space weighting matrix
          *
-         * @param weight_ts task space weighting symetric matrix,
+         * @param weight_ts task space weighting symmetric matrix,
          * default: identity M_x : This matrix being used as a weight
          * for the norm of the error (in terms of task space speed) it
          * HAS TO BE symmetric and positive definite. We can actually
@@ -153,7 +153,7 @@ namespace KDL
          * weighted norm sqrt(|x_dot-Jq_dot|'*(M_x^2)*|x_dot-Jq_dot|).
          * For more detailed explanation : vincent.padois@upmc.fr
          *
-         * @return succes/error code
+         * @return success/error code
          */
         int setWeightTS(const Eigen::MatrixXd& Mx);
 
@@ -183,6 +183,11 @@ namespace KDL
         double getSigmaMin()const {return sigmaMin;};
 
         /**
+         * Request the six singular values of the Jacobian
+         */
+        int getSigma(Eigen::VectorXd& Sout);
+
+        /**
          * Request the value of eps
          */
         double getEps()const {return eps;};
@@ -207,8 +212,11 @@ namespace KDL
         /// @copydoc KDL::SolverI::strError()
         virtual const char* strError(const int error) const;
 
+        /// @copydoc KDL::SolverI::updateInternalDataStructures()
+        virtual void updateInternalDataStructures();
+
     private:
-        const Chain chain;
+        const Chain& chain;
         ChainJntToJacSolver jnt2jac;
         unsigned int nj;
         Jacobian jac;

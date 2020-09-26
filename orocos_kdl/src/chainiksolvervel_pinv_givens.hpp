@@ -30,10 +30,6 @@ namespace KDL
          *
          * @param chain the chain to calculate the inverse velocity
          * kinematics for
-         * @param eps if a singular value is below this value, its
-         * inverse is set to zero, default: 0.00001
-         * @param maxiter maximum iterations for the svd calculation,
-         * default: 150
          *
          */
         explicit ChainIkSolverVel_pinv_givens(const Chain& chain);
@@ -44,17 +40,20 @@ namespace KDL
          * not (yet) implemented.
          *
          */
-        virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out){return (error = E_NOT_IMPLEMENTED);};
+        virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return (error = E_NOT_IMPLEMENTED);};
+
+        /// @copydoc KDL::SolverI::updateInternalDataStructures
+        virtual void updateInternalDataStructures();
 
     private:
-        const Chain chain;
+        const Chain& chain;
         unsigned int nj;
         ChainJntToJacSolver jnt2jac;
         Jacobian jac;
         bool transpose,toggle;
         unsigned int m,n;
         MatrixXd jac_eigen,U,V,B;
-        VectorXd S,tempi,tempj,UY,SUY,qdot_eigen,v_in_eigen;
+        VectorXd S,tempi,UY,SUY,qdot_eigen,v_in_eigen;
     };
 }
 #endif
