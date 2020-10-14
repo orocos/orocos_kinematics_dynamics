@@ -4,7 +4,6 @@
 
 int main()
 {
-
     //Creating Vectors
     KDL::Vector v1;//Default constructor
     KDL::Vector v2(1.0,2.0,3.0);//Most used constructor
@@ -148,8 +147,4 @@ int main()
     //The underlying unitvector Z
     r8.UnitZ(v1);//or
     std::cout<<"UnitZ of r8:"<<r8.UnitZ()<<std::endl;
-
-
-
-
 }
