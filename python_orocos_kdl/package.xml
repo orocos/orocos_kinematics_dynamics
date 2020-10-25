@@ -16,13 +16,9 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>orocos_kdl</build_depend>
-  <build_depend condition="$ROS_PYTHON_VERSION == 2">python-sip</build_depend>
-  <build_depend condition="$ROS_PYTHON_VERSION == 3">python3-sip</build_depend>
 
   <exec_depend>catkin</exec_depend>
   <exec_depend>orocos_kdl</exec_depend>
-  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-sip</exec_depend>
-  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-sip</exec_depend>
 
   <test_depend condition="$ROS_PYTHON_VERSION == 2">python-future</test_depend>
   <test_depend condition="$ROS_PYTHON_VERSION == 3">python3-future</test_depend>
