@@ -175,8 +175,12 @@ void init_kinfam(pybind11::module &m)
     chain.def("addChain", &Chain::addChain);
     chain.def("getNrOfJoints", &Chain::getNrOfJoints);
     chain.def("getNrOfSegments", &Chain::getNrOfSegments);
-    chain.def("getSegment", (Segment& (Chain::*)(unsigned int)) &Chain::getSegment);
-    chain.def("getSegment", (const Segment& (Chain::*)(unsigned int) const) &Chain::getSegment);
+    chain.def("getSegment", [](const Chain &c, unsigned int nr)
+    {
+        if (nr >= c.getNrOfSegments())
+            throw py::index_error("Chain index out of range");
+        return c.getSegment(nr);
+    });
     chain.def("__repr__", [](const Chain &c)
     {
         std::ostringstream oss;

@@ -177,6 +177,17 @@ public:
     unsigned int getNrOfJoints()const;
     unsigned int getNrOfSegments()const;
 
+    Segment& getSegment(unsigned int nr);
+%MethodCode
+    if (a0 < 0 || a0 >= sipCpp->getNrOfSegments()) {
+        PyErr_SetString(PyExc_IndexError, "Chain index out of range");
+        sipError = sipErrorFail;
+    }
+    else {
+        sipRes = &(sipCpp->getSegment(a0));
+    }
+%End
+
     const std::string* __repr__() const;
 %MethodCode
     std::ostringstream oss;
@@ -184,9 +195,6 @@ public:
     std::string s(oss.str());
     sipRes=&s;
 %End
-
-    const Segment& getSegment(unsigned int nr)const /Factory/;
-
 };
 
 class Tree {
