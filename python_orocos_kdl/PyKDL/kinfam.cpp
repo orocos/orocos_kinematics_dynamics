@@ -436,6 +436,9 @@ void init_kinfam(pybind11::module &m)
     // ChainIkSolverPos_LMA
     // -------------------------
     py::class_<ChainIkSolverPos_LMA, ChainIkSolverPos> chain_ik_solver_pos_LMA(m, "ChainIkSolverPos_LMA");
+    chain_ik_solver_pos_LMA.def(py::init<const Chain&, const Eigen::Matrix<double,6,1>&, double, int, double>(),
+                                py::arg("chain"), py::arg("L"), py::arg("eps")=1e-5, py::arg("maxiter")=500,
+                                py::arg("eps_joints")=1e-15);
     chain_ik_solver_pos_LMA.def(py::init<const Chain&, double, int, double>(),
                                 py::arg("chain"), py::arg("eps")=1e-5, py::arg("maxiter")=500,
                                 py::arg("eps_joints")=1e-15);
