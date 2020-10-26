@@ -39,7 +39,7 @@ to your `.bashrc`.
 10. Execute `ldconfig`: `sudo ldconfig`
 11. (Optional) Execute tests:
     - Python 2: `python2 ../tests/PyKDLtest.py`
-    - Python 3: `python2 ../tests/PyKDLtest.py`
+    - Python 3: `python3 ../tests/PyKDLtest.py`
 12. (Optional) To create the API-documentation: `sphinx-build ../doc docs`. The API-documentation will be generated at
 `<builddir>/docs`.
 
