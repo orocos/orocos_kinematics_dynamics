@@ -1,5 +1,7 @@
 # Install instructions
 
+These install instructions are focused on Debian/Ubuntu systems.
+
 ## Shared instructions
 
 1. (Optional) Update apt cache: `sudo apt-get update`

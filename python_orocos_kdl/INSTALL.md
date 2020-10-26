@@ -1,5 +1,7 @@
 # Install instructions
 
+These install instructions are focused on Debian/Ubuntu systems.
+
 ## Shared instructions
 
 1. Follow the shared instructions of the C++ library from [orocos_kdl/INSTALL.md](../orocos_kdl/INSTALL.md#shared-instructions)
