@@ -4,7 +4,7 @@
 
 1. (Optional) Update apt cache: `sudo apt-get update`
 2. Install EIGEN and cppunit: `sudo apt-get install libeigen3-dev libcppunit-dev`
-3. (Optional) Install `Doxygen` and `Graphvix` to generate API-documentation: `sudo apt-get install doxygen graphviz`
+3. (Optional) Install `Doxygen` and `Graphviz` to generate API-documentation: `sudo apt-get install doxygen graphviz`
 
 ## Compilation
 
