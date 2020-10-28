@@ -33,34 +33,15 @@ if(catkin_FOUND)
   set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
 endif()
 
-message(DEPRECATION "PyKDL has been moved to PyBind11. PyKDL based on SIP might become depracted in the (near) future. To keep using the SIP based version set 'BUILD_PYKDL_PYBIND11' to OFF.")
-
-option(BUILD_PYKDL_PYBIND11 "Use PyBind11 instead of SIP" ON)
-if (BUILD_PYKDL_PYBIND11)
-  SET(PYTHON_MODULE_EXTENSION ".so")
-  add_subdirectory(pybind11)
-  pybind11_add_module(${LIBRARY_NAME}
-    PyKDL/pybind11/PyKDL.h
-    PyKDL/pybind11/PyKDL.cpp
-    PyKDL/pybind11/frames.cpp
-    PyKDL/pybind11/kinfam.cpp
-    PyKDL/pybind11/framevel.cpp
-    PyKDL/pybind11/dynamics.cpp)
-  target_link_libraries(${LIBRARY_NAME} PRIVATE ${orocos_kdl_LIBRARIES})
-  install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
-else (BUILD_PYKDL_PYBIND11)
-  list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-  find_package(SIP REQUIRED)
-  include(SIPMacros)
-
-  include_directories(${SIP_INCLUDE_DIR} ${PYTHON_INCLUDE_DIRS})
-
-  file(GLOB SIP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${LIBRARY_NAME}/sip/*.sip")
-  set(SIP_INCLUDES ${SIP_FILES})
-  if (${PYTHON_VERSION_MAJOR} GREATER_EQUAL "3")
-    set(SIP_EXTRA_OPTIONS "-o;-x;PYTHON2") # '-x' disables the feature
-  else()
-    set(SIP_EXTRA_OPTIONS "-o")
-  endif()
-  add_sip_python_module(${LIBRARY_NAME} ${LIBRARY_NAME}/sip/${LIBRARY_NAME}.sip ${orocos_kdl_LIBRARIES})
-endif(BUILD_PYKDL_PYBIND11)
+# Build the module
+SET(PYTHON_MODULE_EXTENSION ".so")
+add_subdirectory(pybind11)
+pybind11_add_module(${LIBRARY_NAME}
+  PyKDL/PyKDL.h
+  PyKDL/PyKDL.cpp
+  PyKDL/frames.cpp
+  PyKDL/kinfam.cpp
+  PyKDL/framevel.cpp
+  PyKDL/dynamics.cpp)
+target_link_libraries(${LIBRARY_NAME} PRIVATE ${orocos_kdl_LIBRARIES})
+install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
