@@ -15,7 +15,7 @@
 #include <chainiksolverpos_nr_jl.hpp>
 #include <chainjnttojacsolver.hpp>
 #include <chainjnttojacdotsolver.hpp>
-#include <chainidsolver_vereshchagin.hpp>
+#include <chainhdsolver_vereshchagin.hpp>
 #include <chainidsolver_recursive_newton_euler.hpp>
 #include <chaindynparam.hpp>
 #include <chainidsolver_recursive_newton_euler.hpp>
@@ -40,6 +40,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(FdSolverDevelopmentTest );
     CPPUNIT_TEST(FdSolverConsistencyTest );
     CPPUNIT_TEST(LDLdecompTest);
+    CPPUNIT_TEST(FdAndVereshchaginSolversConsistencyTest );
     CPPUNIT_TEST(UpdateChainTest );
     CPPUNIT_TEST_SUITE_END();
 
@@ -59,11 +60,12 @@ public:
     void FdSolverDevelopmentTest();
     void FdSolverConsistencyTest();
     void LDLdecompTest();
+    void FdAndVereshchaginSolversConsistencyTest();
     void UpdateChainTest();
 
 private:
 
-  Chain chain1, chain2, chain3, chain4, chaindyn, motomansia10, motomansia10dyn;
+  Chain chain1, chain2, chain3, chain4, chaindyn, motomansia10, motomansia10dyn, kukaLWR;
 
     void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
     void FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);
