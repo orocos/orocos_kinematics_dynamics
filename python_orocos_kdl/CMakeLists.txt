@@ -1,11 +1,12 @@
-cmake_minimum_required(VERSION 2.4.6)
+cmake_minimum_required(VERSION 3.0.2)
 if(POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
 endif()
 
-project(python_orocos_kdl)
+project(python_orocos_kdl VERSION 1.4.1)
 
-find_package(orocos_kdl REQUIRED)
+# find a matching version of orocos_kdl
+find_package(orocos_kdl ${PROJECT_VERSION} EXACT REQUIRED)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
