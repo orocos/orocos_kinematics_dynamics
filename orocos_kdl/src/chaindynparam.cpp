@@ -1,7 +1,7 @@
-// Copyright  (C)  2009  Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Copyright  (C)  2009  Dominick Vanthienen <dominick dot vanthienen at intermodalics dot be>
 
 // Version: 1.0
-// Author: Dominick Vanthienen <dominick dot vanthienen at mech dot kuleuven dot be>
+// Author: Dominick Vanthienen <dominick dot vanthienen at intermodalics dot be>
 // Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
