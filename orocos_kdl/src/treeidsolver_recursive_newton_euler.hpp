@@ -1,8 +1,8 @@
-// Copyright  (C)  2009  Ruben Smits <ruben dot smits at intermoladics dot eu>
+// Copyright  (C)  2009  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
 // Author: Franco Fusco <franco dot fusco at ls2n dot fr>
-// Maintainer: Ruben Smits <ruben dot smits at intermoladics dot eu>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
