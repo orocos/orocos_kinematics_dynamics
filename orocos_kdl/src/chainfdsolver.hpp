@@ -1,8 +1,8 @@
 // Copyright  (C)  2018  Ruben Smits <ruben dot smits at intermodalics dot be>
 
 // Version: 1.0
-// Author: Ruben Smits
-// Author: Craig Carignan
+// Author: Ruben Smits <ruben dot smits at intermodalics dot be>
+// Author: Craig Carignan <craigc at ssl dot umd dot edu>
 // Maintainer: Ruben Smits <ruben dot smits at intermodalics dot be>
 // URL: http://www.orocos.org/kdl
 
