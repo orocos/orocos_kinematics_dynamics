@@ -1,4 +1,5 @@
-// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Copyright  (C)  2007  Francois Cauwe <francois at cauwe dot org>
+// Copyright  (C)  2007  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
 // Author: Francois Cauwe <francois at cauwe dot org>
