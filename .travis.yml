@@ -36,7 +36,8 @@ jobs:
     - <<: *industrial-ci
       name: Industrial CI Melodic
       env: ROS_DISTRO="melodic" ROS_REPO=ros ABICHECK_URL='github:orocos/orocos_kinematics_dynamics#v1.4.0' ABICHECK_MERGE=auto
-
+  allow_failures:
+    - stage: Industrial CI
 
 install:
   - sudo apt-get -qq update
