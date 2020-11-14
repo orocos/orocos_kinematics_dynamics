@@ -33,11 +33,11 @@ jobs:
       services: docker
       install: git clone https://github.com/ros-industrial/industrial_ci.git -b master .ci_config
       script: source .ci_config/travis.sh
+      if: branch = release-1.3
     - <<: *industrial-ci
       name: Industrial CI Melodic
       env: ROS_DISTRO="melodic" ROS_REPO=ros ABICHECK_URL='github:orocos/orocos_kinematics_dynamics#v1.4.0' ABICHECK_MERGE=auto
-  allow_failures:
-    - stage: Industrial CI
+      if: branch = release-1.4
 
 install:
   - sudo apt-get -qq update
