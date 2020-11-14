@@ -13,6 +13,17 @@ env:
     - OROCOS_KDL_BUILD_TYPE=Debug
     - OROCOS_KDL_BUILD_TYPE=Release
 
+jobs:
+  include:
+    - env: OROCOS_KDL_BUILD_TYPE=Debug
+      compiler: gcc
+    - env: OROCOS_KDL_BUILD_TYPE=Release
+      compiler: gcc
+    - env: OROCOS_KDL_BUILD_TYPE=Debug
+      compiler: clang
+    - env: OROCOS_KDL_BUILD_TYPE=Release
+      compiler: clang
+
 before_script:
   - sudo apt-get -qq update
   - sudo apt-get install -y libeigen3-dev libcppunit-dev python-psutil python3-psutil python-future python3-future
