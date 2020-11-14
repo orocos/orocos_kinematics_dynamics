@@ -38,7 +38,7 @@ jobs:
       env: ROS_DISTRO="melodic" ROS_REPO=ros ABICHECK_URL='github:orocos/orocos_kinematics_dynamics#v1.4.0' ABICHECK_MERGE=auto
 
 
-before_script:
+install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libeigen3-dev libcppunit-dev python-psutil python3-psutil python-future python3-future
   # build orocos_kdl
