@@ -36,7 +36,7 @@ jobs:
       if: branch = release-1.3
     - <<: *industrial-ci
       name: Industrial CI Melodic
-      env: ROS_DISTRO="melodic" ROS_REPO=ros ABICHECK_URL='github:orocos/orocos_kinematics_dynamics#v1.4.0' ABICHECK_MERGE=auto
+      env: ROS_DISTRO="melodic" ROS_REPO=ros ABICHECK_URL='github:orocos/orocos_kinematics_dynamics#release-1.4' ABICHECK_MERGE=auto
       if: branch = release-1.4
 
 install:
