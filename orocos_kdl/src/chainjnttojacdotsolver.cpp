@@ -1,6 +1,6 @@
 /*
     Computes the Jacobian time derivative
-    Copyright (C) 2020  Antoine Hoarau <hoarau [at] isir.upmc.fr>
+    Copyright (C) 2015  Antoine Hoarau <hoarau [at] isir.upmc.fr>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public

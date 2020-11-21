@@ -5,7 +5,7 @@
 
 /**************************************************************************
     begin                : May 2012
-    copyright            : (C) 2020 Erwin Aertbelien
+    copyright            : (C) 2012 Erwin Aertbelien
     email                : firstname.lastname@mech.kuleuven.ac.be
 
  History (only major changes)( AUTHOR-Description ) :

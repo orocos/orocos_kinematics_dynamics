@@ -2,7 +2,7 @@
 
 // Version: 1.0
 // Author: Craig Carignan
-// Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
