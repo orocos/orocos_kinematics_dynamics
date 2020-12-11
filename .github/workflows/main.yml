@@ -1,0 +1,93 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  CXXFLAGS: "-Wall -Wextra -Wno-unused-parameter"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        orocos_build_type: [Debug, Release]
+        compiler: [gcc, clang]
+    env:
+      CC: ${{ matrix.compiler }}
+      OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install
+        run: |
+          sudo apt-get install libeigen3-dev libcppunit-dev python-psutil python3-psutil python-future python3-future
+      - name: Build orocos_kdl
+        run: |
+          cd orocos_kdl
+          mkdir build
+          cd build
+          cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
+          make
+          sudo make install
+      - name: Build PyKDL Python 2
+        run: |
+          cd python_orocos_kdl
+          mkdir build2
+          cd build2
+          export ROS_PYTHON_VERSION=2
+          cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
+          make
+          sudo make install
+      - name: Build PyKDL Python 3
+        run: |
+          cd python_orocos_kdl
+          mkdir build3
+          cd build3
+          export ROS_PYTHON_VERSION=3
+          cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
+          make
+          sudo make install
+      - name: Update LD_LIBRARY_PATH
+        run: |
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+          sudo ldconfig
+      - name: Test orocos_kdl
+        run: |
+          cd orocos_kdl/build
+          make check
+      - name: Test PyKDL Python 2
+        run: |
+          cd python_orocos_kdl
+          python2 tests/PyKDLtest.py
+      - name: Test PyKDL Python 3
+        run: |
+          cd python_orocos_kdl
+          python3 tests/PyKDLtest.py
+
+  industrial_ci:
+    name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - env:
+              ROS_DISTRO: kinetic
+              ROS_REPO: ros
+              ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.3
+            branch: refs/heads/release-1.3
+          - env:
+              ROS_DISTRO: melodic
+              ROS_REPO: ros
+              ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.4
+            branch: refs/heads/release-1.4
+    env: ${{ matrix.env }}
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: recursive
+        if: ${{ (github.event_name == 'push' && github.ref == matrix.branch) || (github.event_name == 'pull_request' && github.base_ref == matrix.branch) }}
+      - uses: ros-industrial/industrial_ci@master
+        env: ${{ matrix.env }}
+        if: ${{ (github.event_name == 'push' && github.ref == matrix.branch) || (github.event_name == 'pull_request' && github.base_ref == matrix.branch) }}
