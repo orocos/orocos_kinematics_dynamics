@@ -32,10 +32,7 @@ namespace KDL
 {
     /**
      * @brief  Class to calculate the jacobian of a general
-     * KDL::Chain, it is used by other solvers. It should not be used
-     * outside of KDL.
-     *
-     *
+     * KDL::Chain, it is used by other solvers.
      */
 
     class ChainJntToJacSolver : public SolverI
