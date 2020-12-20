@@ -76,12 +76,12 @@ jobs:
               ROS_DISTRO: kinetic
               ROS_REPO: ros
               ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.3
-            branch: refs/heads/release-1.3
+            branch: release-1.3
           - env:
               ROS_DISTRO: melodic
               ROS_REPO: ros
               ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.4
-            branch: refs/heads/release-1.4
+            branch: release-1.4
     env: ${{ matrix.env }}
     steps:
       - uses: actions/checkout@v1
