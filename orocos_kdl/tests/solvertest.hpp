@@ -20,6 +20,7 @@
 #include <chaindynparam.hpp>
 #include <chainidsolver_recursive_newton_euler.hpp>
 #include <chainfdsolver_recursive_newton_euler.hpp>
+#include <chainexternalwrenchestimator.hpp>
 #include <utilities/ldl_solver_eigen.hpp>
 
 

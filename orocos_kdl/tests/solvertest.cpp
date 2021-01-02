@@ -247,6 +247,7 @@ void SolverTest::UpdateChainTest()
     ChainIdSolver_RNE idsolver1(chain2, Vector::Zero());
     unsigned int nr_of_constraints = 4;
     ChainHdSolver_Vereshchagin hdsolver(chain2,Twist::Zero(),4);
+    ChainExternalWrenchEstimator extwrench_estimator(chain2,Vector::Zero(), 100.0, 30.0, 0.5);
 
     JntArray q_in(chain2.getNrOfJoints());
     JntArray q_in2(chain2.getNrOfJoints());
@@ -266,6 +267,7 @@ void SolverTest::UpdateChainTest()
     FrameVel T2;
     Wrenches wrenches(chain2.getNrOfSegments());
     JntSpaceInertiaMatrix m(chain2.getNrOfJoints());
+    Wrench wrench_out;
 
     Jacobian alpha(nr_of_constraints - 1);
     JntArray beta(nr_of_constraints - 1);
@@ -291,6 +293,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, dynparam.JntToMass(q_in, m));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOT_UP_TO_DATE, extwrench_estimator.JntToExtWrench(q_in,q_in2,ff_tau,wrench_out));
 
     jacsolver1.updateInternalDataStructures();
     jacdotsolver1.updateInternalDataStructures();
@@ -304,6 +307,7 @@ void SolverTest::UpdateChainTest()
     idsolver1.updateInternalDataStructures();
     hdsolver.updateInternalDataStructures();
     dynparam.updateInternalDataStructures();
+    extwrench_estimator.updateInternalDataStructures();
 
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolverpos.JntToCart(q_in, T, chain2.getNrOfSegments()));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH,fksolvervel.JntToCart(q_in3, T2, chain2.getNrOfSegments()));
@@ -322,6 +326,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, extwrench_estimator.JntToExtWrench(q_in,q_in2,ff_tau,wrench_out));
 
     q_in.resize(chain2.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, jacsolver1.JntToJac(q_in, jac, chain2.getNrOfSegments()));
@@ -339,10 +344,12 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToMass(q_in, m));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, extwrench_estimator.JntToExtWrench(q_in,q_in2,ff_tau,wrench_out));
     q_in2.resize(chain2.getNrOfJoints());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, extwrench_estimator.JntToExtWrench(q_in,q_in2,ff_tau,wrench_out));
     wrenches.resize(chain2.getNrOfSegments());
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, idsolver1.CartToJnt(q_in,q_in2,q_out,wrenches,q_out2));
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_SIZE_MISMATCH, hdsolver.CartToJnt(q_in,q_in2,q_out,alpha,beta,wrenches, ff_tau, constraint_tau));
@@ -379,6 +386,7 @@ void SolverTest::UpdateChainTest()
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToCoriolis(q_in, q_in2, q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToGravity(q_in, q_out));
     CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= dynparam.JntToMass(q_in, m));
+    CPPUNIT_ASSERT((int)SolverI::E_NOERROR <= extwrench_estimator.JntToExtWrench(q_in,q_in2,ff_tau,wrench_out));
 }
 void SolverTest::FkPosAndJacTest()
 {
