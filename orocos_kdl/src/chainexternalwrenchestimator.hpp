@@ -78,6 +78,9 @@ namespace KDL {
          */
         int JntToExtWrench(const JntArray &joint_position, const JntArray &joint_velocity, const JntArray &joint_torque, Wrench &external_wrench);
 
+        // Returns the torques felt in the robot's joints as a result of the external wrench being applied on the robot.
+        void getEstimatedJntTorque(JntArray &external_joint_torque);
+
         /// @copydoc KDL::SolverI::updateInternalDataStructures()
         virtual void updateInternalDataStructures();
 

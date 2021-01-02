@@ -159,4 +159,11 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     return (error = E_NOERROR);
 }
 
+// Getter for the torques felt in the robot's joints due to the external wrench being applied on the robot
+void ChainExternalWrenchEstimator::getEstimatedJntTorque(JntArray &external_joint_torque)
+{
+    assert(external_joint_torque.rows() == filtered_estimated_ext_torque.rows());
+    external_joint_torque = filtered_estimated_ext_torque;
+}
+
 } // namespace
