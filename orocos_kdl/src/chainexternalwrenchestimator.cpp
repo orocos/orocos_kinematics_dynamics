@@ -80,6 +80,18 @@ int ChainExternalWrenchEstimator::setInitialMomentum(const JntArray &joint_posit
     return (error = E_NOERROR);
 }
 
+// Sets singular-value eps parameter for the SVD calculation
+void ChainExternalWrenchEstimator::setSVDEps(const double eps_in)
+{
+    svd_eps = eps_in;
+}
+
+// Sets maximum iteration parameter for the SVD calculation
+void ChainExternalWrenchEstimator::setSVDMaxIter(const int maxiter_in)
+{
+    svd_maxiter = maxiter_in;
+}
+
 // This method calculates the external wrench that is applied on the robot's end-effector.
 int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position, const JntArray &joint_velocity, const JntArray &joint_torque, Wrench &external_wrench)
 {

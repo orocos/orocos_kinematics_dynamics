@@ -64,6 +64,12 @@ namespace KDL {
          */
         int setInitialMomentum(const JntArray &joint_position, const JntArray &joint_velocity);
 
+        // Sets singular-value eps parameter for the SVD calculation
+        void setSVDEps(const double eps_in);
+
+        // Sets maximum iteration parameter for the SVD calculation
+        void setSVDMaxIter(const int maxiter_in);
+
         /**
          * This method calculates the external wrench that is applied on the robot's end-effector.
          * Input parameters:
