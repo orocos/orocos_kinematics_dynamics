@@ -37,6 +37,8 @@ namespace KDL {
      * S. Haddadin, A. De Luca and A. Albu-Schäffer,
      * "Robot Collisions: A Survey on Detection, Isolation, and Identification,"
      * in IEEE Transactions on Robotics, vol. 33(6), pp. 1292-1312, 2017.
+     * 
+     * Note: This component assumes that the external wrench is applied on the end-effector (last) link of the robot's chain.
      */
     class ChainExternalWrenchEstimator : public SolverI
     {
