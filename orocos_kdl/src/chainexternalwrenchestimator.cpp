@@ -27,8 +27,9 @@ ChainExternalWrenchEstimator::ChainExternalWrenchEstimator(const Chain &chain, c
     svd_eps(eps),
     svd_maxiter(maxiter),
     nj(CHAIN.getNrOfJoints()), ns(CHAIN.getNrOfSegments()),
-    jnt_mass_matrix(nj), previous_jnt_mass_matrix(nj),
+    jnt_mass_matrix(nj), previous_jnt_mass_matrix(nj), jnt_mass_matrix_dot(nj),
     initial_jnt_momentum(nj), estimated_momentum_integral(nj), filtered_estimated_ext_torque(nj),
+    gravity_torque(nj), coriolis_torque(nj), total_torque(nj), estimated_ext_torque(nj),
     jacobian_end_eff(nj),
     jacobian_end_eff_t(Eigen::MatrixXd::Zero(nj, 6)), jacobian_end_eff_t_inv(Eigen::MatrixXd::Zero(6, nj)), 
     U(Eigen::MatrixXd::Zero(nj, 6)), V(Eigen::MatrixXd::Zero(6, 6)),
@@ -46,9 +47,14 @@ void ChainExternalWrenchEstimator::updateInternalDataStructures()
     ns = CHAIN.getNrOfSegments();
     jnt_mass_matrix.resize(nj);
     previous_jnt_mass_matrix.resize(nj);
+    jnt_mass_matrix_dot.resize(nj);
     initial_jnt_momentum.resize(nj);
     estimated_momentum_integral.resize(nj);
     filtered_estimated_ext_torque.resize(nj);
+    gravity_torque.resize(nj);
+    coriolis_torque.resize(nj);
+    total_torque.resize(nj);
+    estimated_ext_torque.resize(nj);
     jacobian_end_eff.resize(nj);
     jacobian_end_eff_t.conservativeResizeLike(MatrixXd::Zero(nj, 6));
     jacobian_end_eff_t_inv.conservativeResizeLike(MatrixXd::Zero(6, nj));
@@ -115,7 +121,6 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
      */
 
     // Calculate decomposed robot's dynamics
-    JntArray gravity_torque(nj), coriolis_torque(nj);
     int solver_result = dynparam_solver.JntToMass(joint_position, jnt_mass_matrix);
     if (solver_result != 0) return solver_result;
     solver_result = dynparam_solver.JntToCoriolis(joint_position, joint_velocity, coriolis_torque);
@@ -124,21 +129,18 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     if (solver_result != 0) return solver_result;
 
     // Calculate the change of robot's inertia in the joint space
-    JntSpaceInertiaMatrix jnt_mass_matrix_dot(nj);
     jnt_mass_matrix_dot.data = (jnt_mass_matrix.data - previous_jnt_mass_matrix.data) / DT_SEC;
 
     // Save data for the next iteration
     previous_jnt_mass_matrix.data = jnt_mass_matrix.data;
 
     // Calculate total torque exerted on the joint
-    JntArray total_torque(nj);
     total_torque.data = joint_torque.data - gravity_torque.data - coriolis_torque.data + jnt_mass_matrix_dot.data * joint_velocity.data;
 
     // Accumulate main integral
     estimated_momentum_integral.data += (total_torque.data + filtered_estimated_ext_torque.data) * DT_SEC;
 
     // Estimate external joint torque
-    JntArray estimated_ext_torque(nj);
     estimated_ext_torque.data = ESTIMATION_GAIN.asDiagonal() * (jnt_mass_matrix.data * joint_velocity.data - estimated_momentum_integral.data - initial_jnt_momentum.data);
 
     // First order low-pass filter: filter out the noise from the estimated signal

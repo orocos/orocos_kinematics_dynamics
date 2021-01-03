@@ -100,7 +100,7 @@ namespace KDL {
         double svd_eps;
         int svd_maxiter;
         unsigned int nj, ns;
-        JntSpaceInertiaMatrix jnt_mass_matrix, previous_jnt_mass_matrix;
+        JntSpaceInertiaMatrix jnt_mass_matrix, previous_jnt_mass_matrix, jnt_mass_matrix_dot;
         JntArray initial_jnt_momentum, estimated_momentum_integral, filtered_estimated_ext_torque, 
                  gravity_torque, coriolis_torque, total_torque, estimated_ext_torque;
         Jacobian jacobian_end_eff;
