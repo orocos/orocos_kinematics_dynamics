@@ -1704,7 +1704,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
         
         // State integration: integrate from model accelerations to next joint state (positions and velocities)
         qd.data = qd.data + qdd.data * timeDelta; // Euler Forward
-        q.data = q.data + (qd.data - qdd.data * timeDelta / 2.0) * timeDelta; //Trapezoidal rule
+        q.data = q.data + qd.data * timeDelta; // Symplectic Euler
         
         // Estimate external wrench
         extwrench_estimator.JntToExtWrench(q, qd, command_torque, f_tool_estimated);
