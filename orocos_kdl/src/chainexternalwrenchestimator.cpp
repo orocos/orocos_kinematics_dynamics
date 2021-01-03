@@ -21,12 +21,18 @@
 #include "chainexternalwrenchestimator.hpp"
 namespace KDL {
 
-ChainExternalWrenchEstimator::ChainExternalWrenchEstimator(const Chain &chain, const Vector &gravity, const double sample_frequency, const double estimation_gain, const double filter_constant) :
+ChainExternalWrenchEstimator::ChainExternalWrenchEstimator(const Chain &chain, const Vector &gravity, const double sample_frequency, const double estimation_gain, const double filter_constant, const double eps, const int maxiter) :
     CHAIN(chain),
     DT_SEC(1.0 / sample_frequency), FILTER_CONST(filter_constant),
+    svd_eps(eps),
+    svd_maxiter(maxiter),
     nj(CHAIN.getNrOfJoints()), ns(CHAIN.getNrOfSegments()),
     jnt_mass_matrix(nj), previous_jnt_mass_matrix(nj),
     initial_jnt_momentum(nj), estimated_momentum_integral(nj), filtered_estimated_ext_torque(nj),
+    jacobian_end_eff(nj),
+    jacobian_end_eff_t(Eigen::MatrixXd::Zero(nj, 6)), jacobian_end_eff_t_inv(Eigen::MatrixXd::Zero(6, nj)), 
+    U(Eigen::MatrixXd::Zero(nj, 6)), V(Eigen::MatrixXd::Zero(6, 6)),
+    S(Eigen::VectorXd::Zero(6)), S_inv(Eigen::VectorXd::Zero(6)), tmp(Eigen::VectorXd::Zero(6)),
     ESTIMATION_GAIN(Eigen::VectorXd::Constant(nj, estimation_gain)),
     dynparam_solver(CHAIN, gravity),
     jacobian_solver(CHAIN),
@@ -43,6 +49,14 @@ void ChainExternalWrenchEstimator::updateInternalDataStructures()
     initial_jnt_momentum.resize(nj);
     estimated_momentum_integral.resize(nj);
     filtered_estimated_ext_torque.resize(nj);
+    jacobian_end_eff.resize(nj);
+    jacobian_end_eff_t.conservativeResizeLike(MatrixXd::Zero(nj, 6));
+    jacobian_end_eff_t_inv.conservativeResizeLike(MatrixXd::Zero(6, nj));
+    U.conservativeResizeLike(MatrixXd::Zero(nj, 6));
+    V.conservativeResizeLike(MatrixXd::Zero(6, 6));
+    S.conservativeResizeLike(VectorXd::Zero(6));
+    S_inv.conservativeResizeLike(VectorXd::Zero(6));
+    tmp.conservativeResizeLike(VectorXd::Zero(6));
     ESTIMATION_GAIN.conservativeResizeLike(Eigen::VectorXd::Constant(nj, ESTIMATION_GAIN(0)));
     dynparam_solver.updateInternalDataStructures();
     jacobian_solver.updateInternalDataStructures();
@@ -131,7 +145,6 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     if (solver_result != 0) return solver_result;
 
     // Compute robot's jacobian for the end-effector frame, expressed in the base frame
-    Jacobian jacobian_end_eff(nj);
     solver_result = jacobian_solver.JntToJac(joint_position, jacobian_end_eff);
     if (solver_result != 0) return solver_result;
 
@@ -139,20 +152,20 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     // This part can be commented out if the user wants its estimated wrench to be expressed w.r.t. base frame 
     jacobian_end_eff.changeBase(end_eff_frame.M.Inverse()); // Jacobian is now expressed w.r.t. end-effector frame
 
-    // Compute SVD of the jacobian using Eigen functions
-    Eigen::JacobiSVD<Eigen::MatrixXd> svd(jacobian_end_eff.data.transpose(), Eigen::ComputeThinU | Eigen::ComputeThinV);
+    // SVD of "Jac^T" with maximum iterations "maxiter": Jac^T = U * S^-1 * V^T
+    jacobian_end_eff_t = jacobian_end_eff.data.transpose();
+    solver_result = svd_eigen_HH(jacobian_end_eff_t, U, S, V, tmp, svd_maxiter);
+    if (solver_result != 0) return (error = E_SVD_FAILED);
 
-    // Invert singular values
-    Eigen::VectorXd singular_inv(svd.singularValues());
-    for (int j = 0; j < singular_inv.size(); ++j)
-        singular_inv(j) = (singular_inv(j) < 1e-8) ? 0.0 : 1.0 / singular_inv(j);
+    // Invert singular values: S^-1
+    for (int i = 0; i < S.size(); ++i)
+        S_inv(i) = (std::fabs(S(i)) < svd_eps) ? 0.0 : 1.0 / S(i);
 
-    // Compose SVD
-    Eigen::MatrixXd jacobian_end_eff_inv;
-    jacobian_end_eff_inv.noalias() = svd.matrixV() * singular_inv.matrix().asDiagonal() * svd.matrixU().adjoint();
+    // Compose the inverse: (Jac^T)^-1 = V * S^-1 * U^T
+    jacobian_end_eff_t_inv = V * S_inv.asDiagonal() * U.adjoint();
 
-    // Compute end-effector's Cartesian wrench from the estimated joint torques
-    Eigen::VectorXd estimated_wrench = jacobian_end_eff_inv * filtered_estimated_ext_torque.data;
+    // Compute end-effector's Cartesian wrench from the estimated joint torques: (Jac^T)^-1 * ext_tau
+    Vector6d estimated_wrench = jacobian_end_eff_t_inv * filtered_estimated_ext_torque.data;
     for (int i = 0; i < 6; i++) 
         external_wrench(i) = estimated_wrench(i);
 

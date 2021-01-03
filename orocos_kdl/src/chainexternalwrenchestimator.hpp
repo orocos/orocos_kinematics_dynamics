@@ -22,7 +22,7 @@
 #define KDL_EXTERNAL_WRENCH_ESTIMATOR_HPP
 
 #include <Eigen/Core>
-#include <Eigen/SVD> 
+#include "utilities/svd_eigen_HH.hpp"
 #include "chaindynparam.hpp"
 #include "chainjnttojacsolver.hpp"
 #include "chainfksolverpos_recursive.hpp"
@@ -40,6 +40,8 @@ namespace KDL {
      */
     class ChainExternalWrenchEstimator : public SolverI
     {
+        typedef Eigen::Matrix<double, 6, 1 > Vector6d;
+
     public:
         /**
          * Constructor for the estimator, it will allocate all the necessary memory
@@ -49,8 +51,10 @@ namespace KDL {
          * \param filter_constant Parameter defining how much the estimated signal should be filtered by the low-pass filter.
          *                        This input value should be between 0 and 1. Higher the number means more noise needs to be filtered-out.
          *                        The filter can be turned off by setting this value to 0.
+         * \param eps If a SVD-singular value is below this value, its inverse is set to zero. Default: 0.00001
+         * \param maxiter Maximum iterations for the SVD computations. Default: 150.
          */
-        ChainExternalWrenchEstimator(const Chain &chain, const Vector &gravity, const double sample_frequency, const double estimation_gain, const double filter_constant);
+        ChainExternalWrenchEstimator(const Chain &chain, const Vector &gravity, const double sample_frequency, const double estimation_gain, const double filter_constant, const double eps = 0.00001, const int maxiter = 150);
         ~ChainExternalWrenchEstimator(){};
 
         /**
@@ -87,10 +91,15 @@ namespace KDL {
     private:
         const Chain &CHAIN;
         const double DT_SEC, FILTER_CONST;
+        double svd_eps;
+        int svd_maxiter;
         unsigned int nj, ns;
         JntSpaceInertiaMatrix jnt_mass_matrix, previous_jnt_mass_matrix;
-        JntArray initial_jnt_momentum, estimated_momentum_integral, filtered_estimated_ext_torque;
-        Eigen::VectorXd ESTIMATION_GAIN;
+        JntArray initial_jnt_momentum, estimated_momentum_integral, filtered_estimated_ext_torque, 
+                 gravity_torque, coriolis_torque, total_torque, estimated_ext_torque;
+        Jacobian jacobian_end_eff;
+        Eigen::MatrixXd jacobian_end_eff_t, jacobian_end_eff_t_inv, U, V;
+        Eigen::VectorXd S, S_inv, tmp, ESTIMATION_GAIN;
         ChainDynParam dynparam_solver;
         ChainJntToJacSolver jacobian_solver;
         ChainFkSolverPos_recursive fk_pos_solver;
