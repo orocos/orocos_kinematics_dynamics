@@ -1708,29 +1708,17 @@ void SolverTest::ExternalWrenchEstimatorTest()
         
         // Estimate external wrench
         extwrench_estimator.JntToExtWrench(q, qd, command_torque, f_tool_estimated);
-        extwrench_estimator.getEstimatedJntTorque(ext_torque_estimated);
     }
 
     // ##################################################################################
     // Final comparison
     // ##################################################################################
-    
-    // Estimated Wrench
     CPPUNIT_ASSERT(Equal(f_tool_estimated(0), f_tool_reference(0), eps));
     CPPUNIT_ASSERT(Equal(f_tool_estimated(1), f_tool_reference(1), eps));
     CPPUNIT_ASSERT(Equal(f_tool_estimated(2), f_tool_reference(2), eps));
     CPPUNIT_ASSERT(Equal(f_tool_estimated(3), f_tool_reference(3), eps));
     CPPUNIT_ASSERT(Equal(f_tool_estimated(4), f_tool_reference(4), eps));
     CPPUNIT_ASSERT(Equal(f_tool_estimated(5), f_tool_reference(5), eps));
-
-    // Estimated Joint torques
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(0), ext_torque_reference(0), eps));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(1), ext_torque_reference(1), eps));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(2), ext_torque_reference(2), eps));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(3), ext_torque_reference(3), eps));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(4), ext_torque_reference(4), eps));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(5), ext_torque_reference(5), eps));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(6), ext_torque_reference(6), eps));
 
     return;
 }
