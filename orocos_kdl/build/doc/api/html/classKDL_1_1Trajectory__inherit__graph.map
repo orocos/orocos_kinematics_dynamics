@@ -1,0 +1,5 @@
+<map id="KDL::Trajectory" name="KDL::Trajectory">
+<area shape="rect" id="node2" href="$classKDL_1_1Trajectory__Composite.html" title="Trajectory_Composite implements a trajectory that is composed of underlying trajectoria. " alt="" coords="5,80,189,107"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Trajectory__Segment.html" title="Trajectory_Segment combines a VelocityProfile and a Path into a trajectory. " alt="" coords="213,80,387,107"/>
+<area shape="rect" id="node4" href="$classKDL_1_1Trajectory__Stationary.html" title="Implements a &quot;trajectory&quot; of a stationary position for an amount of time. " alt="" coords="411,80,591,107"/>
+</map>

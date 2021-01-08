@@ -1,0 +1,8 @@
+<map id="KDL::Path" name="KDL::Path">
+<area shape="rect" id="node2" href="$classKDL_1_1Path__Circle.html" title="A circular Path with &#39;open ends&#39;. " alt="" coords="177,5,301,32"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Path__Composite.html" title="A Path being the composition of other Path objects. " alt="" coords="162,56,315,83"/>
+<area shape="rect" id="node4" href="$classKDL_1_1Path__Cyclic__Closed.html" title="A Path representing a closed circular movement, which is traversed a number of times. " alt="" coords="151,107,326,133"/>
+<area shape="rect" id="node5" href="$classKDL_1_1Path__Line.html" title="A path representing a line from A to B. " alt="" coords="181,157,296,184"/>
+<area shape="rect" id="node6" href="$classKDL_1_1Path__Point.html" title="A Path consisting only of a point in space. " alt="" coords="179,208,299,235"/>
+<area shape="rect" id="node7" href="$classKDL_1_1Path__RoundedComposite.html" title="The specification of a path, composed of way&#45;points with rounded corners. " alt="" coords="136,259,341,285"/>
+</map>

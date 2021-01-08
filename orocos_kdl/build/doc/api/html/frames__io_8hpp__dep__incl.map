@@ -1,0 +1,36 @@
+<map id="src/frames_io.hpp" name="src/frames_io.hpp">
+<area shape="rect" id="node2" href="$chainfdsolver__recursive__newton__euler_8cpp.html" title="src/chainfdsolver_recursive\l_newton_euler.cpp" alt="" coords="5,80,187,121"/>
+<area shape="rect" id="node3" href="$chainhdsolver__vereshchagin_8cpp.html" title="src/chainhdsolver_vereshchagin.cpp" alt="" coords="211,87,445,114"/>
+<area shape="rect" id="node4" href="$chainidsolver__recursive__newton__euler_8cpp.html" title="src/chainidsolver_recursive\l_newton_euler.cpp" alt="" coords="469,80,649,121"/>
+<area shape="rect" id="node5" href="$frameacc__io_8hpp.html" title="src/frameacc_io.hpp" alt="" coords="673,87,813,114"/>
+<area shape="rect" id="node6" href="$frames__io_8cpp.html" title="src/frames_io.cpp" alt="" coords="837,87,963,114"/>
+<area shape="rect" id="node7" href="$framevel__io_8hpp.html" title="src/framevel_io.hpp" alt="" coords="988,87,1124,114"/>
+<area shape="rect" id="node8" href="$kinfam__io_8cpp.html" title="src/kinfam_io.cpp" alt="" coords="1148,87,1273,114"/>
+<area shape="rect" id="node9" href="$path_8hpp.html" title="src/path.hpp" alt="" coords="1649,87,1743,114"/>
+<area shape="rect" id="node18" href="$path__composite_8hpp.html" title="src/path_composite.hpp" alt="" coords="1615,177,1777,203"/>
+<area shape="rect" id="node23" href="$path__cyclic__closed_8hpp.html" title="src/path_cyclic_closed.hpp" alt="" coords="1914,177,2094,203"/>
+<area shape="rect" id="node25" href="$trajectory_8hpp.html" title="src/trajectory.hpp" alt="" coords="2119,177,2241,203"/>
+<area shape="rect" id="node28" href="$trajectory__segment_8hpp.html" title="src/trajectory_segment.hpp" alt="" coords="2698,266,2878,293"/>
+<area shape="rect" id="node32" href="$rotational__interpolation_8hpp.html" title="src/rotational_interpolation.hpp" alt="" coords="1347,87,1546,114"/>
+<area shape="rect" id="node34" href="$rotational__interpolation__sa_8hpp.html" title="src/rotational_interpolation\l_sa.hpp" alt="" coords="517,169,691,211"/>
+<area shape="rect" id="node35" href="$treeidsolver__recursive__newton__euler_8cpp.html" title="src/treeidsolver_recursive\l_newton_euler.cpp" alt="" coords="2367,80,2537,121"/>
+<area shape="rect" id="node10" href="$path_8cpp.html" title="src/path.cpp" alt="" coords="1399,348,1494,375"/>
+<area shape="rect" id="node11" href="$path__line_8hpp.html" title="src/path_line.hpp" alt="" coords="715,177,837,203"/>
+<area shape="rect" id="node14" href="$path__point_8hpp.html" title="src/path_point.hpp" alt="" coords="1161,177,1290,203"/>
+<area shape="rect" id="node16" href="$path__circle_8hpp.html" title="src/path_circle.hpp" alt="" coords="861,177,993,203"/>
+<area shape="rect" id="node19" href="$path__roundedcomposite_8hpp.html" title="src/path_roundedcomposite.hpp" alt="" coords="1343,266,1550,293"/>
+<area shape="rect" id="node27" href="$trajectory_8cpp.html" title="src/trajectory.cpp" alt="" coords="2599,348,2721,375"/>
+<area shape="rect" id="node12" href="$path__line_8cpp.html" title="src/path_line.cpp" alt="" coords="483,266,605,293"/>
+<area shape="rect" id="node13" href="$path__roundedcomposite_8cpp.html" title="src/path_roundedcomposite.cpp" alt="" coords="590,348,797,375"/>
+<area shape="rect" id="node15" href="$path__point_8cpp.html" title="src/path_point.cpp" alt="" coords="939,266,1069,293"/>
+<area shape="rect" id="node17" href="$path__circle_8cpp.html" title="src/path_circle.cpp" alt="" coords="731,266,863,293"/>
+<area shape="rect" id="node20" href="$path__composite_8cpp.html" title="src/path_composite.cpp" alt="" coords="1626,266,1787,293"/>
+<area shape="rect" id="node21" href="$trajectory__composite_8hpp.html" title="src/trajectory_composite.hpp" alt="" coords="1965,266,2155,293"/>
+<area shape="rect" id="node22" href="$trajectory__composite_8cpp.html" title="src/trajectory_composite.cpp" alt="" coords="1873,348,2063,375"/>
+<area shape="rect" id="node24" href="$path__cyclic__closed_8cpp.html" title="src/path_cyclic_closed.cpp" alt="" coords="2231,266,2411,293"/>
+<area shape="rect" id="node26" href="$rotational__interpolation__sa_8cpp.html" title="src/rotational_interpolation\l_sa.cpp" alt="" coords="1145,259,1319,300"/>
+<area shape="rect" id="node30" href="$trajectory__stationary_8hpp.html" title="src/trajectory_stationary.hpp" alt="" coords="2436,266,2623,293"/>
+<area shape="rect" id="node29" href="$trajectory__segment_8cpp.html" title="src/trajectory_segment.cpp" alt="" coords="2746,348,2926,375"/>
+<area shape="rect" id="node31" href="$trajectory__stationary_8cpp.html" title="src/trajectory_stationary.cpp" alt="" coords="2388,348,2575,375"/>
+<area shape="rect" id="node33" href="$rotational__interpolation_8cpp.html" title="src/rotational_interpolation.cpp" alt="" coords="210,266,409,293"/>
+</map>

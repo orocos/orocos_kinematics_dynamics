@@ -1,0 +1,6 @@
+<map id="KDL::FrameVel" name="KDL::FrameVel">
+<area shape="rect" id="node2" href="$classKDL_1_1VectorVel.html" title="KDL::VectorVel" alt="" coords="5,109,119,136"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Vector.html" title="A concrete implementation of a 3 dimensional vector class. " alt="" coords="29,5,124,32"/>
+<area shape="rect" id="node4" href="$classKDL_1_1RotationVel.html" title="KDL::RotationVel" alt="" coords="143,109,267,136"/>
+<area shape="rect" id="node5" href="$classKDL_1_1Rotation.html" title="represents rotations in 3 dimensional space. " alt="" coords="152,5,257,32"/>
+</map>

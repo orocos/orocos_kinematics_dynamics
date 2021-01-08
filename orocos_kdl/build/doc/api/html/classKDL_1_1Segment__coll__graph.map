@@ -1,0 +1,12 @@
+<map id="KDL::Segment" name="KDL::Segment">
+<area shape="rect" id="node2" href="$classKDL_1_1Frame.html" title="represents a frame transformation in 3D space (rotation + translation) " alt="" coords="249,88,343,115"/>
+<area shape="rect" id="node7" href="$classKDL_1_1Joint.html" title="This class encapsulates a simple joint, that is with one parameterized degree of freedom and with sca..." alt="" coords="501,155,585,181"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Vector.html" title="A concrete implementation of a 3 dimensional vector class. " alt="" coords="33,96,128,123"/>
+<area shape="rect" id="node10" href="$classKDL_1_1RigidBodyInertia.html" title="6D Inertia of a rigid body " alt="" coords="220,13,372,40"/>
+<area shape="rect" id="node4" href="$classKDL_1_1Rotation.html" title="represents rotations in 3 dimensional space. " alt="" coords="28,179,133,205"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="256,233,336,260"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="17,230,144,271"/>
+<area shape="rect" id="node8" href="$classKDL_1_1Joint_1_1joint__type__exception.html" title="KDL::Joint::joint_type\l_exception" alt="" coords="222,285,370,326"/>
+<area shape="rect" id="node9" title="STL class. " alt="" coords="29,296,133,323"/>
+<area shape="rect" id="node11" href="$classKDL_1_1RotationalInertia.html" title="KDL::RotationalInertia" alt="" coords="5,5,156,32"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="src/path_roundedcomposite.hpp" name="src/path_roundedcomposite.hpp">
+<area shape="rect" id="node2" href="$path_8hpp.html" title="path.hpp" alt="" coords="108,155,180,181"/>
+<area shape="rect" id="node13" href="$path__composite_8hpp.html" title="path_composite.hpp" alt="" coords="37,80,176,107"/>
+<area shape="rect" id="node14" href="$rotational__interpolation_8hpp.html" title="rotational_interpolation.hpp" alt="" coords="255,155,433,181"/>
+<area shape="rect" id="node3" href="$frames_8hpp.html" title="frames.hpp" alt="" coords="306,453,393,480"/>
+<area shape="rect" id="node8" href="$frames__io_8hpp.html" title="Defines routines for I/O of Frame and related objects. " alt="" coords="289,229,393,256"/>
+<area shape="rect" id="node6" href="$frames_8inl.html" title="Inlined member functions and global functions that relate to the classes in frames.cpp. " alt="" coords="429,528,507,555"/>
+<area shape="rect" id="node10" href="$jntarray_8hpp.html" title="jntarray.hpp" alt="" coords="431,304,521,331"/>
+<area shape="rect" id="node11" href="$jacobian_8hpp.html" title="jacobian.hpp" alt="" coords="345,379,439,405"/>
+</map>

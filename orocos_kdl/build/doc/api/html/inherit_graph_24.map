@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classKDL_1_1Trajectory.html" title="An abstract class that implements a trajectory contains a cartesian space trajectory and an underlyin..." alt="" coords="5,56,120,83"/>
+<area shape="rect" id="node2" href="$classKDL_1_1Trajectory__Composite.html" title="Trajectory_Composite implements a trajectory that is composed of underlying trajectoria. " alt="" coords="168,5,352,32"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Trajectory__Segment.html" title="Trajectory_Segment combines a VelocityProfile and a Path into a trajectory. " alt="" coords="173,56,347,83"/>
+<area shape="rect" id="node4" href="$classKDL_1_1Trajectory__Stationary.html" title="Implements a &quot;trajectory&quot; of a stationary position for an amount of time. " alt="" coords="170,107,350,133"/>
+</map>

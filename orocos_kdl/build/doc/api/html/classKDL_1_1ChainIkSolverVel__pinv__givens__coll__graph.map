@@ -1,0 +1,20 @@
+<map id="KDL::ChainIkSolverVel_pinv_givens" name="KDL::ChainIkSolverVel_pinv_givens">
+<area shape="rect" id="node2" href="$classKDL_1_1ChainIkSolverVel.html" title="This abstract class encapsulates the inverse velocity solver for a KDL::Chain. " alt="" coords="1548,33,1705,60"/>
+<area shape="rect" id="node3" href="$classKDL_1_1SolverI.html" title="Solver interface supporting storage and description of the latest error. " alt="" coords="1355,5,1452,32"/>
+<area shape="rect" id="node20" href="$classKDL_1_1ChainJntToJacSolver.html" title="Class to calculate the jacobian of a general KDL::Chain, it is used by other solvers. " alt="" coords="1536,135,1717,161"/>
+<area shape="rect" id="node4" href="$classKDL_1_1Jacobian.html" title="KDL::Jacobian" alt="" coords="1573,305,1681,332"/>
+<area shape="rect" id="node5" href="$classKDL_1_1Chain.html" title="This class encapsulates a serial kinematic interconnection structure. " alt="" coords="1358,165,1449,192"/>
+<area shape="rect" id="node7" href="$classKDL_1_1Segment.html" title="This class encapsulates a simple segment, that is a &quot;rigid &#160;&#160;&#160;&#160;&#160;body&quot; (i.e., a frame and a rigid body..." alt="" coords="705,272,813,299"/>
+<area shape="rect" id="node8" href="$classKDL_1_1Frame.html" title="represents a frame transformation in 3D space (rotation + translation) " alt="" coords="253,255,347,281"/>
+<area shape="rect" id="node13" href="$classKDL_1_1Joint.html" title="This class encapsulates a simple joint, that is with one parameterized degree of freedom and with sca..." alt="" coords="512,220,596,247"/>
+<area shape="rect" id="node9" href="$classKDL_1_1Vector.html" title="A concrete implementation of a 3 dimensional vector class. " alt="" coords="33,211,128,237"/>
+<area shape="rect" id="node16" href="$classKDL_1_1RigidBodyInertia.html" title="6D Inertia of a rigid body " alt="" coords="224,351,376,377"/>
+<area shape="rect" id="node21" href="$classKDL_1_1Twist.html" title="represents both translational and rotational velocities. " alt="" coords="400,61,488,88"/>
+<area shape="rect" id="node10" href="$classKDL_1_1Rotation.html" title="represents rotations in 3 dimensional space. " alt="" coords="28,316,133,343"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="260,413,340,440"/>
+<area shape="rect" id="node12" title="STL class. " alt="" coords="17,418,144,459"/>
+<area shape="rect" id="node14" href="$classKDL_1_1Joint_1_1joint__type__exception.html" title="KDL::Joint::joint_type\l_exception" alt="" coords="226,111,374,153"/>
+<area shape="rect" id="node15" title="STL class. " alt="" coords="29,119,133,145"/>
+<area shape="rect" id="node17" href="$classKDL_1_1RotationalInertia.html" title="KDL::RotationalInertia" alt="" coords="5,367,156,393"/>
+<area shape="rect" id="node18" title="STL class. " alt="" coords="701,343,817,369"/>
+</map>

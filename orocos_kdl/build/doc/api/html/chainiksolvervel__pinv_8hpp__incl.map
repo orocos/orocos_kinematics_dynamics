@@ -1,0 +1,20 @@
+<map id="src/chainiksolvervel_pinv.hpp" name="src/chainiksolvervel_pinv.hpp">
+<area shape="rect" id="node2" href="$chainiksolver_8hpp.html" title="chainiksolver.hpp" alt="" coords="513,95,635,121"/>
+<area shape="rect" id="node28" href="$chainjnttojacsolver_8hpp.html" title="chainjnttojacsolver.hpp" alt="" coords="733,95,887,121"/>
+<area shape="rect" id="node3" href="$chain_8hpp.html" title="chain.hpp" alt="" coords="952,169,1031,196"/>
+<area shape="rect" id="node5" href="$frames_8hpp.html" title="frames.hpp" alt="" coords="893,468,980,495"/>
+<area shape="rect" id="node15" href="$framevel_8hpp.html" title="framevel.hpp" alt="" coords="189,319,287,345"/>
+<area shape="rect" id="node19" href="$frameacc_8hpp.html" title="frameacc.hpp" alt="" coords="697,244,798,271"/>
+<area shape="rect" id="node22" href="$jntarray_8hpp.html" title="jntarray.hpp" alt="" coords="457,319,547,345"/>
+<area shape="rect" id="node25" href="$jntarrayvel_8hpp.html" title="jntarrayvel.hpp" alt="" coords="275,244,382,271"/>
+<area shape="rect" id="node26" href="$jntarrayacc_8hpp.html" title="jntarrayacc.hpp" alt="" coords="375,169,485,196"/>
+<area shape="rect" id="node27" href="$solveri_8hpp.html" title="solveri.hpp" alt="" coords="662,169,747,196"/>
+<area shape="rect" id="node4" href="$segment_8hpp.html" title="segment.hpp" alt="" coords="1021,244,1119,271"/>
+<area shape="rect" id="node9" href="$rigidbodyinertia_8hpp.html" title="rigidbodyinertia.hpp" alt="" coords="1108,319,1243,345"/>
+<area shape="rect" id="node11" href="$joint_8hpp.html" title="joint.hpp" alt="" coords="1279,319,1349,345"/>
+<area shape="rect" id="node8" href="$frames_8inl.html" title="Inlined member functions and global functions that relate to the classes in frames.cpp. " alt="" coords="832,543,911,569"/>
+<area shape="rect" id="node10" href="$rotationalinertia_8hpp.html" title="rotationalinertia.hpp" alt="" coords="1025,393,1160,420"/>
+<area shape="rect" id="node18" href="$framevel_8inl.html" title="framevel.inl" alt="" coords="304,393,393,420"/>
+<area shape="rect" id="node21" href="$frameacc_8inl.html" title="frameacc.inl" alt="" coords="705,319,798,345"/>
+<area shape="rect" id="node23" href="$jacobian_8hpp.html" title="jacobian.hpp" alt="" coords="683,393,777,420"/>
+</map>

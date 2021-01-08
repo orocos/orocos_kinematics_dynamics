@@ -1,0 +1,7 @@
+<map id="KDL::ChainIkSolverVel" name="KDL::ChainIkSolverVel">
+<area shape="rect" id="node3" href="$classKDL_1_1ChainIkSolverVel__pinv.html" title="Implementation of a inverse velocity kinematics algorithm based on the generalize pseudo inverse to c..." alt="" coords="357,5,545,32"/>
+<area shape="rect" id="node4" href="$classKDL_1_1ChainIkSolverVel__pinv__givens.html" title="Implementation of a inverse velocity kinematics algorithm based on the generalize pseudo inverse to c..." alt="" coords="373,57,530,98"/>
+<area shape="rect" id="node5" href="$classKDL_1_1ChainIkSolverVel__pinv__nso.html" title="Implementation of a inverse velocity kinematics algorithm based on the generalize pseudo inverse to c..." alt="" coords="373,122,530,163"/>
+<area shape="rect" id="node6" href="$classKDL_1_1ChainIkSolverVel__wdls.html" title="Implementation of a inverse velocity kinematics algorithm based on the weighted pseudo inverse with d..." alt="" coords="356,188,547,215"/>
+<area shape="rect" id="node2" href="$classKDL_1_1SolverI.html" title="Solver interface supporting storage and description of the latest error. " alt="" coords="5,97,103,124"/>
+</map>

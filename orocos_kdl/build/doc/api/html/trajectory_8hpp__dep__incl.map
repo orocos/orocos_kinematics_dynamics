@@ -1,0 +1,10 @@
+<map id="src/trajectory.hpp" name="src/trajectory.hpp">
+<area shape="rect" id="node2" href="$rotational__interpolation__sa_8cpp.html" title="src/rotational_interpolation\l_sa.cpp" alt="" coords="5,80,180,121"/>
+<area shape="rect" id="node3" href="$trajectory_8cpp.html" title="src/trajectory.cpp" alt="" coords="109,169,231,196"/>
+<area shape="rect" id="node4" href="$trajectory__segment_8hpp.html" title="src/trajectory_segment.hpp" alt="" coords="256,87,436,114"/>
+<area shape="rect" id="node6" href="$trajectory__composite_8hpp.html" title="src/trajectory_composite.hpp" alt="" coords="460,87,651,114"/>
+<area shape="rect" id="node8" href="$trajectory__stationary_8hpp.html" title="src/trajectory_stationary.hpp" alt="" coords="675,87,862,114"/>
+<area shape="rect" id="node5" href="$trajectory__segment_8cpp.html" title="src/trajectory_segment.cpp" alt="" coords="256,169,436,196"/>
+<area shape="rect" id="node7" href="$trajectory__composite_8cpp.html" title="src/trajectory_composite.cpp" alt="" coords="460,169,651,196"/>
+<area shape="rect" id="node9" href="$trajectory__stationary_8cpp.html" title="src/trajectory_stationary.cpp" alt="" coords="675,169,862,196"/>
+</map>

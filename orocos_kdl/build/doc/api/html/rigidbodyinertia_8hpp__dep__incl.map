@@ -1,0 +1,51 @@
+<map id="src/rigidbodyinertia.hpp" name="src/rigidbodyinertia.hpp">
+<area shape="rect" id="node2" href="$articulatedbodyinertia_8hpp.html" title="src/articulatedbodyinertia.hpp" alt="" coords="423,229,615,256"/>
+<area shape="rect" id="node12" href="$segment_8hpp.html" title="src/segment.hpp" alt="" coords="2786,80,2905,107"/>
+<area shape="rect" id="node50" href="$rigidbodyinertia_8cpp.html" title="src/rigidbodyinertia.cpp" alt="" coords="2929,80,3085,107"/>
+<area shape="rect" id="node3" href="$articulatedbodyinertia_8cpp.html" title="src/articulatedbodyinertia.cpp" alt="" coords="108,311,300,338"/>
+<area shape="rect" id="node4" href="$chaindynparam_8hpp.html" title="src/chaindynparam.hpp" alt="" coords="517,401,675,427"/>
+<area shape="rect" id="node8" href="$chainhdsolver__vereshchagin_8hpp.html" title="src/chainhdsolver_vereshchagin.hpp" alt="" coords="325,311,558,338"/>
+<area shape="rect" id="node5" href="$chaindynparam_8cpp.html" title="src/chaindynparam.cpp" alt="" coords="517,490,675,517"/>
+<area shape="rect" id="node6" href="$chainfdsolver__recursive__newton__euler_8hpp.html" title="src/chainfdsolver_recursive\l_newton_euler.hpp" alt="" coords="852,483,1033,524"/>
+<area shape="rect" id="node7" href="$chainfdsolver__recursive__newton__euler_8cpp.html" title="src/chainfdsolver_recursive\l_newton_euler.cpp" alt="" coords="1729,572,1911,613"/>
+<area shape="rect" id="node9" href="$chainhdsolver__vereshchagin_8cpp.html" title="src/chainhdsolver_vereshchagin.cpp" alt="" coords="259,401,493,427"/>
+<area shape="rect" id="node10" href="$chainidsolver__vereshchagin_8hpp.html" title="src/chainidsolver_vereshchagin.hpp" alt="" coords="5,401,235,427"/>
+<area shape="rect" id="node11" href="$chainidsolver__vereshchagin_8cpp.html" title="src/chainidsolver_vereshchagin.cpp" alt="" coords="5,490,235,517"/>
+<area shape="rect" id="node13" href="$chain_8hpp.html" title="src/chain.hpp" alt="" coords="1851,155,1951,181"/>
+<area shape="rect" id="node19" href="$kinfam__io_8hpp.html" title="src/kinfam_io.hpp" alt="" coords="2781,311,2907,338"/>
+<area shape="rect" id="node22" href="$tree_8hpp.html" title="src/tree.hpp" alt="" coords="3107,229,3197,256"/>
+<area shape="rect" id="node49" href="$segment_8cpp.html" title="src/segment.cpp" alt="" coords="2883,155,3002,181"/>
+<area shape="rect" id="node14" href="$chain_8cpp.html" title="src/chain.cpp" alt="" coords="1233,229,1333,256"/>
+<area shape="rect" id="node15" href="$chainidsolver_8hpp.html" title="src/chainidsolver.hpp" alt="" coords="717,229,862,256"/>
+<area shape="rect" id="node18" href="$chainfdsolver_8hpp.html" title="src/chainfdsolver.hpp" alt="" coords="1357,229,1504,256"/>
+<area shape="rect" id="node33" href="$chainfksolver_8hpp.html" title="src/chainfksolver.hpp" alt="" coords="1579,229,1725,256"/>
+<area shape="rect" id="node35" href="$chainjnttojacdotsolver_8hpp.html" title="src/chainjnttojacdotsolver.hpp" alt="" coords="2444,401,2639,427"/>
+<area shape="rect" id="node40" href="$chainiksolver_8hpp.html" title="src/chainiksolver.hpp" alt="" coords="1829,229,1974,256"/>
+<area shape="rect" id="node41" href="$chainiksolverpos__lma_8hpp.html" title="computing inverse position kinematics using Levenberg&#45;Marquardt. " alt="" coords="1005,304,1147,345"/>
+<area shape="rect" id="node47" href="$chainjnttojacsolver_8hpp.html" title="src/chainjnttojacsolver.hpp" alt="" coords="2135,229,2313,256"/>
+<area shape="rect" id="node16" href="$chainidsolver__recursive__newton__euler_8hpp.html" title="src/chainidsolver_recursive\l_newton_euler.hpp" alt="" coords="699,304,879,345"/>
+<area shape="rect" id="node17" href="$chainidsolver__recursive__newton__euler_8cpp.html" title="src/chainidsolver_recursive\l_newton_euler.cpp" alt="" coords="699,393,879,435"/>
+<area shape="rect" id="node20" href="$kinfam__io_8cpp.html" title="src/kinfam_io.cpp" alt="" coords="2713,401,2839,427"/>
+<area shape="rect" id="node21" href="$treejnttojacsolver_8cpp.html" title="src/treejnttojacsolver.cpp" alt="" coords="2863,401,3031,427"/>
+<area shape="rect" id="node23" href="$tree_8cpp.html" title="src/tree.cpp" alt="" coords="3283,311,3373,338"/>
+<area shape="rect" id="node24" href="$treefksolver_8hpp.html" title="src/treefksolver.hpp" alt="" coords="3558,311,3695,338"/>
+<area shape="rect" id="node28" href="$treeidsolver_8hpp.html" title="src/treeidsolver.hpp" alt="" coords="3123,311,3259,338"/>
+<area shape="rect" id="node30" href="$treeiksolver_8hpp.html" title="src/treeiksolver.hpp" alt="" coords="3397,311,3533,338"/>
+<area shape="rect" id="node32" href="$treejnttojacsolver_8hpp.html" title="src/treejnttojacsolver.hpp" alt="" coords="2931,311,3099,338"/>
+<area shape="rect" id="node25" href="$treefksolverpos__recursive_8hpp.html" title="src/treefksolverpos\l_recursive.hpp" alt="" coords="3715,393,3848,435"/>
+<area shape="rect" id="node26" href="$treeiksolverpos__nr__jl_8hpp.html" title="src/treeiksolverpos\l_nr_jl.hpp" alt="" coords="3402,393,3534,435"/>
+<area shape="rect" id="node27" href="$treeiksolverpos__online_8hpp.html" title="src/treeiksolverpos\l_online.hpp" alt="" coords="3558,393,3690,435"/>
+<area shape="rect" id="node29" href="$treeidsolver__recursive__newton__euler_8hpp.html" title="src/treeidsolver_recursive\l_newton_euler.hpp" alt="" coords="3207,393,3377,435"/>
+<area shape="rect" id="node31" href="$treeiksolvervel__wdls_8hpp.html" title="src/treeiksolvervel\l_wdls.hpp" alt="" coords="3055,393,3183,435"/>
+<area shape="rect" id="node34" href="$chainfksolverpos__recursive_8hpp.html" title="src/chainfksolverpos\l_recursive.hpp" alt="" coords="1334,304,1477,345"/>
+<area shape="rect" id="node37" href="$chainfksolvervel__recursive_8hpp.html" title="src/chainfksolvervel\l_recursive.hpp" alt="" coords="1171,304,1309,345"/>
+<area shape="rect" id="node38" href="$chainiksolverpos__nr_8hpp.html" title="src/chainiksolverpos\l_nr.hpp" alt="" coords="1667,304,1808,345"/>
+<area shape="rect" id="node39" href="$chainiksolverpos__nr__jl_8hpp.html" title="src/chainiksolverpos\l_nr_jl.hpp" alt="" coords="1501,304,1643,345"/>
+<area shape="rect" id="node36" href="$chainjnttojacdotsolver_8cpp.html" title="src/chainjnttojacdotsolver.cpp" alt="" coords="2444,490,2639,517"/>
+<area shape="rect" id="node43" href="$chainiksolvervel__pinv_8hpp.html" title="src/chainiksolvervel\l_pinv.hpp" alt="" coords="2155,304,2293,345"/>
+<area shape="rect" id="node44" href="$chainiksolvervel__pinv__givens_8hpp.html" title="src/chainiksolvervel\l_pinv_givens.hpp" alt="" coords="2317,304,2454,345"/>
+<area shape="rect" id="node45" href="$chainiksolvervel__pinv__nso_8hpp.html" title="src/chainiksolvervel\l_pinv_nso.hpp" alt="" coords="1833,304,1970,345"/>
+<area shape="rect" id="node46" href="$chainiksolvervel__wdls_8hpp.html" title="src/chainiksolvervel\l_wdls.hpp" alt="" coords="1994,304,2131,345"/>
+<area shape="rect" id="node42" href="$chainiksolverpos__lma_8cpp.html" title="computing inverse position kinematics using Levenberg&#45;Marquardt. " alt="" coords="1005,393,1147,435"/>
+<area shape="rect" id="node48" href="$chainjnttojacsolver_8cpp.html" title="src/chainjnttojacsolver.cpp" alt="" coords="2478,311,2655,338"/>
+</map>

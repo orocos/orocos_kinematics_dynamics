@@ -1,0 +1,4 @@
+<map id="KDL::ChainIkSolverVel_pinv_nso" name="KDL::ChainIkSolverVel_pinv_nso">
+<area shape="rect" id="node2" href="$classKDL_1_1ChainIkSolverVel.html" title="This abstract class encapsulates the inverse velocity solver for a KDL::Chain. " alt="" coords="5,80,163,107"/>
+<area shape="rect" id="node3" href="$classKDL_1_1SolverI.html" title="Solver interface supporting storage and description of the latest error. " alt="" coords="35,5,133,32"/>
+</map>

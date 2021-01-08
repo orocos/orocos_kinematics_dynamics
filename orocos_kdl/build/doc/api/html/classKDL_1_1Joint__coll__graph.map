@@ -1,0 +1,9 @@
+<map id="KDL::Joint" name="KDL::Joint">
+<area shape="rect" id="node2" href="$classKDL_1_1Vector.html" title="A concrete implementation of a 3 dimensional vector class. " alt="" coords="5,13,100,39"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Frame.html" title="represents a frame transformation in 3D space (rotation + translation) " alt="" coords="130,117,223,143"/>
+<area shape="rect" id="node4" href="$classKDL_1_1Rotation.html" title="represents rotations in 3 dimensional space. " alt="" coords="124,13,229,39"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="262,117,342,143"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="253,5,380,47"/>
+<area shape="rect" id="node7" href="$classKDL_1_1Joint_1_1joint__type__exception.html" title="KDL::Joint::joint_type\l_exception" alt="" coords="375,109,523,151"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="405,13,509,39"/>
+</map>

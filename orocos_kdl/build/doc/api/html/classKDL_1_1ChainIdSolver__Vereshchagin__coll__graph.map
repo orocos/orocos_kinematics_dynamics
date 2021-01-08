@@ -1,0 +1,23 @@
+<map id="KDL::ChainIdSolver_Vereshchagin" name="KDL::ChainIdSolver_Vereshchagin">
+<area shape="rect" id="node2" href="$classKDL_1_1ChainHdSolver__Vereshchagin.html" title="Abstract: Acceleration constrained hybrid dynamics calculations for a chain, based on Vereshchagin 19..." alt="" coords="1809,205,1953,246"/>
+<area shape="rect" id="node3" href="$classKDL_1_1SolverI.html" title="Solver interface supporting storage and description of the latest error. " alt="" coords="1612,5,1709,32"/>
+<area shape="rect" id="node4" href="$classKDL_1_1Twist.html" title="represents both translational and rotational velocities. " alt="" coords="549,149,637,176"/>
+<area shape="rect" id="node23" href="$structKDL_1_1ChainHdSolver__Vereshchagin_1_1segment__info.html" title="KDL::ChainHdSolver\l_Vereshchagin::segment_info" alt="" coords="791,289,985,330"/>
+<area shape="rect" id="node5" href="$classKDL_1_1Vector.html" title="A concrete implementation of a 3 dimensional vector class. " alt="" coords="33,464,128,491"/>
+<area shape="rect" id="node7" href="$classKDL_1_1Wrench.html" title="represents both translational and rotational acceleration. " alt="" coords="543,311,644,337"/>
+<area shape="rect" id="node11" href="$classKDL_1_1Frame.html" title="represents a frame transformation in 3D space (rotation + translation) " alt="" coords="249,465,343,492"/>
+<area shape="rect" id="node15" href="$classKDL_1_1Joint.html" title="This class encapsulates a simple joint, that is with one parameterized degree of freedom and with sca..." alt="" coords="551,603,635,629"/>
+<area shape="rect" id="node18" href="$classKDL_1_1RigidBodyInertia.html" title="6D Inertia of a rigid body " alt="" coords="220,661,372,688"/>
+<area shape="rect" id="node6" href="$classKDL_1_1Jacobian.html" title="KDL::Jacobian" alt="" coords="1607,143,1715,169"/>
+<area shape="rect" id="node8" href="$classKDL_1_1Chain.html" title="This class encapsulates a serial kinematic interconnection structure. " alt="" coords="1615,443,1706,469"/>
+<area shape="rect" id="node10" href="$classKDL_1_1Segment.html" title="This class encapsulates a simple segment, that is a &quot;rigid &#160;&#160;&#160;&#160;&#160;body&quot; (i.e., a frame and a rigid body..." alt="" coords="834,603,942,629"/>
+<area shape="rect" id="node12" href="$classKDL_1_1Rotation.html" title="represents rotations in 3 dimensional space. " alt="" coords="28,543,133,569"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="256,733,336,760"/>
+<area shape="rect" id="node14" title="STL class. " alt="" coords="17,731,144,773"/>
+<area shape="rect" id="node16" href="$classKDL_1_1Joint_1_1joint__type__exception.html" title="KDL::Joint::joint_type\l_exception" alt="" coords="222,595,370,637"/>
+<area shape="rect" id="node17" title="STL class. " alt="" coords="29,629,133,656"/>
+<area shape="rect" id="node19" href="$classKDL_1_1RotationalInertia.html" title="KDL::RotationalInertia" alt="" coords="5,680,156,707"/>
+<area shape="rect" id="node20" title="STL class. " alt="" coords="830,496,946,523"/>
+<area shape="rect" id="node24" href="$classKDL_1_1ArticulatedBodyInertia.html" title="6D Inertia of a articulated body " alt="" coords="501,257,685,284"/>
+<area shape="rect" id="node25" href="$classKDL_1_1JntArray.html" title="This class represents an fixed size array containing joint values of a KDL::Chain. " alt="" coords="1608,493,1713,520"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="KDL::Trajectory_Segment" name="KDL::Trajectory_Segment">
+<area shape="rect" id="node2" href="$classKDL_1_1Trajectory.html" title="An abstract class that implements a trajectory contains a cartesian space trajectory and an underlyin..." alt="" coords="5,5,120,32"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Path.html" title="The specification of the path of a trajectory. " alt="" coords="144,5,227,32"/>
+<area shape="rect" id="node4" href="$classKDL_1_1VelocityProfile.html" title="A VelocityProfile stores the velocity profile that is used within a trajectory. " alt="" coords="251,5,391,32"/>
+</map>

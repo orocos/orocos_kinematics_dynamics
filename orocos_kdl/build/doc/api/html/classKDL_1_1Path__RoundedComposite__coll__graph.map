@@ -1,0 +1,9 @@
+<map id="KDL::Path_RoundedComposite" name="KDL::Path_RoundedComposite">
+<area shape="rect" id="node2" href="$classKDL_1_1Path.html" title="The specification of the path of a trajectory. " alt="" coords="461,5,544,32"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Path__Composite.html" title="A Path being the composition of other Path objects. " alt="" coords="659,79,813,105"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="149,93,265,120"/>
+<area shape="rect" id="node8" href="$classKDL_1_1Frame.html" title="represents a frame transformation in 3D space (rotation + translation) " alt="" coords="689,171,783,197"/>
+<area shape="rect" id="node9" href="$classKDL_1_1Vector.html" title="A concrete implementation of a 3 dimensional vector class. " alt="" coords="455,173,550,200"/>
+<area shape="rect" id="node10" href="$classKDL_1_1Rotation.html" title="represents rotations in 3 dimensional space. " alt="" coords="450,224,555,251"/>
+<area shape="rect" id="node11" href="$classKDL_1_1RotationalInterpolation.html" title="RotationalInterpolation specifies the rotational part of a geometric trajectory. " alt="" coords="643,221,829,248"/>
+</map>

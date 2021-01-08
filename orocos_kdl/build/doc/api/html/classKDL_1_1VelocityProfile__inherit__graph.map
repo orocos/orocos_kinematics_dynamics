@@ -1,0 +1,7 @@
+<map id="KDL::VelocityProfile" name="KDL::VelocityProfile">
+<area shape="rect" id="node2" href="$classKDL_1_1VelocityProfile__Dirac.html" title="A Dirac VelocityProfile generates an infinite velocity so that the position jumps from A to B in in i..." alt="" coords="210,5,350,47"/>
+<area shape="rect" id="node3" href="$classKDL_1_1VelocityProfile__Rectangular.html" title="A rectangular VelocityProfile generates a constant velocity for moving from A to B. " alt="" coords="210,71,350,112"/>
+<area shape="rect" id="node4" href="$classKDL_1_1VelocityProfile__Spline.html" title="A spline VelocityProfile trajectory interpolation. " alt="" coords="210,136,350,177"/>
+<area shape="rect" id="node5" href="$classKDL_1_1VelocityProfile__Trap.html" title="A Trapezoidal VelocityProfile implementation. " alt="" coords="193,202,367,229"/>
+<area shape="rect" id="node6" href="$classKDL_1_1VelocityProfile__TrapHalf.html" title="A &#39;Half&#39; Trapezoidal VelocityProfile. " alt="" coords="210,253,350,295"/>
+</map>

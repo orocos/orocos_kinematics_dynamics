@@ -1,0 +1,8 @@
+<map id="KDL::ChainHdSolver_Vereshchagin::segment_info" name="KDL::ChainHdSolver_Vereshchagin::segment_info">
+<area shape="rect" id="node2" href="$classKDL_1_1Twist.html" title="represents both translational and rotational velocities. " alt="" coords="5,109,93,136"/>
+<area shape="rect" id="node3" href="$classKDL_1_1Vector.html" title="A concrete implementation of a 3 dimensional vector class. " alt="" coords="118,5,213,32"/>
+<area shape="rect" id="node5" href="$classKDL_1_1Wrench.html" title="represents both translational and rotational acceleration. " alt="" coords="117,109,219,136"/>
+<area shape="rect" id="node6" href="$classKDL_1_1Frame.html" title="represents a frame transformation in 3D space (rotation + translation) " alt="" coords="243,109,336,136"/>
+<area shape="rect" id="node4" href="$classKDL_1_1ArticulatedBodyInertia.html" title="6D Inertia of a articulated body " alt="" coords="360,109,544,136"/>
+<area shape="rect" id="node7" href="$classKDL_1_1Rotation.html" title="represents rotations in 3 dimensional space. " alt="" coords="237,5,342,32"/>
+</map>
