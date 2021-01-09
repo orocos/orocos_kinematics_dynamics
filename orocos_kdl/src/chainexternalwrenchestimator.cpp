@@ -159,7 +159,8 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     // Compute robot's end-effector frame, expressed in the base frame
     Frame end_eff_frame;
     solver_result = fk_pos_solver.JntToCart(joint_position, end_eff_frame);
-    if (solver_result != 0) return solver_result;
+    if (solver_result != 0)
+        return solver_result;
 
     // Compute robot's jacobian for the end-effector frame, expressed in the base frame
     solver_result = jacobian_solver.JntToJac(joint_position, jacobian_end_eff);
