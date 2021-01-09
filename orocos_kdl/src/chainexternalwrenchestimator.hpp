@@ -18,8 +18,8 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#ifndef KDL_EXTERNAL_WRENCH_ESTIMATOR_HPP
-#define KDL_EXTERNAL_WRENCH_ESTIMATOR_HPP
+#ifndef KDL_CHAIN_EXTERNAL_WRENCH_ESTIMATOR_HPP
+#define KDL_CHAIN_EXTERNAL_WRENCH_ESTIMATOR_HPP
 
 #include <Eigen/Core>
 #include "utilities/svd_eigen_HH.hpp"
