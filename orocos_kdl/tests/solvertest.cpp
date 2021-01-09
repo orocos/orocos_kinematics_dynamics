@@ -1637,12 +1637,10 @@ void SolverTest::ExternalWrenchEstimatorTest()
     ext_torque_reference.data = jacobian_end_eff.data.transpose() * wrench;
 
     // Arm root acceleration (robot's base mounted on an even surface)
-    // Note: Vereshchagin solver takes root acc. with opposite sign comparead to the above FD and RNE solvers
-    Vector linearAcc(0.0, 0.0, 9.81); Vector angularAcc(0.0, 0.0, 0.0);
-    Twist root_Acc(linearAcc, angularAcc);
+    Vector linearAcc(0.0, 0.0, -9.81); Vector angularAcc(0.0, 0.0, 0.0);
 
     // RNE ID solver for control purposes
-    KDL::ChainIdSolver_RNE IdSolver(kukaLWR, -linearAcc);
+    KDL::ChainIdSolver_RNE IdSolver(kukaLWR, linearAcc);
 
     // Vereshchagin Hybrid Dynamics solver for simulation purposes
     int numberOfConstraints = 6;
@@ -1650,7 +1648,8 @@ void SolverTest::ExternalWrenchEstimatorTest()
     JntArray beta(numberOfConstraints); // Acceleration energy at the end-effector
     KDL::SetToZero(alpha); // Set to zero to deactivate all constraints
     KDL::SetToZero(beta); // Set to zero to deactivate all constraints
-    ChainHdSolver_Vereshchagin constraintSolver(kukaLWR, root_Acc, numberOfConstraints);
+    Twist vereshchagin_root_Acc(-linearAcc, angularAcc); // Note: Vereshchagin solver takes root acc. with opposite sign comparead to the above FD and RNE solvers
+    ChainHdSolver_Vereshchagin constraintSolver(kukaLWR, vereshchagin_root_Acc, numberOfConstraints);
 
     // External Wrench Estimator
     double sample_frequency = 10000.0; // Hz
