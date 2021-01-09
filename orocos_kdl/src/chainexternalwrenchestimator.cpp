@@ -32,7 +32,7 @@ ChainExternalWrenchEstimator::ChainExternalWrenchEstimator(const Chain &chain, c
     initial_jnt_momentum(nj), estimated_momentum_integral(nj), filtered_estimated_ext_torque(nj),
     gravity_torque(nj), coriolis_torque(nj), total_torque(nj), estimated_ext_torque(nj),
     jacobian_end_eff(nj),
-    jacobian_end_eff_t(Eigen::MatrixXd::Zero(nj, 6)), jacobian_end_eff_t_inv(Eigen::MatrixXd::Zero(6, nj)), 
+    jacobian_end_eff_transpose(Eigen::MatrixXd::Zero(nj, 6)), jacobian_end_eff_transpose_inv(Eigen::MatrixXd::Zero(6, nj)), 
     U(Eigen::MatrixXd::Zero(nj, 6)), V(Eigen::MatrixXd::Zero(6, 6)),
     S(Eigen::VectorXd::Zero(6)), S_inv(Eigen::VectorXd::Zero(6)), tmp(Eigen::VectorXd::Zero(6)),
     ESTIMATION_GAIN(Eigen::VectorXd::Constant(nj, estimation_gain)),
@@ -57,8 +57,8 @@ void ChainExternalWrenchEstimator::updateInternalDataStructures()
     total_torque.resize(nj);
     estimated_ext_torque.resize(nj);
     jacobian_end_eff.resize(nj);
-    jacobian_end_eff_t.conservativeResizeLike(MatrixXd::Zero(nj, 6));
-    jacobian_end_eff_t_inv.conservativeResizeLike(MatrixXd::Zero(6, nj));
+    jacobian_end_eff_transpose.conservativeResizeLike(MatrixXd::Zero(nj, 6));
+    jacobian_end_eff_transpose_inv.conservativeResizeLike(MatrixXd::Zero(6, nj));
     U.conservativeResizeLike(MatrixXd::Zero(nj, 6));
     V.conservativeResizeLike(MatrixXd::Zero(6, 6));
     S.conservativeResizeLike(VectorXd::Zero(6));
@@ -176,8 +176,8 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     jacobian_end_eff.changeBase(end_eff_frame.M.Inverse()); // Jacobian is now expressed w.r.t. end-effector frame
 
     // SVD of "Jac^T" with maximum iterations "maxiter": Jac^T = U * S^-1 * V^T
-    jacobian_end_eff_t = jacobian_end_eff.data.transpose();
-    solver_result = svd_eigen_HH(jacobian_end_eff_t, U, S, V, tmp, svd_maxiter);
+    jacobian_end_eff_transpose = jacobian_end_eff.data.transpose();
+    solver_result = svd_eigen_HH(jacobian_end_eff_transpose, U, S, V, tmp, svd_maxiter);
     if (solver_result != 0)
         return (error = E_SVD_FAILED);
 
@@ -186,10 +186,10 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
         S_inv(i) = (std::fabs(S(i)) < svd_eps) ? 0.0 : 1.0 / S(i);
 
     // Compose the inverse: (Jac^T)^-1 = V * S^-1 * U^T
-    jacobian_end_eff_t_inv = V * S_inv.asDiagonal() * U.adjoint();
+    jacobian_end_eff_transpose_inv = V * S_inv.asDiagonal() * U.adjoint();
 
     // Compute end-effector's Cartesian wrench from the estimated joint torques: (Jac^T)^-1 * ext_tau
-    Vector6d estimated_wrench = jacobian_end_eff_t_inv * filtered_estimated_ext_torque.data;
+    Vector6d estimated_wrench = jacobian_end_eff_transpose_inv * filtered_estimated_ext_torque.data;
     for (int i = 0; i < 6; i++) 
         external_wrench(i) = estimated_wrench(i);
 

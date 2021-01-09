@@ -106,7 +106,7 @@ namespace KDL {
         JntArray initial_jnt_momentum, estimated_momentum_integral, filtered_estimated_ext_torque, 
                  gravity_torque, coriolis_torque, total_torque, estimated_ext_torque;
         Jacobian jacobian_end_eff;
-        Eigen::MatrixXd jacobian_end_eff_t, jacobian_end_eff_t_inv, U, V;
+        Eigen::MatrixXd jacobian_end_eff_transpose, jacobian_end_eff_transpose_inv, U, V;
         Eigen::VectorXd S, S_inv, tmp, ESTIMATION_GAIN;
         ChainDynParam dynparam_solver;
         ChainJntToJacSolver jacobian_solver;
