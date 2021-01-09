@@ -19,6 +19,7 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "chainexternalwrenchestimator.hpp"
+
 namespace KDL {
 
 ChainExternalWrenchEstimator::ChainExternalWrenchEstimator(const Chain &chain, const Vector &gravity, const double sample_frequency, const double estimation_gain, const double filter_constant, const double eps, const int maxiter) :
