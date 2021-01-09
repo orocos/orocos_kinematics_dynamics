@@ -73,7 +73,8 @@ void ChainExternalWrenchEstimator::updateInternalDataStructures()
 int ChainExternalWrenchEstimator::setInitialMomentum(const JntArray &joint_position, const JntArray &joint_velocity)
 {
     // Check sizes first
-    if (joint_position.rows() != nj || joint_velocity.rows() != nj) return (error = E_SIZE_MISMATCH);
+    if (joint_position.rows() != nj || joint_velocity.rows() != nj)
+        return (error = E_SIZE_MISMATCH);
 
     // Calculate robot's inertia and momentum in the joint space
     dynparam_solver.JntToMass(joint_position, jnt_mass_matrix);
