@@ -174,7 +174,8 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     // SVD of "Jac^T" with maximum iterations "maxiter": Jac^T = U * S^-1 * V^T
     jacobian_end_eff_t = jacobian_end_eff.data.transpose();
     solver_result = svd_eigen_HH(jacobian_end_eff_t, U, S, V, tmp, svd_maxiter);
-    if (solver_result != 0) return (error = E_SVD_FAILED);
+    if (solver_result != 0)
+        return (error = E_SVD_FAILED);
 
     // Invert singular values: S^-1
     for (int i = 0; i < S.size(); ++i)
