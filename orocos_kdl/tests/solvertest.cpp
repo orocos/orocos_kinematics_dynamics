@@ -1571,7 +1571,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
     std::cout << "KDL External Wrench Estimator Test" << std::endl;
 
     int ret;
-    double eps = 0.85;
+    double eps = 0.7;
     unsigned int nj = kukaLWR.getNrOfJoints();
     unsigned int ns = kukaLWR.getNrOfSegments();
     CPPUNIT_ASSERT(Equal(nj, ns)); // Current implementation of the Vereshchagin solver can only work with chains that have equal number of joints and segments
@@ -1655,7 +1655,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
     double sample_frequency = 10000.0; // Hz
     double estimation_gain  = 30.0;
     double filter_constant  = 0.5;
-    ChainExternalWrenchEstimator extwrench_estimator(kukaLWR, -linearAcc, sample_frequency, estimation_gain, filter_constant);
+    ChainExternalWrenchEstimator extwrench_estimator(kukaLWR, linearAcc, sample_frequency, estimation_gain, filter_constant);
     extwrench_estimator.setInitialMomentum(q, qd); // sets the offset for future estimation (momentum calculation)
 
     // ##########################################################################################
