@@ -122,11 +122,14 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
 
     // Calculate decomposed robot's dynamics
     int solver_result = dynparam_solver.JntToMass(joint_position, jnt_mass_matrix);
-    if (solver_result != 0) return solver_result;
+    if (solver_result != 0)
+        return solver_result;
     solver_result = dynparam_solver.JntToCoriolis(joint_position, joint_velocity, coriolis_torque);
-    if (solver_result != 0) return solver_result;
+    if (solver_result != 0)
+        return solver_result;
     solver_result = dynparam_solver.JntToGravity(joint_position, gravity_torque);
-    if (solver_result != 0) return solver_result;
+    if (solver_result != 0)
+        return solver_result;
 
     // Calculate the change of robot's inertia in the joint space
     jnt_mass_matrix_dot.data = (jnt_mass_matrix.data - previous_jnt_mass_matrix.data) / DT_SEC;
