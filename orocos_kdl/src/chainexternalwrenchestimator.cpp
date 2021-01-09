@@ -111,8 +111,10 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
      */
 
     // Check sizes first
-    if (nj != CHAIN.getNrOfJoints() || ns != CHAIN.getNrOfSegments()) return (error = E_NOT_UP_TO_DATE);
-    if (joint_position.rows() != nj || joint_velocity.rows() != nj || joint_torque.rows() != nj) return (error = E_SIZE_MISMATCH);
+    if (nj != CHAIN.getNrOfJoints() || ns != CHAIN.getNrOfSegments())
+        return (error = E_NOT_UP_TO_DATE);
+    if (joint_position.rows() != nj || joint_velocity.rows() != nj || joint_torque.rows() != nj)
+        return (error = E_SIZE_MISMATCH);
 
     /**
      * =======================================================================================================================
