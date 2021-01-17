@@ -45,6 +45,13 @@ namespace KDL {
         typedef Eigen::Matrix<double, 6, 1 > Vector6d;
 
     public:
+
+        static const int E_FKSOLVERPOS_FAILED = -100; //! Internally-used Forward Position Kinematics (Recursive) solver failed
+        static const int E_JACSOLVER_FAILED = -101; //! Internally-used Jacobian solver failed
+        static const int E_DYNPARAMSOLVERMASS_FAILED = -102; //! Internally-used Dynamics Parameters (Mass) solver failed
+        static const int E_DYNPARAMSOLVERCORIOLIS_FAILED = -103; //! Internally-used Dynamics Parameters (Coriolis) solver failed
+        static const int E_DYNPARAMSOLVERGRAVITY_FAILED = -104; //! Internally-used Dynamics Parameters (Gravity) solver failed
+
         /**
          * Constructor for the estimator, it will allocate all the necessary memory
          * \param chain The kinematic chain of the robot, an internal copy will be made.
@@ -95,6 +102,9 @@ namespace KDL {
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures()
         virtual void updateInternalDataStructures();
+
+        /// @copydoc KDL::SolverI::strError()
+        virtual const char* strError(const int error) const;
 
     private:
         const Chain &CHAIN;

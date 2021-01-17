@@ -78,7 +78,9 @@ int ChainExternalWrenchEstimator::setInitialMomentum(const JntArray &joint_posit
         return (error = E_SIZE_MISMATCH);
 
     // Calculate robot's inertia and momentum in the joint space
-    dynparam_solver.JntToMass(joint_position, jnt_mass_matrix);
+    if (E_NOERROR != dynparam_solver.JntToMass(joint_position, jnt_mass_matrix))
+        return (error = E_DYNPARAMSOLVERMASS_FAILED);
+
     initial_jnt_momentum.data = jnt_mass_matrix.data * joint_velocity.data;
 
     // Reset data because of the new momentum offset
@@ -125,15 +127,14 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
      */
 
     // Calculate decomposed robot's dynamics
-    int solver_result = dynparam_solver.JntToMass(joint_position, jnt_mass_matrix);
-    if (solver_result != 0)
-        return solver_result;
-    solver_result = dynparam_solver.JntToCoriolis(joint_position, joint_velocity, coriolis_torque);
-    if (solver_result != 0)
-        return solver_result;
-    solver_result = dynparam_solver.JntToGravity(joint_position, gravity_torque);
-    if (solver_result != 0)
-        return solver_result;
+    if (E_NOERROR != dynparam_solver.JntToMass(joint_position, jnt_mass_matrix))
+        return (error = E_DYNPARAMSOLVERMASS_FAILED);
+
+    if (E_NOERROR != dynparam_solver.JntToCoriolis(joint_position, joint_velocity, coriolis_torque))
+        return (error = E_DYNPARAMSOLVERCORIOLIS_FAILED);
+
+    if (E_NOERROR != dynparam_solver.JntToGravity(joint_position, gravity_torque))
+        return (error = E_DYNPARAMSOLVERGRAVITY_FAILED);
 
     // Calculate the change of robot's inertia in the joint space
     jnt_mass_matrix_dot.data = (jnt_mass_matrix.data - previous_jnt_mass_matrix.data) / DT_SEC;
@@ -162,14 +163,12 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
     
     // Compute robot's end-effector frame, expressed in the base frame
     Frame end_eff_frame;
-    solver_result = fk_pos_solver.JntToCart(joint_position, end_eff_frame);
-    if (solver_result != 0)
-        return solver_result;
+    if (E_NOERROR != fk_pos_solver.JntToCart(joint_position, end_eff_frame))
+        return (error = E_FKSOLVERPOS_FAILED);
 
     // Compute robot's jacobian for the end-effector frame, expressed in the base frame
-    solver_result = jacobian_solver.JntToJac(joint_position, jacobian_end_eff);
-    if (solver_result != 0)
-        return solver_result;
+    if (E_NOERROR != jacobian_solver.JntToJac(joint_position, jacobian_end_eff))
+        return (error = E_JACSOLVER_FAILED);
 
     // Transform the jacobian from the base frame to the end-effector frame. 
     // This part can be commented out if the user wants its estimated wrench to be expressed w.r.t. base frame 
@@ -177,8 +176,7 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
 
     // SVD of "Jac^T" with maximum iterations "maxiter": Jac^T = U * S^-1 * V^T
     jacobian_end_eff_transpose = jacobian_end_eff.data.transpose();
-    solver_result = svd_eigen_HH(jacobian_end_eff_transpose, U, S, V, tmp, svd_maxiter);
-    if (solver_result != 0)
+    if (E_NOERROR != svd_eigen_HH(jacobian_end_eff_transpose, U, S, V, tmp, svd_maxiter))
         return (error = E_SVD_FAILED);
 
     // Invert singular values: S^-1
@@ -201,6 +199,16 @@ void ChainExternalWrenchEstimator::getEstimatedJntTorque(JntArray &external_join
 {
     assert(external_joint_torque.rows() == filtered_estimated_ext_torque.rows());
     external_joint_torque = filtered_estimated_ext_torque;
+}
+
+const char* ChainExternalWrenchEstimator::strError(const int error) const
+{
+    if (E_FKSOLVERPOS_FAILED == error) return "Internally-used Forward Position Kinematics (Recursive) solver failed";
+    else if (E_JACSOLVER_FAILED == error) return "Internally-used Jacobian solver failed";
+    else if (E_DYNPARAMSOLVERMASS_FAILED == error) return "Internally-used Dynamics Parameters (Mass) solver failed";
+    else if (E_DYNPARAMSOLVERCORIOLIS_FAILED == error) return "Internally-used Dynamics Parameters (Coriolis) solver failed";
+    else if (E_DYNPARAMSOLVERGRAVITY_FAILED == error) return "Internally-used Dynamics Parameters (Gravity) solver failed";
+    else return SolverI::strError(error);
 }
 
 } // namespace
