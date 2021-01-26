@@ -82,8 +82,8 @@ void init_framevel(pybind11::module &m)
     vector_vel.def_readwrite("p", &VectorVel::p);
     vector_vel.def_readwrite("v", &VectorVel::v);
     vector_vel.def(py::init<>());
-    vector_vel.def(py::init<const Vector&, const Vector&>());
-    vector_vel.def(py::init<const Vector&>());
+    vector_vel.def(py::init<const Vector&, const Vector&>(), py::arg("p"), py::arg("v"));
+    vector_vel.def(py::init<const Vector&>(), py::arg("p"));
     vector_vel.def(py::init<const VectorVel&>());
     vector_vel.def("value", &VectorVel::value);
     vector_vel.def("deriv", &VectorVel::deriv);
@@ -171,9 +171,9 @@ void init_framevel(pybind11::module &m)
     twist_vel.def_readwrite("vel", &TwistVel::vel);
     twist_vel.def_readwrite("rot", &TwistVel::rot);
     twist_vel.def(py::init<>());
-    twist_vel.def(py::init<const VectorVel&, const VectorVel&>());
-    twist_vel.def(py::init<const Twist&, const Twist&>());
-    twist_vel.def(py::init<const Twist&>());
+    twist_vel.def(py::init<const VectorVel&, const VectorVel&>(), py::arg("vel"), py::arg("rot"));
+    twist_vel.def(py::init<const Twist&, const Twist&>(), py::arg("p"), py::arg("v"));
+    twist_vel.def(py::init<const Twist&>(), py::arg("p"));
     twist_vel.def(py::init<const TwistVel&>());
     twist_vel.def("value", &TwistVel::value);
     twist_vel.def("deriv", &TwistVel::deriv);
@@ -193,7 +193,7 @@ void init_framevel(pybind11::module &m)
     }, py::arg("memo"));
     twist_vel.def_static("Zero", &TwistVel::Zero);
     twist_vel.def("ReverseSign", &TwistVel::ReverseSign);
-    twist_vel.def("RefPoint", &TwistVel::RefPoint);
+    twist_vel.def("RefPoint", &TwistVel::RefPoint, py::arg("base"));
     twist_vel.def("GetTwist", &TwistVel::GetTwist);
     twist_vel.def("GetTwistDot", &TwistVel::GetTwistDot);
 
@@ -252,8 +252,8 @@ void init_framevel(pybind11::module &m)
     rotation_vel.def_readwrite("R", &RotationVel::R);
     rotation_vel.def_readwrite("w", &RotationVel::w);
     rotation_vel.def(py::init<>());
-    rotation_vel.def(py::init<const Rotation&>());
-    rotation_vel.def(py::init<const Rotation&, const Vector&>());
+    rotation_vel.def(py::init<const Rotation&>(), py::arg("R"));
+    rotation_vel.def(py::init<const Rotation&, const Vector&>(), py::arg("R"), py::arg("w"));
     rotation_vel.def(py::init<const RotationVel&>());
     rotation_vel.def("value", &RotationVel::value);
     rotation_vel.def("deriv", &RotationVel::deriv);
@@ -335,9 +335,9 @@ void init_framevel(pybind11::module &m)
     frame_vel.def_readwrite("M", &FrameVel::M);
     frame_vel.def_readwrite("p", &FrameVel::p);
     frame_vel.def(py::init<>());
-    frame_vel.def(py::init<const Frame&>());
-    frame_vel.def(py::init<const Frame&, const Twist&>());
-    frame_vel.def(py::init<const RotationVel&, const VectorVel&>());
+    frame_vel.def(py::init<const Frame&>(), py::arg("T"));
+    frame_vel.def(py::init<const Frame&, const Twist&>(), py::arg("T"), py::arg("t"));
+    frame_vel.def(py::init<const RotationVel&, const VectorVel&>(), py::arg("M"), py::arg("p"));
     frame_vel.def(py::init<const FrameVel&>());
     frame_vel.def("value", &FrameVel::value);
     frame_vel.def("deriv", &FrameVel::deriv);

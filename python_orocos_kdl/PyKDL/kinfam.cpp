@@ -190,9 +190,9 @@ void init_kinfam(pybind11::module &m)
     // --------------------
     py::class_<Tree> tree(m, "Tree");
     tree.def(py::init<const std::string&>(), py::arg("root_name")="root");
-    tree.def("addSegment", &Tree::addSegment);
-    tree.def("addChain", &Tree::addChain);
-    tree.def("addTree", &Tree::addTree);
+    tree.def("addSegment", &Tree::addSegment, py::arg("segment"), py::arg("hook_name"));
+    tree.def("addChain", &Tree::addChain, py::arg("chain"), py::arg("hook_name"));
+    tree.def("addTree", &Tree::addTree, py::arg("tree"), py::arg("hook_name"));
     tree.def("getNrOfJoints", &Tree::getNrOfJoints);
     tree.def("getNrOfSegments", &Tree::getNrOfSegments);
     tree.def("getChain", [](const Tree &tree, const std::string& chain_root, const std::string& chain_tip)
@@ -200,7 +200,7 @@ void init_kinfam(pybind11::module &m)
         Chain* chain = new Chain();
         tree.getChain(chain_root, chain_tip, *chain);
         return chain;
-    });
+    }, py::arg("chain_root"), py::arg("chain_tip"));
     tree.def("__repr__", [](const Tree &t)
     {
         std::ostringstream oss;
@@ -221,9 +221,9 @@ void init_kinfam(pybind11::module &m)
     jacobian.def("resize", &Jacobian::resize);
     jacobian.def("getColumn", &Jacobian::getColumn);
     jacobian.def("setColumn", &Jacobian::setColumn);
-    jacobian.def("changeRefPoint", &Jacobian::changeRefPoint);
-    jacobian.def("changeBase", &Jacobian::changeBase);
-    jacobian.def("changeRefFrame", &Jacobian::changeRefFrame);
+    jacobian.def("changeRefPoint", &Jacobian::changeRefPoint, py::arg("base"));
+    jacobian.def("changeBase", &Jacobian::changeBase, py::arg("rot"));
+    jacobian.def("changeRefFrame", &Jacobian::changeRefFrame, py::arg("frame"));
     jacobian.def("__getitem__", [](const Jacobian &jac, std::tuple<int, int> idx)
     {
         int i = std::get<0>(idx);
@@ -303,7 +303,7 @@ void init_kinfam(pybind11::module &m)
     jnt_array_vel.def_readwrite("q", &JntArrayVel::q);
     jnt_array_vel.def_readwrite("qdot", &JntArrayVel::qdot);
     jnt_array_vel.def(py::init<unsigned int>());
-    jnt_array_vel.def(py::init<const JntArray&, const JntArray&>());
+    jnt_array_vel.def(py::init<const JntArray&, const JntArray&>(), py::arg("q"), py::arg("qdot"));
     jnt_array_vel.def(py::init<const JntArray&>());
     jnt_array_vel.def("resize", &JntArrayVel::resize);
     jnt_array_vel.def("value", &JntArrayVel::value);
@@ -356,14 +356,14 @@ void init_kinfam(pybind11::module &m)
     // ChainFkSolverPos_recursive
     // ------------------------------
     py::class_<ChainFkSolverPos_recursive, ChainFkSolverPos> chain_fk_solver_pos_recursive(m, "ChainFkSolverPos_recursive");
-    chain_fk_solver_pos_recursive.def(py::init<const Chain&>());
+    chain_fk_solver_pos_recursive.def(py::init<const Chain&>(), py::arg("chain"));
 
 
     // ------------------------------
     // ChainFkSolverVel_recursive
     // ------------------------------
     py::class_<ChainFkSolverVel_recursive, ChainFkSolverVel> chain_fk_solver_vel_recursive(m, "ChainFkSolverVel_recursive");
-    chain_fk_solver_vel_recursive.def(py::init<const Chain&>());
+    chain_fk_solver_vel_recursive.def(py::init<const Chain&>(), py::arg("chain"));
 
 
     // --------------------
@@ -462,14 +462,14 @@ void init_kinfam(pybind11::module &m)
     // ChainIkSolverVel_pinv_givens
     // -------------------------------
     py::class_<ChainIkSolverVel_pinv_givens, ChainIkSolverVel> chain_ik_solver_vel_pinv_givens(m, "ChainIkSolverVel_pinv_givens");
-    chain_ik_solver_vel_pinv_givens.def(py::init<const Chain&>());
+    chain_ik_solver_vel_pinv_givens.def(py::init<const Chain&>(), py::arg("chain"));
 
 
     // ------------------------------
     // ChainJntToJacSolver
     // ------------------------------
     py::class_<ChainJntToJacSolver, SolverI> chain_jnt_to_jac_solver(m, "ChainJntToJacSolver");
-    chain_jnt_to_jac_solver.def(py::init<const Chain&>());
+    chain_jnt_to_jac_solver.def(py::init<const Chain&>(), py::arg("chain"));
     chain_jnt_to_jac_solver.def("JntToJac", &ChainJntToJacSolver::JntToJac,
                                 py::arg("q_in"), py::arg("jac"), py::arg("seg_nr")=-1);
     chain_jnt_to_jac_solver.def("setLockedJoints", &ChainJntToJacSolver::setLockedJoints);
@@ -479,7 +479,7 @@ void init_kinfam(pybind11::module &m)
     // ChainJntToJacDotSolver
     // ------------------------------
     py::class_<ChainJntToJacDotSolver, SolverI> chain_jnt_to_jac_dot_solver(m, "ChainJntToJacDotSolver");
-    chain_jnt_to_jac_dot_solver.def(py::init<const Chain&>());
+    chain_jnt_to_jac_dot_solver.def(py::init<const Chain&>(), py::arg("chain"));
     chain_jnt_to_jac_dot_solver.def("JntToJacDot", (int (ChainJntToJacDotSolver::*)(const JntArrayVel&, Jacobian&, int)) &ChainJntToJacDotSolver::JntToJacDot,
                                     py::arg("q_in"), py::arg("jdot"), py::arg("seg_nr")=-1);
     chain_jnt_to_jac_dot_solver.def("JntToJacDot", (int (ChainJntToJacDotSolver::*)(const JntArrayVel&, Twist&, int)) &ChainJntToJacDotSolver::JntToJacDot,
@@ -513,5 +513,5 @@ void init_kinfam(pybind11::module &m)
     // ChainIdSolver_RNE
     // ------------------------------
     py::class_<ChainIdSolver_RNE, ChainIdSolver> chain_id_solver_RNE(m, "ChainIdSolver_RNE");
-    chain_id_solver_RNE.def(py::init<const Chain&, Vector>());
+    chain_id_solver_RNE.def(py::init<const Chain&, Vector>(), py::arg("chain"), py::arg("grav"));
 }

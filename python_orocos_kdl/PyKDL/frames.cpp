@@ -37,7 +37,7 @@ void init_frames(py::module &m)
     // --------------------
     py::class_<Vector> vector(m, "Vector");
     vector.def(py::init<>());
-    vector.def(py::init<double, double, double>());
+    vector.def(py::init<double, double, double>(), py::arg("x"), py::arg("y"), py::arg("z"));
     vector.def(py::init<const Vector&>());
     vector.def("x", (void (Vector::*)(double)) &Vector::x);
     vector.def("y", (void (Vector::*)(double)) &Vector::y);
@@ -118,7 +118,7 @@ void init_frames(py::module &m)
     // --------------------
     py::class_<Wrench> wrench(m, "Wrench");
     wrench.def(py::init<>());
-    wrench.def(py::init<const Vector&, const Vector&>());
+    wrench.def(py::init<const Vector&, const Vector&>(), py::arg("force"), py::arg("torque"));
     wrench.def(py::init<const Wrench&>());
     wrench.def_readwrite("force", &Wrench::force);
     wrench.def_readwrite("torque", &Wrench::torque);
@@ -152,7 +152,7 @@ void init_frames(py::module &m)
     }, py::arg("memo"));
     wrench.def_static("Zero", &Wrench::Zero);
     wrench.def("ReverseSign", &Wrench::ReverseSign);
-    wrench.def("RefPoint", &Wrench::RefPoint);
+    wrench.def("RefPoint", &Wrench::RefPoint, py::arg("base"));
     wrench.def(py::self -= py::self);
     wrench.def(py::self += py::self);
     wrench.def(py::self * double());
@@ -192,7 +192,7 @@ void init_frames(py::module &m)
     // --------------------
     py::class_<Twist> twist(m, "Twist");
     twist.def(py::init<>());
-    twist.def(py::init<const Vector&, const Vector&>());
+    twist.def(py::init<const Vector&, const Vector&>(), py::arg("vel"), py::arg("rot"));
     twist.def(py::init<const Twist&>());
     twist.def_readwrite("vel", &Twist::vel);
     twist.def_readwrite("rot", &Twist::rot);
@@ -226,7 +226,7 @@ void init_frames(py::module &m)
     }, py::arg("memo"));
     twist.def_static("Zero", &Twist::Zero);
     twist.def("ReverseSign", &Twist::ReverseSign);
-    twist.def("RefPoint", &Twist::RefPoint);
+    twist.def("RefPoint", &Twist::RefPoint, py::arg("base"));
     twist.def(py::self -= py::self);
     twist.def(py::self += py::self);
     twist.def(py::self * double());
@@ -268,8 +268,12 @@ void init_frames(py::module &m)
     // --------------------
     py::class_<Rotation> rotation(m, "Rotation");
     rotation.def(py::init<>());
-    rotation.def(py::init<double, double, double, double, double, double, double, double, double>());
-    rotation.def(py::init<const Vector&, const Vector&, const Vector&>());
+    rotation.def(py::init<double, double, double, double, double, double, double, double, double>(),
+                 py::arg("xx"), py::arg("yx"), py::arg("zx"),
+                 py::arg("xy"), py::arg("yy"), py::arg("zy"),
+                 py::arg("xz"), py::arg("yz"), py::arg("zz"));
+    rotation.def(py::init<const Vector&, const Vector&, const Vector&>(),
+                 py::arg("x"), py::arg("y"), py::arg("z"));
     rotation.def(py::init<const Rotation&>());
     rotation.def("__getitem__", [](const Rotation &r, std::tuple<int, int> idx)
     {
@@ -317,7 +321,7 @@ void init_frames(py::module &m)
     rotation.def_static("EulerZYZ", &Rotation::EulerZYZ);
     rotation.def_static("RPY", &Rotation::RPY);
     rotation.def_static("EulerZYX", &Rotation::EulerZYX);
-    rotation.def_static("Quaternion", &Rotation::Quaternion);
+    rotation.def_static("Quaternion", &Rotation::Quaternion, py::arg("x"), py::arg("y"), py::arg("z"), py::arg("w"));
     rotation.def("DoRotX", &Rotation::DoRotX);
     rotation.def("DoRotY", &Rotation::DoRotY);
     rotation.def("DoRotZ", &Rotation::DoRotZ);
@@ -389,7 +393,7 @@ void init_frames(py::module &m)
     // Frame
     // --------------------
     py::class_<Frame> frame(m, "Frame");
-    frame.def(py::init<const Rotation&, const Vector&>());
+    frame.def(py::init<const Rotation&, const Vector&>(), py::arg("R"), py::arg("V"));
     frame.def(py::init<const Vector&>());
     frame.def(py::init<const Rotation&>());
     frame.def(py::init<const Frame&>());
