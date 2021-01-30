@@ -57,6 +57,7 @@ jobs:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - env:
