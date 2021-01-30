@@ -16,7 +16,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>orocos_kdl</build_depend>
-  
+
   <depend condition="$ROS_PYTHON_VERSION == 2">python</depend>
   <depend condition="$ROS_PYTHON_VERSION == 3">python3</depend>
 

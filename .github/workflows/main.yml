@@ -23,7 +23,7 @@ jobs:
           submodules: recursive
       - name: Install
         run: |
-          sudo apt-get install libeigen3-dev libcppunit-dev python-psutil python3-psutil python-future python3-future
+          sudo apt-get install libeigen3-dev libcppunit-dev python-psutil python-future
       - name: Build orocos_kdl
         run: |
           cd orocos_kdl
@@ -41,15 +41,6 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
           make
           sudo make install
-      - name: Build PyKDL Python 3
-        run: |
-          cd python_orocos_kdl
-          mkdir build3
-          cd build3
-          export ROS_PYTHON_VERSION=3
-          cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
-          make
-          sudo make install
       - name: Update LD_LIBRARY_PATH
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
@@ -62,10 +53,6 @@ jobs:
         run: |
           cd python_orocos_kdl
           python2 tests/PyKDLtest.py
-      - name: Test PyKDL Python 3
-        run: |
-          cd python_orocos_kdl
-          python3 tests/PyKDLtest.py
 
   industrial_ci:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
