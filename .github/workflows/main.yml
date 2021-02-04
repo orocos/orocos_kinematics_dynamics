@@ -70,17 +70,20 @@ jobs:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - env:
               ROS_DISTRO: kinetic
               ROS_REPO: ros
               ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.3
+              ABICHECK_MERGE: false
             branch: release-1.3
           - env:
               ROS_DISTRO: melodic
               ROS_REPO: ros
               ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.4
+              ABICHECK_MERGE: false
             branch: release-1.4
     env: ${{ matrix.env }}
     steps:
