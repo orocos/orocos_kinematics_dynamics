@@ -23,7 +23,7 @@ jobs:
           submodules: recursive
       - name: Install
         run: |
-          sudo apt-get install libeigen3-dev libcppunit-dev python-future python-sip-dev
+          sudo apt-get install libeigen3-dev libcppunit-dev python-future python-psutil python-sip-dev
       - name: Build orocos_kdl
         run: |
           cd orocos_kdl
