@@ -16,6 +16,8 @@ else()
   SET(PYTHON_VERSION 2 CACHE STRING "Python Version")
 endif()
 
+set(PYBIND11_PYTHON_VERSION ${PYTHON_VERSION} CACHE STRING "Python version used by PyBind11")
+
 find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
 find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} REQUIRED)
 # get_python_lib in python3 produces path which isn't in sys.path: https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
