@@ -51,8 +51,12 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
 SET( KDL_CFLAGS "")
 
 find_package(Eigen3 QUIET)
-if(NOT EIGEN3_FOUND)
+if(NOT EIGEN3_FOUND OR NOT TARGET Eigen3::Eigen)
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
+endif()
+
+if(NOT TARGET Eigen3::Eigen)
+  message(FATAL_ERROR "Eigen3 NOT FOUND")
 endif()
 
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
@@ -101,6 +105,11 @@ ENDIF(ENABLE_TESTS )
 
 OPTION(ENABLE_EXAMPLES OFF "Enable building of examples")
 
+# Configuration variables
+set(orocos_kdl_TARGETS_EXPORT_NAME "OrocosKDLTargets")
+set(orocos_kdl_VERSION_CONFIG_FILENAME "${PROJECT_NAME}-config-version.cmake")
+set(orocos_kdl_CONFIG_FILENAME "${PROJECT_NAME}-config.cmake")
+
 ADD_SUBDIRECTORY( doc )
 ADD_SUBDIRECTORY( src )
 ADD_SUBDIRECTORY( tests )
@@ -108,15 +117,21 @@ ADD_SUBDIRECTORY( models )
 ADD_SUBDIRECTORY( examples )
 
 # Generate CMake package configuration
-CONFIGURE_FILE(orocos_kdl-config.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
+include(CMakePackageConfigHelpers)
 
-INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
+set(orocos_kdl_CMAKE_INSTALL_SUFFIX share/orocos_kdl/cmake)
+
+configure_package_config_file(orocos_kdl-config.cmake.in ${orocos_kdl_CONFIG_FILENAME}
+                              INSTALL_DESTINATION ${orocos_kdl_CMAKE_INSTALL_SUFFIX})
+write_basic_package_version_file(${orocos_kdl_VERSION_CONFIG_FILENAME}
+                                 VERSION ${KDL_VERSION}
+                                 COMPATIBILITY AnyNewerVersion)
+                                 
+INSTALL(FILES cmake/FindEigen3.cmake 
+              ${CMAKE_CURRENT_BINARY_DIR}/${orocos_kdl_CONFIG_FILENAME}
+              ${CMAKE_CURRENT_BINARY_DIR}/${orocos_kdl_VERSION_CONFIG_FILENAME}
+        DESTINATION ${orocos_kdl_CMAKE_INSTALL_SUFFIX})
+INSTALL(EXPORT OrocosKDLTargets DESTINATION ${orocos_kdl_CMAKE_INSTALL_SUFFIX})
 
 # Generate pkg-config package configuration
 CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
