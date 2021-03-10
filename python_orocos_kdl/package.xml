@@ -28,7 +28,8 @@
   <test_depend condition="$ROS_PYTHON_VERSION == 2">python-psutil</test_depend>
   <test_depend condition="$ROS_PYTHON_VERSION == 3">python3-psutil</test_depend>
 
-  <doc_depend>python-sphinx</doc_depend>
+  <doc_depend condition="$ROS_PYTHON_VERSION == 2">python-sphinx</doc_depend>
+  <doc_depend condition="$ROS_PYTHON_VERSION == 3">python3-sphinx</doc_depend>
 
   <export>
     <rosdoc config="rosdoc.yaml"/>
