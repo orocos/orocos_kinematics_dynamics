@@ -21,6 +21,7 @@
 
 #include "tree.hpp"
 #include <sstream>
+#include <algorithm>
 
 namespace KDL {
 using namespace std;
@@ -172,6 +173,61 @@ bool Tree::getSubTree(const std::string& segment_name, Tree& tree) const
   //init the tree, segment_name is the new root.
   tree = Tree(root->first);
   return tree.addTreeRecursive(root, segment_name);
+}
+
+void Tree::deleteSegmentsRecursive(SegmentMap::const_iterator segment, unsigned int& ns, unsigned int& nj) {
+  // delete all children (if any)
+  SegmentMap::const_iterator child;
+  for(unsigned int i=0; i<GetTreeElementChildren(segment->second).size(); i++) {
+    // delete i-th child
+    child = GetTreeElementChildren(segment->second)[i];
+    deleteSegmentsRecursive(child, ns, nj);
+  }
+  
+  // update ns and nj
+  ns++;
+  if(GetTreeElementSegment(segment->second).getJoint().getType() != Joint::None)
+    nj++;
+  // remove the segment from the map
+  segments.erase(segment->first);
+}
+
+unsigned int Tree::deleteSegmentsFrom(SegmentMap::const_iterator segment) {
+  // prevent to remove the root segment or a segment that does not exist
+  if(segment == segments.end() || segment == getRootSegment())
+    return 0;
+
+  // remove references to this segment from its parent
+  SegmentMap::iterator parent = segments.find(GetTreeElementParent(segment->second)->first);
+  std::vector<SegmentMap::const_iterator>& parent_children = GetTreeElementChildren(parent->second);
+  parent_children.erase(std::remove(parent_children.begin(), parent_children.end(), segment));
+
+  // delete children recursively
+  unsigned int ns=0, nj=0;
+  deleteSegmentsRecursive(segment, ns, nj);
+  
+  // update number of segments
+  nrOfSegments -= ns;
+  
+  if(nj > 0) {
+    // update joints indices if needed
+    nrOfJoints -= nj;
+    unsigned int nq = 0;
+    for(SegmentMap::iterator s=segments.begin(); s!=segments.end(); s++) {
+      if(GetTreeElementSegment(s->second).getJoint().getType() != Joint::None) {
+        GetTreeElementQNr(s->second) = nq;
+        nq++;
+      }
+    }
+  }
+  
+  return ns;
+}
+    
+unsigned int Tree::deleteSegmentsFrom(const std::string& name) {
+  // delete segments using the iterator version; if name is the root
+  // or an invalid segment, this overload will exit immediately 
+  return deleteSegmentsFrom(segments.find(name));
 }
 
 }//end of namespace

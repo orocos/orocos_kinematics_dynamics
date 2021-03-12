@@ -153,6 +153,57 @@ void KinFamTest::ChainTest()
     chain2.addChain(chain1);
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfJoints(),chain1.getNrOfJoints()*(uint)2);
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfSegments(),chain1.getNrOfSegments()*(uint)2);
+    
+    // test segment removal from chains
+    Chain chain3(chain1);
+    // try to remove an inexistent segment
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Non existent segment"), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments());
+    // try to from an invalid index
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(chain3.getNrOfSegments()), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments());
+    // remove the last segment (which is attached to a fixed joint)
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(chain3.getNrOfSegments()-1), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments()-1);
+    // reset the chain, then try to remove all segments/joints
+    chain3 = chain1;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(0), chain1.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), (uint)0);
+    CPPUNIT_ASSERT(chain3.segments.empty());
+    // reset the chain, then try to remove the last 3 segments (having 2 moving joints)
+    chain3 = chain1;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Segment 4"), (uint)3);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain1.getNrOfJoints()-2);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain1.getNrOfSegments()-3);
+    CPPUNIT_ASSERT_EQUAL((uint)chain3.segments.size(), chain3.getNrOfSegments());
+    // create a new chain with some segment names whith repetitions
+    Chain chain4(chain1);
+    chain4.addSegment(Segment("SegmentX", Joint("JointX", Joint::None)));
+    chain4.addSegment(Segment("SegmentY", Joint("JointY", Joint::None)));
+    chain4.addSegment(Segment("SegmentY", Joint("JointY", Joint::None)));
+    chain4.addSegment(Segment("SegmentZ", Joint("JointZ", Joint::None)));
+    chain4.addSegment(Segment("SegmentX", Joint("JointX", Joint::None)));
+    chain4.addSegment(Segment("SegmentY", Joint("JointY", Joint::None)));
+    CPPUNIT_ASSERT_EQUAL(chain4.getNrOfSegments(), chain1.getNrOfSegments()+6);
+    CPPUNIT_ASSERT_EQUAL(chain4.getNrOfJoints(), chain1.getNrOfJoints());
+    chain3 = chain4;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentY"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentY"), (uint)2);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentY"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain4.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain4.getNrOfSegments()-6);
+    // reset the chain, then remove similarly to before
+    chain3  = chain4;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)2);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("SegmentX"), (uint)4);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(), chain4.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(), chain4.getNrOfSegments()-6);
 }
 
 // forward declaration, see below
@@ -244,6 +295,50 @@ void KinFamTest::TreeTest()
     cout << "Subtree (rooted at " << subroot << "):" << endl << tree2str(subtree) << endl;
     CPPUNIT_ASSERT(!isSubtree(tree1.getSegment(subroot), subtree.getRootSegment()));
     CPPUNIT_ASSERT(isSubtree(subtree.getRootSegment(), tree1.getSegment(subroot)));
+
+    Tree tree3("root");
+    tree3.addSegment(Segment("S1", Joint("J1", Joint::RotX)), "root");
+    tree3.addSegment(Segment("S2", Joint("J2", Joint::RotX)), "root");
+    tree3.addSegment(Segment("S3", Joint("J3", Joint::RotX)), "S2");
+    tree3.addSegment(Segment("S4", Joint("J4", Joint::None)), "S3");
+    tree3.addSegment(Segment("S5", Joint("J5", Joint::RotX)), "S2");
+    tree3.addSegment(Segment("S6", Joint("J6", Joint::RotX)), "S5");
+    tree3.addSegment(Segment("S7", Joint("J7", Joint::None)), "S5");
+    cout << "Tree 3:" << endl << tree3 << endl;
+    
+    Tree tree4(tree3);
+    tree4.deleteSegmentsFrom("S1");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)6);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)4);
+    cout << "After removing S1:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("S2");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)1);
+    cout << "After removing S2:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("S3");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)5);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)4);
+    cout << "After removing S3:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("S7");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)6);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)5);
+    cout << "After removing S7:" << endl << tree4 << endl;
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("ABCDEF");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), tree3.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), tree3.getNrOfJoints());
+    
+    tree4 = tree3;
+    tree4.deleteSegmentsFrom("root");
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), tree3.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), tree3.getNrOfJoints());
 }
 
 //Utility to check if the set of segments in contained is a subset of container.

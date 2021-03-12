@@ -106,6 +106,17 @@ namespace KDL
         std::string root_name;
 
         bool addTreeRecursive(SegmentMap::const_iterator root, const std::string& hook_name);
+        
+        /** Removes all child segments of `segment` (and `segment` itself).
+          *
+          * @param segment Iterator pointing to the segment to be deleted.
+          * @param ns Total number of segments that are removed in this way.
+          * @param nj Total number of moving joints that are removed in this way.
+          *
+          * @note A part from the `segments` map, no internal variables are
+          * modeified here, *ie*, `nrOfJoints` and `nrOfSegments` are untouched.
+          */
+        void deleteSegmentsRecursive(SegmentMap::const_iterator segment, unsigned int& ns, unsigned int& nj);
 
     public:
         /**
@@ -219,6 +230,39 @@ namespace KDL
         {
             return segments;
         }
+        
+        /**
+         * Request to delete all child segments starting from the given element.
+         *
+         * @param segment iterator of the first segment to delete (all children
+         * will be removed as well).
+         *
+         * @return the number of deleted segments.
+         *
+         * @note The root segment cannot be removed from the tree.
+         *
+         * @note If moving joints are removed in this way, joint indices
+         * are recomputed internally.
+         *
+         * @warning The behavior is undefined if `segment` is not a valid
+         * iterator (note that `getSegments().end()` is valid).
+         */
+        unsigned int deleteSegmentsFrom(SegmentMap::const_iterator segment);
+        
+        /**
+         * Request to delete all child segments starting from the one with given name.
+         *
+         * @param name the name of the first segment to delete (all children
+         * will be removed as well).
+         *
+         * @return the number of deleted segments.
+         *
+         * @note The root segment cannot be removed from the tree.
+         *
+         * @note If moving joints are removed in this way, joint indices
+         * are recomputed internally.
+         */
+        unsigned int deleteSegmentsFrom(const std::string& name);
 
         virtual ~Tree(){};
 
