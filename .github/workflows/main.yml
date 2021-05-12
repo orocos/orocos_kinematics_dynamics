@@ -18,7 +18,7 @@ jobs:
       CC: ${{ matrix.compiler }}
       OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
         with:
           submodules: recursive
       - name: Install
@@ -88,7 +88,7 @@ jobs:
             branch: release-1.4
     env: ${{ matrix.env }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           submodules: recursive
         if: ${{ (github.event_name == 'push' && github.ref == matrix.branch) || (github.event_name == 'pull_request' && github.base_ref == matrix.branch) }}
