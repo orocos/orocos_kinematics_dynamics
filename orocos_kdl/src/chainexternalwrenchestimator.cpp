@@ -121,9 +121,9 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
         return (error = E_SIZE_MISMATCH);
 
     /**
-     * =======================================================================================================================
-     * Part I: Estimation of the torques that are felt in joints as a result of the external wrench being applied on the robot
-     * =======================================================================================================================
+     * ================================================================================================================
+     * Part I: Estimation of the torques felt in joints as a result of the external wrench being applied on the robot
+     * ================================================================================================================
      */
 
     // Calculate decomposed robot's dynamics
@@ -171,7 +171,7 @@ int ChainExternalWrenchEstimator::JntToExtWrench(const JntArray &joint_position,
         return (error = E_JACSOLVER_FAILED);
 
     // Transform the jacobian from the base frame to the end-effector frame. 
-    // This part can be commented out if the user wants its estimated wrench to be expressed w.r.t. base frame 
+    // This part can be commented out if the user wants estimated wrench to be expressed w.r.t. base frame 
     jacobian_end_eff.changeBase(end_eff_frame.M.Inverse()); // Jacobian is now expressed w.r.t. end-effector frame
 
     // SVD of "Jac^T" with maximum iterations "maxiter": Jac^T = U * S^-1 * V^T

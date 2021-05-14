@@ -57,6 +57,7 @@ namespace KDL {
          * \param chain The kinematic chain of the robot, an internal copy will be made.
          * \param gravity The gravity-acceleration vector to use during the calculation.
          * \param sample_frequency Frequency at which users updates it estimation loop (in Hz).
+         * \param estimation_gain Parameter used to control the estimator's convergence
          * \param filter_constant Parameter defining how much the estimated signal should be filtered by the low-pass filter.
          *                        This input value should be between 0 and 1. Higher the number means more noise needs to be filtered-out.
          *                        The filter can be turned off by setting this value to 0.
