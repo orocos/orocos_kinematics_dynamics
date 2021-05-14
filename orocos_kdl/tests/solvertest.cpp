@@ -1577,7 +1577,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
      * take into account the noise in estimated signals (the differences between estimated and ground-truth wrenches), caused by other computations in this test
      * (ones coming from the implemented controller and the dynamics simulator) not just those coming from the estimator itself.
      */
-    double eps_wrench = 0.5, eps_torque = 0.2;
+    double eps_wrench = 0.6, eps_torque = 0.3;
     int ret;
     unsigned int nj = kukaLWR.getNrOfJoints();
     unsigned int ns = kukaLWR.getNrOfSegments();
@@ -1628,11 +1628,14 @@ void SolverTest::ExternalWrenchEstimatorTest()
 
     // External Wrench Estimator
     double sample_frequency = 1000.0; // Hz
-    double estimation_gain  = 30.0;
+    double estimation_gain  = 45.0;
     double filter_constant  = 0.5;
     ChainExternalWrenchEstimator extwrench_estimator(kukaLWR, linearAcc, sample_frequency, estimation_gain, filter_constant);
     
-    // Initial test state
+    std::vector<KDL::JntArray> jnt_pos;
+    std::vector<KDL::Wrench> wrench_reference;
+
+    // Set first test case
     q(0) = 1.0;
     q(1) = 0.0;
     q(2) = 0.0;
@@ -1640,30 +1643,34 @@ void SolverTest::ExternalWrenchEstimatorTest()
     q(4) = 0.0;
     q(5) = 1.57;
     q(6) = 5.48;
+    jnt_pos.push_back(q);
+    wrench_reference.push_back(Wrench(Vector(10.0, -20.0, 30.0), Vector(0.0, 0.0, 0.0))); // Ground-truth external wrench acting on the end-effector expressed in local end-effector's frame
 
-    qd(0) = 0.2;
-    qd(1) = -0.1;
-    qd(2) = 0.3;
-    qd(3) = 0.1;
-    qd(4) = -0.1;
-    qd(5) = -0.15;
-    qd(6) = 0.3;
+    // Set second test case
+    q(0) = 2.96;
+    q(1) = 1.02;
+    q(2) = 6.15;
+    q(3) = 1.61;
+    q(4) = 0.22;
+    q(5) = 0.17;
+    q(6) = 0.01;
+    jnt_pos.push_back(q);
+    wrench_reference.push_back(Wrench(Vector(0.0, 0.0, 0.0), Vector(0.3, -0.7, 0.0))); // expressed in local end-effector's frame
 
-    // Ground-truth external wrench acting on the end-effector
-    KDL::Vector f(10.0, -20.0, 30.0);
-    KDL::Vector n(0.3, -0.7, 0.0);
-    KDL::Wrench f_tool_reference(f, n); // expressed in local end-effector's frame
-
-    end_eff_force.setZero();
-    end_eff_pos_error.setZero();
-    end_eff_vel_error.setZero();
+    // Set third test case
+    q(0) = 1.12;
+    q(1) = 0.66;
+    q(2) = 6.15;
+    q(3) = 4.09;
+    q(4) = 1.64;
+    q(5) = 0.12;
+    q(6) = 0.01;
+    jnt_pos.push_back(q);
+    wrench_reference.push_back(Wrench(Vector(13.0, -0.5, 7.0), Vector(-0.4, 0.0, 0.9))); // expressed in local end-effector's frame
 
     // ##########################################################################################
     // Control and simulation
     // ##########################################################################################
-
-    // Initialize the estimator
-    extwrench_estimator.setInitialMomentum(q, qd); // sets the offset for future estimation (momentum calculation)
 
     // Control gains for a simple PD controller
     double k_p = 1500.0; // Proportional
@@ -1673,118 +1680,141 @@ void SolverTest::ExternalWrenchEstimatorTest()
     double simulationTime = 0.4; // in seconds
     double timeDelta = 1.0 / sample_frequency; // unit of seconds
 
-    // Set the desired Cartesian state
-    fksolverpos.JntToCart(q, end_effector_pose);
-    desired_end_eff_pose.p(0) = end_effector_pose.p(0) + 0.02;
-    desired_end_eff_pose.p(1) = end_effector_pose.p(1) + 0.02;
-    desired_end_eff_pose.p(2) = end_effector_pose.p(2) + 0.02;
-    desired_end_eff_twist.p.v(0) = 0.0;
-    desired_end_eff_twist.p.v(1) = 0.0;
-    desired_end_eff_twist.p.v(2) = 0.0;
-
-    for (double t = 0.0; t <= simulationTime; t = t + timeDelta)
+    // Iterate over test cases
+    for (unsigned int i = 0; i < jnt_pos.size(); i++)
     {
-        ret = jacobian_solver.JntToJac(q, jacobian_end_eff);
-        if (ret < 0)
+        // Re-set control and simulation variables
+        q = jnt_pos[i];
+        qd(0) = 0.2;
+        qd(1) = -0.1;
+        qd(2) = 0.3;
+        qd(3) = 0.5;
+        qd(4) = -0.1;
+        qd(5) = -0.15;
+        qd(6) = 0.9;
+
+        end_eff_force.setZero();
+        end_eff_pos_error.setZero();
+        end_eff_vel_error.setZero();
+        f_ext_base = f_ext_zero;
+
+        // Initialize the estimator
+        extwrench_estimator.updateInternalDataStructures();
+        extwrench_estimator.setInitialMomentum(q, qd); // sets the offset for future estimation (momentum calculation)
+
+        // Set the desired Cartesian state
+        fksolverpos.JntToCart(q, end_effector_pose);
+        desired_end_eff_pose.p(0) = end_effector_pose.p(0) + 0.02;
+        desired_end_eff_pose.p(1) = end_effector_pose.p(1) + 0.02;
+        desired_end_eff_pose.p(2) = end_effector_pose.p(2) + 0.02;
+        desired_end_eff_twist.p.v(0) = 0.0;
+        desired_end_eff_twist.p.v(1) = 0.0;
+        desired_end_eff_twist.p.v(2) = 0.0;
+
+        for (double t = 0.0; t <= simulationTime; t = t + timeDelta)
         {
-            std::cout << "Jacobian solver ERROR: " << ret << std::endl;
-            break;
+            ret = jacobian_solver.JntToJac(q, jacobian_end_eff);
+            if (ret < 0)
+            {
+                std::cout << "Jacobian solver ERROR: " << ret << std::endl;
+                break;
+            }
+
+            ret = fksolverpos.JntToCart(q, end_effector_pose);
+            if (ret < 0)
+            {
+                std::cout << "FK pos solver ERROR: " << ret << std::endl;
+                break;
+            }
+
+            jnt_position_velocity.q = q;
+            jnt_position_velocity.qdot = qd;
+            ret = fksolvervel.JntToCart(jnt_position_velocity, end_eff_twist);
+            if (ret < 0)
+            {
+                std::cout << "FK vel solver ERROR: " << ret << std::endl;
+                break;
+            }
+
+            end_eff_pos_error(0) = end_effector_pose.p(0) - desired_end_eff_pose.p(0);
+            end_eff_pos_error(1) = end_effector_pose.p(1) - desired_end_eff_pose.p(1);
+            end_eff_pos_error(2) = end_effector_pose.p(2) - desired_end_eff_pose.p(2);
+
+            end_eff_vel_error(0) = end_eff_twist.p.v(0) - desired_end_eff_twist.p.v(0);
+            end_eff_vel_error(1) = end_eff_twist.p.v(1) - desired_end_eff_twist.p.v(1);
+            end_eff_vel_error(2) = end_eff_twist.p.v(2) - desired_end_eff_twist.p.v(2);
+
+            end_eff_force = -end_eff_pos_error * k_p - end_eff_vel_error * k_d;
+
+            // Compute gravity joint torques (hide external wrench from this dynamics calculation)
+            ret = IdSolver.CartToJnt(q, jnt_array_zero, jnt_array_zero, f_ext_zero, gravity_torque);
+            if (ret < 0)
+            {
+                std::cout << "KDL RNE solver ERROR: " << ret << std::endl;
+                break;
+            }
+
+            // Compute joint control commands
+            command_torque.data =  jacobian_end_eff.data.transpose() * end_eff_force;
+            command_torque.data += gravity_torque.data;
+
+            // Start simulating the external force
+            if (t > 0.2) f_ext_base[ns - 1] = end_effector_pose.M * wrench_reference[i];
+
+            // Compute resultant joint accelerations that simulate robot's behaviour, given the command torques (add external wrench in this dynamics calculation)
+            ret = constraintSolver.CartToJnt(q, qd, qdd, alpha, beta, f_ext_base, command_torque, constraint_tau);
+            if (ret < 0)
+            {
+                std::cout << "KDL Vereshchagin solver ERROR: " << ret << std::endl;
+                break;
+            }
+            
+            // State integration: integrate from model accelerations to next joint state (positions and velocities)
+            qd.data = qd.data + qdd.data * timeDelta; // Euler Forward
+            q.data = q.data + qd.data * timeDelta; // Symplectic Euler
+
+            // Saturate integrated joint position for full circle crossing
+            for (unsigned int j = 0; j < nj; j++)
+            {
+                q(j) = std::fmod(q(j), 360 * deg2rad);
+                if (q(j) < 0.0) q(j) += 360 * deg2rad;
+            }
+            
+            // Estimate external wrench
+            extwrench_estimator.JntToExtWrench(q, qd, command_torque, f_tool_estimated);
         }
 
-        ret = fksolverpos.JntToCart(q, end_effector_pose);
-        if (ret < 0)
-        {
-            std::cout << "FK pos solver ERROR: " << ret << std::endl;
-            break;
-        }
+        // Inverse Force Kinematics
+        Eigen::Matrix<double, 6, 1> wrench;
+        wrench(0) = f_ext_base[ns - 1](0);
+        wrench(1) = f_ext_base[ns - 1](1);
+        wrench(2) = f_ext_base[ns - 1](2);
+        wrench(3) = f_ext_base[ns - 1](3);
+        wrench(4) = f_ext_base[ns - 1](4);
+        wrench(5) = f_ext_base[ns - 1](5);
+        ext_torque_reference.data = jacobian_end_eff.data.transpose() * wrench;
 
-        jnt_position_velocity.q = q;
-        jnt_position_velocity.qdot = qd;
-        ret = fksolvervel.JntToCart(jnt_position_velocity, end_eff_twist);
-        if (ret < 0)
-        {
-            std::cout << "FK vel solver ERROR: " << ret << std::endl;
-            break;
-        }
+        // Get estimated joint torque 
+        extwrench_estimator.getEstimatedJntTorque(ext_torque_estimated);
 
-        end_eff_pos_error(0) = end_effector_pose.p(0) - desired_end_eff_pose.p(0);
-        end_eff_pos_error(1) = end_effector_pose.p(1) - desired_end_eff_pose.p(1);
-        end_eff_pos_error(2) = end_effector_pose.p(2) - desired_end_eff_pose.p(2);
+        // ##################################################################################
+        // Final comparison
+        // ##################################################################################
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(0), wrench_reference[i](0), eps_wrench));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(1), wrench_reference[i](1), eps_wrench));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(2), wrench_reference[i](2), eps_wrench));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(3), wrench_reference[i](3), eps_wrench));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(4), wrench_reference[i](4), eps_wrench));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(5), wrench_reference[i](5), eps_wrench));
 
-        end_eff_vel_error(0) = end_eff_twist.p.v(0) - desired_end_eff_twist.p.v(0);
-        end_eff_vel_error(1) = end_eff_twist.p.v(1) - desired_end_eff_twist.p.v(1);
-        end_eff_vel_error(2) = end_eff_twist.p.v(2) - desired_end_eff_twist.p.v(2);
-
-        end_eff_force = -end_eff_pos_error * k_p - end_eff_vel_error * k_d;
-
-        // Compute necessary joint torques to maintain desired state, given accelerations (hide external wrench from this dynamics calculation)
-        ret = IdSolver.CartToJnt(q, jnt_array_zero, jnt_array_zero, f_ext_zero, gravity_torque);
-        if (ret < 0)
-        {
-            std::cout << "KDL RNE solver ERROR: " << ret << std::endl;
-            break;
-        }
-
-        // Compute control command
-        command_torque.data =  jacobian_end_eff.data.transpose() * end_eff_force;
-        command_torque.data += gravity_torque.data;
-
-        // Start simulating the external force
-        if (t > 0.1) f_ext_base[ns - 1] = end_effector_pose.M * f_tool_reference;
-
-        // Compute resultant joint accelerations that simulate robot's behaviour, given the command torques (add external wrench in this dynamics calculation)
-        ret = constraintSolver.CartToJnt(q, qd, qdd, alpha, beta, f_ext_base, command_torque, constraint_tau);
-        if (ret < 0)
-        {
-            std::cout << "KDL Vereshchagin solver ERROR: " << ret << std::endl;
-            break;
-        }
-        
-        // State integration: integrate from model accelerations to next joint state (positions and velocities)
-        qd.data = qd.data + qdd.data * timeDelta; // Euler Forward
-        q.data = q.data + qd.data * timeDelta; // Symplectic Euler
-
-        // Saturate integrated joint position for full circle crossing
-        for (unsigned int j = 0; j < nj; j++)
-        {
-            q(j) = std::fmod(q(j), 360 * deg2rad);
-            if (q(j) < 0.0) q(j) += 360 * deg2rad;
-        }
-        
-        // Estimate external wrench
-        extwrench_estimator.JntToExtWrench(q, qd, command_torque, f_tool_estimated);
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(0), ext_torque_reference(0), eps_torque));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(1), ext_torque_reference(1), eps_torque));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(2), ext_torque_reference(2), eps_torque));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(3), ext_torque_reference(3), eps_torque));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(4), ext_torque_reference(4), eps_torque));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(5), ext_torque_reference(5), eps_torque));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(6), ext_torque_reference(6), eps_torque));
     }
-
-    // Inverse Force Kinematics
-    Eigen::Matrix<double, 6, 1> wrench;
-    wrench(0) = f_ext_base[ns - 1](0);
-    wrench(1) = f_ext_base[ns - 1](1);
-    wrench(2) = f_ext_base[ns - 1](2);
-    wrench(3) = f_ext_base[ns - 1](3);
-    wrench(4) = f_ext_base[ns - 1](4);
-    wrench(5) = f_ext_base[ns - 1](5);
-    ext_torque_reference.data = jacobian_end_eff.data.transpose() * wrench;
-
-    // Get estimated joint torque 
-    extwrench_estimator.getEstimatedJntTorque(ext_torque_estimated);
-
-    // ##################################################################################
-    // Final comparison
-    // ##################################################################################
-    CPPUNIT_ASSERT(Equal(f_tool_estimated(0), f_tool_reference(0), eps_wrench));
-    CPPUNIT_ASSERT(Equal(f_tool_estimated(1), f_tool_reference(1), eps_wrench));
-    CPPUNIT_ASSERT(Equal(f_tool_estimated(2), f_tool_reference(2), eps_wrench));
-    CPPUNIT_ASSERT(Equal(f_tool_estimated(3), f_tool_reference(3), eps_wrench));
-    CPPUNIT_ASSERT(Equal(f_tool_estimated(4), f_tool_reference(4), eps_wrench));
-    CPPUNIT_ASSERT(Equal(f_tool_estimated(5), f_tool_reference(5), eps_wrench));
-
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(0), ext_torque_reference(0), eps_torque));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(1), ext_torque_reference(1), eps_torque));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(2), ext_torque_reference(2), eps_torque));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(3), ext_torque_reference(3), eps_torque));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(4), ext_torque_reference(4), eps_torque));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(5), ext_torque_reference(5), eps_torque));
-    CPPUNIT_ASSERT(Equal(ext_torque_estimated(6), ext_torque_reference(6), eps_torque));
 
     return;
 }
