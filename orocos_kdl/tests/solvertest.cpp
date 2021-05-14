@@ -2,6 +2,7 @@
 #include <frames_io.hpp>
 #include <framevel_io.hpp>
 #include <kinfam_io.hpp>
+#include <random>
 #include <time.h>
 #include <utilities/utility.h>
 
@@ -1577,7 +1578,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
      * take into account the noise in estimated signals (the differences between estimated and ground-truth wrenches), caused by other computations in this test
      * (ones coming from the implemented controller and the dynamics simulator) not just those coming from the estimator itself.
      */
-    double eps_wrench = 0.6, eps_torque = 0.3;
+    double eps_wrench = 0.5, eps_torque = 0.3;
     int ret;
     unsigned int nj = kukaLWR.getNrOfJoints();
     unsigned int ns = kukaLWR.getNrOfSegments();
@@ -1631,9 +1632,17 @@ void SolverTest::ExternalWrenchEstimatorTest()
     double estimation_gain  = 45.0;
     double filter_constant  = 0.5;
     ChainExternalWrenchEstimator extwrench_estimator(kukaLWR, linearAcc, sample_frequency, estimation_gain, filter_constant);
-    
+
+    // Prepare test cases
     std::vector<KDL::JntArray> jnt_pos;
     std::vector<KDL::Wrench> wrench_reference;
+
+    // Intialize random generator
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_real_distribution<> dis_force(-15.0, 15.0);
+    std::uniform_real_distribution<> dis_moment(-0.9, 0.9);
+    std::uniform_real_distribution<> dis_jnt_vel(-0.5, 0.5);
 
     // Set first test case
     q(0) = 1.0;
@@ -1644,7 +1653,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
     q(5) = 1.57;
     q(6) = 5.48;
     jnt_pos.push_back(q);
-    wrench_reference.push_back(Wrench(Vector(10.0, -20.0, 30.0), Vector(0.0, 0.0, 0.0))); // Ground-truth external wrench acting on the end-effector expressed in local end-effector's frame
+    wrench_reference.push_back(Wrench(Vector(dis_force(gen), dis_force(gen), dis_force(gen)), Vector(0.0, 0.0, 0.0))); // Ground-truth external wrench acting on the end-effector expressed in local end-effector's frame
 
     // Set second test case
     q(0) = 2.96;
@@ -1655,7 +1664,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
     q(5) = 0.17;
     q(6) = 0.01;
     jnt_pos.push_back(q);
-    wrench_reference.push_back(Wrench(Vector(0.0, 0.0, 0.0), Vector(0.3, -0.7, 0.0))); // expressed in local end-effector's frame
+    wrench_reference.push_back(Wrench(Vector(0.0, 0.0, 0.0), Vector(dis_moment(gen), dis_moment(gen), 0.0))); // expressed in local end-effector's frame
 
     // Set third test case
     q(0) = 1.12;
@@ -1666,7 +1675,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
     q(5) = 0.12;
     q(6) = 0.01;
     jnt_pos.push_back(q);
-    wrench_reference.push_back(Wrench(Vector(13.0, -0.5, 7.0), Vector(-0.4, 0.0, 0.9))); // expressed in local end-effector's frame
+    wrench_reference.push_back(Wrench(Vector(dis_force(gen), dis_force(gen), dis_force(gen)), Vector(dis_moment(gen), 0.0, dis_moment(gen)))); // expressed in local end-effector's frame
 
     // ##########################################################################################
     // Control and simulation
@@ -1685,13 +1694,13 @@ void SolverTest::ExternalWrenchEstimatorTest()
     {
         // Re-set control and simulation variables
         q = jnt_pos[i];
-        qd(0) = 0.2;
-        qd(1) = -0.1;
-        qd(2) = 0.3;
-        qd(3) = 0.5;
-        qd(4) = -0.1;
-        qd(5) = -0.15;
-        qd(6) = 0.9;
+        qd(0) = dis_jnt_vel(gen);
+        qd(1) = dis_jnt_vel(gen);
+        qd(2) = dis_jnt_vel(gen);
+        qd(3) = dis_jnt_vel(gen);
+        qd(4) = dis_jnt_vel(gen);
+        qd(5) = dis_jnt_vel(gen);
+        qd(6) = dis_jnt_vel(gen);
 
         end_eff_force.setZero();
         end_eff_pos_error.setZero();
