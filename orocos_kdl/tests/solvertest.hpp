@@ -20,6 +20,7 @@
 #include <chaindynparam.hpp>
 #include <chainidsolver_recursive_newton_euler.hpp>
 #include <chainfdsolver_recursive_newton_euler.hpp>
+#include <chainexternalwrenchestimator.hpp>
 #include <utilities/ldl_solver_eigen.hpp>
 
 
@@ -33,6 +34,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(FkVelAndIkVelTest );
     CPPUNIT_TEST(FkPosAndIkPosTest );
     CPPUNIT_TEST(VereshchaginTest );
+    CPPUNIT_TEST(ExternalWrenchEstimatorTest );
     CPPUNIT_TEST(IkSingularValueTest );
     CPPUNIT_TEST(IkVelSolverWDLSTest );
     CPPUNIT_TEST(FkPosVectTest );
@@ -53,6 +55,7 @@ public:
     void FkVelAndIkVelTest();
     void FkPosAndIkPosTest();
     void VereshchaginTest();
+    void ExternalWrenchEstimatorTest();
     void IkSingularValueTest() ;
     void IkVelSolverWDLSTest();
     void FkPosVectTest();
