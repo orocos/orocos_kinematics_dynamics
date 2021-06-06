@@ -3,7 +3,7 @@ if(POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
 endif()
 if(POLICY CMP0057)
-  cmake_policy(SET CMP0057 NEW)  # support IN_LISTS
+  cmake_policy(SET CMP0057 NEW)  # support IN_LISTS which is required for PyBind11 2.6 and newer
 endif()
 
 project(python_orocos_kdl VERSION 1.5.0)
