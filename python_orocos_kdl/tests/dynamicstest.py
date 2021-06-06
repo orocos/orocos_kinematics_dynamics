@@ -1,8 +1,9 @@
-# Copyright  (C)  2007  Ruben Smits <ruben dot smits at intermodalics dot eu>
+# Copyright  (C)  2020  Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
 
 # Version: 1.0
 # Author: Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
 # Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
+# Maintainer: Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
 # URL: http://www.orocos.org/kdl
 
 # This library is free software; you can redistribute it and/or
