@@ -3,7 +3,7 @@ if(POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
 endif()
 
-project(python_orocos_kdl VERSION 1.4.1)
+project(python_orocos_kdl VERSION 1.5.0)
 
 # find a matching version of orocos_kdl
 find_package(orocos_kdl ${PROJECT_VERSION} EXACT REQUIRED)
