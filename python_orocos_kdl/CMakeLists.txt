@@ -13,7 +13,7 @@ link_directories(${orocos_kdl_LIBRARY_DIRS})
 if(DEFINED ENV{ROS_PYTHON_VERSION})
   SET(PYTHON_VERSION $ENV{ROS_PYTHON_VERSION} CACHE STRING "Python Version")
 else()
-  SET(PYTHON_VERSION 2 CACHE STRING "Python Version")
+  SET(PYTHON_VERSION 3 CACHE STRING "Python Version")
 endif()
 
 set(PYBIND11_PYTHON_VERSION ${PYTHON_VERSION} CACHE STRING "Python version used by PyBind11")
