@@ -211,5 +211,5 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'orocoskdlpythonbindings', u'Orocos KDL python bindings Documentation',
-     [u'Ruben Smits'], 1)
+     [u'Ruben Smits', u"Matthijs van der Burgh"], 1)
 ]

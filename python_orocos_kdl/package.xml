@@ -10,13 +10,14 @@
     Library (KDL), distributed by the Orocos Project.
   </description>
   <maintainer email="ruben.smits@intermodalics.eu">Ruben Smits</maintainer>
+  <maintainer email="MatthijsBurgh@outlook.com">Matthijs van der Burgh</maintainer>
   <url>http://wiki.ros.org/python_orocos_kdl</url>
   <license>LGPL</license>
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>orocos_kdl</build_depend>
-  
+
   <depend condition="$ROS_PYTHON_VERSION == 2">python</depend>
   <depend condition="$ROS_PYTHON_VERSION == 3">python3</depend>
 

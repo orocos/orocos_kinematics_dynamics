@@ -4,6 +4,7 @@
 # Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
 # Author: Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
 # Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
+# Maintainer: Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
 # URL: http://www.orocos.org/kdl
 
 # This library is free software; you can redistribute it and/or
@@ -268,7 +269,7 @@ class KinfamTestFunctions(unittest.TestCase):
         q_dqdt = JntArray(q)
         for i in range(q.rows()):
             q_dqdt[i] += dt * qdot[i]
-        
+
         F_bs_ee_q = Frame.Identity()
         F_bs_ee_q_dqdt = Frame.Identity()
 
@@ -284,13 +285,13 @@ class KinfamTestFunctions(unittest.TestCase):
 
         changeJacRepresentation(jac_q, F_bs_ee_q, representation)
         changeJacRepresentation(jac_q_dqdt, F_bs_ee_q_dqdt, representation)
-        
+
         Jdot_diff(jac_q, jac_q_dqdt, dt, jdot_by_diff)
 
         jdot_by_solver = Jacobian(NrOfJoints)
         self.jacdotsolver.setRepresentation(representation)
         self.jacdotsolver.JntToJacDot(JntArrayVel(q_dqdt, qdot), jdot_by_solver)
-        
+
         jdot_qdot_by_solver = Twist()
         MultiplyJacobian(jdot_by_solver, qdot, jdot_qdot_by_solver)
 
@@ -320,7 +321,7 @@ class KinfamTestFunctions(unittest.TestCase):
                                          "err: {}".format(jdot_qdot_solver, jdot_qdot_diff, representation, dt,
                                                           eps_diff_vs_solver, err))
             dt *= 10
-        
+
 
 class KinfamTestTree(unittest.TestCase):
 
