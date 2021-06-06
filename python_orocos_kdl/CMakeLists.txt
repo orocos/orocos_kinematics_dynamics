@@ -37,7 +37,12 @@ if(catkin_FOUND)
 endif()
 
 # Build the module
-SET(PYTHON_MODULE_EXTENSION ".so")
+if(WIN32)
+  set(PYTHON_MODULE_EXTENSION ".pyd")
+else()
+  set(PYTHON_MODULE_EXTENSION ".so")
+endif()
+
 add_subdirectory(pybind11)
 pybind11_add_module(${LIBRARY_NAME}
   PyKDL/PyKDL.h
