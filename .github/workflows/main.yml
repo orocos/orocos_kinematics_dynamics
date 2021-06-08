@@ -81,4 +81,4 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref == matrix.branch) || (github.event_name == 'pull_request' && github.base_ref == matrix.branch) }}
       - uses: ros-industrial/industrial_ci@master
         env: ${{ matrix.env }}
-        if: ${{ (github.event_name == 'push' && github.ref == matrix.branch) || (github.event_name == 'pull_request' && github.base_ref == matrix.branch) }}
+        if: ${{ (github.event_name == 'push' && endsWith(github.ref, matrix.branch)) || (github.event_name == 'pull_request' && endsWith(github.base_ref, matrix.branch)) }}
