@@ -11,7 +11,7 @@
   </description>
   <maintainer email="ruben.smits@intermodalics.eu">Ruben Smits</maintainer>
   <url>http://wiki.ros.org/orocos_kdl</url>
-  <license>LGPL</license>
+  <license>LGPL-2.1-or-later</license>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>eigen</build_depend>
