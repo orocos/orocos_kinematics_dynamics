@@ -73,6 +73,47 @@ namespace KDL {
          */
         virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out);
 
+        /**
+         * Set maximum number of iterations
+         */
+        void setMaxIter(const unsigned int maxiter_in);
+
+        /**
+         * Set epsilon
+         * \pre 0 < eps, otherwise eps is ignored
+         */
+        void setEps(const double eps_in);
+
+        /**
+         * Get maximum number of iterations
+         * \pre 1 <= maxiter, otherwise maxiter is ignored
+         */
+        unsigned int getMaxIter()const { return maxiter; }
+
+        /**
+         * Get epsilon
+         */
+        double getEps()const { return eps; }
+
+        /**
+         * Get delta twist from last call to CartToJnt()
+         */
+        void getDeltaTwist(KDL::Twist& _delta_twist)
+        {
+            _delta_twist    = delta_twist;
+        }
+
+        /**
+         * Get status of ik velocity solver
+         */
+        int getVelSolverStatus() const { return ikvelstatus; }
+
+        /**
+         * Get number iterations spent in last call to CartToJnt()
+         * Defaults to 0 at construction
+         */
+        unsigned int getNumIters() const { return numiter; }
+
         /// @copydoc KDL::SolverI::strError()
         virtual const char* strError(const int error) const;
 
@@ -90,6 +131,8 @@ namespace KDL {
 
         unsigned int maxiter;
         double eps;
+        unsigned int numiter;
+        int ikvelstatus;
     };
 
 }
