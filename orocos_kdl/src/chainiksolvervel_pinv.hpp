@@ -80,11 +80,44 @@ namespace KDL
         virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return -1;};
 
         /**
+         * Set eps
+         * \pre 0 < eps, otherwise eps is ignored
+         */
+        void setEps(const double eps_in);
+
+        /**
+         * Set maxIter
+         * \pre 1 <= maxiter, otherwise maxiter is ignored
+         */
+        void setMaxIter(const unsigned int maxiter_in);
+
+        /**
          * Retrieve the number of singular values of the jacobian that are < eps;
          * if the number of near zero singular values is > jac.col()-jac.row(),
          * then the jacobian pseudoinverse is singular
          */
         unsigned int getNrZeroSigmas()const {return nrZeroSigmas;};
+
+        /**
+         * Request the minimum of the first six singular values
+         */
+        double getSigmaMin()const {return sigmaMin;};
+
+        /**
+         * Request the singular values of the Jacobian
+         */
+        int getSigma(JntArray& Sout);
+
+        /**
+         * Request the value of eps
+         */
+        double getEps()const {return eps;};
+
+        /**
+         * Get maximum number of iterations
+         * \pre 1 <= maxiter, otherwise maxiter is ignored
+         */
+        unsigned int getMaxIter()const { return maxiter; }
 
         /**
          * Retrieve the latest return code from the SVD algorithm
@@ -108,10 +141,10 @@ namespace KDL
         std::vector<JntArray> V;
         JntArray tmp;
         double eps;
-        int maxiter;
+        unsigned int maxiter;
         unsigned int nrZeroSigmas;
         int svdResult;
-
+        double sigmaMin;
     };
 }
 #endif

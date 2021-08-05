@@ -36,7 +36,9 @@ namespace KDL
         eps(_eps),
         maxiter(_maxiter),
         nrZeroSigmas(0),
-        svdResult(0)
+        svdResult(0),
+        sigmaMin(0),
+        Smaxtomin(nj)
     {
     }
 
@@ -52,12 +54,34 @@ namespace KDL
         for(unsigned int i = 0 ; i < V.size(); i++)
             V[i].resize(nj);
         tmp.resize(nj);
+        Smaxtomin.resize(nj);
     }
 
     ChainIkSolverVel_pinv::~ChainIkSolverVel_pinv()
     {
     }
 
+
+    void ChainIkSolverVel_pinv::setEps(const double eps_in)
+    {
+        if (0 < eps_in) eps = eps_in;
+        // else silently ignore
+    }
+
+    void ChainIkSolverVel_pinv::setMaxIter(const unsigned int maxiter_in)
+    {
+        if (1 <= maxiter_in) maxiter = maxiter_in;
+        // else silently ignore
+    }
+
+    int ChainIkSolverVel_pinv::getSigma(JntArray& Sout)
+    {
+        if (Sout.rows() != S.rows())
+            return (error = E_SIZE_MISMATCH);
+        for (unsigned int i=0;i<Sout.rows();i++)
+            Sout(i)=S(i);
+        return (error = E_NOERROR);
+    }
 
     int ChainIkSolverVel_pinv::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
@@ -75,8 +99,9 @@ namespace KDL
         double sum;
         unsigned int i,j;
 
-        // Initialize near zero singular value counter
+        // Initialize (internal) return values
         nrZeroSigmas = 0 ;
+        sigmaMin = 0.;
 
         //Do a singular value decomposition of "jac" with maximum
         //iterations "maxiter", put the results in "U", "S" and "V"
@@ -86,6 +111,14 @@ namespace KDL
         {
             qdot_out.data.setZero();
             return (error = E_SVD_FAILED);
+        }
+
+        // Minimum of six largest singular values of J is S(5) if number of joints >=6 and 0 for <6
+        if ( jac.columns() >= 6 ) {
+            sigmaMin = S(5);
+        }
+        else {
+            sigmaMin = 0.;
         }
 
         // We have to calculate qdot_out = jac_pinv*v_in
