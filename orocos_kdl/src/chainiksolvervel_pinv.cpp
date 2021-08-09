@@ -76,10 +76,10 @@ namespace KDL
 
     int ChainIkSolverVel_pinv::getSigma(JntArray& Sout)
     {
-        if (Sout.rows() != S.rows())
+        if (Sout.rows() != Smaxtomin.rows())
             return (error = E_SIZE_MISMATCH);
         for (unsigned int i=0;i<Sout.rows();i++)
-            Sout(i)=S(i);
+            Sout(i)=Smaxtomin(i);
         return (error = E_NOERROR);
     }
 
@@ -113,9 +113,13 @@ namespace KDL
             return (error = E_SVD_FAILED);
         }
 
+        // Sort S in descending order (S is not sorted in SVD_HH)
+        // copied from svd_eigen_HH.cpp
+        Smaxtomin = S;
+        SortJntArrayMaxToMin(Smaxtomin);
         // Minimum of six largest singular values of J is S(5) if number of joints >=6 and 0 for <6
         if ( jac.columns() >= 6 ) {
-            sigmaMin = S(5);
+            sigmaMin = Smaxtomin(5);
         }
         else {
             sigmaMin = 0.;
@@ -160,6 +164,29 @@ namespace KDL
         } else {
             return (error = E_NOERROR);                 // have converged
         }
+    }
+
+    void ChainIkSolverVel_pinv::SortJntArrayMaxToMin(JntArray& Smaxtomin)
+    {
+        int n=Smaxtomin.rows();
+        for (int i=0; i<n; i++){
+            double S_max = Smaxtomin(i);
+            int i_max = i;
+            for (int j=i+1; j<n; j++){
+                double Sj = Smaxtomin(j);
+                if (Sj > S_max){
+                    S_max = Sj;
+                    i_max = j;
+                }
+            }
+            if (i_max != i){
+                /* swap eigenvalues */
+                double tmp = Smaxtomin(i);
+                Smaxtomin(i)=Smaxtomin(i_max);
+                Smaxtomin(i_max)=tmp;
+            }
+        }
+        return;
     }
 
     const char* ChainIkSolverVel_pinv::strError(const int error) const

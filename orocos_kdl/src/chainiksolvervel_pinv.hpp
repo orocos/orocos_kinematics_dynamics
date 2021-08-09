@@ -125,6 +125,11 @@ namespace KDL
          */
         int getSVDResult()const {return svdResult;};
 
+        /**
+         * Sort a JntArray from maximum to minimum value
+         */
+        void SortJntArrayMaxToMin(JntArray& Smaxtomin);
+
         /// @copydoc KDL::SolverI::strError()
         virtual const char* strError(const int error) const;
 
@@ -145,6 +150,7 @@ namespace KDL
         unsigned int nrZeroSigmas;
         int svdResult;
         double sigmaMin;
+        JntArray Smaxtomin;
     };
 }
 #endif
