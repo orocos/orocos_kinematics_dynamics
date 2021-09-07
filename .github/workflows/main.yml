@@ -62,7 +62,7 @@ jobs:
       - name: Update LD_LIBRARY_PATH
         run: |
           export LD_LIBRARY_PATH=/usr/local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-          sudo ldconfig
+          sudo ldconfig -v
           echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $GITHUB_ENV
       - name: Test orocos_kdl
         run: |
@@ -74,6 +74,8 @@ jobs:
         run: |
           cd python_orocos_kdl
           which python
+          env
+          sudo ldconfig -v
           env
           python tests/PyKDLtest.py
 
