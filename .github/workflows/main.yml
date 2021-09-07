@@ -28,11 +28,6 @@ jobs:
             compiler: gcc
             python_version: '3.9'
             python: python3
-          - os: ubuntu-20.04
-            orocos_build_type: Release
-            compiler: gcc
-            python_version: '3.10'
-            python: python3
     env:
       CC: ${{ matrix.compiler }}
       OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
@@ -76,6 +71,7 @@ jobs:
       - name: Test PyKDL Python
         run: |
           cd python_orocos_kdl
+          which python
           python tests/PyKDLtest.py
 
   industrial_ci:
