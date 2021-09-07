@@ -69,11 +69,13 @@ jobs:
           cd orocos_kdl/build
           make check
       - name: Test PyKDL Python
+        env:
+          LD_LIBRARY_PATH: ""
         run: |
           cd python_orocos_kdl
           which python
           env
-          LD_LIBRARY_PATH="" python tests/PyKDLtest.py
+          python tests/PyKDLtest.py
 
   industrial_ci:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
