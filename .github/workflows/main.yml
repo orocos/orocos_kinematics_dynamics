@@ -72,7 +72,7 @@ jobs:
         run: |
           cd python_orocos_kdl
           which python
-          python tests/PyKDLtest.py
+          LD_LIBRARY_PATH="" python tests/PyKDLtest.py
 
   industrial_ci:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
