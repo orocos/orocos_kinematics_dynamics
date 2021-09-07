@@ -68,6 +68,7 @@ jobs:
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
           sudo ldconfig
+          echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $GITHUB_ENV
       - name: Test orocos_kdl
         run: |
           cd orocos_kdl/build
