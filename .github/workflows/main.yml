@@ -15,7 +15,7 @@ jobs:
         os: [ubuntu-20.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
-        python_version: ['3']
+        python_version: ['3.8']
         python: [python3]
         include:
           - os: ubuntu-18.04
@@ -62,23 +62,17 @@ jobs:
       - name: Update LD_LIBRARY_PATH
         run: |
           export LD_LIBRARY_PATH=/usr/local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-          sudo ldconfig -v
+          sudo ldconfig
           echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH" >> $GITHUB_ENV
       - name: Test orocos_kdl
         run: |
           cd orocos_kdl/build
           make check
       - name: Test PyKDL
-        env:
-          LD_LIBRARY_PATH: ""
         run: |
           cd python_orocos_kdl
-          which python
-          env
-          sudo ldconfig -v
-          env
-          python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(plat_specific=True, prefix=''))"
-          python -c "import sys; print(sys.path)"
+          python_version_short=$(python -c "import sys; print('{}.{}'.format(sys.version_info[0], sys.version_info[1]))"
+          PYTHONPATH=/usr/local/lib/python${python_version_short}/dist-packages${PYTHONPATH:+:${PYTHONPATH}}
           python tests/PyKDLtest.py
 
   industrial_ci:
