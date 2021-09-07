@@ -72,7 +72,7 @@ jobs:
         run: |
           cd python_orocos_kdl
           python_version_short=$(python -c "import sys; print('{}.{}'.format(sys.version_info[0], sys.version_info[1]))")
-          PYTHONPATH=/usr/local/lib/python${python_version_short}/dist-packages${PYTHONPATH:+:${PYTHONPATH}}
+          export PYTHONPATH=/usr/local/lib/python${python_version_short}/dist-packages${PYTHONPATH:+:${PYTHONPATH}}
           python -c "import sys; print(sys.path)"
           python tests/PyKDLtest.py
 
