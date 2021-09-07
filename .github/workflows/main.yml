@@ -42,7 +42,8 @@ jobs:
           python-version: ${{ matrix.python_version }}
       - name: Install
         run: |
-          sudo apt-get install libeigen3-dev libcppunit-dev ${PYTHON}-psutil ${PYTHON}-future
+          sudo apt-get install libeigen3-dev libcppunit-dev
+          pip install psutil future
       - name: Build orocos_kdl
         run: |
           cd orocos_kdl
@@ -71,8 +72,8 @@ jobs:
       - name: Test PyKDL
         run: |
           cd python_orocos_kdl
-          python -c "import sys; print(sys.path)"
-          export PYTHONPATH=$(python -c "import sys; print(':'.join(sys.path))"):$(/usr/bin/python -c "import sys; print(':'.join(sys.path))")
+          python_version_short=$(python -c "import sys; print('{}.{}'.format(sys.version_info[0], sys.version_info[1]))")
+          export PYTHONPATH=/usr/local/lib/python${python_version_short}/dist-packages${PYTHONPATH:+:${PYTHONPATH}}
           echo $PYTHONPATH
           python -c "import sys; print(sys.path)"
           python tests/PyKDLtest.py
