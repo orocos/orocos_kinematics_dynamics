@@ -8,22 +8,33 @@ env:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-18.04
+    runs-on:  ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-20.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
+        ros_python_version: [3]
+        python: [python3]
+        include:
+          - os: ubuntu-18.04
+            orocos_build_type: Release
+            compiler: gcc
+            ros_python_version: 2
+            python: python
     env:
       CC: ${{ matrix.compiler }}
       OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
+      ROS_PYTHON_VERSION: ${{ matrix.ros_python_version }}
+      PYTHON: ${{ matrix.python }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
       - name: Install
         run: |
-          sudo apt-get install libeigen3-dev libcppunit-dev python-psutil python3-psutil python-future python3-future
+          sudo apt-get install libeigen3-dev libcppunit-dev ${PYTHON}-psutil ${PYTHON}-future
       - name: Build orocos_kdl
         run: |
           cd orocos_kdl
@@ -32,21 +43,11 @@ jobs:
           cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
           make
           sudo make install
-      - name: Build PyKDL Python 2
+      - name: Build PyKDL Python
         run: |
           cd python_orocos_kdl
-          mkdir build2
-          cd build2
-          export ROS_PYTHON_VERSION=2
-          cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
-          make
-          sudo make install
-      - name: Build PyKDL Python 3
-        run: |
-          cd python_orocos_kdl
-          mkdir build3
-          cd build3
-          export ROS_PYTHON_VERSION=3
+          mkdir build
+          cd build
           cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
           make
           sudo make install
@@ -58,14 +59,10 @@ jobs:
         run: |
           cd orocos_kdl/build
           make check
-      - name: Test PyKDL Python 2
+      - name: Test PyKDL Python
         run: |
           cd python_orocos_kdl
-          python2 tests/PyKDLtest.py
-      - name: Test PyKDL Python 3
-        run: |
-          cd python_orocos_kdl
-          python3 tests/PyKDLtest.py
+          ${PYTHON} tests/PyKDLtest.py
 
   industrial_ci:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
