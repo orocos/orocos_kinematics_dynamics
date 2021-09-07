@@ -71,6 +71,7 @@ jobs:
       - name: Test PyKDL
         run: |
           cd python_orocos_kdl
+          python -c "import sys; print(sys.path)"
           export PYTHONPATH=$(python -c "import sys; print(':'.join(sys.path))"):$(/usr/bin/python -c "import sys; print(':'.join(sys.path))")
           echo $PYTHONPATH
           python -c "import sys; print(sys.path)"
