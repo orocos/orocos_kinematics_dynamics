@@ -15,23 +15,36 @@ jobs:
         os: [ubuntu-20.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
-        ros_python_version: [3]
+        python_version: [3]
         python: [python3]
         include:
           - os: ubuntu-18.04
             orocos_build_type: Release
             compiler: gcc
-            ros_python_version: 2
+            python_version: 2
             python: python
+          - os: ubuntu-20.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: 3.9
+            python: python3
+          - os: ubuntu-20.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: 3.10
+            python: python3
     env:
       CC: ${{ matrix.compiler }}
       OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
-      ROS_PYTHON_VERSION: ${{ matrix.ros_python_version }}
+      ROS_PYTHON_VERSION: ${{ matrix.python_version }}
       PYTHON: ${{ matrix.python }}
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python_version }}
       - name: Install
         run: |
           sudo apt-get install libeigen3-dev libcppunit-dev ${PYTHON}-psutil ${PYTHON}-future
