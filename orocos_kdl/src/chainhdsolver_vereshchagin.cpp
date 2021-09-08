@@ -27,7 +27,6 @@
 
 namespace KDL
 {
-using namespace Eigen;
 
 ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, const Twist &root_acc, const unsigned int nc_) :
     chain(chain_), nj(chain.getNrOfJoints()), ns(chain.getNrOfSegments()), nc(nc_),
@@ -38,19 +37,19 @@ ChainHdSolver_Vereshchagin::ChainHdSolver_Vereshchagin(const Chain& chain_, cons
     //Provide the necessary memory for computing the inverse of M0
     nu_sum.resize(nc);
     M_0_inverse.resize(nc, nc);
-    Um = MatrixXd::Identity(nc, nc);
-    Vm = MatrixXd::Identity(nc, nc);
-    Sm = VectorXd::Ones(nc);
-    tmpm = VectorXd::Ones(nc);
+    Um = Eigen::MatrixXd::Identity(nc, nc);
+    Vm = Eigen::MatrixXd::Identity(nc, nc);
+    Sm = Eigen::VectorXd::Ones(nc);
+    tmpm = Eigen::VectorXd::Ones(nc);
 
     // Provide the necessary memory for storing the total torque acting on each joint
-    total_torques = VectorXd::Zero(nj);
+    total_torques = Eigen::VectorXd::Zero(nj);
 }
 
 void ChainHdSolver_Vereshchagin::updateInternalDataStructures() {
     ns = chain.getNrOfSegments();
     nj = chain.getNrOfJoints();
-    total_torques = VectorXd::Zero(nj);
+    total_torques = Eigen::VectorXd::Zero(nj);
     results.resize(ns+1,segment_info(nc));
 }
 
@@ -173,7 +172,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
                 Wrench col(Vector(s.E_tilde(3, c), s.E_tilde(4, c), s.E_tilde(5, c)),
                            Vector(s.E_tilde(0, c), s.E_tilde(1, c), s.E_tilde(2, c)));
                 col = base_to_end*col;
-                s.E_tilde.col(c) << Vector3d::Map(col.torque.data), Vector3d::Map(col.force.data);
+                s.E_tilde.col(c) << Eigen::Vector3d::Map(col.torque.data), Eigen::Vector3d::Map(col.force.data);
             }
         }
         else
@@ -183,7 +182,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             segment_info& child = results[i + 1];
             //Copy PZ into a vector so we can do matrix manipulations, put torques above forces
             Vector6d vPZ;
-            vPZ << Vector3d::Map(child.PZ.torque.data), Vector3d::Map(child.PZ.force.data);
+            vPZ << Eigen::Vector3d::Map(child.PZ.torque.data), Eigen::Vector3d::Map(child.PZ.force.data);
             Matrix6d PZDPZt;
             PZDPZt.noalias() = vPZ * vPZ.transpose();
             PZDPZt /= child.D;
@@ -209,7 +208,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             s.G = child.G;
             Twist CiZDu = child.C + (child.Z / child.D) * child.u;
             Vector6d vCiZDu;
-            vCiZDu << Vector3d::Map(CiZDu.rot.data), Vector3d::Map(CiZDu.vel.data);
+            vCiZDu << Eigen::Vector3d::Map(CiZDu.rot.data), Eigen::Vector3d::Map(CiZDu.vel.data);
             s.G.noalias() += child.E.transpose() * vCiZDu;
         }
         if (i != 0)
@@ -225,7 +224,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
                 Wrench col(Vector(s.E_tilde(3, c), s.E_tilde(4, c), s.E_tilde(5, c)),
                            Vector(s.E_tilde(0, c), s.E_tilde(1, c), s.E_tilde(2, c)));
                 col = s.F*col;
-                s.E.col(c) << Vector3d::Map(col.torque.data), Vector3d::Map(col.force.data);
+                s.E.col(c) << Eigen::Vector3d::Map(col.torque.data), Eigen::Vector3d::Map(col.force.data);
             }
 
             //needed for next recursion
@@ -253,7 +252,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
 
             //Matrix form of Z, put rotations above translations
             Vector6d vZ;
-            vZ << Vector3d::Map(s.Z.rot.data), Vector3d::Map(s.Z.vel.data);
+            vZ << Eigen::Vector3d::Map(s.Z.rot.data), Eigen::Vector3d::Map(s.Z.vel.data);
             s.EZ.noalias() = s.E.transpose() * vZ;
 
             if (chain.getSegment(i - 1).getJoint().getType() != Joint::Fixed)
@@ -267,7 +266,7 @@ void ChainHdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
     //equation f) nu = M_0_inverse*(beta_N - E0_tilde`*acc0 - G0)
     //M_0_inverse, always nc*nc symmetric matrix
     //std::cout<<"M0: "<<results[0].M<<std::endl;
-    //results[0].M-=MatrixXd::Identity(nc,nc);
+    //results[0].M-=Eigen::MatrixXd::Identity(nc,nc);
     //std::cout<<"augmented M0: "<<results[0].M<<std::endl;
 
 
@@ -284,10 +283,10 @@ void ChainHdSolver_Vereshchagin::constraint_calculation(const JntArray& beta)
 
     results[0].M.noalias() = Vm * Sm.asDiagonal();
     M_0_inverse.noalias() = results[0].M * Um.transpose();
-    //results[0].M.ldlt().solve(MatrixXd::Identity(nc,nc),&M_0_inverse);
+    //results[0].M.ldlt().solve(Eigen::MatrixXd::Identity(nc,nc),&M_0_inverse);
     //results[0].M.computeInverse(&M_0_inverse);
     Vector6d acc;
-    acc << Vector3d::Map(acc_root.rot.data), Vector3d::Map(acc_root.vel.data);
+    acc << Eigen::Vector3d::Map(acc_root.rot.data), Eigen::Vector3d::Map(acc_root.vel.data);
     nu_sum.noalias() = -(results[0].E_tilde.transpose() * acc);
     //nu_sum.setZero();
     nu_sum += beta.data;

@@ -23,8 +23,6 @@
 
 namespace KDL
 {
-    using namespace Eigen;
-
     JntSpaceInertiaMatrix::JntSpaceInertiaMatrix()
     {
     }
@@ -117,7 +115,6 @@ namespace KDL
 
     bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2){return Equal(src1,src2);}
     //bool operator!=(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2){return Equal(src1,src2);}
-
 }
 
 

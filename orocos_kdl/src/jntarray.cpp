@@ -23,8 +23,6 @@
 
 namespace KDL
 {
-    using namespace Eigen;
-
     JntArray::JntArray()
     {
     }
@@ -54,7 +52,7 @@ namespace KDL
 
     void JntArray::resize(unsigned int newSize)
     {
-        data.conservativeResizeLike(VectorXd::Zero(newSize));
+        data.conservativeResizeLike(Eigen::VectorXd::Zero(newSize));
     }
 
     double JntArray::operator()(unsigned int i,unsigned int j)const

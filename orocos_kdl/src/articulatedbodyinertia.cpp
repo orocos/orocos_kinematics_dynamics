@@ -23,14 +23,12 @@
 
 #include <Eigen/Core>
 
-using namespace Eigen;
-
 namespace KDL{
     
   ArticulatedBodyInertia::ArticulatedBodyInertia(const RigidBodyInertia& rbi)
     {
-        this->M=Matrix3d::Identity()*rbi.m;
-        this->I=Map<const Matrix3d>(rbi.I.data);
+        this->M=Eigen::Matrix3d::Identity()*rbi.m;
+        this->I=Eigen::Map<const Eigen::Matrix3d>(rbi.I.data);
         this->H << 0,-rbi.h[2],rbi.h[1],
             rbi.h[2],0,-rbi.h[0],
             -rbi.h[1],rbi.h[0],0;
@@ -41,7 +39,7 @@ namespace KDL{
         *this = RigidBodyInertia(m,c,Ic);
     }
 
-  ArticulatedBodyInertia::ArticulatedBodyInertia(const Matrix3d& M, const Matrix3d& H, const Matrix3d& I)
+  ArticulatedBodyInertia::ArticulatedBodyInertia(const Eigen::Matrix3d& M, const Eigen::Matrix3d& H, const Eigen::Matrix3d& I)
     {
         this->M=M;
         this->I=I;
@@ -69,8 +67,8 @@ namespace KDL{
     
     Wrench operator*(const ArticulatedBodyInertia& I,const Twist& t){
         Wrench result;
-        Vector3d::Map(result.force.data)=I.M*Vector3d::Map(t.vel.data)+I.H.transpose()*Vector3d::Map(t.rot.data);
-        Vector3d::Map(result.torque.data)=I.I*Vector3d::Map(t.rot.data)+I.H*Vector3d::Map(t.vel.data);
+        Eigen::Vector3d::Map(result.force.data)=I.M*Eigen::Vector3d::Map(t.vel.data)+I.H.transpose()*Eigen::Vector3d::Map(t.rot.data);
+        Eigen::Vector3d::Map(result.torque.data)=I.I*Eigen::Vector3d::Map(t.rot.data)+I.H*Eigen::Vector3d::Map(t.vel.data);
         return result;
     }
 
@@ -79,18 +77,18 @@ namespace KDL{
         //mb=ma
         //hb=R*(h-m*r)
         //Ib = R(Ia+r x h x + (h-m*r) x r x)R'
-        Map<Matrix3d> E(X.M.data);
-        Matrix3d rcross;
+        Eigen::Map<Eigen::Matrix3d> E(X.M.data);
+        Eigen::Matrix3d rcross;
         rcross << 0,-X.p[2],X.p[1],
             X.p[2],0,-X.p[0],
             -X.p[1],X.p[0],0;
         
-        Matrix3d HrM=I.H-rcross*I.M;
+        Eigen::Matrix3d HrM=I.H-rcross*I.M;
         return ArticulatedBodyInertia(E*I.M*E.transpose(),E*HrM*E.transpose(),E*(I.I-rcross*I.H.transpose()+HrM*rcross)*E.transpose());
     }
 
     ArticulatedBodyInertia operator*(const Rotation& M,const ArticulatedBodyInertia& I){
-        Map<const Matrix3d> E(M.data);
+        Eigen::Map<const Eigen::Matrix3d> E(M.data);
         return ArticulatedBodyInertia(E.transpose()*I.M*E,E.transpose()*I.H*E,E.transpose()*I.I*E);
     }
 
@@ -98,12 +96,12 @@ namespace KDL{
         //mb=ma
         //hb=R*(h-m*r)
         //Ib = R(Ia+r x h x + (h-m*r) x r x)R'
-        Matrix3d rcross;
+        Eigen::Matrix3d rcross;
         rcross << 0,-p[2],p[1],
             p[2],0,-p[0],
             -p[1],p[0],0;
         
-        Matrix3d HrM=this->H-rcross*this->M;
+        Eigen::Matrix3d HrM=this->H-rcross*this->M;
         return ArticulatedBodyInertia(this->M,HrM,this->I-rcross*this->H.transpose()+HrM*rcross);
     }
 }//namespace

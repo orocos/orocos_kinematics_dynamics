@@ -32,7 +32,7 @@ ChainExternalWrenchEstimator::ChainExternalWrenchEstimator(const Chain &chain, c
     initial_jnt_momentum(nj), estimated_momentum_integral(nj), filtered_estimated_ext_torque(nj),
     gravity_torque(nj), coriolis_torque(nj), total_torque(nj), estimated_ext_torque(nj),
     jacobian_end_eff(nj),
-    jacobian_end_eff_transpose(Eigen::MatrixXd::Zero(nj, 6)), jacobian_end_eff_transpose_inv(Eigen::MatrixXd::Zero(6, nj)), 
+    jacobian_end_eff_transpose(Eigen::MatrixXd::Zero(nj, 6)), jacobian_end_eff_transpose_inv(Eigen::MatrixXd::Zero(6, nj)),
     U(Eigen::MatrixXd::Zero(nj, 6)), V(Eigen::MatrixXd::Zero(6, 6)),
     S(Eigen::VectorXd::Zero(6)), S_inv(Eigen::VectorXd::Zero(6)), tmp(Eigen::VectorXd::Zero(6)),
     ESTIMATION_GAIN(Eigen::VectorXd::Constant(nj, estimation_gain)),
@@ -57,13 +57,13 @@ void ChainExternalWrenchEstimator::updateInternalDataStructures()
     total_torque.resize(nj);
     estimated_ext_torque.resize(nj);
     jacobian_end_eff.resize(nj);
-    jacobian_end_eff_transpose.conservativeResizeLike(MatrixXd::Zero(nj, 6));
-    jacobian_end_eff_transpose_inv.conservativeResizeLike(MatrixXd::Zero(6, nj));
-    U.conservativeResizeLike(MatrixXd::Zero(nj, 6));
-    V.conservativeResizeLike(MatrixXd::Zero(6, 6));
-    S.conservativeResizeLike(VectorXd::Zero(6));
-    S_inv.conservativeResizeLike(VectorXd::Zero(6));
-    tmp.conservativeResizeLike(VectorXd::Zero(6));
+    jacobian_end_eff_transpose.conservativeResizeLike(Eigen::MatrixXd::Zero(nj, 6));
+    jacobian_end_eff_transpose_inv.conservativeResizeLike(Eigen::MatrixXd::Zero(6, nj));
+    U.conservativeResizeLike(Eigen::MatrixXd::Zero(nj, 6));
+    V.conservativeResizeLike(Eigen::MatrixXd::Zero(6, 6));
+    S.conservativeResizeLike(Eigen::VectorXd::Zero(6));
+    S_inv.conservativeResizeLike(Eigen::VectorXd::Zero(6));
+    tmp.conservativeResizeLike(Eigen::VectorXd::Zero(6));
     ESTIMATION_GAIN.conservativeResizeLike(Eigen::VectorXd::Constant(nj, ESTIMATION_GAIN(0)));
     dynparam_solver.updateInternalDataStructures();
     jacobian_solver.updateInternalDataStructures();

@@ -30,19 +30,19 @@ namespace KDL
         jnt2jac(chain),
         nj(chain.getNrOfJoints()),
         jac(nj),
-        U(MatrixXd::Zero(6,nj)),
-        S(VectorXd::Zero(nj)),
-        V(MatrixXd::Zero(nj,nj)),
+        U(Eigen::MatrixXd::Zero(6,nj)),
+        S(Eigen::VectorXd::Zero(nj)),
+        V(Eigen::MatrixXd::Zero(nj,nj)),
         eps(_eps),
         maxiter(_maxiter),
-        tmp(VectorXd::Zero(nj)),
-        tmp_jac(MatrixXd::Zero(6,nj)),
-        tmp_jac_weight1(MatrixXd::Zero(6,nj)),
-        tmp_jac_weight2(MatrixXd::Zero(6,nj)),
-        tmp_ts(MatrixXd::Zero(6,6)),
-        tmp_js(MatrixXd::Zero(nj,nj)),
-        weight_ts(MatrixXd::Identity(6,6)),
-        weight_js(MatrixXd::Identity(nj,nj)),
+        tmp(Eigen::VectorXd::Zero(nj)),
+        tmp_jac(Eigen::MatrixXd::Zero(6,nj)),
+        tmp_jac_weight1(Eigen::MatrixXd::Zero(6,nj)),
+        tmp_jac_weight2(Eigen::MatrixXd::Zero(6,nj)),
+        tmp_ts(Eigen::MatrixXd::Zero(6,6)),
+        tmp_js(Eigen::MatrixXd::Zero(nj,nj)),
+        weight_ts(Eigen::MatrixXd::Identity(6,6)),
+        weight_js(Eigen::MatrixXd::Identity(nj,nj)),
         lambda(0.0),
         lambda_scaled(0.0),
         nrZeroSigmas(0),
@@ -55,9 +55,9 @@ namespace KDL
         jnt2jac.updateInternalDataStructures();
         nj = chain.getNrOfJoints();
         jac.resize(nj);
-        MatrixXd z6nj = MatrixXd::Zero(6,nj);
-        VectorXd znj = VectorXd::Zero(nj);
-        MatrixXd znjnj = MatrixXd::Zero(nj,nj);
+        Eigen::MatrixXd z6nj = Eigen::MatrixXd::Zero(6,nj);
+        Eigen::VectorXd znj = Eigen::VectorXd::Zero(nj);
+        Eigen::MatrixXd znjnj = Eigen::MatrixXd::Zero(nj,nj);
         U.conservativeResizeLike(z6nj);
         S.conservativeResizeLike(znj);
         V.conservativeResizeLike(znjnj);
@@ -66,14 +66,14 @@ namespace KDL
         tmp_jac_weight1.conservativeResizeLike(z6nj);
         tmp_jac_weight2.conservativeResizeLike(z6nj);
         tmp_js.conservativeResizeLike(znjnj);
-        weight_js.conservativeResizeLike(MatrixXd::Identity(nj,nj));
+        weight_js.conservativeResizeLike(Eigen::MatrixXd::Identity(nj,nj));
     }
 
     ChainIkSolverVel_wdls::~ChainIkSolverVel_wdls()
     {
     }
     
-    int ChainIkSolverVel_wdls::setWeightJS(const MatrixXd& Mq){
+    int ChainIkSolverVel_wdls::setWeightJS(const Eigen::MatrixXd& Mq){
         if(nj != chain.getNrOfJoints())
             return (error = E_NOT_UP_TO_DATE);
 
@@ -83,7 +83,7 @@ namespace KDL
         return (error = E_NOERROR);
     }
     
-    int ChainIkSolverVel_wdls::setWeightTS(const MatrixXd& Mx){
+    int ChainIkSolverVel_wdls::setWeightTS(const Eigen::MatrixXd& Mx){
         if (Mx.size() != weight_ts.size())
             return (error = E_SIZE_MISMATCH);
         weight_ts = Mx;

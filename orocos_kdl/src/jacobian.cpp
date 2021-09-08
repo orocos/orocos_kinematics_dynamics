@@ -23,8 +23,6 @@
 
 namespace KDL
 {
-    using namespace Eigen;
-
     Jacobian::Jacobian()
     {
     }
@@ -148,8 +146,8 @@ namespace KDL
     }
 
     void Jacobian::setColumn(unsigned int i,const Twist& t){
-        data.col(i).head<3>()=Eigen::Map<const Vector3d>(t.vel.data);
-        data.col(i).tail<3>()=Eigen::Map<const Vector3d>(t.rot.data);
+        data.col(i).head<3>()=Eigen::Map<const Eigen::Vector3d>(t.vel.data);
+        data.col(i).tail<3>()=Eigen::Map<const Eigen::Vector3d>(t.rot.data);
     }
 
 }

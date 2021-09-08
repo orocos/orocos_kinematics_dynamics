@@ -29,8 +29,6 @@
 #include <Eigen/Core>
 #include "../solveri.hpp"
 
-using namespace Eigen;
-
 namespace KDL
 {
     /**

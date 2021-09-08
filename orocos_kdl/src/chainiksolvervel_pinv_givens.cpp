@@ -33,13 +33,13 @@ namespace KDL
         m(max(6,nj)),
         n(min(6,nj)),
         jac_eigen(m,n),
-        U(MatrixXd::Identity(m,m)),
-        V(MatrixXd::Identity(n,n)),
+        U(Eigen::MatrixXd::Identity(m,m)),
+        V(Eigen::MatrixXd::Identity(n,n)),
         B(m,n),
         S(n),
         tempi(m),
-        UY(VectorXd::Zero(6)),
-        SUY(VectorXd::Zero(nj)),
+        UY(Eigen::VectorXd::Zero(6)),
+        SUY(Eigen::VectorXd::Zero(nj)),
         qdot_eigen(nj),
         v_in_eigen(6)
     {
@@ -53,12 +53,12 @@ namespace KDL
         m = max(6,nj);
         n = min(6,nj);
         jac_eigen.conservativeResize(m,n);
-        U.conservativeResizeLike(MatrixXd::Identity(m,m));
-        V.conservativeResizeLike(MatrixXd::Identity(n,n));
+        U.conservativeResizeLike(Eigen::MatrixXd::Identity(m,m));
+        V.conservativeResizeLike(Eigen::MatrixXd::Identity(n,n));
         B.conservativeResize(m,n);
         S.conservativeResize(n);
         tempi.conservativeResize(m);
-        SUY.conservativeResizeLike(VectorXd::Zero(nj));
+        SUY.conservativeResizeLike(Eigen::VectorXd::Zero(nj));
         qdot_eigen.conservativeResize(nj);
     }
 
@@ -108,6 +108,7 @@ namespace KDL
                 alpha = 0.0;
             SUY(i)= alpha * wi;
         }
+
         if(transpose)
             qdot_eigen.noalias() = U * SUY;
         else
@@ -117,6 +118,5 @@ namespace KDL
             qdot_out(j)=qdot_eigen(j);
 
         return (error = E_NOERROR);
-
     }
 }
