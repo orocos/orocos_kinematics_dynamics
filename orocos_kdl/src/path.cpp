@@ -56,10 +56,8 @@
 
 namespace KDL {
 
-using namespace std;
 
-
-Path* Path::Read(istream& is) {
+Path* Path::Read(std::istream& is) {
 	// auto_ptr because exception can be thrown !
 	IOTrace("Path::Read");
 	char storage[64];
@@ -164,8 +162,6 @@ Path* Path::Read(istream& is) {
 	}
 	return NULL; // just to avoid the warning;
 }
-
-
 
 }
 
