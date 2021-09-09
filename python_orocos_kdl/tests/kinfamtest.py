@@ -327,15 +327,17 @@ class KinfamTestTree(unittest.TestCase):
 
     def setUp(self):
         self.tree = Tree()
-        self.tree.addSegment(Segment(Joint(Joint.RotZ),
+        self.tree.addSegment(Segment("foo",
+                                     Joint(Joint.RotZ),
+                                     Frame(Vector(0.0, 0.0, 0.0))), "root")
+        self.tree.addSegment(Segment("bar",
+                                     Joint(Joint.Fixed),
                                      Frame(Vector(0.0, 0.0, 0.0))), "foo")
-        self.tree.addSegment(Segment(Joint(Joint.Fixed),
-                                     Frame(Vector(0.0, 0.0, 0.0))), "bar")
 
     def testTreeGetChainMemLeak(self):
         # test for the memory leak in Tree.getChain described in issue #211
         process = psutil.Process()
-        self.tree.getChain("foo", "bar")
+        self.tree.getChain("foo", "bla")
         gc.collect()
         mem_before = process.memory_info().vms
         # needs at least 2000 iterations on my system to cause a detectable
