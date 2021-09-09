@@ -23,7 +23,6 @@
 #include <sstream>
 
 namespace KDL {
-using namespace std;
 
 Tree::Tree(const std::string& _root_name) :
         nrOfJoints(0), nrOfSegments(0), root_name(_root_name)
@@ -57,7 +56,7 @@ bool Tree::addSegment(const Segment& segment, const std::string& hook_name) {
     //check if parent exists
     if (parent == segments.end())
         return false;
-    pair<SegmentMap::iterator, bool> retval;
+    std::pair<SegmentMap::iterator, bool> retval;
     //insert new element
     unsigned int q_nr = segment.getJoint().getType() != Joint::Fixed ? nrOfJoints : 0;
 
@@ -81,7 +80,7 @@ bool Tree::addSegment(const Segment& segment, const std::string& hook_name) {
 }
 
 bool Tree::addChain(const Chain& chain, const std::string& hook_name) {
-    string parent_name = hook_name;
+    std::string parent_name = hook_name;
     for (unsigned int i = 0; i < chain.getNrOfSegments(); i++) {
         if (this->addSegment(chain.getSegment(i), parent_name))
             parent_name = chain.getSegment(i).getName();
@@ -120,7 +119,7 @@ bool Tree::getChain(const std::string& chain_root, const std::string& chain_tip,
     chain = Chain();
 
     // walk down from chain_root and chain_tip to the root of the tree
-    vector<SegmentMap::key_type> parents_chain_root, parents_chain_tip;
+    std::vector<SegmentMap::key_type> parents_chain_root, parents_chain_tip;
     for (SegmentMap::const_iterator s=getSegment(chain_root); s!=segments.end(); s = GetTreeElementParent(s->second)){
         parents_chain_root.push_back(s->first);
         if (s->first == root_name) break;

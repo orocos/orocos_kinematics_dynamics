@@ -26,7 +26,6 @@
 
 
 using namespace KDL;
-using namespace std;
 
 // Again something a little bit more complicated : autodiff to 2nd derivative with N variables
 template <class T,int N>

@@ -6,8 +6,14 @@
 #include <kdl/kinfam/lineartransmission.hpp>
 #include <kdl/kinfam/unittransmission.hpp>
 
+#include <iostream>
+
 using namespace KDL;
-using namespace std;
+
+using std::cerr;
+using std::cout;
+using std::endl;
+
 /**
  * testing of forward and inverse position kinematics of the  routines.
  * Also tests everything for all configurations.

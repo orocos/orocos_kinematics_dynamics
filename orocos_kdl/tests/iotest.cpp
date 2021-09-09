@@ -10,25 +10,24 @@
 #include <kdl/kinfam/jnt2cartpos.hpp>
 #include <memory>
 
-using namespace std;
 using namespace KDL;
 
 void test_io(KinematicFamily* kf) {
 	// write a kf to the file tst.dat
-	ofstream os("tst.dat");
-	os << kf << endl;
-	cout << kf  << endl;
+        std::ofstream os("tst.dat");
+        os << kf << std::endl;
+        std::cout << kf  << std::endl;
 	os.close();
 
 	// read a serial chain from the file tst.dat
-	ifstream is ("tst.dat");
+        std::ifstream is ("tst.dat");
 	KinematicFamily* kf2;
 	try {
 	  kf2 = readKinematicFamily(is);
-	  cout << kf2 << endl;
+          std::cout << kf2 << std::endl;
 	} catch (Error& err) {
-	  IOTraceOutput(cerr);
-	  cout << "ERROR : " << err.Description() << endl;
+          IOTraceOutput(std::cerr);
+          std::cout << "ERROR : " << err.Description() << std::endl;
 	  exit(-1);
 	}
 
@@ -40,10 +39,10 @@ void test_io(KinematicFamily* kf) {
 
 	jnt2cartpos->evaluate(q);jnt2cartpos->getFrame(F1);
 	jnt2cartpos2->evaluate(q);jnt2cartpos2->getFrame(F2);
-	cout << F1 << endl;
-	cout << F2 << endl;
+        std::cout << F1 << std::endl;
+        std::cout << F2 << std::endl;
 	if (!Equal(F1,F2)) {
-		cerr << "Results are not equal" << endl;
+                std::cerr << "Results are not equal" << std::endl;
 		exit(-1);
 	}
 	delete jnt2cartpos;

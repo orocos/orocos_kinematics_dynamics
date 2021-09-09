@@ -22,7 +22,6 @@
 #include "chain.hpp"
 
 namespace KDL {
-    using namespace std;
 
     Chain::Chain():
             nrOfJoints(0),

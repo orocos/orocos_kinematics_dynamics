@@ -11,7 +11,6 @@
 
 using namespace RTT;
 using namespace KDL;
-using namespace std;
 
 int ORO_main(int argc, char** argv)
 {
@@ -99,5 +98,3 @@ int ORO_main(int argc, char** argv)
     return retval;
 
 }
-
-

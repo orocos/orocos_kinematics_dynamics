@@ -8,8 +8,6 @@
 
 #include <Eigen/Core>
 
-using namespace Eigen;
-
 namespace KDL
 {
     /**
@@ -52,8 +50,8 @@ namespace KDL
         Jacobian jac;
         bool transpose,toggle;
         unsigned int m,n;
-        MatrixXd jac_eigen,U,V,B;
-        VectorXd S,tempi,UY,SUY,qdot_eigen,v_in_eigen;
+        Eigen::MatrixXd jac_eigen,U,V,B;
+        Eigen::VectorXd S,tempi,UY,SUY,qdot_eigen,v_in_eigen;
     };
 }
 #endif

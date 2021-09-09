@@ -29,12 +29,12 @@ namespace KDL
         jnt2jac(chain),
         nj(chain.getNrOfJoints()),
         jac(nj),
-        U(MatrixXd::Zero(6,nj)),
-        S(VectorXd::Zero(nj)),
-        Sinv(VectorXd::Zero(nj)),
-        V(MatrixXd::Zero(nj,nj)),
-        tmp(VectorXd::Zero(nj)),
-        tmp2(VectorXd::Zero(nj)),
+        U(Eigen::MatrixXd::Zero(6,nj)),
+        S(Eigen::VectorXd::Zero(nj)),
+        Sinv(Eigen::VectorXd::Zero(nj)),
+        V(Eigen::MatrixXd::Zero(nj,nj)),
+        tmp(Eigen::VectorXd::Zero(nj)),
+        tmp2(Eigen::VectorXd::Zero(nj)),
         eps(_eps),
         maxiter(_maxiter),
         svdResult(0),
@@ -49,12 +49,12 @@ namespace KDL
         jnt2jac(chain),
         nj(chain.getNrOfJoints()),
         jac(nj),
-        U(MatrixXd::Zero(6,nj)),
-        S(VectorXd::Zero(nj)),
-        Sinv(VectorXd::Zero(nj)),
-        V(MatrixXd::Zero(nj,nj)),
-        tmp(VectorXd::Zero(nj)),
-        tmp2(VectorXd::Zero(nj)),
+        U(Eigen::MatrixXd::Zero(6,nj)),
+        S(Eigen::VectorXd::Zero(nj)),
+        Sinv(Eigen::VectorXd::Zero(nj)),
+        V(Eigen::MatrixXd::Zero(nj,nj)),
+        tmp(Eigen::VectorXd::Zero(nj)),
+        tmp2(Eigen::VectorXd::Zero(nj)),
         eps(_eps),
         maxiter(_maxiter),
         svdResult(0),
@@ -66,14 +66,14 @@ namespace KDL
         jnt2jac.updateInternalDataStructures();
         nj = chain.getNrOfJoints();
         jac.resize(nj);
-        U.conservativeResizeLike(MatrixXd::Zero(6,nj));
-        S.conservativeResizeLike(VectorXd::Zero(nj));
-        Sinv.conservativeResizeLike(VectorXd::Zero(nj));
-        V.conservativeResizeLike(MatrixXd::Zero(nj,nj));
-        tmp.conservativeResizeLike(VectorXd::Zero(nj));
-        tmp2.conservativeResizeLike(VectorXd::Zero(nj));
-        opt_pos.data.conservativeResizeLike(VectorXd::Zero(nj));
-        weights.data.conservativeResizeLike(VectorXd::Ones(nj));
+        U.conservativeResizeLike(Eigen::MatrixXd::Zero(6,nj));
+        S.conservativeResizeLike(Eigen::VectorXd::Zero(nj));
+        Sinv.conservativeResizeLike(Eigen::VectorXd::Zero(nj));
+        V.conservativeResizeLike(Eigen::MatrixXd::Zero(nj,nj));
+        tmp.conservativeResizeLike(Eigen::VectorXd::Zero(nj));
+        tmp2.conservativeResizeLike(Eigen::VectorXd::Zero(nj));
+        opt_pos.data.conservativeResizeLike(Eigen::VectorXd::Zero(nj));
+        weights.data.conservativeResizeLike(Eigen::VectorXd::Ones(nj));
     }
 
     ChainIkSolverVel_pinv_nso::~ChainIkSolverVel_pinv_nso()

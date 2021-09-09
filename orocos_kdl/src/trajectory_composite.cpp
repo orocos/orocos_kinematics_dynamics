@@ -18,9 +18,6 @@
 
 namespace KDL {
 
-    using namespace std;
-
-
     Trajectory_Composite::Trajectory_Composite():duration(0.0)
     {
     }
@@ -107,14 +104,13 @@ namespace KDL {
         Destroy();
     }
 
-
-    void Trajectory_Composite::Write(ostream& os) const {
-        os << "COMPOSITE[ " << vt.size() << endl;
+    void Trajectory_Composite::Write(std::ostream& os) const {
+        os << "COMPOSITE[ " << vt.size() << std::endl;
         unsigned int i;
         for (i=0;i<vt.size();i++) {
             vt[i]->Write(os);
         }
-        os << "]" << endl;
+        os << "]" << std::endl;
     }
 
     Trajectory* Trajectory_Composite::Clone() const{
@@ -126,5 +122,3 @@ namespace KDL {
     }
 
 }
-
-

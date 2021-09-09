@@ -53,8 +53,6 @@
 
 namespace KDL {
 
-using namespace std;
-
 Trajectory* Trajectory::Read(std::istream& is) {
 	IOTrace("Trajectory::Read");
 	char storage[64];
@@ -74,7 +72,4 @@ Trajectory* Trajectory::Read(std::istream& is) {
 	return NULL; // just to avoid the warning;
 }
 
-
-
 }
-

@@ -48,9 +48,7 @@
 
 namespace KDL {
 
-using namespace std;
-
-RotationalInterpolation* RotationalInterpolation::Read(istream& is) {
+RotationalInterpolation* RotationalInterpolation::Read(std::istream& is) {
 	IOTrace("RotationalInterpolation::Read");
 	char storage[64];
 	EatWord(is,"[",storage,sizeof(storage));
@@ -82,4 +80,3 @@ RotationalInterpolation* RotationalInterpolation::Read(istream& is) {
 }
 
 }
-

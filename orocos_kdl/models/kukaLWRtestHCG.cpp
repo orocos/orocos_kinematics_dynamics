@@ -8,8 +8,11 @@
 #include <jntspaceinertiamatrix.hpp>
 #include <chaindynparam.hpp>
 
+#include <iostream>
+
 using namespace KDL;
-using namespace std;
+
+using std::setw;
 
 void outputLine( double, double, double, double, double, double, double);
 int getInputs(JntArray&, JntArray&, JntArray&, int&);
@@ -59,23 +62,23 @@ int main(int argc , char** argv){
     std::cout<<"H= \n"<<H<<"\n C = \n "<<C<<"\n G= \n"<<G<<" \n tau (with HCG)= \n"<< tauHCG  <<std::endl;
     
     //write file: code based on example 14.4, c++ how to program, Deitel and Deitel, book p 708
-    ofstream outPoseFile("poseResultaat.dat",ios::app);
+    std::ofstream outPoseFile("poseResultaat.dat",std::ios::app);
     if(!outPoseFile)
     {
-    cerr << "File poseResultaat could not be opened" <<endl;
+    std::cerr << "File poseResultaat could not be opened" <<std::endl;
     exit(1);
     }
     outPoseFile << "linenumber=experimentnr= "<< linenum << "\n";
     outPoseFile << T << "\n \n";
     outPoseFile.close();
 
-    ofstream outTauFile("tauResultaat.dat",ios::app);
+    std::ofstream outTauFile("tauResultaat.dat",std::ios::app);
     if(!outTauFile)
     {
-    cerr << "File tauResultaat could not be opened" <<endl;
+    std::cerr << "File tauResultaat could not be opened" <<std::endl;
     exit(1);
     }
-    outTauFile << setiosflags( ios::left) << setw(10)  << linenum;
+    outTauFile << setiosflags(std::ios::left) << setw(10)  << linenum;
     outTauFile << tau << "\n";
     outTauFile.close();
 }
@@ -84,7 +87,7 @@ int main(int argc , char** argv){
 
 int getInputs(JntArray &_q, JntArray &_qdot, JntArray &_qdotdot, int &linenr)
 {
-  //cout << " q" << _q<< "\n";
+  //std::cout << " q" << _q<< "\n";
   
   //declaration
   //int linenr; //line =experiment number
@@ -94,8 +97,8 @@ int getInputs(JntArray &_q, JntArray &_qdot, JntArray &_qdotdot, int &linenr)
   counter=0;
   
   //ask which experiment number= line number in files
-  cout << "Give experiment number= line number in files \n ?";
-  cin >> linenr;
+  std::cout << "Give experiment number= line number in files \n ?";
+  std::cin >> linenr;
     
   //read files: code based on example 14.8, c++ how to program, Deitel and Deitel, book p 712
   
@@ -103,16 +106,16 @@ int getInputs(JntArray &_q, JntArray &_qdot, JntArray &_qdotdot, int &linenr)
    *READING Q = joint positions
    */
   
-  ifstream inQfile("interpreteerbaar/q", ios::in);
+  std::ifstream inQfile("interpreteerbaar/q", std::ios::in);
 
   if (!inQfile)
   {
-    cerr << "File q could not be opened \n";
+    std::cerr << "File q could not be opened \n";
     exit(1);
   }
   
   //print headers
-  cout << setiosflags( ios::left) << setw(15) << "_q(0)" << setw(15) << "_q(1)" << setw(15) << "_q(2)" << setw(15) << "_q(3)" << setw(15) << "_q(4)" << setw(15) << "_q(5)" << setw(15) << "_q(6)"   << " \n" ;
+  std::cout << setiosflags(std::ios::left) << setw(15) << "_q(0)" << setw(15) << "_q(1)" << setw(15) << "_q(2)" << setw(15) << "_q(3)" << setw(15) << "_q(4)" << setw(15) << "_q(5)" << setw(15) << "_q(6)"   << " \n" ;
   
   while(!inQfile.eof())
   {
@@ -132,16 +135,16 @@ int getInputs(JntArray &_q, JntArray &_qdot, JntArray &_qdotdot, int &linenr)
    *READING Qdot = joint velocities
    */
   counter=0;//reset counter
-  ifstream inQdotfile("interpreteerbaar/qdot", ios::in);
+  std::ifstream inQdotfile("interpreteerbaar/qdot", std::ios::in);
 
   if (!inQdotfile)
   {
-    cerr << "File qdot could not be opened \n";
+    std::cerr << "File qdot could not be opened \n";
     exit(1);
   }
   
   //print headers
-  cout << setiosflags( ios::left) << setw(15) << "_qdot(0)" << setw(15) << "_qdot(1)" << setw(15) << "_qdot(2)" << setw(15) << "_qdot(3)" << setw(15) << "_qdot(4)" << setw(15) << "_qdot(5)" << setw(15) << "_qdot(6)"   << " \n" ;
+  std::cout << setiosflags(std::ios::left) << setw(15) << "_qdot(0)" << setw(15) << "_qdot(1)" << setw(15) << "_qdot(2)" << setw(15) << "_qdot(3)" << setw(15) << "_qdot(4)" << setw(15) << "_qdot(5)" << setw(15) << "_qdot(6)"   << " \n" ;
   
   while(!inQdotfile.eof())
   {
@@ -161,16 +164,16 @@ int getInputs(JntArray &_q, JntArray &_qdot, JntArray &_qdotdot, int &linenr)
    *READING Qdotdot = joint accelerations
    */
   counter=0;//reset counter
-  ifstream inQdotdotfile("interpreteerbaar/qddot", ios::in);
+  std::ifstream inQdotdotfile("interpreteerbaar/qddot", std::ios::in);
 
   if (!inQdotdotfile)
   {
-    cerr << "File qdotdot could not be opened \n";
+    std::cerr << "File qdotdot could not be opened \n";
     exit(1);
   }
   
   //print headers
-  cout << setiosflags( ios::left) << setw(15) << "_qdotdot(0)" << setw(15) << "_qdotdot(1)" << setw(15) << "_qdotdot(2)" << setw(15) << "_qdotdot(3)" << setw(15) << "_qdotdot(4)" << setw(15) << "_qdotdot(5)" << setw(15) << "_qdotdot(6)"  << " \n" ;
+  std::cout << setiosflags(std::ios::left) << setw(15) << "_qdotdot(0)" << setw(15) << "_qdotdot(1)" << setw(15) << "_qdotdot(2)" << setw(15) << "_qdotdot(3)" << setw(15) << "_qdotdot(4)" << setw(15) << "_qdotdot(5)" << setw(15) << "_qdotdot(6)"  << " \n" ;
   
   while(!inQdotdotfile.eof())
   {
@@ -185,13 +188,12 @@ int getInputs(JntArray &_q, JntArray &_qdot, JntArray &_qdotdot, int &linenr)
     
   }
   inQdotdotfile.close();
-
   
   return 0;
 }
 
 void outputLine( double x1, double x2, double x3, double x4, double x5, double x6, double x7)
 {
-  cout << setiosflags(ios::left) << setiosflags(ios::fixed | ios::showpoint) <<setw(15) 
+  std::cout << setiosflags(std::ios::left) << setiosflags(std::ios::fixed | std::ios::showpoint) <<setw(15)
   << x1 << setw(15) << x2 <<setw(15) <<setw(15) << x3 <<setw(15) << x4 <<setw(15) << x5 <<setw(15) << x6 <<setw(15) << x7 <<"\n";
 }

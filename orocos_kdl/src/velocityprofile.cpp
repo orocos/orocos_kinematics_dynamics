@@ -50,9 +50,7 @@
 
 namespace KDL {
 
-using namespace std;
-
-VelocityProfile* VelocityProfile::Read(istream& is) {
+VelocityProfile* VelocityProfile::Read(std::istream& is) {
 	IOTrace("VelocityProfile::Read");
 	char storage[25];
 	EatWord(is,"[",storage,sizeof(storage));
@@ -94,7 +92,5 @@ VelocityProfile* VelocityProfile::Read(istream& is) {
 	}
     return 0;
 }
-
-
 
 }
