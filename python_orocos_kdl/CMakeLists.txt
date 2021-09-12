@@ -6,7 +6,7 @@ if(POLICY CMP0057)
   cmake_policy(SET CMP0057 NEW)  # support IN_LISTS which is required for PyBind11 2.6 and newer
 endif()
 
-project(python_orocos_kdl VERSION 1.5.0)
+project(python_orocos_kdl VERSION 1.5.1)
 
 # find a matching version of orocos_kdl
 find_package(orocos_kdl ${PROJECT_VERSION} EXACT REQUIRED)
