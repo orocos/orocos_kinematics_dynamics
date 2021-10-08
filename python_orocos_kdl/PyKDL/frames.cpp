@@ -436,8 +436,8 @@ void init_frames(py::module &m)
     {
         return Frame(self);
     }, py::arg("memo"));
-    frame.def("DH_Craig1989", &Frame::DH_Craig1989);
-    frame.def("DH", &Frame::DH);
+    frame.def_static("DH_Craig1989", &Frame::DH_Craig1989);
+    frame.def_static("DH", &Frame::DH);
     frame.def("Inverse", (Frame (Frame::*)() const) &Frame::Inverse);
     frame.def("Inverse", (Vector (Frame::*)(const Vector&) const) &Frame::Inverse);
     frame.def("Inverse", (Wrench (Frame::*)(const Wrench&) const) &Frame::Inverse);
