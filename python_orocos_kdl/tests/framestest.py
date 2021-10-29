@@ -347,19 +347,19 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(Frame(f).p, f.p)
 
         # Denavit-Hartenberg
-        f = Frame.DH(0.0, pi/2, 0.36, 0.0)
-        self.assertTrue(Equal(
-            Frame.DH(0.0, pi/2, 0.36, 0.0),
-            Frame(Rotation(1, 0, 0,
-                           0, 0, -1,
-                           0, 1, 0),
-                  Vector(0, 0, 0.36))))
-        self.assertTrue(Equal(
-            Frame.DH_Craig1989(0.0, pi/2, 0.36, 0.0),
-            Frame(Rotation(1, 0, 0,
-                           0, 0, -1,
-                           0, 1, 0),
-                  Vector(0, -0.36, 0))))
+        f_dh = Frame(Rotation(1, 0, 0,
+                              0, 0, -1,
+                              0, 1, 0),
+                     Vector(0, 0, 0.36))
+        self.assertTrue(Equal(Frame.DH(0.0, pi/2, 0.36, 0.0), f_dh))
+        self.assertTrue(Equal(Frame().DH(0.0, pi/2, 0.36, 0.0), f_dh))
+
+        f_dh_craig1989 = Frame(Rotation(1, 0, 0,
+                                        0, 0, -1,
+                                        0, 1, 0),
+                               Vector(0, -0.36, 0))
+        self.assertTrue(Equal(Frame.DH_Craig1989(0.0, pi/2, 0.36, 0.0), f_dh_craig1989))
+        self.assertTrue(Equal(Frame().DH_Craig1989(0.0, pi / 2, 0.36, 0.0), f_dh_craig1989))
 
         f = Frame(Rotation(1, 2, 3,
                            5, 6, 7,
