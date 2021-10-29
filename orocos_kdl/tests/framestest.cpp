@@ -640,14 +640,14 @@ void FramesTest::TestFrame() {
                           0, 1, 0),
                  Vector(0, 0, 0.36));
     CPPUNIT_ASSERT(Equal(Frame::DH(0.0, M_PI_2, 0.36, 0.0), F_DH));
-    CPPUNIT_ASSERT(Equal(Frame().DH(0.0, M_PI_2, 0.36, 0.0), F_DH));
+    CPPUNIT_ASSERT(Equal(Frame().DH(0.0, M_PI_2, 0.36, 0.0), F_DH)); // Only for testing purposes, shouldn't use static function of instances
 
     Frame F_DH_Craig1989 = Frame(Rotation(1, 0, 0,
                                           0, 0, -1,
                                           0, 1, 0),
                                  Vector(0, -0.36, 0));
     CPPUNIT_ASSERT(Equal(Frame::DH_Craig1989(0.0, M_PI_2, 0.36, 0.0), F_DH_Craig1989));
-    CPPUNIT_ASSERT(Equal(Frame().DH_Craig1989(0.0, M_PI_2, 0.36, 0.0), F_DH_Craig1989));
+    CPPUNIT_ASSERT(Equal(Frame().DH_Craig1989(0.0, M_PI_2, 0.36, 0.0), F_DH_Craig1989)); // Only for testing purposes, shouldn't use static function of instances
 }
 
 JntArray CreateRandomJntArray(int size)
