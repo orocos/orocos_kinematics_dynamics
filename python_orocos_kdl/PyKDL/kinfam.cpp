@@ -338,8 +338,9 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainFkSolverPos, SolverI> chain_fk_solver_pos(m, "ChainFkSolverPos");
     chain_fk_solver_pos.def("JntToCart", (int (ChainFkSolverPos::*)(const JntArray&, Frame&, int)) &ChainFkSolverPos::JntToCart,
                             py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
-    chain_fk_solver_pos.def("JntToCart", (int (ChainFkSolverPos::*)(const JntArray&, std::vector<Frame>&, int)) &ChainFkSolverPos::JntToCart,
-                            py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
+//    Argument by reference doesn't work for container types
+//    chain_fk_solver_pos.def("JntToCart", (int (ChainFkSolverPos::*)(const JntArray&, std::vector<Frame>&, int)) &ChainFkSolverPos::JntToCart,
+//                            py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
 
 
     // --------------------
