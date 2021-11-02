@@ -22,7 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-from math import radians, sqrt
+from math import pi, radians, sqrt
 from PyKDL import *
 import sys
 import unittest
@@ -345,6 +345,23 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(f.p, v2)
         self.assertEqual(Frame(f).M, f.M)
         self.assertEqual(Frame(f).p, f.p)
+
+        # Denavit-Hartenberg
+        f_dh = Frame(Rotation(1, 0, 0,
+                              0, 0, -1,
+                              0, 1, 0),
+                     Vector(0, 0, 0.36))
+        self.assertTrue(Equal(Frame.DH(0.0, pi/2, 0.36, 0.0), f_dh))
+        # Only for testing purposes, shouldn't use static function of instances
+        self.assertTrue(Equal(Frame().DH(0.0, pi/2, 0.36, 0.0), f_dh))
+
+        f_dh_craig1989 = Frame(Rotation(1, 0, 0,
+                                        0, 0, -1,
+                                        0, 1, 0),
+                               Vector(0, -0.36, 0))
+        self.assertTrue(Equal(Frame.DH_Craig1989(0.0, pi/2, 0.36, 0.0), f_dh_craig1989))
+        # Only for testing purposes, shouldn't use static function of instances
+        self.assertTrue(Equal(Frame().DH_Craig1989(0.0, pi / 2, 0.36, 0.0), f_dh_craig1989))
 
         f = Frame(Rotation(1, 2, 3,
                            5, 6, 7,
