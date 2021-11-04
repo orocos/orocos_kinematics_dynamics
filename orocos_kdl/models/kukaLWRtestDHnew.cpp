@@ -109,7 +109,7 @@ int getInputs(JntArray &_q, JntArray &_qdot, JntArray &_qdotdot, int &linenr)
    *READING Qdot = joint velocities
    */
   counter=0;//reset counter
-  ifstream inQdotfile("interpreteerbaar/qdot", std::ios::in);
+  std::ifstream inQdotfile("interpreteerbaar/qdot", std::ios::in);
 
   if (!inQdotfile)
   {
