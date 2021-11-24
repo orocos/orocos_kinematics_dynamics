@@ -84,7 +84,8 @@ namespace KDL
 
     void ChainIkSolverPos_NR::setEps(const double _eps)
     {
-        if (0 < _eps) eps = _eps;
+        if (0 < _eps)
+            eps = _eps;
         // else silently ignore
     }
 
