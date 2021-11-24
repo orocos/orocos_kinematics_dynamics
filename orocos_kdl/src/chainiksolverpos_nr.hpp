@@ -88,7 +88,7 @@ namespace KDL {
          * Get maximum number of iterations
          * \pre 1 <= maxiter, otherwise maxiter is ignored
          */
-        unsigned int getMaxIter()const { return maxiter; }
+        unsigned int getMaxIter() const { return maxiter; }
 
         /**
          * Get epsilon
