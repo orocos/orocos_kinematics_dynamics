@@ -78,11 +78,10 @@ namespace KDL
         (void)fksolver.JntToCart(q_out,f);
 
         // not converged but singularity avoidance is active so okay
-        if (degraded) {
+        if (degraded)
             return (error = E_DEGRADED);
-        } else {
+        else
             return (error = E_MAX_ITERATIONS_EXCEEDED);
-        }
     }
 
     void ChainIkSolverPos_NR::setEps(const double _eps)
