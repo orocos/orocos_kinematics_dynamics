@@ -61,11 +61,9 @@ namespace KDL
             ikvelstatus = iksolver.CartToJnt(q_out,delta_twist,delta_q);
             if (E_NOERROR > ikvelstatus)
                 return (error = E_IKSOLVER_FAILED);
-            }
             // check for degraded solution (but can still continue motion)
-            else if (E_NOERROR < ikvelstatus) {
+            else if (E_NOERROR < ikvelstatus)
                 degraded  = true;
-            }
             // we choose to continue if the child solver returned a positive
             // "error", which may simply indicate a degraded solution
             Add(q_out,delta_q,q_out);
