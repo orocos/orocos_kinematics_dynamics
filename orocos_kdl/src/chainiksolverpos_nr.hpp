@@ -93,7 +93,7 @@ namespace KDL {
         /**
          * Get epsilon
          */
-        double getEps()const { return eps; }
+        double getEps() const { return eps; }
 
         /**
          * Get delta twist from last call to CartToJnt()
