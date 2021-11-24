@@ -100,7 +100,7 @@ namespace KDL {
          */
         void getDeltaTwist(KDL::Twist& _delta_twist)
         {
-            _delta_twist    = delta_twist;
+            _delta_twist = delta_twist;
         }
 
         /**
