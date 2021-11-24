@@ -59,7 +59,7 @@ namespace KDL
                 return (error = E_FKSOLVERPOS_FAILED);
             delta_twist = diff(f,p_in);
             ikvelstatus = iksolver.CartToJnt(q_out,delta_twist,delta_q);
-            if (E_NOERROR > ikvelstatus) {
+            if (E_NOERROR > ikvelstatus)
                 return (error = E_IKSOLVER_FAILED);
             }
             // check for degraded solution (but can still continue motion)
