@@ -53,8 +53,8 @@ namespace KDL
         q_out = q_init;
         bool degraded = false;
 
-        for(numiter=1;numiter<=maxiter;numiter++){
-            degraded = false;        // prove otherwise
+        for(numiter=1; numiter<=maxiter; ++numiter) {
+            degraded = false; // prove otherwise
             if (E_NOERROR > fksolver.JntToCart(q_out,f) )
                 return (error = E_FKSOLVERPOS_FAILED);
             delta_twist = diff(f,p_in);
