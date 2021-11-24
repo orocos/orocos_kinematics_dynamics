@@ -91,7 +91,8 @@ namespace KDL
 
     void ChainIkSolverPos_NR::setMaxIter(const unsigned int _maxiter)
     {
-        if (1 <= _maxiter) maxiter = _maxiter;
+        if (1 <= _maxiter)
+            maxiter = _maxiter;
         // else silently ignore
     }
 
