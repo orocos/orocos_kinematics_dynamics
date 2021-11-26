@@ -96,11 +96,14 @@ namespace KDL {
         double getEps() const { return eps; }
 
         /**
-         * Get delta twist from last call to CartToJnt()
+         * Request the delta twist from last call to CartToJnt()
+         *
+         *
+         * @return const reference to the delta twist
          */
-        void getDeltaTwist(KDL::Twist& _delta_twist)
+        const Twist& getDeltaTwist()const
         {
-            _delta_twist = delta_twist;
+            return delta_twist;
         }
 
         /**
