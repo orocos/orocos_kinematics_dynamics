@@ -51,7 +51,7 @@ if(NOT ${pybind11_FOUND})
   message(STATUS "pybind11 not found, building from source")
   add_subdirectory(pybind11)
 else()
-  message(STATUS "pybind11 found, building against found version")
+  message(STATUS "pybind11 found, building against installed version")
 endif()
 pybind11_add_module(${LIBRARY_NAME}
   PyKDL/PyKDL.h
