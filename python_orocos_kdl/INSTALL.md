@@ -33,7 +33,7 @@ These install instructions are focused on Debian/Ubuntu systems.
 6. Execute cmake: `cmake ..`
    - (Optional) Adapt `CMAKE_INSTALL_PREFIX` to the desired installation directory
    - (Optional) To change the build type, add: `-DCMAKE_BUILD_TYPE=<DESIRED_BUILD_TYPE>`
-   - (Optional) To change the python version (default=2), set `ROS_PYTHON_VERSION` environment variable to either `2` or `3`.
+   - (Optional) To change the python version (default=3), set `ROS_PYTHON_VERSION` environment variable to either `2` or `3`.
 7. Compile: `make`
 8. Install the python bindings: `sudo make install`
 9. Make sure `LD_LIBRARY_PATH` is set correctly: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib`. Add this also
