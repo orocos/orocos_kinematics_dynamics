@@ -85,6 +85,11 @@ namespace KDL {
                      );
     }
 
+    double Vector2::Norm() const
+    {
+        return Norm(KDL::epsilon);
+    }
+
     double Vector2::Norm(double eps) const
     {
         double tmp1 = fabs(data[0]);
@@ -113,6 +118,10 @@ namespace KDL {
         }
     }
 
+    double Vector::Norm() const
+    {
+        return Norm(KDL::epsilon);
+    }
 
     // do some effort not to lose precision
     double Vector::Norm(double eps) const
