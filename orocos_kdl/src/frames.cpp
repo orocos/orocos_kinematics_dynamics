@@ -392,8 +392,6 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
         double xz = (data[2] + data[6]) / 4;
         double yz = (data[5] + data[7]) / 4;
 
-        double half_sqrt_2 = 0.5 * sqrt(2.0);
-
         if ((xx > yy) && (xx > zz))
         {
             // data[0] is the largest diagonal term

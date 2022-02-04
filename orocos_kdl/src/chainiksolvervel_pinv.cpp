@@ -25,8 +25,8 @@ namespace KDL
 {
     ChainIkSolverVel_pinv::ChainIkSolverVel_pinv(const Chain& _chain,double _eps,int _maxiter):
         chain(_chain),
-        nj(chain.getNrOfJoints()),
         jnt2jac(chain),
+        nj(chain.getNrOfJoints()),
         jac(nj),
         svd(jac),
         U(6,JntArray(nj)),

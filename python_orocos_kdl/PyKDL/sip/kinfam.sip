@@ -658,7 +658,7 @@ using namespace KDL;
 %End
 public:
     ChainJntToJacSolver(const Chain& chain);
-    int JntToJac(const JntArray& q_in,Jacobian& jac);
+    int JntToJac(const JntArray& q_in,Jacobian& jac, int seg_nr=-1);
     virtual void updateInternalDataStructures();
 };
 
