@@ -100,7 +100,7 @@ void changeRepresentation(Jacobian& J,const Frame& F_bs_ee,const int& representa
             // Ref Frame {ee}, Ref Point {ee}
             J.changeBase(F_bs_ee.M.Inverse());
             break;
-        case ChainJntToJacDotSolver::INTERTIAL:
+        case ChainJntToJacDotSolver::INERTIAL:
             // Ref Frame {bs}, Ref Point {bs}
             J.changeRefPoint(-F_bs_ee.p);
             break;
@@ -251,7 +251,7 @@ bool runTest(const Chain& chain,const int& representation)
     
     for(double dt=1e-6;dt<0.1;dt*=10)
     {
-        double eps_diff_vs_solver = 3.0*dt; // Apparently :)
+        double eps_diff_vs_solver = 4.0*dt; // Apparently :)
 
         for(int i=0;i<100;i++)
         {

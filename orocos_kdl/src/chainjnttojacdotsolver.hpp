@@ -57,7 +57,7 @@ public:
     // Body-fixed representation ref Frame: end-effector, ref Point: end-effector
     static const int BODYFIXED = 1;
     // Intertial representation ref Frame: base, ref Point: base
-    static const int INTERTIAL = 2;
+    static const int INERTIAL = 2;
 
     explicit ChainJntToJacDotSolver(const Chain& chain);
     virtual ~ChainJntToJacDotSolver();
@@ -100,11 +100,11 @@ public:
      * 
      * @return void
      */
-    void setInternialRepresentation(){setRepresentation(INTERTIAL);}
+    void setInertialRepresentation(){setRepresentation(INERTIAL);}
     /**
      * @brief Sets the internal variable for the representation (with a check on the value)
      * 
-     * @param representation The representation for Jdot : HYBRID,BODYFIXED or INTERTIAL
+     * @param representation The representation for Jdot : HYBRID,BODYFIXED or INERTIAL
      * @return void
      */
     void setRepresentation(const int& representation);

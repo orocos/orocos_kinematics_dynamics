@@ -55,7 +55,7 @@ namespace KDL
         else
             segmentNr = seg_nr;
 
-        //Initialize Jacobian to zero since only segmentNr colunns are computed
+        //Initialize Jacobian to zero since only segmentNr columns are computed
         SetToZero(jac) ;
 
         if( q_in.rows()!=chain.getNrOfJoints() || jac.columns() != chain.getNrOfJoints())

@@ -100,6 +100,7 @@ public:
 %End
 
 };
+Vector operator*(RotationalInertia& Ia, Vector omega) const /Factory/;
 RotationalInertia operator*(double a, const RotationalInertia& I)/Factory/;
 RotationalInertia operator+(const RotationalInertia& Ia, const RotationalInertia& Ib)/Factory/;
 

@@ -54,6 +54,7 @@
         *sipCppPtr = new std::string;
          return 1;
      }
+#if PY_MAJOR_VERSION < 3
      if (PyUnicode_Check(sipPy)) {
         PyObject* s = PyUnicode_AsUTF8String(sipPy);
         *sipCppPtr = new std::string(PyBytes_AS_STRING(s));
@@ -62,6 +63,11 @@
      }
      else if (PyBytes_Check(sipPy)) {
         *sipCppPtr = new std::string(PyBytes_AS_STRING(sipPy));
+        return 1;
+     }
+#else
+     if (PyUnicode_Check(sipPy)) {
+        *sipCppPtr = new std::string(PyUnicode_AsUTF8(sipPy));
         return 1;
      }
 #endif
