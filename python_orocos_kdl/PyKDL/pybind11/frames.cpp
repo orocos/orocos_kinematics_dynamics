@@ -81,7 +81,9 @@ void init_frames(py::module &m)
         return operator-(a);
     }, py::is_operator());
     vector.def_static("Zero", &Vector::Zero);
-    vector.def("Norm", &Vector::Norm, py::arg("eps")=epsilon);
+    vector.def("Norm", static_cast<double (Vector::*)() const>(&Vector::Norm));
+    vector.def("Norm", static_cast<double (Vector::*)(double) const>(&Vector::Norm), py::arg("eps"));
+    // vector.def("Norm", static_cast<aaa>(&Vector::Norm));
     vector.def("Normalize", &Vector::Normalize, py::arg("eps")=epsilon);
     vector.def(py::pickle(
             [](const Vector &v)
