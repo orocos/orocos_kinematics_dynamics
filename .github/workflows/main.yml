@@ -24,6 +24,7 @@ jobs:
       - name: Install
         run: |
           sudo apt-get install libeigen3-dev libcppunit-dev python-sip-dev
+          sudo apt-get install python-psutil python-future
       - name: Build orocos_kdl
         run: |
           cd orocos_kdl
