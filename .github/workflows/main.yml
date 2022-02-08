@@ -42,6 +42,15 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
           make
           sudo make install
+      - name: Build PyKDL Python 3
+        run: |
+          cd python_orocos_kdl
+          mkdir build3
+          cd build3
+          export ROS_PYTHON_VERSION=3
+          cmake -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
+          make
+          sudo make install
       - name: Update LD_LIBRARY_PATH
         run: |
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
@@ -54,6 +63,10 @@ jobs:
         run: |
           cd python_orocos_kdl
           python2 tests/PyKDLtest.py
+      - name: Test PyKDL Python 3
+        run: |
+          cd python_orocos_kdl
+          python3 tests/PyKDLtest.py
 
   industrial_ci:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
