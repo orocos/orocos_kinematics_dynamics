@@ -200,7 +200,7 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertTrue(0 == self.fksolvervel.JntToCart(qvel, cart))
         self.assertTrue(0 == self.iksolvervel.CartToJnt(qvel.q, cart.deriv(), qdot_solved))
 
-        self.assertEqual(qvel.qdot, qdot_solved)
+        self.assertTrue(Equal(qvel.qdot, qdot_solved, 1e-4))
 
     def testFkPosAndIkPos(self):
         q = JntArray(self.chain.getNrOfJoints())
@@ -221,7 +221,7 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertTrue(0 == self.fksolverpos.JntToCart(q_solved, F2))
 
         self.assertEqual(F1, F2)
-        self.assertEqual(q, q_solved)
+        self.assertTrue(Equal(q, q_solved, 1e-4))
 
 
 class KinfamTestTree(unittest.TestCase):
