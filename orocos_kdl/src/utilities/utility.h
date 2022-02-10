@@ -179,12 +179,6 @@ extern int          MAXLENFILENAME;
 //! the value of pi
 extern const double PI;
 
-//! the value of pi/2
-extern const double PI_2;
-
-//! the value of pi/4
-extern const double PI_4;
-
 //! the value pi/180
 extern const double deg2rad;
 

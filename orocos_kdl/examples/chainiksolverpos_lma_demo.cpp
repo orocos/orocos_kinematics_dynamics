@@ -54,8 +54,6 @@ estimate of shortest time per invposkin (ms) 0.155544
 #include <models.hpp>
 #include <chainiksolverpos_lma.hpp>
 #include <chainfksolverpos_recursive.hpp>
-#include <utilities/utility.h>
-
 #include <boost/timer.hpp>
 
 /**
@@ -92,9 +90,9 @@ void test_inverseposkin(KDL::Chain& chain) {
 	JntArray q_sol(n);
 	for (int trial=0;trial<num_of_trials;++trial) {
 		q.data.setRandom();
-		q.data *= PI;
+		q.data *= M_PI;
 		q_init.data.setRandom();
-		q_init.data *= PI;
+		q_init.data *= M_PI;
 		Frame pos_goal,pos_reached;
 		fwdkin.JntToCart(q,pos_goal);
 		//solver.compute_fwdpos(q.data);
