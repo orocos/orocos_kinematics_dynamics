@@ -53,7 +53,7 @@ namespace KDL
         bool transpose,toggle;
         unsigned int m,n;
         MatrixXd jac_eigen,U,V,B;
-        VectorXd S,tempi,UY,SUY,qdot_eigen,v_in_eigen;
+        VectorXd S,tempi,tempj,UY,SUY,qdot_eigen,v_in_eigen;
     };
 }
 #endif
