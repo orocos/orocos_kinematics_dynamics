@@ -3,7 +3,7 @@
 #include <framevel_io.hpp>
 #include <kinfam_io.hpp>
 #include <time.h>
-
+#include <utilities/utility.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SolverTest );
 
@@ -106,17 +106,17 @@ void SolverTest::setUp()
 	motomansia10.addSegment(Segment(Joint(Joint::None),
 									Frame::DH_Craig1989(0.0, 0.0, 0.36, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
-									Frame::DH_Craig1989(0.0, M_PI_2, 0.0, 0.0)));
+									Frame::DH_Craig1989(0.0, PI_2, 0.0, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
-									Frame::DH_Craig1989(0.0, -M_PI_2, 0.36, 0.0)));
+									Frame::DH_Craig1989(0.0, -PI_2, 0.36, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
-									Frame::DH_Craig1989(0.0, M_PI_2, 0.0, 0.0)));
+									Frame::DH_Craig1989(0.0, PI_2, 0.0, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
-									Frame::DH_Craig1989(0.0, -M_PI_2, 0.36, 0.0)));
+									Frame::DH_Craig1989(0.0, -PI_2, 0.36, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
-									Frame::DH_Craig1989(0.0, M_PI_2, 0.0, 0.0)));
+									Frame::DH_Craig1989(0.0, PI_2, 0.0, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
-									Frame::DH_Craig1989(0.0, -M_PI_2, 0.0, 0.0)));
+									Frame::DH_Craig1989(0.0, -PI_2, 0.0, 0.0)));
 	motomansia10.addSegment(Segment(Joint(Joint::RotZ),
 									Frame(Rotation::Identity(),Vector(0.0,0.0,0.155))));
 
@@ -148,22 +148,22 @@ void SolverTest::setUp()
                                  KDL::RotationalInertia(0.01, 0.01, 0.1, 0.0, 0.0, 0.0));
 
     motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
-                               Frame::DH(0.0, M_PI_2, 0.36, 0.0),
+                               Frame::DH(0.0, PI_2, 0.36, 0.0),
                                inert1));
     motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorA, damping, stiffness),
-                               Frame::DH(0.0, -M_PI_2, 0.0, 0.0),
+                               Frame::DH(0.0, -PI_2, 0.0, 0.0),
                                inert2));
     motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
-                               Frame::DH(0.0, M_PI_2, 0.36, 0.0),
+                               Frame::DH(0.0, PI_2, 0.36, 0.0),
                                inert3));
     motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorB, damping, stiffness),
-                               Frame::DH(0.0, -M_PI_2, 0.0, 0.0),
+                               Frame::DH(0.0, -PI_2, 0.0, 0.0),
                                inert4));
     motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
-                               Frame::DH(0.0, M_PI_2, 0.36, 0.0),
+                               Frame::DH(0.0, PI_2, 0.36, 0.0),
                                inert5));
     motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
-                               Frame::DH(0.0, -M_PI_2, 0.0, 0.0),
+                               Frame::DH(0.0, -PI_2, 0.0, 0.0),
                                inert6));
     motomansia10dyn.addSegment(Segment(Joint(Joint::RotZ, scale, offset, inertiamotorC, damping, stiffness),
                                Frame::DH(0.0, 0.0, 0.0, 0.0),
@@ -476,7 +476,7 @@ void SolverTest::IkSingularValueTest()
 	q(0) = 0. ;
 	q(1) = 0.5 ;
 	q(2) = 0.4 ;
-	q(3) = -M_PI_2 ;
+	q(3) = -PI_2 ;
 	q(4) = 0. ;
 	q(5) = 0. ;
 	q(6) = 0. ;
@@ -503,7 +503,7 @@ void SolverTest::IkSingularValueTest()
 	q(0) = 0. ;
 	q(1) = 0.2 ;
 	q(2) = 0.4 ;
-	q(3) = -M_PI_2 ;
+	q(3) = -PI_2 ;
 	q(4) = 0. ;
 	q(5) = 0. ;
 	q(6) = 0. ;
@@ -526,7 +526,7 @@ void SolverTest::IkSingularValueTest()
 	q(0) = 0. ;
 	q(1) = 0.5 ;
 	q(2) = 0.4 ;
-	q(3) = -M_PI_2 ;
+	q(3) = -PI_2 ;
 	q(4) = 0. ;
 	q(5) = 0. ;
 	q(6) = 0. ;
@@ -595,7 +595,7 @@ void SolverTest::IkVelSolverWDLSTest()
 	q(0) = 0. ;
 	q(1) = 0.5 ;
 	q(2) = 0.4 ;
-	q(3) = -M_PI_2 ;
+	q(3) = -PI_2 ;
 	q(4) = 0. ;
 	q(5) = 0. ;
 	q(6) = 0. ;
@@ -822,7 +822,7 @@ void SolverTest::VereshchaginTest()
     // Initial arm position configuration/constraint
     JntArray jointInitialPose(chaindyn.getNrOfJoints());
     jointInitialPose(0) = 0.0; // initial joint0 pose
-    jointInitialPose(1) = M_PI/6.0; //initial joint1 pose, negative in clockwise
+    jointInitialPose(1) = PI/6.0; //initial joint1 pose, negative in clockwise
     //j0=0.0, j1=pi/6.0 correspond to x = 0.2, y = -0.7464
     //j0=2*pi/3.0, j1=pi/4.0 correspond to x = 0.44992, y = 0.58636
 
