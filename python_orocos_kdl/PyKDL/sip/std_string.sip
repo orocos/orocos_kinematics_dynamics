@@ -15,6 +15,13 @@
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+%ModuleHeaderCode
+#if PY_VERSION_HEX < 0x03000000
+#define PyBytes_AS_STRING PyString_AS_STRING
+#define PyBytes_FromString PyString_FromString
+#define PyBytes_Check PyString_Check
+#endif
+%End
 %MappedType std::string
 {
 %TypeHeaderCode
@@ -39,7 +46,7 @@
     // If argument is a Python string, assume it's UTF-8
      if (sipIsErr == NULL)
 #if PY_MAJOR_VERSION < 3
-        return (PyString_Check(sipPy) || PyUnicode_Check(sipPy));
+        return (PyBytes_Check(sipPy) || PyUnicode_Check(sipPy));
 #else
         return PyUnicode_Check(sipPy);
 #endif
@@ -47,15 +54,20 @@
         *sipCppPtr = new std::string;
          return 1;
      }
+#if PY_MAJOR_VERSION < 3
      if (PyUnicode_Check(sipPy)) {
-        PyObject* s = PyUnicode_AsEncodedString(sipPy, "UTF-8", "");
-        *sipCppPtr = new std::string(PyUnicode_AS_DATA(s));
+        PyObject* s = PyUnicode_AsUTF8String(sipPy);
+        *sipCppPtr = new std::string(PyBytes_AS_STRING(s));
         Py_DECREF(s);
         return 1;
      }
-#if PY_MAJOR_VERSION < 3
-     if (PyString_Check(sipPy)) {
-        *sipCppPtr = new std::string(PyString_AS_STRING(sipPy));
+     else if (PyBytes_Check(sipPy)) {
+        *sipCppPtr = new std::string(PyBytes_AS_STRING(sipPy));
+        return 1;
+     }
+#else
+     if (PyUnicode_Check(sipPy)) {
+        *sipCppPtr = new std::string(PyUnicode_AsUTF8(sipPy));
         return 1;
      }
 #endif

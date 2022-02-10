@@ -334,3 +334,45 @@ void VelocityProfileTest::TestTrapHalf_SetDuration_End()
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, v.Acc(time),epsilon);
 
 }
+
+void VelocityProfileTest::TestDirac_SetProfile()
+{
+    double time;
+    double pos1 = 10.0;
+    double pos2 = -1.0;
+
+    VelocityProfile_Dirac v;
+    v.SetProfile(pos1, pos2);
+
+    time = 0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos1, v.Pos(time), epsilon);
+
+    time = 1.0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos2, v.Pos(time), epsilon);
+
+    time = -1.0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos1, v.Pos(time), epsilon);
+}
+
+void VelocityProfileTest::TestDirac_SetProfileDuration()
+{
+    double time;
+    double pos1 = 10.0;
+    double pos2 = -1.0;
+    double duration = 5.0;
+    VelocityProfile_Dirac v;
+    v.SetProfileDuration(pos1, pos2, duration);
+
+    time = -1.0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos1, v.Pos(time), epsilon);
+
+    time = duration/2;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL((pos1 + pos2)/2, v.Pos(time), epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL((pos2-pos1)/duration, v.Vel(time), epsilon);
+
+    time = duration;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos2, v.Pos(time), epsilon);
+
+    time = duration + 1.0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(pos2, v.Pos(time), epsilon);
+}

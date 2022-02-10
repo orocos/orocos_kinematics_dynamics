@@ -19,6 +19,7 @@
 #include <path_roundedcomposite.hpp>
 #include <rotational_interpolation_sa.hpp>
 #include <utilities/error.h>
+#include <utilities/utility.h>
 #include <trajectory_composite.hpp>
 
 int main(int argc,char* argv[]) {
@@ -35,13 +36,13 @@ int main(int argc,char* argv[]) {
 		// When the routines are parallel, no rounding is needed, and no attempt is made
 		// add constructing a rounding arc.
 		// (It is still not possible when the segments are on top of each other)
-		// Note that you can only rotate in a deterministic way over an angle less then M_PI!
-		// With an angle == M_PI, you cannot predict over which side will be rotated.
-		// With an angle > M_PI, the routine will rotate over 2*M_PI-angle.
+		// Note that you can only rotate in a deterministic way over an angle less then PI!
+		// With an angle == PI, you cannot predict over which side will be rotated.
+		// With an angle > PI, the routine will rotate over 2*PI-angle.
 		// If you need to rotate over a larger angle, you need to introduce intermediate points.
 		// So, there is a common use case for using parallel segments.
-		path->Add(Frame(Rotation::RPY(M_PI,0,0), Vector(-1,0,0)));
-		path->Add(Frame(Rotation::RPY(M_PI/2,0,0), Vector(-0.5,0,0)));
+		path->Add(Frame(Rotation::RPY(PI,0,0), Vector(-1,0,0)));
+		path->Add(Frame(Rotation::RPY(PI_2,0,0), Vector(-0.5,0,0)));
 		path->Add(Frame(Rotation::RPY(0,0,0), Vector(0,0,0)));
 		path->Add(Frame(Rotation::RPY(0.7,0.7,0.7), Vector(1,1,1)));
 		path->Add(Frame(Rotation::RPY(0,0.7,0), Vector(1.5,0.3,0)));
@@ -60,8 +61,6 @@ int main(int argc,char* argv[]) {
 		Trajectory_Composite* ctraject = new Trajectory_Composite();
 		ctraject->Add(traject);
 		ctraject->Add(new Trajectory_Stationary(1.0,Frame(Rotation::RPY(0.7,0.7,0), Vector(1,1,0))));
-
-
 
 		// use the trajectory
 		double dt=0.1;
@@ -113,5 +112,3 @@ int main(int argc,char* argv[]) {
 	}
 
 }
-
-

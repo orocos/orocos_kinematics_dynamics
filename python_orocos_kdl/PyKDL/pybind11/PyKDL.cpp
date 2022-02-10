@@ -1,8 +1,10 @@
-//Copyright  (C)  2007  Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+//Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 //
 //Version: 1.0
-//Author: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
-//Maintainer: Ruben Smits <ruben dot smits at mech dot kuleuven dot be>
+//Author: Ruben Smits Ruben Smits <ruben dot smits at intermodalics dot eu>
+//Author: Zihan Chen <zihan dot chen dot jhu at gmail dot com>
+//Author: Matthijs van der Burgh <MatthijsBurgh at outlook dot com>
+//Maintainer: Ruben Smits Ruben Smits <ruben dot smits at intermodalics dot eu>
 //URL: http://www.orocos.org/kdl
 //
 //This library is free software; you can redistribute it and/or
@@ -20,13 +22,18 @@
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-%Module(name = PyKDL,version=0,keyword_arguments="All")
+#include <kdl/config.h>
+#include "PyKDL.h"
 
-%License(type="LGPL",licensee="Ruben Smits",signature="ruben@intermodalics.eu",timestamp="2014")
+namespace py = pybind11;
 
-%Include std_string.sip
-%Include frames.sip
-%Include kinfam.sip
-%Include framevel.sip
 
-%Include dynamics.sip
+PYBIND11_MODULE(PyKDL, m)
+{
+    m.doc() = "Orocos KDL Python wrapper"; // optional module docstring
+    m.attr("__version__") = KDL_VERSION_STRING;
+    init_frames(m);
+    init_framevel(m);
+    init_kinfam(m);
+    init_dynamics(m);
+}

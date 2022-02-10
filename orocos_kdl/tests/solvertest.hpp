@@ -18,6 +18,9 @@
 #include <chainidsolver_vereshchagin.hpp>
 #include <chainidsolver_recursive_newton_euler.hpp>
 #include <chaindynparam.hpp>
+#include <chainidsolver_recursive_newton_euler.hpp>
+#include <chainfdsolver_recursive_newton_euler.hpp>
+#include <utilities/ldl_solver_eigen.hpp>
 
 
 using namespace KDL;
@@ -34,6 +37,9 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(IkVelSolverWDLSTest );
     CPPUNIT_TEST(FkPosVectTest );
     CPPUNIT_TEST(FkVelVectTest );
+    CPPUNIT_TEST(FdSolverDevelopmentTest );
+    CPPUNIT_TEST(FdSolverConsistencyTest );
+    CPPUNIT_TEST(LDLdecompTest);
     CPPUNIT_TEST(UpdateChainTest );
     CPPUNIT_TEST_SUITE_END();
 
@@ -50,11 +56,14 @@ public:
     void IkVelSolverWDLSTest();
     void FkPosVectTest();
     void FkVelVectTest();
+    void FdSolverDevelopmentTest();
+    void FdSolverConsistencyTest();
+    void LDLdecompTest();
     void UpdateChainTest();
 
 private:
 
-  Chain chain1,chain2,chain3,chain4, chaindyn,motomansia10;
+  Chain chain1, chain2, chain3, chain4, chaindyn, motomansia10, motomansia10dyn;
 
     void FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver);
     void FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainJntToJacSolver& jacsolver);

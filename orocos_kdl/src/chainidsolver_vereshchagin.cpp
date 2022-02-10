@@ -1,8 +1,10 @@
-// Copyright  (C)  2009, 2011
+// Copyright  (C)  2020  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 // Version: 1.0
-// Author: Ruben Smits, Herman Bruyninckx, Azamat Shakhimardanov
-// Maintainer: Ruben Smits, Azamat Shakhimardanov
+// Author: Ruben Smits <ruben dot smits at intermodalics dot eu>
+// Author: Herman Bruyninckx
+// Author: Azamat Shakhimardanov
+// Maintainer: Ruben Smits <ruben dot smits at intermodalics dot eu>
 // URL: http://www.orocos.org/kdl
 
 // This library is free software; you can redistribute it and/or
@@ -124,7 +126,7 @@ void ChainIdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
         //external forces are taken into account through s.U.
         Wrench FextLocal = F_total.M.Inverse() * f_ext[i];
         s.U = s.v * (s.H * s.v) - FextLocal; //f_ext[i];
-        if (segment.getJoint().getType() != Joint::None)
+        if (segment.getJoint().getType() != Joint::Fixed)
             j++;
     }
 
@@ -240,7 +242,7 @@ void ChainIdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
             vZ << Vector3d::Map(s.Z.rot.data), Vector3d::Map(s.Z.vel.data);
             s.EZ.noalias() = s.E.transpose() * vZ;
 
-            if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
+            if (chain.getSegment(i - 1).getJoint().getType() != Joint::Fixed)
                 j--;
         }
     }
@@ -325,7 +327,7 @@ void ChainIdSolver_Vereshchagin::final_upwards_sweep(JntArray &q_dotdot, JntArra
         // nullspace forces.
         q_dotdot(j) = (s.nullspaceAccComp + parentAccComp + s.constAccComp);
         s.acc = s.F.Inverse(a_p + s.Z * q_dotdot(j) + s.C);//returns acceleration in link distal tip coordinates. For use needs to be transformed
-        if (chain.getSegment(i - 1).getJoint().getType() != Joint::None)
+        if (chain.getSegment(i - 1).getJoint().getType() != Joint::Fixed)
             j++;
     }
 }

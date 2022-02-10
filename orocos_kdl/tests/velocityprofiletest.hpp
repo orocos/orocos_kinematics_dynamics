@@ -4,6 +4,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <velocityprofile_trap.hpp>
 #include <velocityprofile_traphalf.hpp>
+#include <velocityprofile_dirac.hpp>
 
 class VelocityProfileTest : public CppUnit::TestFixture
 {
@@ -17,6 +18,9 @@ class VelocityProfileTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestTrapHalf_SetProfile_End);
     CPPUNIT_TEST(TestTrapHalf_SetDuration_Start);
     CPPUNIT_TEST(TestTrapHalf_SetDuration_End);
+
+    CPPUNIT_TEST(TestDirac_SetProfile);
+    CPPUNIT_TEST(TestDirac_SetProfileDuration);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -33,6 +37,9 @@ public:
     void TestTrapHalf_SetProfile_End();
     void TestTrapHalf_SetDuration_Start();
     void TestTrapHalf_SetDuration_End();
+
+    void TestDirac_SetProfile();
+    void TestDirac_SetProfileDuration();
 };
 
 #endif

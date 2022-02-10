@@ -42,6 +42,7 @@
 
 #include "utilities/error.h"
 #include "utilities/error_stack.h"
+#include "utilities/scoped_ptr.hpp"
 #include "trajectory.hpp"
 #include "path.hpp"
 #include "trajectory_segment.hpp"
@@ -55,15 +56,14 @@ namespace KDL {
 using namespace std;
 
 Trajectory* Trajectory::Read(std::istream& is) {
-	// auto_ptr because exception can be thrown !
 	IOTrace("Trajectory::Read");
 	char storage[64];
 	EatWord(is,"[",storage,sizeof(storage));
 	Eat(is,'[');
 	if (strcmp(storage,"SEGMENT")==0) {
 		IOTrace("SEGMENT");
-		auto_ptr<Path>      geom(    Path::Read(is)       );
-		auto_ptr<VelocityProfile> motprof( VelocityProfile::Read(is)  );
+		scoped_ptr<Path>      geom(    Path::Read(is)       );
+		scoped_ptr<VelocityProfile> motprof( VelocityProfile::Read(is)  );
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();

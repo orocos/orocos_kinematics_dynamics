@@ -122,10 +122,10 @@ namespace KDL
             return (error = E_SIZE_MISMATCH);
         error = jnt2jac.JntToJac(q_in,jac);
         if ( error < E_NOERROR) return error;
-        
+
         double sum;
         unsigned int i,j;
-        
+
         // Initialize (internal) return values
         nrZeroSigmas = 0 ;
         sigmaMin = 0.;
@@ -137,11 +137,11 @@ namespace KDL
                 tmp_jac(i,j) = jac(i,j);
         }
         */
-        
+
         // Create the Weighted jacobian
         tmp_jac_weight1 = jac.data.lazyProduct(weight_js);
         tmp_jac_weight2 = weight_ts.lazyProduct(tmp_jac_weight1);
-   
+
         // Compute the SVD of the weighted jacobian
         svdResult = svd_eigen_HH(tmp_jac_weight2,U,S,V,tmp,maxiter);
         if (0 != svdResult)
@@ -176,22 +176,22 @@ namespace KDL
             // Note:  singular values are always positive so sigmaMin >=0
             if ( sigmaMin < eps )
             {
-			    lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
+                lambda_scaled = sqrt(1.0-(sigmaMin/eps)*(sigmaMin/eps))*lambda ;
             }
-			if(fabs(S(i))<eps) {
-				if (i<6) {
-					// Scale lambda to size of singular value sigmaMin
-					tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda_scaled*lambda_scaled)));
-				}
-				else {
-					tmp(i)=0.0;  // S(i)=0 for i>=6 due to cols>rows
-				}
-				//  Count number of singular values near zero
-				++nrZeroSigmas ;
-			}
-			else {
+            if(fabs(S(i))<eps) {
+                if (i<6) {
+                    // Scale lambda to size of singular value sigmaMin
+                    tmp(i) = sum*((S(i)/(S(i)*S(i)+lambda_scaled*lambda_scaled)));
+                }
+                else {
+                    tmp(i)=0.0;  // S(i)=0 for i>=6 due to cols>rows
+                }
+                //  Count number of singular values near zero
+                ++nrZeroSigmas ;
+            }
+            else {
                 tmp(i) = sum/S(i);
-			}
+            }
         }
 
         /*
@@ -208,7 +208,7 @@ namespace KDL
 
         // If number of near zero singular values is greater than the full rank
         // of jac, then wdls is active
-        if ( nrZeroSigmas > (jac.columns()-jac.rows()) )	{
+        if ( nrZeroSigmas > (jac.columns()-jac.rows()) ) {
             return (error = E_CONVERGE_PINV_SINGULAR);  // converged but pinv singular
         } else {
             return (error = E_NOERROR);                 // have converged

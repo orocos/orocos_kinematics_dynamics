@@ -100,7 +100,7 @@ void changeRepresentation(Jacobian& J,const Frame& F_bs_ee,const int& representa
             // Ref Frame {ee}, Ref Point {ee}
             J.changeBase(F_bs_ee.M.Inverse());
             break;
-        case ChainJntToJacDotSolver::INTERTIAL:
+        case ChainJntToJacDotSolver::INERTIAL:
             // Ref Frame {bs}, Ref Point {bs}
             J.changeRefPoint(-F_bs_ee.p);
             break;
@@ -113,8 +113,8 @@ void Jdot_diff(const Jacobian& J_q,
 {
     assert(J_q.columns() == J_qdt.columns());
     assert(J_q.columns() == Jdot.columns());
-    for(int l=0;l<6;l++)
-    for(int c=0;c<J_q.columns();c++)
+    for(unsigned int l=0;l<6;l++)
+    for(unsigned int c=0;c<J_q.columns();c++)
         Jdot(l,c) = (J_qdt(l,c) - J_q(l,c))/dt;
 }
 
@@ -146,14 +146,14 @@ Jacobian J_d2_symbolic(const JntArray& q,const JntArray& qdot)
 JntArray diff(const JntArray& q,const JntArray& qdot,const double& dt)
 {
     JntArray q_qdqt(q);
-    for(int i=0; i<q.rows(); i++)
+    for(unsigned int i=0; i<q.rows(); i++)
         q_qdqt(i) += dt*qdot(i);
     return q_qdqt;
 }
 
 void random(JntArray& q)
 {
-    for(int i=0; i<q.rows(); i++)
+    for(unsigned int i=0; i<q.rows(); i++)
         random(q(i));
 }
 
@@ -251,7 +251,7 @@ bool runTest(const Chain& chain,const int& representation)
     
     for(double dt=1e-6;dt<0.1;dt*=10)
     {
-        double eps_diff_vs_solver = 3.0*dt; // Apparently :)
+        double eps_diff_vs_solver = 4.0*dt; // Apparently :)
 
         for(int i=0;i<100;i++)
         {

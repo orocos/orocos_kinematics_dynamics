@@ -76,7 +76,7 @@ public:
     IMETHOD VectorAcc& operator -= (const VectorAcc& arg);
     IMETHOD static VectorAcc Zero();
     IMETHOD void ReverseSign();
-    IMETHOD doubleAcc Norm();
+    IMETHOD doubleAcc Norm(double eps=epsilon);
     IMETHOD friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
     IMETHOD friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
     IMETHOD friend VectorAcc operator + (const Vector& r1,const VectorAcc& r2);

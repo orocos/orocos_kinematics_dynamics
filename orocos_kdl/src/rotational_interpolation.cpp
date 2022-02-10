@@ -51,7 +51,6 @@ namespace KDL {
 using namespace std;
 
 RotationalInterpolation* RotationalInterpolation::Read(istream& is) {
-	// auto_ptr because exception can be thrown !
 	IOTrace("RotationalInterpolation::Read");
 	char storage[64];
 	EatWord(is,"[",storage,sizeof(storage));

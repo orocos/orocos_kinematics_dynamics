@@ -56,7 +56,7 @@ class Rall1d
         T t;        //!< value
         V grad;     //!< gradient
     public :
-        INLINE Rall1d() {}
+        INLINE Rall1d():t(),grad() {};
 
         T value() const {
             return t;
@@ -469,6 +469,22 @@ template <class T,class V,class S>
 INLINE  bool Equal(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x,double eps=epsilon)
 {
     return (Equal(x.t,y.t,eps)&&Equal(x.grad,y.grad,eps));
+}
+
+template <class T,class V,class S>
+INLINE  bool operator==(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x)
+{
+#ifdef KDL_USE_EQUAL
+    return Equal(y, x);
+#else
+    return (x.t == y.t && x.grad == y.grad);
+#endif
+}
+
+template <class T,class V,class S>
+INLINE  bool operator!=(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x)
+{
+    return !operator==(y, x);
 }
 
 }

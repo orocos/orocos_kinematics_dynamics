@@ -92,6 +92,18 @@ void JacobianTest::TestConstructor(){
     CPPUNIT_ASSERT_EQUAL(j2.columns(),(unsigned int)5);
 }
 
-void JacobianTest::TestGetSetColumn(){}
+void JacobianTest::TestEqual(){
+    Jacobian j1(1);
+    Jacobian j2(j1);
+    for (unsigned int i=0; i<6; ++i)
+    {
+        random(j1(i,0));
+        j1(i,0) = j1(i,0)*1e-7;
+    }
+    CPPUNIT_ASSERT(Equal(j1,j2,1));
+    CPPUNIT_ASSERT(Equal(j1,j2,1e-6));
+    CPPUNIT_ASSERT(!Equal(j1,j2,1e-8));
+
+}
 
 
