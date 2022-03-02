@@ -34,7 +34,7 @@ jobs:
       OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
       ROS_PYTHON_VERSION: ${{ matrix.python_version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
       - uses: actions/setup-python@v3
@@ -100,7 +100,7 @@ jobs:
             branch: release-1.5
     env: ${{ matrix.env }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
         if: ${{ (github.event_name == 'push' && endsWith(github.ref, matrix.branch)) || (github.event_name == 'pull_request' && endsWith(github.base_ref, matrix.branch)) }}
