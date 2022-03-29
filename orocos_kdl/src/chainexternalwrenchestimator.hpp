@@ -21,7 +21,7 @@
 #ifndef KDL_CHAIN_EXTERNAL_WRENCH_ESTIMATOR_HPP
 #define KDL_CHAIN_EXTERNAL_WRENCH_ESTIMATOR_HPP
 
-#include <Eigen/Core>
+#include <eigen3/Eigen/Core>
 #include "utilities/svd_eigen_HH.hpp"
 #include "chaindynparam.hpp"
 #include "chainjnttojacsolver.hpp"

@@ -25,7 +25,7 @@
 #include "frames.hpp"
 #include "jacobian.hpp"
 
-#include <Eigen/Core>
+#include <eigen3/Eigen/Core>
 
 namespace KDL
 {
