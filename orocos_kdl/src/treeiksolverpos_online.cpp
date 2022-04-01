@@ -26,7 +26,7 @@
 
 namespace KDL {
 
-TreeIkSolverPos_Online::TreeIkSolverPos_Online(const unsigned int& nr_of_jnts,
+TreeIkSolverPos_Online::TreeIkSolverPos_Online(const double& nr_of_jnts,
                                                const std::vector<std::string>& endpoints,
                                                const JntArray& q_min,
                                                const JntArray& q_max,
@@ -35,12 +35,12 @@ TreeIkSolverPos_Online::TreeIkSolverPos_Online(const unsigned int& nr_of_jnts,
                                                const double x_dot_rot_max,
                                                TreeFkSolverPos& fksolver,
                                                TreeIkSolverVel& iksolver) :
-                                               q_min_(nr_of_jnts),
-                                               q_max_(nr_of_jnts),
-                                               q_dot_max_(nr_of_jnts),
+                                               q_min_(static_cast<unsigned int>(nr_of_jnts)),
+                                               q_max_(static_cast<unsigned int>(nr_of_jnts)),
+                                               q_dot_max_(static_cast<unsigned int>(nr_of_jnts)),
                                                fksolver_(fksolver),
                                                iksolver_(iksolver),
-                                               q_dot_(nr_of_jnts)
+                                               q_dot_(static_cast<unsigned int>(nr_of_jnts))
 {
     q_min_ = q_min;
     q_max_ = q_max;
