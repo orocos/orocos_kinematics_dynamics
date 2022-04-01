@@ -57,7 +57,11 @@ void IOTracePopStr(char* buffer,int size) {
         *buffer = 0;
         return;
     }
+#if defined(_WIN32)
+    strncpy_s(buffer,size,errorstack.top().c_str(),size);
+#else
     strncpy(buffer,errorstack.top().c_str(),size);
+#endif
     buffer[size - 1] = '\0';
     errorstack.pop();
 }
