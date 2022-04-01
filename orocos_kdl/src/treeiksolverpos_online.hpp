@@ -61,7 +61,7 @@ public:
      * @return
      */
 
-    TreeIkSolverPos_Online(const double& nr_of_jnts,
+    TreeIkSolverPos_Online(const unsigned int& nr_of_jnts,
                            const std::vector<std::string>& endpoints,
                            const JntArray& q_min,
                            const JntArray& q_max,

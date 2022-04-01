@@ -69,12 +69,12 @@ namespace KDL
 
     unsigned int JntArray::rows()const
     {
-        return data.rows();
+        return static_cast<unsigned int>(data.rows());
     }
 
     unsigned int JntArray::columns()const
     {
-        return data.cols();
+        return static_cast<unsigned int>(data.cols());
     }
 
     void Add(const JntArray& src1,const JntArray& src2,JntArray& dest)
