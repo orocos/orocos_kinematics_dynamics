@@ -26,8 +26,8 @@ namespace KDL{
     int svd_eigen_HH(const Eigen::MatrixXd &A, Eigen::MatrixXd &U, Eigen::VectorXd &S, Eigen::MatrixXd &V, Eigen::VectorXd &tmp, int maxiter, double epsilon)
     {
         //get the rows/columns of the matrix
-        const int rows = A.rows();
-        const int cols = A.cols();
+        const int rows = static_cast<int>(A.rows());
+        const int cols = static_cast<int>(A.cols());
     
         U.setZero();
         U.topLeftCorner(rows,cols)=A;

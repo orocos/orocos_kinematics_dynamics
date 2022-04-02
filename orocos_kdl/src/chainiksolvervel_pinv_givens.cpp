@@ -30,8 +30,8 @@ namespace KDL
         jnt2jac(chain),
         jac(nj),
         transpose(nj>6),toggle(true),
-        m(max(6,nj)),
-        n(min(6,nj)),
+        m(static_cast<unsigned int>(max(6,nj))),
+        n(static_cast<unsigned int>(min(6,nj))),
         jac_eigen(m,n),
         U(Eigen::MatrixXd::Identity(m,m)),
         V(Eigen::MatrixXd::Identity(n,n)),
@@ -50,8 +50,8 @@ namespace KDL
         jnt2jac.updateInternalDataStructures();
         jac.resize(nj);
         transpose = (nj > 6);
-        m = max(6,nj);
-        n = min(6,nj);
+        m = static_cast<unsigned int>(max(6,nj));
+        n = static_cast<unsigned int>(min(6,nj));
         jac_eigen.conservativeResize(m,n);
         U.conservativeResizeLike(Eigen::MatrixXd::Identity(m,m));
         V.conservativeResizeLike(Eigen::MatrixXd::Identity(n,n));

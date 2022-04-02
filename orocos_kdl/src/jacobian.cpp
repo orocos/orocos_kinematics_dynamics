@@ -68,12 +68,12 @@ namespace KDL
 
     unsigned int Jacobian::rows()const
     {
-        return data.rows();
+        return static_cast<unsigned int>(data.rows());
     }
 
     unsigned int Jacobian::columns()const
     {
-        return data.cols();
+        return static_cast<unsigned int>(data.cols());
     }
 
     void SetToZero(Jacobian& jac)
