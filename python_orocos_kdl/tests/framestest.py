@@ -194,7 +194,6 @@ class FramesTestFunctions(unittest.TestCase):
         self.testWrenchImpl(w)
 
         # Equality
-        w = Wrench(Vector(1, 2, 3), Vector(1, 2, 3))
         self.assertFalse(w == -w)  # Doesn't work for zero wrench
         self.assertFalse(Equal(w, -w))  # Doesn't work for zero wrench
         self.assertTrue(w != -w)  # Doesn't work for zero wrench
