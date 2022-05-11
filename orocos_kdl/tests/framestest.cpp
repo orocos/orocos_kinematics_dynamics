@@ -36,8 +36,8 @@ void FramesTest::TestVector() {
 	Vector   v2(0,0,0);
 	TestVector2(v2);
 
-    CPPUNIT_ASSERT_EQUAL(std::hash<Vector>{}(v), static_cast<size_t>(3450679443808348711));
-    CPPUNIT_ASSERT_EQUAL(std::hash<Vector>{}(v2), static_cast<size_t>(11093822414574));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Vector>{}(v), static_cast<size_t>(3450679443808348711u));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Vector>{}(v2), static_cast<size_t>(11093822414574u));
 	
 	Vector nu(0,0,0);
 	CPPUNIT_ASSERT_EQUAL(nu.Norm(),0.0);
@@ -80,8 +80,8 @@ void FramesTest::TestTwist() {
 	Twist    t3(Vector(0,-9,-3),Vector(1,-2,-4));
 	TestTwist2(t3);	
 
-    CPPUNIT_ASSERT_EQUAL(std::hash<Twist>{}(t3), static_cast<size_t>(3373832976806748309));
-    CPPUNIT_ASSERT_EQUAL(std::hash<Twist>{}(t2), static_cast<size_t>(730713428471863));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Twist>{}(t3), static_cast<size_t>(3373832976806748309u));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Twist>{}(t2), static_cast<size_t>(730713428471863u));
 }
 
 void FramesTest::TestWrench2(Wrench& w) {
@@ -109,8 +109,8 @@ void FramesTest::TestWrench() {
 	Wrench   w3(Vector(2,1,4),Vector(5,3,1));
     TestWrench2(w3);
 
-    CPPUNIT_ASSERT_EQUAL(std::hash<Wrench>{}(w3), static_cast<size_t>(13897938943539516747));
-    CPPUNIT_ASSERT_EQUAL(std::hash<Wrench>{}(w2), static_cast<size_t>(730713428471863));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Wrench>{}(w3), static_cast<size_t>(13897938943539516747u));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Wrench>{}(w2), static_cast<size_t>(730713428471863u));
 }
 
 void FramesTest::TestRotation2(const Vector& v,double a,double b,double c) {
@@ -420,8 +420,8 @@ void FramesTest::TestRotation() {
 
 	TestOneRotation("rot([0.707107, 0, 0.707107", KDL::Rotation::RPY(-2.9811968953315162, -atan(1)*2, -0.1603957582582825), 180*deg2rad, Vector(0.707107,0,0.707107) );
 
-    CPPUNIT_ASSERT_EQUAL(std::hash<Rotation>{}(Rotation::Quaternion(1, 0, 0, 0)), static_cast<size_t>(5526237894416316219));
-    CPPUNIT_ASSERT_EQUAL(std::hash<Rotation>{}(Rotation()), static_cast<size_t>(8386870752212395617));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Rotation>{}(Rotation::Quaternion(1, 0, 0, 0)), static_cast<size_t>(5526237894416316219u));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Rotation>{}(Rotation()), static_cast<size_t>(8386870752212395617u));
 }
 
 void FramesTest::TestGetRotAngle() {
@@ -666,8 +666,8 @@ void FramesTest::TestFrame() {
     CPPUNIT_ASSERT(Equal(Frame::DH_Craig1989(0.0, M_PI_2, 0.36, 0.0), F_DH_Craig1989));
     CPPUNIT_ASSERT(Equal(Frame().DH_Craig1989(0.0, M_PI_2, 0.36, 0.0), F_DH_Craig1989)); // Only for testing purposes, shouldn't use static function of instances
 
-    CPPUNIT_ASSERT_EQUAL(std::hash<Frame>{}(F), static_cast<size_t>(6112004106257185417));
-    CPPUNIT_ASSERT_EQUAL(std::hash<Frame>{}(Frame()), static_cast<size_t>(8387572672274540708));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Frame>{}(F), static_cast<size_t>(6112004106257185417u));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Frame>{}(Frame()), static_cast<size_t>(8387572672274540708u));
 }
 
 JntArray CreateRandomJntArray(int size)
