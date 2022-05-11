@@ -200,7 +200,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertTrue(not Equal(w, -w))  # Doesn't work for zero wrench
 
         # Hash
-        self.assertEqual(hash(w), 551895977443887016)
+        self.assertEqual(hash(w), hash(13897938943539516747))  # 551895977443887016
         self.assertEqual(hash(Wrench()), 730713428471863)
 
         # Members
