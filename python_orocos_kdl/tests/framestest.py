@@ -115,14 +115,14 @@ class FramesTestFunctions(unittest.TestCase):
         self.testTwistImpl(t)
 
         # Equality
-        t = Twist(Vector(1, 2, 3), Vector(1, 2, 3))
+        t = Twist(Vector(0, -9, -3), Vector(1, -2, -4))
         self.assertFalse(t == -t)  # Doesn't work for zero twist
         self.assertFalse(Equal(t, -t))  # Doesn't work for zero twist
         self.assertTrue(t != -t)  # Doesn't work for zero twist
         self.assertTrue(not Equal(t, -t))  # Doesn't work for zero twist
 
         # Hash
-        self.assertEqual(hash(t), 551895977443887016)
+        self.assertEqual(hash(t), 3373832976806748309)
         self.assertEqual(hash(Twist()), 730713428471863)
 
         # Members
