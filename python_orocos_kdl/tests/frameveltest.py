@@ -67,7 +67,11 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(not Equal(v, -v))  # Doesn't work for zero VectorVel
 
         # Hash
-        self.assertEqual(hash(v), 2049006275376269995)
+        if sys.version_info < (3, 0):
+            self.assertEqual(hash(v), -4868522752264811866)
+        else:
+            self.assertEqual(hash(v), 2049006275376269995)
+
         self.assertEqual(hash(VectorVel()), 730713428471863)
 
         v = VectorVel(v1)
@@ -249,7 +253,10 @@ class FrameVelTestFunctions(unittest.TestCase):
 
         # Hash
         self.assertEqual(hash(fr), 6112004106257185417)
-        self.assertEqual(hash(FrameVel()), 35564562501293795)
+        if sys.version_info < (3, 0):
+            self.assertEqual(hash(FrameVel()), -2270278446712400164)
+        else:
+            self.assertEqual(hash(FrameVel()), 35564562501293795)
 
     def testFrameVelImpl(self, f, v, vt):
         f2 = FrameVel(f)
