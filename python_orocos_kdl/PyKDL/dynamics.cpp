@@ -43,7 +43,7 @@ void init_dynamics(pybind11::module &m)
     jnt_space_inertia_matrix.def(py::init<>());
     jnt_space_inertia_matrix.def(py::init<int>());
     jnt_space_inertia_matrix.def(py::init<const JntSpaceInertiaMatrix&>());
-    jnt_space_inertia_matrix.def("resize", &JntSpaceInertiaMatrix::resize);
+    jnt_space_inertia_matrix.def("resize", &JntSpaceInertiaMatrix::resize, py::arg("new_size"));
     jnt_space_inertia_matrix.def("rows", &JntSpaceInertiaMatrix::rows);
     jnt_space_inertia_matrix.def("columns", &JntSpaceInertiaMatrix::columns);
     jnt_space_inertia_matrix.def("__getitem__", [](const JntSpaceInertiaMatrix &jm, std::tuple<int, int> idx)
@@ -72,12 +72,12 @@ void init_dynamics(pybind11::module &m)
     });
     jnt_space_inertia_matrix.def(py::self == py::self);
 
-    m.def("Add", (void (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&, JntSpaceInertiaMatrix&)) &KDL::Add);
-    m.def("Subtract", (void (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&,JntSpaceInertiaMatrix&)) &KDL::Subtract);
-    m.def("Multiply", (void (*)(const JntSpaceInertiaMatrix&, const double&, JntSpaceInertiaMatrix&)) &KDL::Multiply);
-    m.def("Divide", (void (*)(const JntSpaceInertiaMatrix&, const double&, JntSpaceInertiaMatrix&)) &KDL::Divide);
-    m.def("Multiply", (void (*)(const JntSpaceInertiaMatrix&, const JntArray&, JntArray&)) &KDL::Multiply);
-    m.def("SetToZero", (void (*)(JntSpaceInertiaMatrix&)) &KDL::SetToZero);
+    m.def("Add", (void (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&, JntSpaceInertiaMatrix&)) &KDL::Add, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Subtract", (void (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&,JntSpaceInertiaMatrix&)) &KDL::Subtract, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Multiply", (void (*)(const JntSpaceInertiaMatrix&, const double&, JntSpaceInertiaMatrix&)) &KDL::Multiply, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("Divide", (void (*)(const JntSpaceInertiaMatrix&, const double&, JntSpaceInertiaMatrix&)) &KDL::Divide, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("Multiply", (void (*)(const JntSpaceInertiaMatrix&, const JntArray&, JntArray&)) &KDL::Multiply, py::arg("src"), py::arg("vec"), py::arg("dest"));
+    m.def("SetToZero", (void (*)(JntSpaceInertiaMatrix&)) &KDL::SetToZero, py::arg("matrix"));
     m.def("Equal", (bool (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&, double)) &KDL::Equal,
           py::arg("src1"), py::arg("src2"), py::arg("eps")=epsilon);
 
@@ -87,7 +87,7 @@ void init_dynamics(pybind11::module &m)
     // --------------------
     py::class_<ChainDynParam> chain_dyn_param(m, "ChainDynParam");
     chain_dyn_param.def(py::init<const Chain&, Vector>());
-    chain_dyn_param.def("JntToCoriolis", &ChainDynParam::JntToCoriolis);
-    chain_dyn_param.def("JntToMass", &ChainDynParam::JntToMass);
-    chain_dyn_param.def("JntToGravity", &ChainDynParam::JntToGravity);
+    chain_dyn_param.def("JntToCoriolis", &ChainDynParam::JntToCoriolis, py::arg("q"), py::arg("q_dot"), py::arg("coriolis"));
+    chain_dyn_param.def("JntToMass", &ChainDynParam::JntToMass, py::arg("q"), py::arg("H"));
+    chain_dyn_param.def("JntToGravity", &ChainDynParam::JntToGravity, py::arg("q"), py::arg("gravity"));
 }

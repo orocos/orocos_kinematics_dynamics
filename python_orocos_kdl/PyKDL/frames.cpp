@@ -40,9 +40,9 @@ void init_frames(py::module &m)
     vector.def(py::init<>());
     vector.def(py::init<double, double, double>(), py::arg("x"), py::arg("y"), py::arg("z"));
     vector.def(py::init<const Vector&>());
-    vector.def("x", (void (Vector::*)(double)) &Vector::x);
-    vector.def("y", (void (Vector::*)(double)) &Vector::y);
-    vector.def("z", (void (Vector::*)(double)) &Vector::z);
+    vector.def("x", (void (Vector::*)(double)) &Vector::x, py::arg("value"));
+    vector.def("y", (void (Vector::*)(double)) &Vector::y, py::arg("value"));
+    vector.def("z", (void (Vector::*)(double)) &Vector::z, py::arg("value"));
     vector.def("x", (double (Vector::*)(void) const) &Vector::x);
     vector.def("y", (double (Vector::*)(void) const) &Vector::y);
     vector.def("z", (double (Vector::*)(void) const) &Vector::z);
@@ -52,14 +52,14 @@ void init_frames(py::module &m)
             throw py::index_error("Vector index out of range");
 
         return v(i);
-    });
+    }, py::arg("index"));
     vector.def("__setitem__", [](Vector &v, int i, double value)
     {
         if (i < 0 || i > 2)
             throw py::index_error("Vector index out of range");
 
         v(i) = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     vector.def("__repr__", [](const Vector &v)
     {
         std::ostringstream oss;
@@ -108,7 +108,7 @@ void init_frames(py::module &m)
                 return v;
             }));
 
-    m.def("SetToZero", (void (*)(Vector&)) &KDL::SetToZero);
+    m.def("SetToZero", (void (*)(Vector&)) &KDL::SetToZero, py::arg("vector"));
     m.def("dot", (double (*)(const Vector&, const Vector&)) &KDL::dot);
     m.def("Equal", (bool (*)(const Vector&, const Vector&, double)) &KDL::Equal,
           py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
@@ -129,14 +129,14 @@ void init_frames(py::module &m)
             throw py::index_error("Wrench index out of range");
 
         return t(i);
-    });
+    }, py::arg("index"));
     wrench.def("__setitem__", [](Wrench &t, int i, double value)
     {
         if (i < 0 || i > 5)
             throw py::index_error("Wrench index out of range");
 
         t(i) = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     wrench.def("__repr__", [](const Wrench &t)
     {
         std::ostringstream oss;
@@ -183,7 +183,7 @@ void init_frames(py::module &m)
                 return wr;
             }));
 
-    m.def("SetToZero", (void (*)(Wrench&)) &KDL::SetToZero);
+    m.def("SetToZero", (void (*)(Wrench&)) &KDL::SetToZero, py::arg("wrench"));
     m.def("Equal", (bool (*)(const Wrench&, const Wrench&, double eps)) &KDL::Equal,
           py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
 
@@ -203,14 +203,14 @@ void init_frames(py::module &m)
             throw py::index_error("Twist index out of range");
 
         return t(i);
-    });
+    }, py::arg("index"));
     twist.def("__setitem__", [](Twist &t, int i, double value)
     {
         if (i < 0 || i > 5)
             throw py::index_error("Twist index out of range");
 
         t(i) = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     twist.def("__repr__", [](const Twist &t)
     {
         std::ostringstream oss;
@@ -259,7 +259,7 @@ void init_frames(py::module &m)
 
     m.def("dot", (double (*)(const Twist&, const Wrench&)) &KDL::dot);
     m.def("dot", (double (*)(const Wrench&, const Twist&)) &KDL::dot);
-    m.def("SetToZero", (void (*)(Twist&)) &KDL::SetToZero);
+    m.def("SetToZero", (void (*)(Twist&)) &KDL::SetToZero, py::arg("twist"));
     m.def("Equal", (bool (*)(const Twist&, const Twist&, double eps)) &KDL::Equal,
           py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
 
@@ -284,7 +284,7 @@ void init_frames(py::module &m)
             throw py::index_error("Rotation index out of range");
 
         return r(i, j);
-    });
+    }, py::arg("index"));
     rotation.def("__setitem__", [](Rotation &r, std::tuple<int, int> idx, double value)
     {
         int i = std::get<0>(idx);
@@ -293,7 +293,7 @@ void init_frames(py::module &m)
             throw py::index_error("Rotation index out of range");
 
         r(i, j) = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     rotation.def("__repr__", [](const Rotation &r)
     {
             std::ostringstream oss;
@@ -314,18 +314,18 @@ void init_frames(py::module &m)
     rotation.def("Inverse", (Wrench (Rotation::*)(const Wrench&) const) &Rotation::Inverse);
     rotation.def("Inverse", (Twist (Rotation::*)(const Twist&) const) &Rotation::Inverse);
     rotation.def_static("Identity", &Rotation::Identity);
-    rotation.def_static("RotX", &Rotation::RotX);
-    rotation.def_static("RotY", &Rotation::RotY);
-    rotation.def_static("RotZ", &Rotation::RotZ);
-    rotation.def_static("Rot", &Rotation::Rot);
-    rotation.def_static("Rot2", &Rotation::Rot2);
-    rotation.def_static("EulerZYZ", &Rotation::EulerZYZ);
-    rotation.def_static("RPY", &Rotation::RPY);
-    rotation.def_static("EulerZYX", &Rotation::EulerZYX);
+    rotation.def_static("RotX", &Rotation::RotX, py::arg("angle"));
+    rotation.def_static("RotY", &Rotation::RotY, py::arg("angle"));
+    rotation.def_static("RotZ", &Rotation::RotZ, py::arg("angle"));
+    rotation.def_static("Rot", &Rotation::Rot, py::arg("rotvec"), py::arg("angle"));
+    rotation.def_static("Rot2", &Rotation::Rot2, py::arg("rotvec"), py::arg("angle"));
+    rotation.def_static("EulerZYZ", &Rotation::EulerZYZ, py::arg("alpha"), py::arg("beta"), py::arg("gamma"));
+    rotation.def_static("RPY", &Rotation::RPY, py::arg("roll"), py::arg("pitch"), py::arg("yaw"));
+    rotation.def_static("EulerZYX", &Rotation::EulerZYX, py::arg("alpha"), py::arg("beta"), py::arg("gamma"));
     rotation.def_static("Quaternion", &Rotation::Quaternion, py::arg("x"), py::arg("y"), py::arg("z"), py::arg("w"));
-    rotation.def("DoRotX", &Rotation::DoRotX);
-    rotation.def("DoRotY", &Rotation::DoRotY);
-    rotation.def("DoRotZ", &Rotation::DoRotZ);
+    rotation.def("DoRotX", &Rotation::DoRotX, py::arg("angle"));
+    rotation.def("DoRotY", &Rotation::DoRotY, py::arg("angle"));
+    rotation.def("DoRotZ", &Rotation::DoRotZ, py::arg("angle"));
     rotation.def("GetRot", &Rotation::GetRot);
     rotation.def("GetRotAngle", [](const Rotation &r, double eps)
     {
@@ -360,9 +360,9 @@ void init_frames(py::module &m)
     rotation.def("UnitX", (Vector (Rotation::*)() const) &Rotation::UnitX);
     rotation.def("UnitY", (Vector (Rotation::*)() const) &Rotation::UnitY);
     rotation.def("UnitZ", (Vector (Rotation::*)() const) &Rotation::UnitZ);
-    rotation.def("UnitX", (void (Rotation::*)(const Vector&)) &Rotation::UnitX);
-    rotation.def("UnitY", (void (Rotation::*)(const Vector&)) &Rotation::UnitY);
-    rotation.def("UnitZ", (void (Rotation::*)(const Vector&)) &Rotation::UnitZ);
+    rotation.def("UnitX", (void (Rotation::*)(const Vector&)) &Rotation::UnitX, py::arg("vec"));
+    rotation.def("UnitY", (void (Rotation::*)(const Vector&)) &Rotation::UnitY, py::arg("vec"));
+    rotation.def("UnitZ", (void (Rotation::*)(const Vector&)) &Rotation::UnitZ, py::arg("vec"));
     rotation.def(py::self * Vector());
     rotation.def(py::self * Twist());
     rotation.def(py::self * Wrench());
@@ -409,7 +409,7 @@ void init_frames(py::module &m)
             throw py::index_error("Frame index out of range");
 
         return frm(i, j);
-    });
+    }, py::arg("index"));
     frame.def("__setitem__", [](Frame &frm, std::tuple<int, int> idx, double value)
     {
         int i = std::get<0>(idx);
@@ -421,7 +421,7 @@ void init_frames(py::module &m)
             frm.p(i) = value;
         else
             frm.M(i, j) = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     frame.def("__repr__", [](const Frame &frm)
     {
         std::ostringstream oss;
@@ -436,14 +436,14 @@ void init_frames(py::module &m)
     {
         return Frame(self);
     }, py::arg("memo"));
-    frame.def_static("DH_Craig1989", &Frame::DH_Craig1989);
-    frame.def_static("DH", &Frame::DH);
+    frame.def_static("DH_Craig1989", &Frame::DH_Craig1989, py::arg("a"), py::arg("alpha"), py::arg("d"), py::arg("theta"));
+    frame.def_static("DH", &Frame::DH, py::arg("a"), py::arg("alpha"), py::arg("d"), py::arg("theta"));
     frame.def("Inverse", (Frame (Frame::*)() const) &Frame::Inverse);
     frame.def("Inverse", (Vector (Frame::*)(const Vector&) const) &Frame::Inverse);
     frame.def("Inverse", (Wrench (Frame::*)(const Wrench&) const) &Frame::Inverse);
     frame.def("Inverse", (Twist (Frame::*)(const Twist&) const) &Frame::Inverse);
     frame.def_static("Identity", &Frame::Identity);
-    frame.def("Integrate", &Frame::Integrate);
+    frame.def("Integrate", &Frame::Integrate, py::arg("twist"), py::arg("sample_frequency"));
     frame.def(py::self * Vector());
     frame.def(py::self * Wrench());
     frame.def(py::self * Twist());

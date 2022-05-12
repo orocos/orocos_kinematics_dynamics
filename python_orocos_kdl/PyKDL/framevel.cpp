@@ -152,7 +152,7 @@ void init_framevel(pybind11::module &m)
                 return vv;
             }));
 
-    m.def("SetToZero", (void (*)(VectorVel&)) &KDL::SetToZero);
+    m.def("SetToZero", (void (*)(VectorVel&)) &KDL::SetToZero, py::arg("vector_vel"));
     m.def("Equal", (bool (*)(const VectorVel&, const VectorVel&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
     m.def("Equal", (bool (*)(const Vector&, const VectorVel&, double)) &KDL::Equal,
@@ -237,7 +237,7 @@ void init_framevel(pybind11::module &m)
                 return tv;
             }));
 
-    m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero);
+    m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero, py::arg("twist_vel"));
     m.def("Equal", (bool (*)(const TwistVel&, const TwistVel&, double)) &KDL::Equal,
           py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
     m.def("Equal", (bool (*)(const Twist&, const TwistVel&, double)) &KDL::Equal,
@@ -279,14 +279,14 @@ void init_framevel(pybind11::module &m)
     rotation_vel.def("Inverse", (RotationVel (RotationVel::*)(void) const) &RotationVel::Inverse);
     rotation_vel.def("Inverse", (VectorVel (RotationVel::*)(const VectorVel&) const) &RotationVel::Inverse);
     rotation_vel.def("Inverse", (VectorVel (RotationVel::*)(const Vector&) const) &RotationVel::Inverse);
-    rotation_vel.def("DoRotX", &RotationVel::DoRotX);
-    rotation_vel.def("DoRotY", &RotationVel::DoRotY);
-    rotation_vel.def("DoRotZ", &RotationVel::DoRotZ);
-    rotation_vel.def_static("RotX", &RotationVel::RotX);
-    rotation_vel.def_static("RotY", &RotationVel::RotY);
-    rotation_vel.def_static("RotZ", &RotationVel::RotZ);
-    rotation_vel.def_static("Rot", &RotationVel::Rot);
-    rotation_vel.def_static("Rot2", &RotationVel::Rot2);
+    rotation_vel.def("DoRotX", &RotationVel::DoRotX, py::arg("angle"));
+    rotation_vel.def("DoRotY", &RotationVel::DoRotY, py::arg("angle"));
+    rotation_vel.def("DoRotZ", &RotationVel::DoRotZ, py::arg("angle"));
+    rotation_vel.def_static("RotX", &RotationVel::RotX, py::arg("angle"));
+    rotation_vel.def_static("RotY", &RotationVel::RotY, py::arg("angle"));
+    rotation_vel.def_static("RotZ", &RotationVel::RotZ, py::arg("angle"));
+    rotation_vel.def_static("Rot", &RotationVel::Rot, py::arg("rotvec"), py::arg("angle"));
+    rotation_vel.def_static("Rot2", &RotationVel::Rot2, py::arg("rotvec"), py::arg("angle"));
 
     rotation_vel.def("Inverse", (TwistVel (RotationVel::*)(const TwistVel&) const) &RotationVel::Inverse);
     rotation_vel.def("Inverse", (TwistVel (RotationVel::*)(const Twist&) const) &RotationVel::Inverse);

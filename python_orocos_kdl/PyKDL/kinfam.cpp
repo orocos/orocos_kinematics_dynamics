@@ -85,8 +85,8 @@ void init_kinfam(pybind11::module &m)
               py::arg("origin"), py::arg("axis"), py::arg("type"), py::arg("scale")=1, py::arg("offset")=0,
               py::arg("inertia")=0, py::arg("damping")=0, py::arg("stiffness")=0);
     joint.def(py::init<const Joint&>());
-    joint.def("pose", &Joint::pose);
-    joint.def("twist", &Joint::twist);
+    joint.def("pose", &Joint::pose, py::arg("q"));
+    joint.def("twist", &Joint::twist, py::arg("q_dot"));
     joint.def("JointAxis", &Joint::JointAxis);
     joint.def("JointOrigin", &Joint::JointOrigin);
     joint.def("getName", &Joint::getName);
@@ -114,14 +114,14 @@ void init_kinfam(pybind11::module &m)
             throw py::index_error("RotationalInertia index out of range");
 
         return inertia.data[i];
-    });
+    }, py::arg("index"));
     rotational_inertia.def("__setitem__", [](RotationalInertia &inertia, int i, double value)
     {
         if (i < 0 || i > 8)
             throw py::index_error("RotationalInertia index out of range");
 
         inertia.data[i] = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     rotational_inertia.def(double() * py::self);
     rotational_inertia.def(py::self + py::self);
     rotational_inertia.def(py::self * Vector());
@@ -135,7 +135,7 @@ void init_kinfam(pybind11::module &m)
                            py::arg("m")=0, py::arg_v("oc", Vector::Zero(), "Vector.Zero"),
                            py::arg_v("Ic", RotationalInertia::Zero(), "RigidBodyInertia.Zero"));
     rigid_body_inertia.def_static("Zero", &RigidBodyInertia::Zero);
-    rigid_body_inertia.def("RefPoint", &RigidBodyInertia::RefPoint);
+    rigid_body_inertia.def("RefPoint", &RigidBodyInertia::RefPoint, py::arg("p"));
     rigid_body_inertia.def("getMass", &RigidBodyInertia::getMass);
     rigid_body_inertia.def("getCOG", &RigidBodyInertia::getCOG);
     rigid_body_inertia.def("getRotationalInertia", &RigidBodyInertia::getRotationalInertia);
@@ -158,12 +158,12 @@ void init_kinfam(pybind11::module &m)
                 py::arg_v("I", RigidBodyInertia::Zero(), "RigidBodyInertia.Zero"));
     segment.def(py::init<const Segment&>());
     segment.def("getFrameToTip", &Segment::getFrameToTip);
-    segment.def("pose", &Segment::pose);
-    segment.def("twist", &Segment::twist);
+    segment.def("pose", &Segment::pose, py::arg("q"));
+    segment.def("twist", &Segment::twist, py::arg("q"), py::arg("q_dot"));
     segment.def("getName", &Segment::getName);
     segment.def("getJoint", &Segment::getJoint);
     segment.def("getInertia", &Segment::getInertia);
-    segment.def("setInertia", &Segment::setInertia);
+    segment.def("setInertia", &Segment::setInertia, py::arg("I_in"));
 
 
     // --------------------
@@ -172,12 +172,12 @@ void init_kinfam(pybind11::module &m)
     py::class_<Chain> chain(m, "Chain");
     chain.def(py::init<>());
     chain.def(py::init<const Chain&>());
-    chain.def("addSegment", &Chain::addSegment);
-    chain.def("addChain", &Chain::addChain);
+    chain.def("addSegment", &Chain::addSegment, py::arg("segment"));
+    chain.def("addChain", &Chain::addChain, py::arg("chain"));
     chain.def("getNrOfJoints", &Chain::getNrOfJoints);
     chain.def("getNrOfSegments", &Chain::getNrOfSegments);
-    chain.def("getSegment", (Segment& (Chain::*)(unsigned int)) &Chain::getSegment);
-    chain.def("getSegment", (const Segment& (Chain::*)(unsigned int) const) &Chain::getSegment);
+    chain.def("getSegment", (Segment& (Chain::*)(unsigned int)) &Chain::getSegment, py::arg("index"));
+    chain.def("getSegment", (const Segment& (Chain::*)(unsigned int) const) &Chain::getSegment, py::arg("index"));
     chain.def("__repr__", [](const Chain &c)
     {
         std::ostringstream oss;
@@ -215,13 +215,13 @@ void init_kinfam(pybind11::module &m)
     // --------------------
     py::class_<Jacobian> jacobian(m, "Jacobian");
     jacobian.def(py::init<>());
-    jacobian.def(py::init<unsigned int>());
+    jacobian.def(py::init<unsigned int>(), py::arg("nr_columns"));
     jacobian.def(py::init<const Jacobian&>());
     jacobian.def("rows", &Jacobian::rows);
     jacobian.def("columns", &Jacobian::columns);
-    jacobian.def("resize", &Jacobian::resize);
-    jacobian.def("getColumn", &Jacobian::getColumn);
-    jacobian.def("setColumn", &Jacobian::setColumn);
+    jacobian.def("resize", &Jacobian::resize, py::arg("nr_columns"));
+    jacobian.def("getColumn", &Jacobian::getColumn, py::arg("index"));
+    jacobian.def("setColumn", &Jacobian::setColumn, py::arg("index"), py::arg("t"));
     jacobian.def("changeRefPoint", &Jacobian::changeRefPoint, py::arg("base"));
     jacobian.def("changeBase", &Jacobian::changeBase, py::arg("rot"));
     jacobian.def("changeRefFrame", &Jacobian::changeRefFrame, py::arg("frame"));
@@ -232,7 +232,7 @@ void init_kinfam(pybind11::module &m)
         if (i < 0 || i > 5 || j < 0 || (unsigned int)j >= jac.columns())
             throw py::index_error("Jacobian index out of range");
         return jac((unsigned int)i, (unsigned int)j);
-    });
+    }, py::arg("index"));
     jacobian.def("__setitem__", [](Jacobian &jac, std::tuple<int, int> idx, double value)
     {
         int i = std::get<0>(idx);
@@ -241,7 +241,7 @@ void init_kinfam(pybind11::module &m)
             throw py::index_error("Jacobian index out of range");
 
         jac((unsigned int)i, (unsigned int)j) = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     jacobian.def("__repr__", [](const Jacobian &jac)
     {
         std::ostringstream oss;
@@ -249,10 +249,10 @@ void init_kinfam(pybind11::module &m)
         return oss.str();
     });
 
-    m.def("SetToZero", (void (*)(Jacobian&)) &KDL::SetToZero);
-    m.def("changeRefPoint", (void (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint);
-    m.def("changeBase", (void (*)(const Jacobian&, const Rotation&, Jacobian&)) &KDL::changeBase);
-    m.def("SetToZero", (void (*)(const Jacobian&, const Frame&, Jacobian&)) &KDL::changeRefFrame);
+    m.def("SetToZero", (void (*)(Jacobian&)) &KDL::SetToZero, py::arg("jac"));
+    m.def("changeRefPoint", (void (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint, py::arg("src"), py::arg("base"), py::arg("dest"));
+    m.def("changeBase", (void (*)(const Jacobian&, const Rotation&, Jacobian&)) &KDL::changeBase, py::arg("src"), py::arg("rot"), py::arg("dest"));
+    m.def("SetToZero", (void (*)(const Jacobian&, const Frame&, Jacobian&)) &KDL::changeRefFrame, py::arg("src"), py::arg("frame"), py::arg("dest"));
 
 
     // --------------------
@@ -260,25 +260,25 @@ void init_kinfam(pybind11::module &m)
     // --------------------
     py::class_<JntArray> jnt_array(m, "JntArray");
     jnt_array.def(py::init<>());
-    jnt_array.def(py::init<unsigned int>());
+    jnt_array.def(py::init<unsigned int>(), py::arg("size"));
     jnt_array.def(py::init<const JntArray&>());
     jnt_array.def("rows", &JntArray::rows);
     jnt_array.def("columns", &JntArray::columns);
-    jnt_array.def("resize", &JntArray::resize);
+    jnt_array.def("resize", &JntArray::resize, py::arg("size"));
     jnt_array.def("__getitem__", [](const JntArray &ja, int i)
     {
         if (i < 0 || (unsigned int)i >= ja.rows())
             throw py::index_error("JntArray index out of range");
 
         return ja(i);
-    });
+    }, py::arg("index"));
     jnt_array.def("__setitem__", [](JntArray &ja, int i, double value)
     {
         if (i < 0 || (unsigned int)i >= ja.rows())
             throw py::index_error("JntArray index out of range");
 
         ja(i) = value;
-    });
+    }, py::arg("index"), py::arg("value"));
     jnt_array.def("__repr__", [](const JntArray &ja)
     {
         std::ostringstream oss;
@@ -287,12 +287,12 @@ void init_kinfam(pybind11::module &m)
     });
     jnt_array.def(py::self == py::self);
 
-    m.def("Add", (void (*)(const JntArray&, const JntArray&, JntArray&)) &KDL::Add);
-    m.def("Subtract", (void (*)(const JntArray&, const JntArray&, JntArray&)) &KDL::Subtract);
-    m.def("Multiply", (void (*)(const JntArray&, const double&, JntArray&)) &KDL::Multiply);
-    m.def("Divide", (void (*)(const JntArray&, const double&, JntArray&)) &KDL::Divide);
-    m.def("MultiplyJacobian", (void (*)(const Jacobian&, const JntArray&, Twist&)) &KDL::MultiplyJacobian);
-    m.def("SetToZero", (void (*)(JntArray&)) &KDL::SetToZero);
+    m.def("Add", (void (*)(const JntArray&, const JntArray&, JntArray&)) &KDL::Add, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Subtract", (void (*)(const JntArray&, const JntArray&, JntArray&)) &KDL::Subtract, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Multiply", (void (*)(const JntArray&, const double&, JntArray&)) &KDL::Multiply, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("Divide", (void (*)(const JntArray&, const double&, JntArray&)) &KDL::Divide, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("MultiplyJacobian", (void (*)(const Jacobian&, const JntArray&, Twist&)) &KDL::MultiplyJacobian, py::arg("jac"), py::arg("src"), py::arg("dest"));
+    m.def("SetToZero", (void (*)(JntArray&)) &KDL::SetToZero, py::arg("jnt_array"));
     m.def("Equal", (bool (*)(const JntArray&, const JntArray&, double)) &KDL::Equal,
           py::arg("src1"), py::arg("src2"), py::arg("eps")=epsilon);
 
@@ -303,22 +303,22 @@ void init_kinfam(pybind11::module &m)
     py::class_<JntArrayVel> jnt_array_vel(m, "JntArrayVel");
     jnt_array_vel.def_readwrite("q", &JntArrayVel::q);
     jnt_array_vel.def_readwrite("qdot", &JntArrayVel::qdot);
-    jnt_array_vel.def(py::init<unsigned int>());
-    jnt_array_vel.def(py::init<const JntArray&, const JntArray&>(), py::arg("q"), py::arg("qdot"));
+    jnt_array_vel.def(py::init<unsigned int>(), py::arg("size"));
+    jnt_array_vel.def(py::init<const JntArray&, const JntArray&>(), py::arg("q"), py::arg("q_dot"));
     jnt_array_vel.def(py::init<const JntArray&>());
-    jnt_array_vel.def("resize", &JntArrayVel::resize);
+    jnt_array_vel.def("resize", &JntArrayVel::resize, py::arg("size"));
     jnt_array_vel.def("value", &JntArrayVel::value);
     jnt_array_vel.def("deriv", &JntArrayVel::deriv);
 
-    m.def("Add", (void (*)(const JntArrayVel&, const JntArrayVel&, JntArrayVel&)) &KDL::Add);
-    m.def("Add", (void (*)(const JntArrayVel&, const JntArray&, JntArrayVel&)) &KDL::Add);
-    m.def("Subtract", (void (*)(const JntArrayVel&, const JntArrayVel&, JntArrayVel&)) &KDL::Subtract);
-    m.def("Subtract", (void (*)(const JntArrayVel&, const JntArray&, JntArrayVel&)) &KDL::Subtract);
-    m.def("Multiply", (void (*)(const JntArrayVel&, const double&, JntArrayVel&)) &KDL::Multiply);
-    m.def("Multiply", (void (*)(const JntArrayVel&, const doubleVel&, JntArrayVel&)) &KDL::Multiply);
-    m.def("Divide", (void (*)(const JntArrayVel&, const double&, JntArrayVel&)) &KDL::Divide);
-    m.def("Divide", (void (*)(const JntArrayVel&, const doubleVel&, JntArrayVel&)) &KDL::Divide);
-    m.def("SetToZero", (void (*)(JntArrayVel&)) &KDL::SetToZero);
+    m.def("Add", (void (*)(const JntArrayVel&, const JntArrayVel&, JntArrayVel&)) &KDL::Add, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Add", (void (*)(const JntArrayVel&, const JntArray&, JntArrayVel&)) &KDL::Add, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Subtract", (void (*)(const JntArrayVel&, const JntArrayVel&, JntArrayVel&)) &KDL::Subtract, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Subtract", (void (*)(const JntArrayVel&, const JntArray&, JntArrayVel&)) &KDL::Subtract, py::arg("src1"), py::arg("src2"), py::arg("dest"));
+    m.def("Multiply", (void (*)(const JntArrayVel&, const double&, JntArrayVel&)) &KDL::Multiply, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("Multiply", (void (*)(const JntArrayVel&, const doubleVel&, JntArrayVel&)) &KDL::Multiply, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("Divide", (void (*)(const JntArrayVel&, const double&, JntArrayVel&)) &KDL::Divide, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("Divide", (void (*)(const JntArrayVel&, const doubleVel&, JntArrayVel&)) &KDL::Divide, py::arg("src"), py::arg("factor"), py::arg("dest"));
+    m.def("SetToZero", (void (*)(JntArrayVel&)) &KDL::SetToZero, py::arg("jnt_array_vel"));
     m.def("Equal", (bool (*)(const JntArrayVel&, const JntArrayVel&, double)) &KDL::Equal,
           py::arg("src1"), py::arg("src2"), py::arg("eps")=epsilon);
 
@@ -328,7 +328,7 @@ void init_kinfam(pybind11::module &m)
     // --------------------
     py::class_<SolverI> solver_i(m, "SolverI");
     solver_i.def("getError", &SolverI::getError);
-    solver_i.def("strError", &SolverI::strError);
+    solver_i.def("strError", &SolverI::strError, py::arg("error"));
     solver_i.def("updateInternalDataStructures", &SolverI::updateInternalDataStructures);
 
 
@@ -381,7 +381,7 @@ void init_kinfam(pybind11::module &m)
     // --------------------
     py::class_<ChainIkSolverVel, SolverI> chain_ik_solver_vel(m, "ChainIkSolverVel");
     chain_ik_solver_vel.def("CartToJnt", (int (ChainIkSolverVel::*)(const JntArray&, const Twist&, JntArray&)) &ChainIkSolverVel::CartToJnt,
-                            py::arg("q_in"), py::arg("v_in"), py::arg("qdot_out"));
+                            py::arg("q_in"), py::arg("v_in"), py::arg("q_dot_out"));
 //    Not yet implemented in orocos_kdl
 //    chain_ik_solver_vel.def("CartToJnt", (int (ChainIkSolverVel::*)(const JntArray&, const FrameVel&, JntArrayVel&)) &ChainIkSolverVel::CartToJnt,
 //                            py::arg("q_init"), py::arg("v_in"), py::arg("q_out"));
@@ -420,14 +420,14 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainIkSolverVel_wdls, ChainIkSolverVel> chain_ik_solver_vel_wdls(m, "ChainIkSolverVel_wdls");
     chain_ik_solver_vel_wdls.def(py::init<const Chain&, double, int>(),
                                  py::arg("chain"), py::arg("eps")=0.00001, py::arg("maxiter")=150);
-    chain_ik_solver_vel_wdls.def("setWeightTS", &ChainIkSolverVel_wdls::setWeightTS);
-    chain_ik_solver_vel_wdls.def("setWeightJS", &ChainIkSolverVel_wdls::setWeightJS);
-    chain_ik_solver_vel_wdls.def("setLambda", &ChainIkSolverVel_wdls::setLambda);
-    chain_ik_solver_vel_wdls.def("setEps", &ChainIkSolverVel_wdls::setEps);
-    chain_ik_solver_vel_wdls.def("setMaxIter", &ChainIkSolverVel_wdls::setMaxIter);
+    chain_ik_solver_vel_wdls.def("setWeightTS", &ChainIkSolverVel_wdls::setWeightTS, py::arg("matrix"));
+    chain_ik_solver_vel_wdls.def("setWeightJS", &ChainIkSolverVel_wdls::setWeightJS, py::arg("matrix"));
+    chain_ik_solver_vel_wdls.def("setLambda", &ChainIkSolverVel_wdls::setLambda, py::arg("lambda"));
+    chain_ik_solver_vel_wdls.def("setEps", &ChainIkSolverVel_wdls::setEps, py::arg("eps"));
+    chain_ik_solver_vel_wdls.def("setMaxIter", &ChainIkSolverVel_wdls::setMaxIter, py::arg("max_iter"));
     chain_ik_solver_vel_wdls.def("getNrZeroSigmas", &ChainIkSolverVel_wdls::getNrZeroSigmas);
     chain_ik_solver_vel_wdls.def("getSigmaMin", &ChainIkSolverVel_wdls::getSigmaMin);
-    chain_ik_solver_vel_wdls.def("getSigma", &ChainIkSolverVel_wdls::getSigma);
+    chain_ik_solver_vel_wdls.def("getSigma", &ChainIkSolverVel_wdls::getSigma, py::arg("sigma_out"));
     chain_ik_solver_vel_wdls.def("getEps", &ChainIkSolverVel_wdls::getEps);
     chain_ik_solver_vel_wdls.def("getLambda", &ChainIkSolverVel_wdls::getLambda);
     chain_ik_solver_vel_wdls.def("getLambdaScaled", &ChainIkSolverVel_wdls::getLambdaScaled);
@@ -452,9 +452,9 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainIkSolverVel_pinv_nso, ChainIkSolverVel> chain_ik_solver_vel_pinv_nso(m, "ChainIkSolverVel_pinv_nso");
     chain_ik_solver_vel_pinv_nso.def(py::init<const Chain&, double, int, double>(),
                                      py::arg("chain"), py::arg("eps")=0.00001, py::arg("maxiter")=150, py::arg("alpha")=0.25);
-    chain_ik_solver_vel_pinv_nso.def("setWeights", &ChainIkSolverVel_pinv_nso::setWeights);
-    chain_ik_solver_vel_pinv_nso.def("setOptPos", &ChainIkSolverVel_pinv_nso::setOptPos);
-    chain_ik_solver_vel_pinv_nso.def("setAlpha", &ChainIkSolverVel_pinv_nso::setAlpha);
+    chain_ik_solver_vel_pinv_nso.def("setWeights", &ChainIkSolverVel_pinv_nso::setWeights, py::arg("weights"));
+    chain_ik_solver_vel_pinv_nso.def("setOptPos", &ChainIkSolverVel_pinv_nso::setOptPos, py::arg("opt_pos"));
+    chain_ik_solver_vel_pinv_nso.def("setAlpha", &ChainIkSolverVel_pinv_nso::setAlpha, py::arg("alpha"));
     chain_ik_solver_vel_pinv_nso.def("getWeights", &ChainIkSolverVel_pinv_nso::getWeights);
     chain_ik_solver_vel_pinv_nso.def("getOptPos", &ChainIkSolverVel_pinv_nso::getOptPos);
     chain_ik_solver_vel_pinv_nso.def("getAlpha", &ChainIkSolverVel_pinv_nso::getAlpha);
@@ -474,7 +474,7 @@ void init_kinfam(pybind11::module &m)
     chain_jnt_to_jac_solver.def(py::init<const Chain&>(), py::arg("chain"));
     chain_jnt_to_jac_solver.def("JntToJac", &ChainJntToJacSolver::JntToJac,
                                 py::arg("q_in"), py::arg("jac"), py::arg("seg_nr")=-1);
-    chain_jnt_to_jac_solver.def("setLockedJoints", &ChainJntToJacSolver::setLockedJoints);
+    chain_jnt_to_jac_solver.def("setLockedJoints", &ChainJntToJacSolver::setLockedJoints, py::arg("locked_joints"));
 
 
     // ------------------------------
@@ -508,7 +508,7 @@ void init_kinfam(pybind11::module &m)
     // ChainIdSolver
     // ------------------------------
     py::class_<ChainIdSolver, SolverI> chain_id_solver(m, "ChainIdSolver");
-    chain_id_solver.def("CartToJnt", &ChainIdSolver::CartToJnt);
+    chain_id_solver.def("CartToJnt", &ChainIdSolver::CartToJnt, py::arg("q"), py::arg("q_dot"), py::arg("q_dot_dot"), py::arg("f_ext"), py::arg("torques"));
 
 
     // ------------------------------
