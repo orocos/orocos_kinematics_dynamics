@@ -62,7 +62,7 @@ void init_framevel(pybind11::module &m)
 
     double_vel.def(py::self == py::self);
     double_vel.def(py::self != py::self);
-
+    double_vel.def(py::hash(py::self));
     double_vel.def("__neg__", [](const doubleVel &a)
     {
         return operator-(a);
@@ -132,6 +132,7 @@ void init_framevel(pybind11::module &m)
     vector_vel.def(Vector() != py::self);
     vector_vel.def(py::self == Vector());
     vector_vel.def(py::self != Vector());
+    vector_vel.def(py::hash(py::self));
     vector_vel.def("__neg__", [](const VectorVel &a)
     {
         return operator-(a);
@@ -217,6 +218,7 @@ void init_framevel(pybind11::module &m)
     twist_vel.def(Twist() != py::self);
     twist_vel.def(py::self == Twist());
     twist_vel.def(py::self != Twist());
+    twist_vel.def(py::hash(py::self));
     twist_vel.def("__neg__", [](const TwistVel &a)
     {
         return operator-(a);
@@ -305,6 +307,7 @@ void init_framevel(pybind11::module &m)
     rotation_vel.def(Rotation() != py::self);
     rotation_vel.def(py::self == Rotation());
     rotation_vel.def(py::self != Rotation());
+    rotation_vel.def(py::hash(py::self));
     rotation_vel.def(py::pickle(
             [](const RotationVel &rv)
             { // __getstate__
@@ -378,6 +381,7 @@ void init_framevel(pybind11::module &m)
     frame_vel.def(Frame() != py::self);
     frame_vel.def(py::self == Frame());
     frame_vel.def(py::self != Frame());
+    frame_vel.def(py::hash(py::self));
     frame_vel.def(py::pickle(
             [](const FrameVel &fv)
             { // __getstate__

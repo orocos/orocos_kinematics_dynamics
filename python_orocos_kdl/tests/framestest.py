@@ -42,6 +42,10 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertTrue(v != -v)  # Doesn't work for zero vector
         self.assertTrue(not Equal(v, -v))  # Doesn't work for zero vector
 
+        # Hash
+        self.assertEqual(hash(v), 3450679443808348711)
+        self.assertEqual(hash(Vector()), 11093822414574)
+
         # Test member get and set functions
         self.assertEqual(v.x(), 3)
         v.x(1)
@@ -89,6 +93,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(v+v+v-2*v, v)
         v2 = Vector(v)
         self.assertEqual(v, v2)
+        self.assertEqual(hash(v), hash(v2))
         v2 += v
         self.assertEqual(2*v, v2)
         v2 -= v
@@ -110,11 +115,15 @@ class FramesTestFunctions(unittest.TestCase):
         self.testTwistImpl(t)
 
         # Equality
-        t = Twist(Vector(1, 2, 3), Vector(1, 2, 3))
+        t = Twist(Vector(0, -9, -3), Vector(1, -2, -4))
         self.assertFalse(t == -t)  # Doesn't work for zero twist
         self.assertFalse(Equal(t, -t))  # Doesn't work for zero twist
         self.assertTrue(t != -t)  # Doesn't work for zero twist
         self.assertTrue(not Equal(t, -t))  # Doesn't work for zero twist
+
+        # Hash
+        self.assertEqual(hash(t), 3373832976806748309)
+        self.assertEqual(hash(Twist()), 730713428471863)
 
         # Members
         v1 = Vector(1, 2, 3)
@@ -158,6 +167,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(t+t+t-2*t, t)
         t2 = Twist(t)
         self.assertEqual(t, t2)
+        self.assertEqual(hash(t), hash(t2))
         t2 += t
         self.assertEqual(2*t, t2)
         t2 -= t
@@ -184,11 +194,14 @@ class FramesTestFunctions(unittest.TestCase):
         self.testWrenchImpl(w)
 
         # Equality
-        w = Wrench(Vector(1, 2, 3), Vector(1, 2, 3))
         self.assertFalse(w == -w)  # Doesn't work for zero wrench
         self.assertFalse(Equal(w, -w))  # Doesn't work for zero wrench
         self.assertTrue(w != -w)  # Doesn't work for zero wrench
         self.assertTrue(not Equal(w, -w))  # Doesn't work for zero wrench
+
+        # Hash
+        self.assertEqual(hash(w), hash(13897938943539516747))  # 551895977443887016
+        self.assertEqual(hash(Wrench()), 730713428471863)
 
         # Members
         v1 = Vector(1, 2, 3)
@@ -228,6 +241,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(w+w+w-2*w, w)
         w2 = Wrench(w)
         self.assertEqual(w, w2)
+        self.assertEqual(hash(w), hash(w2))
         w2 += w
         self.assertEqual(2*w, w2)
         w2 -= w
@@ -245,6 +259,10 @@ class FramesTestFunctions(unittest.TestCase):
         self.testRotationImpl(Rotation.RPY(radians(10), radians(20), radians(30)), Vector())
         self.testRotationImpl(Rotation(), Vector(3, 4, 5))
         self.testRotationImpl(Rotation(), Vector())
+
+        # Hash
+        self.assertEqual(hash(Rotation.Quaternion(1, 0, 0, 0)), 5526237894416316219)
+        self.assertEqual(hash(Rotation()), 8386870752212395617)
 
         r = Rotation(*range(1, 10))
 
@@ -290,6 +308,7 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertAlmostEqual(dot(r.UnitY(), r.UnitZ()), 0.0, 15)
         r2 = Rotation(r)
         self.assertEqual(r, r2)
+        self.assertEqual(hash(r), hash(r2))
         self.assertAlmostEqual((r*v).Norm(), v.Norm(), 14)
         self.assertEqual(r.Inverse(r*v), v)
         self.assertEqual(r.Inverse(r*t), t)
@@ -339,6 +358,11 @@ class FramesTestFunctions(unittest.TestCase):
         # Equality
         f2 = Frame(f)
         self.assertEqual(f, f2)
+        self.assertEqual(hash(f), hash(f2))
+
+        # Hash
+        self.assertEqual(hash(f), 6112004106257185417)
+        self.assertEqual(hash(Frame()), 8387572672274540708)
 
         # Members
         self.assertEqual(f.M, r)

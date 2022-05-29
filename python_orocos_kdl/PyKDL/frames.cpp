@@ -77,6 +77,7 @@ void init_frames(py::module &m)
     vector.def(py::self * py::self);
     vector.def(py::self == py::self);
     vector.def(py::self != py::self);
+    vector.def(py::hash(py::self));
     vector.def("__neg__", [](const Vector &a)
     {
         return operator-(a);
@@ -163,6 +164,7 @@ void init_frames(py::module &m)
     wrench.def(py::self - py::self);
     wrench.def(py::self == py::self);
     wrench.def(py::self != py::self);
+    wrench.def(py::hash(py::self));
     wrench.def("__neg__", [](const Wrench &w)
     {
         return operator-(w);
@@ -237,6 +239,7 @@ void init_frames(py::module &m)
     twist.def(py::self - py::self);
     twist.def(py::self == py::self);
     twist.def(py::self != py::self);
+    twist.def(py::hash(py::self));
     twist.def("__neg__", [](const Twist &a)
     {
         return operator-(a);
@@ -369,6 +372,7 @@ void init_frames(py::module &m)
     rotation.def(py::self == py::self);
     rotation.def(py::self != py::self);
     rotation.def(py::self * py::self);
+    rotation.def(py::hash(py::self));
     rotation.def(py::pickle(
             [](const Rotation &rot)
             { // __getstate__
@@ -450,6 +454,7 @@ void init_frames(py::module &m)
     frame.def(py::self * py::self);
     frame.def(py::self == py::self);
     frame.def(py::self != py::self);
+    frame.def(py::hash(py::self));
     frame.def(py::pickle(
             [](const Frame &frm)
             { // __getstate__
