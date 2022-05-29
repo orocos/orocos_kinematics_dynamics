@@ -235,10 +235,8 @@ namespace KDL {
 
         // variables for RotAxis joint
         Vector axis, origin;
-        mutable Frame  joint_pose;
-        mutable double q_previous;
-
-
+        mutable Frame  joint_pose; // Deprecated, but keeping for ABI compatibility
+        mutable double q_previous; // Deprecated, but keeping for ABI compatibility
 
       class joint_type_exception: public std::exception{
 	virtual const char* what() const throw(){
