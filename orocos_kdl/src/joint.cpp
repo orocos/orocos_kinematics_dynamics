@@ -28,8 +28,8 @@ namespace KDL {
                  const double& _inertia, const double& _damping, const double& _stiffness):
       name(_name),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
     {
-      if (type == RotAxis || type == TransAxis) throw joint_type_ex;
-      q_previous = 0;
+      if (type == RotAxis || type == TransAxis)
+          throw joint_type_ex;
     }
 
     // constructor for joint along x,y or z axis, at origin of reference frame
@@ -37,8 +37,8 @@ namespace KDL {
                  const double& _inertia, const double& _damping, const double& _stiffness):
       name("NoName"),type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
     {
-      if (type == RotAxis || type == TransAxis) throw joint_type_ex;
-      q_previous = 0;
+      if (type == RotAxis || type == TransAxis)
+          throw joint_type_ex;
     }
 
     // constructor for joint along arbitrary axis, at arbitrary origin
@@ -47,12 +47,8 @@ namespace KDL {
       name(_name), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness)
       , axis(_axis / _axis.Norm()), origin(_origin)
     {
-      if (type != RotAxis && type != TransAxis) throw joint_type_ex;
-
-      // initialize
-      joint_pose.p = origin;
-      joint_pose.M = Rotation::Rot2(axis, offset);
-      q_previous = 0;
+      if (type != RotAxis && type != TransAxis)
+          throw joint_type_ex;
     }
 
     // constructor for joint along arbitrary axis, at arbitrary origin
@@ -61,12 +57,8 @@ namespace KDL {
           name("NoName"), type(_type),scale(_scale),offset(_offset),inertia(_inertia),damping(_damping),stiffness(_stiffness),
           axis(_axis / _axis.Norm()),origin(_origin)
     {
-      if (type != RotAxis && type != TransAxis) throw joint_type_ex;
-
-      // initialize
-      joint_pose.p = origin;
-      joint_pose.M = Rotation::Rot2(axis, offset);
-      q_previous = 0;
+      if (type != RotAxis && type != TransAxis)
+          throw joint_type_ex;
     }
 
     Joint::~Joint()
@@ -77,12 +69,7 @@ namespace KDL {
     {
         switch(type){
         case RotAxis:
-            // calculate the rotation matrix around the vector "axis"
-            if (q != q_previous){
-                q_previous = q;
-                joint_pose.M = Rotation::Rot2(axis, scale*q+offset);
-            }
-            return joint_pose;
+            return Frame(Rotation::Rot2(axis, scale*q+offset), origin);
         case RotX:
             return Frame(Rotation::RotX(scale*q+offset));
         case RotY:
