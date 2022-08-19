@@ -138,7 +138,7 @@ void ChainHdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const 
 void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const JntArray &ff_torques)
 {
     int j = nj - 1;
-    for (int i = ns; i >= 0; i--)
+    for (int i = ns-1; i >= 0; i--)
     {
         //Get a handle for the segment we are working on.
         segment_info& s = results[i];
@@ -150,7 +150,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
         //M is the (unit) acceleration energy already generated at link i
         //G is the (unit) magnitude of the constraint forces at link i
         //E are the (unit) constraint forces due to the constraints
-        if (i == (int)ns)
+        if (i == (int)ns-1)
         {
             s.P_tilde = s.H;
             s.R_tilde = s.U;
