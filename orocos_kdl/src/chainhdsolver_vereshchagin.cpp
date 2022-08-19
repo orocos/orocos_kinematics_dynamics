@@ -150,7 +150,7 @@ void ChainHdSolver_Vereshchagin::downwards_sweep(const Jacobian& alfa, const Jnt
         //M is the (unit) acceleration energy already generated at link i
         //G is the (unit) magnitude of the constraint forces at link i
         //E are the (unit) constraint forces due to the constraints
-        if (i == (int)ns-1)
+        if (i == static_cast<int>(ns)-1)
         {
             s.P_tilde = s.H;
             s.R_tilde = s.U;
