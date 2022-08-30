@@ -16,3 +16,5 @@ The python bindings, are located in the `python_orocos_kdl` folder. The installa
 Always use the same version of the C++ library and the python bindings. As a mismatch between these two can cause many issues.
 
 Also when using ROS/catkin, it is preferred to use the catkin installation method over the `cmake/make` method.
+
+There will be no ROS Noetic release.
