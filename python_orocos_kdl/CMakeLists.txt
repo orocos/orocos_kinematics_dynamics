@@ -17,7 +17,7 @@ add_compile_options(-Wextra -Werror=extra)
 
 # find a matching version of orocos_kdl
 find_package(orocos_kdl ${PROJECT_VERSION} EXACT REQUIRED)
-include_directories(${orocos_kdl_INCLUDE_DIRS})
+include_directories(SYSTEM ${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
 if(DEFINED ENV{ROS_PYTHON_VERSION})
