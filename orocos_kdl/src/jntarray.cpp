@@ -55,15 +55,13 @@ namespace KDL
         data.conservativeResizeLike(Eigen::VectorXd::Zero(newSize));
     }
 
-    double JntArray::operator()(unsigned int i,unsigned int j)const
+    double JntArray::operator()(unsigned int i,unsigned int /*j*/)const
     {
-        assert(j==0);
         return data(i);
     }
 
-    double& JntArray::operator()(unsigned int i,unsigned int j)
+    double& JntArray::operator()(unsigned int i,unsigned int /*j*/)
     {
-        assert(j==0);
         return data(i);
     }
 

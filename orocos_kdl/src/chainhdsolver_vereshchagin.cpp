@@ -74,7 +74,7 @@ int ChainHdSolver_Vereshchagin::CartToJnt(const JntArray &q, const JntArray &q_d
     return (error = E_NOERROR);
 }
 
-void ChainHdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const JntArray &qdot, const JntArray &qdotdot, const Wrenches& f_ext)
+void ChainHdSolver_Vereshchagin::initial_upwards_sweep(const JntArray &q, const JntArray &qdot, const JntArray &/*qdotdot*/, const Wrenches& f_ext)
 {
     //if (q.rows() != nj || qdot.rows() != nj || qdotdot.rows() != nj || f_ext.size() != ns)
     //        return -1;
