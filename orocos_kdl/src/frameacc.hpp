@@ -66,6 +66,7 @@ public:
     Vector dv;  //!< acceleration vector
 public:
     VectorAcc():p(),v(),dv() {}
+    VectorAcc(const VectorAcc& arg) = default;
     explicit VectorAcc(const Vector& _p):p(_p),v(Vector::Zero()),dv(Vector::Zero()) {}
     VectorAcc(const Vector& _p,const Vector& _v):p(_p),v(_v),dv(Vector::Zero()) {}
     VectorAcc(const Vector& _p,const Vector& _v,const Vector& _dv):
@@ -114,6 +115,7 @@ public:
     Vector   dw;    //!< angular acceration vector
 public:
     RotationAcc():R(),w() {}
+    RotationAcc(const RotationAcc& arg) = default;
     explicit RotationAcc(const Rotation& _R):R(_R),w(Vector::Zero()){}
     RotationAcc(const Rotation& _R,const Vector& _w,const Vector& _dw):
         R(_R),w(_w),dw(_dw) {}
@@ -166,6 +168,7 @@ public:
     VectorAcc   p;   //!< Translation, velocity and acceleration of origin.
 public:
     FrameAcc(){}
+    FrameAcc(const FrameAcc& arg) = default;
     explicit FrameAcc(const Frame& _T):M(_T.M),p(_T.p) {}
     FrameAcc(const Frame& _T,const Twist& _t,const Twist& _dt):
         M(_T.M,_t.rot,_dt.rot),p(_T.p,_t.vel,_dt.vel) {}
@@ -205,6 +208,7 @@ public:
 public:
 
      TwistAcc():vel(),rot() {};
+     TwistAcc(const TwistAcc& arg) = default;
      TwistAcc(const VectorAcc& _vel,const VectorAcc& _rot):vel(_vel),rot(_rot) {};
 
      IMETHOD TwistAcc& operator-=(const TwistAcc& arg);
