@@ -35,10 +35,7 @@ set(LIBRARY_NAME "PyKDL")
 # catkin-specific configuration (optional)
 find_package(catkin QUIET)
 if(catkin_FOUND)
-  catkin_package(
-    SKIP_CMAKE_CONFIG_GENERATION
-    SKIP_PKG_CONFIG_GENERATION
-  )
+  catkin_package()
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${PYTHON_INSTALL_DIR})
   set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
 endif()
