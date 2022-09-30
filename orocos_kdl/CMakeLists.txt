@@ -56,7 +56,7 @@ find_package(Eigen3 QUIET)
 if(NOT EIGEN3_FOUND)
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
 endif()
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
 
 # Check the platform STL containers capabilities
@@ -83,7 +83,7 @@ endif()
 if(KDL_USE_NEW_TREE_INTERFACE)
     # We need shared_ptr from boost since not all compilers are c++11 capable
     find_package(Boost REQUIRED)
-    include_directories(${Boost_INCLUDE_DIRS})
+    include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
