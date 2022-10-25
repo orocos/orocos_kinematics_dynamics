@@ -159,6 +159,11 @@ namespace KDL {
          * @param f_tip_new pose from the joint end to the tip of the segment
          */
         void setFrameToTip(const Frame& f_tip_new);
+
+        const Frame& getFrameToTipRaw() const
+        {
+            return f_tip;
+        }
     };
 }//end of namespace KDL
 
