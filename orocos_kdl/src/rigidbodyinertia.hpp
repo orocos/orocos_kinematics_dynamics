@@ -72,6 +72,11 @@ namespace KDL {
             return m;
         };
         
+        const Vector& getSpatialMomentum() const
+        {
+            return h;
+        }
+
         /**
          * Get the center of gravity of the rigid body
          */
