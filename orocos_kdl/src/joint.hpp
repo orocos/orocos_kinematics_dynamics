@@ -192,6 +192,16 @@ namespace KDL {
             }
         };
 
+        const double& getScale() const
+        {
+            return scale;
+        }
+
+        const double& getOffset() const
+        {
+            return offset;
+        }
+
         /**
          * Request the inertia of the joint.
          *
@@ -221,6 +231,16 @@ namespace KDL {
         {
             return stiffness;
         };
+
+        const Vector& getAxis() const
+        {
+            return axis;
+        }
+
+        const Vector& getOrigin() const
+        {
+            return origin;
+        }
 
         virtual ~Joint();
 
