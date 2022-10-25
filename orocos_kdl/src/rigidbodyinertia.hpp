@@ -68,10 +68,10 @@ namespace KDL {
         /**
          * Get the mass of the rigid body
          */
-        double getMass() const{
+        const double& getMass() const{
             return m;
         };
-        
+
         const Vector& getSpatialMomentum() const
         {
             return h;
@@ -88,7 +88,7 @@ namespace KDL {
         /**
          * Get the rotational inertia expressed in the reference frame (not the cog)
          */
-        RotationalInertia getRotationalInertia() const{
+        const RotationalInertia& getRotationalInertia() const{
             return I;
         };
 
