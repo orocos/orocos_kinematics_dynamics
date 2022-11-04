@@ -43,7 +43,7 @@ namespace KDL {
         virtual int JntToCart(const JntArray& q_in, Frame& p_out, std::string segmentName);
 
     private:
-        const Tree tree;
+        const Tree& tree;
         
         Frame recursiveFk(const JntArray& q_in, const SegmentMap::const_iterator& it);
     };

@@ -29,7 +29,7 @@ public:
             const std::string& segmentname);
 
 private:
-    KDL::Tree tree;
+    const KDL::Tree& tree;
 
 };
 
