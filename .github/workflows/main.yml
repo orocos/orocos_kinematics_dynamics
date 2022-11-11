@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  CXXFLAGS: "-Wall -Wextra -Wno-unused-parameter"
+  CXXFLAGS: "-Wall -Wextra"
 
 jobs:
   build:
