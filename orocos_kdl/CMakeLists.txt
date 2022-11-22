@@ -47,10 +47,14 @@ ELSE ( NOT CMAKE_BUILD_TYPE )
   MESSAGE( STATUS "Build type set to '${CMAKE_BUILD_TYPE}' by user." )
 ENDIF ( NOT CMAKE_BUILD_TYPE )
 
-add_compile_options(-Wall -Werror=all)
-add_compile_options(-Wextra -Werror=extra)
+add_compile_options()
+add_compile_options()
 
-SET( KDL_CFLAGS "")
+IF(MSVC)
+    SET( KDL_CFLAGS "/W4 /WX" )
+ELSE(MSVC)
+    SET( KDL_CFLAGS "-Wall -Werror=all -Wextra -Werror=extra" )
+ENDIF(MSVC)
 
 find_package(Eigen3 QUIET)
 if(NOT EIGEN3_FOUND)
