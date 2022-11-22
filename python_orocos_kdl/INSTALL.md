@@ -5,12 +5,8 @@ These install instructions are focused on Debian/Ubuntu systems.
 ## Shared instructions
 
 1. Follow the shared instructions of the C++ library from [orocos_kdl/INSTALL.md](../orocos_kdl/INSTALL.md#shared-instructions)
-2. Depending on your python version install the `future` and `psutil` module
-   - Python 2: `sudo apt-get install python-psutil python-future`
-   - Python 3: `sudo apt-get install python3-psutil python3-future`
-3. (Optional) Install `Sphinx` to generate API-documentation
-   - Python 2: `sudo apt-get install python-sphinx`
-   - Python 3: `sudo apt-get install python3-sphinx`
+2. Install the `future` and `psutil` module: `sudo apt-get install python3-psutil python3-future`
+3. (Optional) Install `Sphinx` to generate API-documentation: `sudo apt-get install python3-sphinx`
 
 ## Compilation
 
@@ -33,15 +29,12 @@ These install instructions are focused on Debian/Ubuntu systems.
 6. Execute cmake: `cmake ..`
    - (Optional) Adapt `CMAKE_INSTALL_PREFIX` to the desired installation directory
    - (Optional) To change the build type, add: `-DCMAKE_BUILD_TYPE=<DESIRED_BUILD_TYPE>`
-   - (Optional) To change the python version (default=3), set `ROS_PYTHON_VERSION` environment variable to either `2` or `3`.
 7. Compile: `make`
 8. Install the python bindings: `sudo make install`
 9. Make sure `LD_LIBRARY_PATH` is set correctly: `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib`. Add this also
 to your `.bashrc`.
 10. Execute `ldconfig`: `sudo ldconfig`
-11. (Optional) Execute tests:
-    - Python 2: `python2 ../tests/PyKDLtest.py`
-    - Python 3: `python3 ../tests/PyKDLtest.py`
+11. (Optional) Execute tests: `python3 ../tests/PyKDLtest.py`
 12. (Optional) To create the API-documentation: `sphinx-build ../doc docs`. The API-documentation will be generated at
 `<builddir>/docs`.
 
