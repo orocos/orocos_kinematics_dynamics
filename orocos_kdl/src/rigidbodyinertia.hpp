@@ -72,6 +72,9 @@ namespace KDL {
             return m;
         };
 
+        /**
+         * Get the spatial momentum of the rigid body
+         */
         const Vector& getSpatialMomentum() const
         {
             return h;
