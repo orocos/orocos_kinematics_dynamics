@@ -195,9 +195,9 @@ namespace KDL {
         /**
          * Request the scale of the joint.
          *
-         * @return The scale of the joint
+         * @return const reference to the scale of the joint
          */
-        double getScale() const
+        const double& getScale() const
         {
             return scale;
         }
@@ -205,9 +205,9 @@ namespace KDL {
         /**
          * Request the offset of the joint.
          *
-         * @return The offset of the joint
+         * @return const reference to the offset of the joint
          */
-        double getOffset() const
+        const double& getOffset() const
         {
             return offset;
         }
@@ -215,9 +215,9 @@ namespace KDL {
         /**
          * Request the inertia of the joint.
          *
-         * @return The inertia of the joint
+         * @return const reference to the inertia of the joint
          */
-        double getInertia() const
+        const double& getInertia() const
         {
             return inertia;
         };
@@ -225,9 +225,9 @@ namespace KDL {
         /**
          * Request the damping of the joint.
          *
-         * @return The damping of the joint
+         * @return const reference to the damping of the joint
          */
-        double getDamping() const
+        const double& getDamping() const
         {
             return damping;
         };
@@ -235,9 +235,9 @@ namespace KDL {
         /**
          * Request the stiffness of the joint.
          *
-         * @return The stiffness of the joint
+         * @return const reference to the stiffness of the joint
          */
-        double getStiffness() const
+        const double& getStiffness() const
         {
             return stiffness;
         };
