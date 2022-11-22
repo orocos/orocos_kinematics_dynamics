@@ -88,7 +88,7 @@ namespace KDL {
         /**
          * Get the rotational inertia expressed in the reference frame (not the cog)
          */
-        const RotationalInertia& getRotationalInertia() const{
+        RotationalInertia getRotationalInertia() const{
             return I;
         };
 
