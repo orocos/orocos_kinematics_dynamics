@@ -24,7 +24,6 @@
 
 from math import radians
 from PyKDL import *
-import sys
 import unittest
 
 
@@ -67,10 +66,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(not Equal(v, -v))  # Doesn't work for zero VectorVel
 
         # Hash
-        if sys.version_info < (3, 0):
-            self.assertEqual(hash(v), -4868522752264811866)
-        else:
-            self.assertEqual(hash(v), 2049006275376269995)
+        self.assertEqual(hash(v), 2049006275376269995)
 
         self.assertEqual(hash(VectorVel()), 730713428471863)
 
@@ -330,6 +326,7 @@ def suite():
 
 
 if __name__ == '__main__':
+    import sys
     suite = suite()
     result = unittest.TextTestRunner(verbosity=3).run(suite)
 
