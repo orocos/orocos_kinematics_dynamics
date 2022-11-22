@@ -249,10 +249,7 @@ class FrameVelTestFunctions(unittest.TestCase):
 
         # Hash
         self.assertEqual(hash(fr), 6112004106257185417)
-        if sys.version_info < (3, 0):
-            self.assertEqual(hash(FrameVel()), -2270278446712400164)
-        else:
-            self.assertEqual(hash(FrameVel()), 35564562501293795)
+        self.assertEqual(hash(FrameVel()), 35564562501293795)
 
     def testFrameVelImpl(self, f, v, vt):
         f2 = FrameVel(f)
@@ -271,10 +268,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(f.Inverse()*vt, f.Inverse(vt))
 
     def testPickle(self):
-        if sys.version_info < (3, 0):
-            import cPickle as pickle
-        else:
-            import pickle
+        import pickle
         data = {}
         data['vv'] = VectorVel(Vector(1, 2, 3), Vector(4, 5, 6))
         data['rv'] = RotationVel(Rotation.RotX(1.3), Vector(4.1, 5.1, 6.1))
