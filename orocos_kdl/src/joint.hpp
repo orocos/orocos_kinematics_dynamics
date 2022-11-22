@@ -192,12 +192,22 @@ namespace KDL {
             }
         };
 
-        const double& getScale() const
+        /**
+         * Request the scale of the joint.
+         *
+         * @return The scale of the joint
+         */
+        double getScale() const
         {
             return scale;
         }
 
-        const double& getOffset() const
+        /**
+         * Request the offset of the joint.
+         *
+         * @return The offset of the joint
+         */
+        double getOffset() const
         {
             return offset;
         }
@@ -205,9 +215,9 @@ namespace KDL {
         /**
          * Request the inertia of the joint.
          *
-         * @return const reference to the inertia of the joint
+         * @return The inertia of the joint
          */
-        const double& getInertia() const
+        double getInertia() const
         {
             return inertia;
         };
@@ -215,9 +225,9 @@ namespace KDL {
         /**
          * Request the damping of the joint.
          *
-         * @return const reference to the damping of the joint
+         * @return The damping of the joint
          */
-        const double& getDamping() const
+        double getDamping() const
         {
             return damping;
         };
@@ -225,18 +235,28 @@ namespace KDL {
         /**
          * Request the stiffness of the joint.
          *
-         * @return const reference to the stiffness of the joint
+         * @return The stiffness of the joint
          */
-        const double& getStiffness() const
+        double getStiffness() const
         {
             return stiffness;
         };
 
+        /**
+         * Request the axis of the joint.
+         *
+         * @return const reference to the axis of the joint
+         */
         const Vector& getAxis() const
         {
             return axis;
         }
 
+        /**
+         * Request the origin of the joint.
+         *
+         * @return const reference to the origin of the joint
+         */
         const Vector& getOrigin() const
         {
             return origin;
