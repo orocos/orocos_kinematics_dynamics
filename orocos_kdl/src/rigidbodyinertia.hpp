@@ -68,7 +68,7 @@ namespace KDL {
         /**
          * Get the mass of the rigid body
          */
-        const double& getMass() const{
+        double getMass() const{
             return m;
         };
 
