@@ -28,6 +28,7 @@ import gc
 import psutil
 from PyKDL import *
 import random
+import sys
 import unittest
 
 
@@ -363,7 +364,6 @@ def suite():
 
 
 if __name__ == '__main__':
-    import sys
     suite = suite()
     result = unittest.TextTestRunner(verbosity=3).run(suite)
 

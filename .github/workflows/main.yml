@@ -17,6 +17,10 @@ jobs:
         compiler: [gcc, clang]
         python_version: ['3.8']
         include:
+          - os: ubuntu-18.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: '2'
           - os: ubuntu-20.04
             orocos_build_type: Release
             compiler: gcc
@@ -76,6 +80,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - env:
+              ROS_DISTRO: kinetic
+              ROS_REPO: ros
+              ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.3
+              ABICHECK_MERGE: false
+            branch: release-1.3
+          - env:
+              ROS_DISTRO: melodic
+              ROS_REPO: ros
+              ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.4
+              ABICHECK_MERGE: false
+            branch: release-1.4
           - env:
               ROS_DISTRO: noetic
               ROS_REPO: ros
