@@ -66,9 +66,6 @@ void init_kinfam(pybind11::module &m)
         joint_type.value("TransY", Joint::JointType::TransY);
         joint_type.value("TransZ", Joint::JointType::TransZ);
         joint_type.value("Fixed", Joint::JointType::Fixed);
-#if PY_VERSION_HEX < 0x03000000
-        joint_type.value("None", Joint::JointType::None);
-#endif
         joint_type.export_values();
 
     joint.def(py::init<>());
