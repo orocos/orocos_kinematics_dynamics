@@ -167,7 +167,7 @@ namespace KDL {
          * @return const reference to the pose from the end of the joint to the tip of the segment
          * at joint position 0
          */
-        const Frame& getFrameToTipRaw() const
+        const Frame& getFrameToTipZero() const
         {
             return f_tip;
         }
