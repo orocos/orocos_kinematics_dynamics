@@ -1686,8 +1686,10 @@ void SolverTest::ExternalWrenchEstimatorTest()
     double k_d = 300.0; // Derivative
 
     // Time required to complete the task
-    double simulationTime = 0.4; // in seconds
+    double simulationTime = 5.; // in seconds
     double timeDelta = 1.0 / sample_frequency; // unit of seconds
+
+    std::stringstream csv_output;
 
     // Iterate over test cases
     for (unsigned int i = 0; i < jnt_pos.size(); i++)
@@ -1786,12 +1788,24 @@ void SolverTest::ExternalWrenchEstimatorTest()
             for (unsigned int j = 0; j < nj; j++)
             {
                 q(j) = std::fmod(q(j), 360 * deg2rad);
-                if (q(j) < 0.0) q(j) += 360 * deg2rad;
+                if (q(j) < 0.0)
+                    q(j) += 360 * deg2rad;
             }
             
             // Estimate external wrench
             extwrench_estimator.JntToExtWrench(q, qd, command_torque, f_tool_estimated);
+            if (i == 2)
+            {
+//                std::cout << "time: " << t << ", f_tool_estimated(1): " << f_tool_estimated(1) << ", wrench_reference[" << i << "](1): " << wrench_reference[i](1) << std::endl;
+//                std::cout << "time: " << t << ", f_tool_estimated(2): " << f_tool_estimated(2) << ", wrench_reference[" << i << "](2): " << wrench_reference[i](2) << std::endl;
+                csv_output << t << "," << f_tool_estimated(1) << "," << wrench_reference[i](1) << "," << f_tool_estimated(2) << "," << wrench_reference[i](2) << std::endl;
+            }
         }
+        std::ofstream q_csv;
+        q_csv.open("q_wrench_estimator.csv", std::ofstream::out);
+        q_csv << "time,f_tool_estimated(1),wrench_reference[2](1),f_tool_estimated(2),wrench_reference[2](2)" << std::endl;
+        q_csv << csv_output.rdbuf();
+        q_csv.close();
 
         // Inverse Force Kinematics
         Eigen::Matrix<double, 6, 1> wrench;
