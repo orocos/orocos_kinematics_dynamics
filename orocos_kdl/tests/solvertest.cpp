@@ -1806,12 +1806,17 @@ void SolverTest::ExternalWrenchEstimatorTest()
             {
 //                std::cout << "time: " << t << ", f_tool_estimated(1): " << f_tool_estimated(1) << ", wrench_reference[" << i << "](1): " << wrench_reference[i](1) << std::endl;
 //                std::cout << "time: " << t << ", f_tool_estimated(2): " << f_tool_estimated(2) << ", wrench_reference[" << i << "](2): " << wrench_reference[i](2) << std::endl;
-                csv_output << t << "," << f_tool_estimated(1) << "," << wrench_reference[i](1) << "," << f_tool_estimated(2) << "," << wrench_reference[i](2) << std::endl;
+                csv_output << t << "," << f_tool_estimated(0) << "," << wrench_reference[i](0)
+                                << "," << f_tool_estimated(1) << "," << wrench_reference[i](1)
+                                << "," << f_tool_estimated(2) << "," << wrench_reference[i](2)
+                                << "," << f_tool_estimated(3) << "," << wrench_reference[i](3)
+                                << "," << f_tool_estimated(4) << "," << wrench_reference[i](4)
+                                << "," << f_tool_estimated(5) << "," << wrench_reference[i](5) << std::endl;
             }
         }
         std::ofstream q_csv;
         q_csv.open("q_wrench_estimator.csv", std::ofstream::out);
-        q_csv << "time,f_tool_estimated(1),wrench_reference[2](1),f_tool_estimated(2),wrench_reference[2](2)" << std::endl;
+        q_csv << "time,f_tool_estimated(0),wrench_reference[2](0),f_tool_estimated(1),wrench_reference[2](1),f_tool_estimated(2),wrench_reference[2](2),f_tool_estimated(3),wrench_reference[2](3),f_tool_estimated(4),wrench_reference[2](4),f_tool_estimated(5),wrench_reference[2](5)" << std::endl;
         q_csv << csv_output.rdbuf();
         q_csv.close();
 
