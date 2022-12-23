@@ -1578,7 +1578,9 @@ void SolverTest::ExternalWrenchEstimatorTest()
      * take into account the noise in estimated signals (the differences between estimated and ground-truth wrenches), caused by other computations in this test
      * (ones coming from the implemented controller and the dynamics simulator) not just those coming from the estimator itself.
      */
-    double eps_wrench = 0.5, eps_torque = 0.3;
+    std::vector<double> eps_wrench, eps_torque;
+    eps_wrench.reserve(3);
+    eps_torque.reserve(3);
     int ret;
     unsigned int nj = kukaLWR.getNrOfJoints();
     unsigned int ns = kukaLWR.getNrOfSegments();
@@ -1653,6 +1655,8 @@ void SolverTest::ExternalWrenchEstimatorTest()
     q(5) = 1.57;
     q(6) = 5.48;
     jnt_pos.push_back(q);
+    eps_wrench.push_back(0.5);
+    eps_torque.push_back(0.3);
     wrench_reference.push_back(Wrench(Vector(dis_force(gen), dis_force(gen), dis_force(gen)), Vector(0.0, 0.0, 0.0))); // Ground-truth external wrench acting on the end-effector expressed in local end-effector's frame
 
     // Set second test case
@@ -1664,6 +1668,8 @@ void SolverTest::ExternalWrenchEstimatorTest()
     q(5) = 0.17;
     q(6) = 0.01;
     jnt_pos.push_back(q);
+    eps_wrench.push_back(0.5);
+    eps_torque.push_back(0.3);
     wrench_reference.push_back(Wrench(Vector(0.0, 0.0, 0.0), Vector(dis_moment(gen), dis_moment(gen), 0.0))); // expressed in local end-effector's frame
 
     // Set third test case
@@ -1675,6 +1681,8 @@ void SolverTest::ExternalWrenchEstimatorTest()
     q(5) = 0.12;
     q(6) = 0.01;
     jnt_pos.push_back(q);
+    eps_wrench.push_back(0.6);
+    eps_torque.push_back(0.3);
     wrench_reference.push_back(Wrench(Vector(dis_force(gen), dis_force(gen), dis_force(gen)), Vector(dis_moment(gen), 0.0, dis_moment(gen)))); // expressed in local end-effector's frame
 
     // ##########################################################################################
@@ -1823,20 +1831,27 @@ void SolverTest::ExternalWrenchEstimatorTest()
         // ##################################################################################
         // Final comparison
         // ##################################################################################
-        CPPUNIT_ASSERT(Equal(f_tool_estimated(0), wrench_reference[i](0), eps_wrench));
-        CPPUNIT_ASSERT(Equal(f_tool_estimated(1), wrench_reference[i](1), eps_wrench));
-        CPPUNIT_ASSERT(Equal(f_tool_estimated(2), wrench_reference[i](2), eps_wrench));
-        CPPUNIT_ASSERT(Equal(f_tool_estimated(3), wrench_reference[i](3), eps_wrench));
-        CPPUNIT_ASSERT(Equal(f_tool_estimated(4), wrench_reference[i](4), eps_wrench));
-        CPPUNIT_ASSERT(Equal(f_tool_estimated(5), wrench_reference[i](5), eps_wrench));
+        std::cout << "Testcase: " << i << std::endl;
+        std::cout << "f_tool_estimated(0): " << f_tool_estimated(0) << ", wrench_reference[i](0): " << wrench_reference[i](0) << std::endl;
+        std::cout << "f_tool_estimated(1): " << f_tool_estimated(1) << ", wrench_reference[i](1): " << wrench_reference[i](1) << std::endl;
+        std::cout << "f_tool_estimated(2): " << f_tool_estimated(2) << ", wrench_reference[i](2): " << wrench_reference[i](2) << std::endl;
+        std::cout << "f_tool_estimated(3): " << f_tool_estimated(3) << ", wrench_reference[i](3): " << wrench_reference[i](3) << std::endl;
+        std::cout << "f_tool_estimated(4): " << f_tool_estimated(4) << ", wrench_reference[i](4): " << wrench_reference[i](4) << std::endl;
+        std::cout << "f_tool_estimated(5): " << f_tool_estimated(5) << ", wrench_reference[i](5): " << wrench_reference[i](5) << std::endl;
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(0), wrench_reference[i](0), eps_wrench[i]));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(1), wrench_reference[i](1), eps_wrench[i]));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(2), wrench_reference[i](2), eps_wrench[i]));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(3), wrench_reference[i](3), eps_wrench[i]));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(4), wrench_reference[i](4), eps_wrench[i]));
+        CPPUNIT_ASSERT(Equal(f_tool_estimated(5), wrench_reference[i](5), eps_wrench[i]));
 
-        CPPUNIT_ASSERT(Equal(ext_torque_estimated(0), ext_torque_reference(0), eps_torque));
-        CPPUNIT_ASSERT(Equal(ext_torque_estimated(1), ext_torque_reference(1), eps_torque));
-        CPPUNIT_ASSERT(Equal(ext_torque_estimated(2), ext_torque_reference(2), eps_torque));
-        CPPUNIT_ASSERT(Equal(ext_torque_estimated(3), ext_torque_reference(3), eps_torque));
-        CPPUNIT_ASSERT(Equal(ext_torque_estimated(4), ext_torque_reference(4), eps_torque));
-        CPPUNIT_ASSERT(Equal(ext_torque_estimated(5), ext_torque_reference(5), eps_torque));
-        CPPUNIT_ASSERT(Equal(ext_torque_estimated(6), ext_torque_reference(6), eps_torque));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(0), ext_torque_reference(0), eps_torque[i]));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(1), ext_torque_reference(1), eps_torque[i]));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(2), ext_torque_reference(2), eps_torque[i]));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(3), ext_torque_reference(3), eps_torque[i]));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(4), ext_torque_reference(4), eps_torque[i]));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(5), ext_torque_reference(5), eps_torque[i]));
+        CPPUNIT_ASSERT(Equal(ext_torque_estimated(6), ext_torque_reference(6), eps_torque[i]));
     }
 
     return;
