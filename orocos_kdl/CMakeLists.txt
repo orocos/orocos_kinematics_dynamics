@@ -116,20 +116,42 @@ export(TARGETS orocos-kdl
 
 export(PACKAGE orocos_kdl)
 
+include(CMakePackageConfigHelpers)
 # Generate CMake package configuration
-CONFIGURE_FILE(orocos_kdl-config.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl-config.cmake.in
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+  INSTALL_DESTINATION share/orocos_kdl/cmake
+)
+
+write_basic_package_version_file(
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  VERSION ${KDL_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(
+  FILES
+    ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+    ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  DESTINATION share/orocos_kdl/cmake
+)
 
 INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
 INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
 
 # Generate pkg-config package configuration
-CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
-CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl.pc.in
+  ${PROJECT_BINARY_DIR}/orocos_kdl.pc
+  INSTALL_DESTINATION lib${LIB_SUFFIX}/pkgconfig
+)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl.pc.in
+  ${PROJECT_BINARY_DIR}/orocos-kdl.pc
+  INSTALL_DESTINATION lib${LIB_SUFFIX}/pkgconfig
+)
 
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+install(
+  FILES
+    ${PROJECT_BINARY_DIR}/orocos_kdl.pc
+    ${PROJECT_BINARY_DIR}/orocos-kdl.pc
+  DESTINATION lib${LIB_SUFFIX}/pkgconfig
+)
