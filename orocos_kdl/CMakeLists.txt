@@ -47,9 +47,6 @@ ELSE ( NOT CMAKE_BUILD_TYPE )
   MESSAGE( STATUS "Build type set to '${CMAKE_BUILD_TYPE}' by user." )
 ENDIF ( NOT CMAKE_BUILD_TYPE )
 
-add_compile_options()
-add_compile_options()
-
 IF(MSVC)
     SET( KDL_CFLAGS "/W4 /WX" )
 ELSE(MSVC)
