@@ -59,10 +59,6 @@ IF(ENABLE_TESTS)
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(NAME treeinvdyntest COMMAND treeinvdyntest)
 
-#  ADD_EXECUTABLE(rframestest  rframestest.cpp)
-#  TARGET_LINK_LIBRARIES(rframestest orocos-kdl)
-#  ADD_TEST(NAME rframestest COMMAND rframestest)
-#
 #  ADD_EXECUTABLE(rallnumbertest  rallnumbertest.cpp)
 #  TARGET_LINK_LIBRARIES(rallnumbertest orocos-kdl)
 #  ADD_TEST(NAME rallnumbertest COMMAND rallnumbertest)
