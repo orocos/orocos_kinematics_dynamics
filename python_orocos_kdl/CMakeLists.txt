@@ -49,7 +49,7 @@ else()
   set(PYTHON_MODULE_EXTENSION ".so")
 endif()
 
-find_package(pybind11 QUIET)
+find_package(pybind11 2.6 QUIET)
 if(NOT ${pybind11_FOUND})
   message(STATUS "pybind11 not found, building from source")
   add_subdirectory(pybind11)
