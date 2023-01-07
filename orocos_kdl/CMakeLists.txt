@@ -47,11 +47,11 @@ ELSE ( NOT CMAKE_BUILD_TYPE )
   MESSAGE( STATUS "Build type set to '${CMAKE_BUILD_TYPE}' by user." )
 ENDIF ( NOT CMAKE_BUILD_TYPE )
 
-IF(MSVC)
-    SET( KDL_CFLAGS "/W4 /WX" )
-ELSE(MSVC)
-    SET( KDL_CFLAGS "-Wall -Werror=all -Wextra -Werror=extra" )
-ENDIF(MSVC)
+if(MSVC)
+  add_compile_options(/W4 /WX)
+else(MSVC)
+  add_compile_options(-Wall -Werror=all -Wextra -Werror=extra)
+endif(MSVC)
 
 find_package(Eigen3 QUIET)
 if(NOT EIGEN3_FOUND)
@@ -63,8 +63,7 @@ SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
 # Check the platform STL containers capabilities
 include(cmake/CheckSTLContainers.cmake)
 CHECK_STL_CONTAINERS()
-
-# Set the default option appropriately
+# Set the default option accordingly
 if(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
     set(KDL_USE_NEW_TREE_INTERFACE_DEFAULT OFF)
 else(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
@@ -120,7 +119,7 @@ include(CMakePackageConfigHelpers)
 # Generate CMake package configuration
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl-config.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
-  INSTALL_DESTINATION share/orocos_kdl/cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl
 )
 
 write_basic_package_version_file(
@@ -133,25 +132,25 @@ install(
   FILES
     ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
     ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
-  DESTINATION share/orocos_kdl/cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl
 )
 
-INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
+INSTALL(FILES cmake/FindEigen3.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
+INSTALL(EXPORT OrocosKDLTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
 
 # Generate pkg-config package configuration
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl.pc.in
   ${PROJECT_BINARY_DIR}/orocos_kdl.pc
-  INSTALL_DESTINATION lib${LIB_SUFFIX}/pkgconfig
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl.pc.in
   ${PROJECT_BINARY_DIR}/orocos-kdl.pc
-  INSTALL_DESTINATION lib${LIB_SUFFIX}/pkgconfig
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
 install(
   FILES
     ${PROJECT_BINARY_DIR}/orocos_kdl.pc
     ${PROJECT_BINARY_DIR}/orocos-kdl.pc
-  DESTINATION lib${LIB_SUFFIX}/pkgconfig
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )

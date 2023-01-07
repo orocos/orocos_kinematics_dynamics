@@ -5,58 +5,42 @@ IF(ENABLE_TESTS)
 
   ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
   TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
-  SET(TESTNAME "framestest")
-  SET_TARGET_PROPERTIES( framestest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+  target_compile_definitions(framestest PRIVATE TESTNAME="framestest")
   ADD_TEST(NAME framestest COMMAND framestest)
 
  ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
  TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
- SET(TESTNAME "kinfamtest")
- SET_TARGET_PROPERTIES( kinfamtest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
+  target_compile_definitions(kinfamtest PRIVATE TESTNAME="kinfamtest")
  ADD_TEST(NAME kinfamtest COMMAND kinfamtest)
 
  ADD_EXECUTABLE(solvertest solvertest.cpp test-runner.cpp)
  TARGET_LINK_LIBRARIES(solvertest orocos-kdl ${CPPUNIT})
- SET(TESTNAME "solvertest")
- SET_TARGET_PROPERTIES( solvertest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+  target_compile_definitions(solvertest PRIVATE TESTNAME="solvertest")
  ADD_TEST(NAME solvertest COMMAND solvertest)
 
  ADD_EXECUTABLE(inertiatest inertiatest.cpp test-runner.cpp)
  TARGET_LINK_LIBRARIES(inertiatest orocos-kdl ${CPPUNIT})
- SET(TESTNAME "inertiatest")
- SET_TARGET_PROPERTIES( inertiatest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+  target_compile_definitions(inertiatest PRIVATE TESTNAME="inertiatest")
  ADD_TEST(NAME inertiatest COMMAND inertiatest)
 
  ADD_EXECUTABLE(jacobiantest jacobiantest.cpp test-runner.cpp)
- SET(TESTNAME "jacobiantest")
  TARGET_LINK_LIBRARIES(jacobiantest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( jacobiantest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+  target_compile_definitions(jacobiantest PRIVATE TESTNAME="jacobiantest")
  ADD_TEST(NAME jacobiantest COMMAND jacobiantest)
 
  ADD_EXECUTABLE(jacobiandottest jacobiandottest.cpp test-runner.cpp)
- SET(TESTNAME "jacobiandottest")
  TARGET_LINK_LIBRARIES(jacobiandottest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( jacobiandottest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+  target_compile_definitions(jacobiandottest PRIVATE TESTNAME="jacobiandottest")
  ADD_TEST(NAME jacobiandottest COMMAND jacobiandottest)
 
  ADD_EXECUTABLE(velocityprofiletest velocityprofiletest.cpp test-runner.cpp)
- SET(TESTNAME "velocityprofiletest")
  TARGET_LINK_LIBRARIES(velocityprofiletest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( velocityprofiletest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+  target_compile_definitions(velocityprofiletest PRIVATE TESTNAME="velocityprofiletest")
  ADD_TEST(NAME velocityprofiletest COMMAND velocityprofiletest)
 
  ADD_EXECUTABLE(treeinvdyntest treeinvdyntest.cpp test-runner.cpp)
- SET(TESTNAME "treeinvdyntest")
  TARGET_LINK_LIBRARIES(treeinvdyntest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( treeinvdyntest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+  target_compile_definitions(treeinvdyntest PRIVATE TESTNAME="treeinvdyntest")
  ADD_TEST(NAME treeinvdyntest COMMAND treeinvdyntest)
 
 #  ADD_EXECUTABLE(rallnumbertest  rallnumbertest.cpp)
