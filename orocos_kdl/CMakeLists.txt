@@ -23,6 +23,8 @@ MESSAGE( STATUS "Orocos KDL version ${VERSION} (${KDL_VERSION_MAJOR}.${KDL_VERSI
 SET( PROJ_SOURCE_DIR ${orocos_kdl_SOURCE_DIR} )
 SET( PROJ_BINARY_DIR ${orocos_kdl_BINARY_DIR} )
 
+include(GNUInstallDirs)
+
 # catkin-specific configuration (optional)
 find_package(catkin QUIET)
 if(catkin_FOUND)
