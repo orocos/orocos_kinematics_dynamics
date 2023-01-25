@@ -177,7 +177,7 @@ int main(int argc,char* argv[]) {
               <<  " This routine can take more then 6 minutes to execute. It then gives statistics on execution times\n"
               <<  " and failures.\n"
               <<  " Typically when executed 1 000 000 times, you will still see some small amount of failures\n"
-              <<  " Typically these failures are in the neighbourhoud of singularities.  Most failures of type -2 still\n"
+              <<  " Typically these failures are in the neighbourhood of singularities.  Most failures of type -2 still\n"
               <<  " reach an accuracy better than 1E-4.\n"
               <<  " This is much better than ChainIkSolverPos_NR, which fails a few times per 100 trials.\n";
 

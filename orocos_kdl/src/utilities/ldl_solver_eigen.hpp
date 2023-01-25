@@ -37,7 +37,7 @@ namespace KDL
      *
      * The algorithm factor A into the product of three matrices LDL^T, where L
      * is a lower triangular matrix and D is a diagonal matrix.  This allows q
-     * to be computed without explicity inverting A.  Note that the LDL decomposition
+     * to be computed without explicitly inverting A.  Note that the LDL decomposition
      * is a variant of the classical Cholesky Decomposition that does not require
      * the computation of square roots.
      * Input parameters:
