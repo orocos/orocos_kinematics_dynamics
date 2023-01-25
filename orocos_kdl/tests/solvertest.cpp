@@ -922,12 +922,12 @@ void SolverTest::VereshchaginTest()
     Twist unit_force_x_a(
         Vector(0.0, 0.0, 0.0),
         Vector(0.0, 0.0, 0.0));
-    alpha_unit_force.setColumn(3, unit_force_x_a); // constraint diabled... In this direction, end-effector's motion is left to emerge naturally
+    alpha_unit_force.setColumn(3, unit_force_x_a); // constraint disabled... In this direction, end-effector's motion is left to emerge naturally
 
     Twist unit_force_y_a(
         Vector(0.0, 0.0, 0.0),
         Vector(0.0, 0.0, 0.0));
-    alpha_unit_force.setColumn(4, unit_force_y_a); // constraint diabled... In this direction, end-effector's motion is left to emerge naturally
+    alpha_unit_force.setColumn(4, unit_force_y_a); // constraint disabled... In this direction, end-effector's motion is left to emerge naturally
 
     Twist unit_force_z_a(
         Vector(0.0, 0.0, 0.0),
@@ -1515,8 +1515,8 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
 
     // #########################################################################################
     // Vereshchagin Hybrid Dynamics solver
-    // When the Cartesian Acceleration Constraints are deactivated, the computations perfomed 
-    // in the Vereshchagin solver are completely the same as the computations perfomed in 
+    // When the Cartesian Acceleration Constraints are deactivated, the computations performed 
+    // in the Vereshchagin solver are completely the same as the computations performed in 
     // the well-known FD Articulated Body Algorithm (ABA) developed by Featherstone 
 
     // Constraint Unit forces at the end-effector. Set to zero to deactivate all constraints
@@ -1533,7 +1533,7 @@ void SolverTest::FdAndVereshchaginSolversConsistencyTest()
     Vector linearAcc(0.0, 0.0, 9.81); Vector angularAcc(0.0, 0.0, 0.0);
     Twist root_Acc(linearAcc, angularAcc);
 
-    // Torques felt in robot's joints due to constrait forces acting on the end-effector
+    // Torques felt in robot's joints due to constraint forces acting on the end-effector
     JntArray constraint_tau(nj); // In this test, all elements of this array should result to zero
     JntArray q_dd_Ver(nj); // Resultant joint accelerations
 
@@ -1574,7 +1574,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
     /**
      * This EPS has a slightly different purpose than the EPSes of the other solver-tests. While other EPSes are taking care of the differences that
      * originate from e.g. floating-number imprecisions, different compilers (or same compiler but different flags) used between different machines (OS), etc. 
-     * The EPS specified bellow is there to cover those imperfections as well but, it's also there to
+     * The EPS specified below is there to cover those imperfections as well but, it's also there to
      * take into account the noise in estimated signals (the differences between estimated and ground-truth wrenches), caused by other computations in this test
      * (ones coming from the implemented controller and the dynamics simulator) not just those coming from the estimator itself.
      */
@@ -1637,7 +1637,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
     std::vector<KDL::JntArray> jnt_pos;
     std::vector<KDL::Wrench> wrench_reference;
 
-    // Intialize random generator
+    // Initialize random generator
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<> dis_force(-15.0, 15.0);

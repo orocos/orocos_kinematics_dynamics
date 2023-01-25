@@ -69,7 +69,7 @@ namespace KDL {
 
         /**
          * Calculates robot's initial momentum in the joint space. 
-         * Bassically, sets the offset for future estimation (momentum calculation).
+         * Basically, sets the offset for future estimation (momentum calculation).
          * If this method is not called by the user, zero values will be taken for the initial momentum.
          */
         int setInitialMomentum(const JntArray &joint_position, const JntArray &joint_velocity);
