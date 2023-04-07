@@ -719,7 +719,7 @@ void SolverTest::IkVelSolverPinvTest()
     KDL::Twist dx(v05,v05);
 
 
-    std::cout<<"smallest singular value is above threshold (no Pinv)"<<std::endl;
+    std::cout << "smallest singular value is above threshold (no Pinv)" << std::endl;
 
     q(0) = 0. ;
     q(1) = 0.5 ;
