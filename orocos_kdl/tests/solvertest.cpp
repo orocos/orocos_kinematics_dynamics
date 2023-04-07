@@ -747,7 +747,7 @@ void SolverTest::IkVelSolverPinvTest()
         CPPUNIT_ASSERT_DOUBLES_EQUAL(Sexp(i), S(i), 0.0001);
     }
     double Smin = ikvelsolver.getSigmaMin();
-    CPPUNIT_ASSERT_EQUAL(S(5),Smin);
+    CPPUNIT_ASSERT_EQUAL(S(5), Smin);
 
 
     std::cout<<"smallest singular value is below threshold"<<std::endl;
