@@ -115,7 +115,7 @@ namespace KDL
 
         /**
          * Get maximum number of iterations
-         * \pre 1 <= maxiter, otherwise maxiter is ignored
+         * \pre maxiter >= 1, otherwise maxiter is ignored
          */
         unsigned int getMaxIter() const { return static_cast<unsigned int>(maxiter); }
 
