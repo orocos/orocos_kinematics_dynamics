@@ -64,7 +64,8 @@ namespace KDL
 
     void ChainIkSolverVel_pinv::setEps(const double eps_in)
     {
-        if (0 < eps_in) eps = eps_in;
+        if (eps_in > 0)
+            eps = eps_in;
         // else silently ignore
     }
 
