@@ -757,7 +757,7 @@ void SolverTest::IkVelSolverPinvTest()
                          ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
     CPPUNIT_ASSERT_EQUAL((unsigned int)2,ikvelsolver.getNrZeroSigmas()) ;        //    2 singular values
 
-    q(1) = 0.0 ;
+    q(1) = 0.0;
 
     CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
                          ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
