@@ -715,8 +715,8 @@ void SolverTest::IkVelSolverPinvTest()
     unsigned int nj = motomansia10.getNrOfJoints();
     JntArray q(nj), dq(nj);
 
-    KDL::Vector v05(0.05,0.05,0.05);
-    KDL::Twist dx(v05,v05);
+    KDL::Vector v05(0.05, 0.05, 0.05);
+    KDL::Twist dx(v05, v05);
 
 
     std::cout << "smallest singular value is above threshold (no Pinv)" << std::endl;
