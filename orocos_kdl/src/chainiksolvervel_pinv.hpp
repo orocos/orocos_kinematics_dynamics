@@ -111,7 +111,7 @@ namespace KDL
         /**
          * Request the value of eps
          */
-        double getEps()const {return eps;};
+        double getEps() const { return eps; };
 
         /**
          * Get maximum number of iterations
