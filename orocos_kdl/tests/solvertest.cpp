@@ -742,8 +742,9 @@ void SolverTest::IkVelSolverPinvTest()
     Sexp(5) = 0.1163;
     Sexp(6) = 0.0;
     CPPUNIT_ASSERT_EQUAL(0, ikvelsolver.getSigma(S));
-    for(unsigned int i=0;i<nj;i++) {
-        CPPUNIT_ASSERT_DOUBLES_EQUAL(Sexp(i),S(i),0.0001);
+    for(unsigned int i=0; i<nj; ++i)
+    {
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(Sexp(i), S(i), 0.0001);
     }
     double Smin = ikvelsolver.getSigmaMin();
     CPPUNIT_ASSERT_EQUAL(S(5),Smin);
