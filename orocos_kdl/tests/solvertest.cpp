@@ -769,7 +769,6 @@ void SolverTest::IkVelSolverPinvTest()
     CPPUNIT_ASSERT_EQUAL(4u, ikvelsolver.getNrZeroSigmas());
 }
 
-
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
 {
     double deltaq = 1E-4;
