@@ -115,7 +115,7 @@ namespace KDL
         }
 
         // Sort S in descending order (S is not sorted in SVD_HH)
-        // copied from svd_eigen_HH.cpp
+        // Copied from svd_eigen_HH.cpp
         Smaxtomin = S;
         SortJntArrayMaxToMin(Smaxtomin);
         // Minimum of six largest singular values of J is S(5) if number of joints >=6 and 0 for <6
