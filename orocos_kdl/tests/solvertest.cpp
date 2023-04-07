@@ -702,7 +702,7 @@ void SolverTest::IkVelSolverPinvTest()
     unsigned int maxiternew = 10;
     double epsnew = 0.1;
 
-    std::cout<<"KDL-IK Pinv Vel Solver Tests for Near Zero SVs"<<std::endl;
+    std::cout << "KDL-IK Pinv Vel Solver Tests for Near Zero SVs" << std::endl;
 
     KDL::ChainIkSolverVel_pinv ikvelsolver(motomansia10,eps,maxiter);
     CPPUNIT_ASSERT_EQUAL(eps,ikvelsolver.getEps());
