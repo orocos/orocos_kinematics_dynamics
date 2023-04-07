@@ -695,8 +695,6 @@ void SolverTest::IkVelSolverWDLSTest()
 	CPPUNIT_ASSERT_EQUAL(4,(int)ikvelsolver.getNrZeroSigmas()) ;
 	CPPUNIT_ASSERT_EQUAL(ikvelsolver.getLambdaScaled(),lambda) ;	// full value
 }
-
-
 void SolverTest::IkVelSolverPinvTest()
 {
     unsigned int maxiter = 30;
