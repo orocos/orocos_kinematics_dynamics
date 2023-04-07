@@ -751,7 +751,7 @@ void SolverTest::IkVelSolverPinvTest()
 
     std::cout << "smallest singular value is below threshold" << std::endl;
 
-    q(1) = 0.2 ;
+    q(1) = 0.2;
 
     CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
                          ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
