@@ -729,9 +729,8 @@ void SolverTest::IkVelSolverPinvTest()
     q(5) = 0.0;
     q(6) = 0.0;
 
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
-                         ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
-    CPPUNIT_ASSERT(1==ikvelsolver.getNrZeroSigmas()) ;          // 1 singular value
+    CPPUNIT_ASSERT_EQUAL(SolverI::E_NOERROR, ikvelsolver.CartToJnt(q, dx, dq)); // pinv mode
+    CPPUNIT_ASSERT_EQUAL(1u, ikvelsolver.getNrZeroSigmas()); // 1 singular value
 
     std::cout<<"Test singular value function"<<std::endl;
     JntArray S(nj), Sexp(nj);
