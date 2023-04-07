@@ -101,7 +101,7 @@ namespace KDL
         /**
          * Request the minimum of the first six singular values
          */
-        double getSigmaMin()const {return sigmaMin;};
+        double getSigmaMin( )const { return sigmaMin; };
 
         /**
          * Request the singular values of the Jacobian
@@ -111,13 +111,13 @@ namespace KDL
         /**
          * Request the value of eps
          */
-        double getEps()const {return eps;};
+        double getEps() const { return eps; };
 
         /**
          * Get maximum number of iterations
-         * \pre 1 <= maxiter, otherwise maxiter is ignored
+         * \pre maxiter >= 1, otherwise maxiter is ignored
          */
-        unsigned int getMaxIter()const { return maxiter; }
+        unsigned int getMaxIter() const { return static_cast<unsigned int>(maxiter); }
 
         /**
          * Retrieve the latest return code from the SVD algorithm

@@ -695,8 +695,6 @@ void SolverTest::IkVelSolverWDLSTest()
 	CPPUNIT_ASSERT_EQUAL(4,(int)ikvelsolver.getNrZeroSigmas()) ;
 	CPPUNIT_ASSERT_EQUAL(ikvelsolver.getLambdaScaled(),lambda) ;	// full value
 }
-
-
 void SolverTest::IkVelSolverPinvTest()
 {
     unsigned int maxiter = 30;
@@ -704,38 +702,37 @@ void SolverTest::IkVelSolverPinvTest()
     unsigned int maxiternew = 10;
     double epsnew = 0.1;
 
-    std::cout<<"KDL-IK Pinv Vel Solver Tests for Near Zero SVs"<<std::endl;
+    std::cout << "KDL-IK Pinv Vel Solver Tests for Near Zero SVs" << std::endl;
 
-    KDL::ChainIkSolverVel_pinv ikvelsolver(motomansia10,eps,maxiter);
-    CPPUNIT_ASSERT_EQUAL(eps,ikvelsolver.getEps());
-    CPPUNIT_ASSERT_EQUAL(maxiter,ikvelsolver.getMaxIter());
+    KDL::ChainIkSolverVel_pinv ikvelsolver(motomansia10, eps, maxiter);
+    CPPUNIT_ASSERT_EQUAL(eps, ikvelsolver.getEps());
+    CPPUNIT_ASSERT_EQUAL(maxiter, ikvelsolver.getMaxIter());
     ikvelsolver.setEps(epsnew);
-    CPPUNIT_ASSERT_EQUAL(epsnew,ikvelsolver.getEps());
+    CPPUNIT_ASSERT_EQUAL(epsnew, ikvelsolver.getEps());
     ikvelsolver.setMaxIter(maxiternew);
-    CPPUNIT_ASSERT_EQUAL(maxiternew,ikvelsolver.getMaxIter());
+    CPPUNIT_ASSERT_EQUAL(maxiternew, ikvelsolver.getMaxIter());
 
     unsigned int nj = motomansia10.getNrOfJoints();
     JntArray q(nj), dq(nj);
 
-    KDL::Vector v05(0.05,0.05,0.05);
-    KDL::Twist dx(v05,v05);
+    KDL::Vector v05(0.05, 0.05, 0.05);
+    KDL::Twist dx(v05, v05);
 
 
-    std::cout<<"smallest singular value is above threshold (no Pinv)"<<std::endl;
+    std::cout << "smallest singular value is above threshold (no Pinv)" << std::endl;
 
-    q(0) = 0. ;
-    q(1) = 0.5 ;
-    q(2) = 0.4 ;
-    q(3) = -PI_2 ;
-    q(4) = 0. ;
-    q(5) = 0. ;
-    q(6) = 0. ;
+    q(0) = 0.0;
+    q(1) = 0.5;
+    q(2) = 0.4;
+    q(3) = -PI_2;
+    q(4) = 0.0;
+    q(5) = 0.0;
+    q(6) = 0.0;
 
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
-                         ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
-    CPPUNIT_ASSERT(1==ikvelsolver.getNrZeroSigmas()) ;          // 1 singular value
+    CPPUNIT_ASSERT_EQUAL(SolverI::E_NOERROR, ikvelsolver.CartToJnt(q, dx, dq)); // pinv mode
+    CPPUNIT_ASSERT_EQUAL(1u, ikvelsolver.getNrZeroSigmas()); // 1 singular value
 
-    std::cout<<"Test singular value function"<<std::endl;
+    std::cout << "Test singular value function" << std::endl;
     JntArray S(nj), Sexp(nj);
     Sexp(0) = 1.86694;
     Sexp(1) = 1.61924;
@@ -744,37 +741,33 @@ void SolverTest::IkVelSolverPinvTest()
     Sexp(4) = 0.206596;
     Sexp(5) = 0.1163;
     Sexp(6) = 0.0;
-    CPPUNIT_ASSERT_EQUAL(0,(int)ikvelsolver.getSigma(S)) ;
-    for(unsigned int i=0;i<nj;i++) {
-        CPPUNIT_ASSERT_DOUBLES_EQUAL(Sexp(i),S(i),0.0001);
+    CPPUNIT_ASSERT_EQUAL(0, ikvelsolver.getSigma(S));
+    for(unsigned int i=0; i<nj; ++i)
+    {
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(Sexp(i), S(i), 0.0001);
     }
     double Smin = ikvelsolver.getSigmaMin();
-    CPPUNIT_ASSERT_EQUAL(S(5),Smin);
+    CPPUNIT_ASSERT_EQUAL(S(5), Smin);
 
+    std::cout << "smallest singular value is below threshold" << std::endl;
 
-    std::cout<<"smallest singular value is below threshold"<<std::endl;
+    q(1) = 0.2;
 
-    q(1) = 0.2 ;
+    CPPUNIT_ASSERT_EQUAL(ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR, ikvelsolver.CartToJnt(q, dx, dq));  // pinv mode
+    CPPUNIT_ASSERT_EQUAL(2u, ikvelsolver.getNrZeroSigmas()) ;  // 2 singular values
 
-    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
-                         ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
-    CPPUNIT_ASSERT_EQUAL((unsigned int)2,ikvelsolver.getNrZeroSigmas()) ;        //    2 singular values
+    q(1) = 0.0;
 
-    q(1) = 0.0 ;
+    CPPUNIT_ASSERT_EQUAL(ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR, ikvelsolver.CartToJnt(q, dx, dq));  // pinv mode
+    CPPUNIT_ASSERT_EQUAL(2u, ikvelsolver.getNrZeroSigmas()); // 2 singular values
 
-    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
-                         ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
-    CPPUNIT_ASSERT_EQUAL((unsigned int)2,ikvelsolver.getNrZeroSigmas()) ;        //    2 singular values
+    // Fully singular
+    q(2) = 0.0;
+    q(3) = 0.0;
 
-    // fully singular
-    q(2) = 0.0 ;
-    q(3) = 0.0 ;
-
-    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
-                         ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
-    CPPUNIT_ASSERT_EQUAL(4,(int)ikvelsolver.getNrZeroSigmas()) ;
+    CPPUNIT_ASSERT_EQUAL(ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR, ikvelsolver.CartToJnt(q, dx, dq));  // pinv mode
+    CPPUNIT_ASSERT_EQUAL(4u, ikvelsolver.getNrZeroSigmas());
 }
-
 
 void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,ChainJntToJacSolver& jacsolver)
 {
