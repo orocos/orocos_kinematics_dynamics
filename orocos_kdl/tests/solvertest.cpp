@@ -704,13 +704,13 @@ void SolverTest::IkVelSolverPinvTest()
 
     std::cout << "KDL-IK Pinv Vel Solver Tests for Near Zero SVs" << std::endl;
 
-    KDL::ChainIkSolverVel_pinv ikvelsolver(motomansia10,eps,maxiter);
-    CPPUNIT_ASSERT_EQUAL(eps,ikvelsolver.getEps());
-    CPPUNIT_ASSERT_EQUAL(maxiter,ikvelsolver.getMaxIter());
+    KDL::ChainIkSolverVel_pinv ikvelsolver(motomansia10, eps, maxiter);
+    CPPUNIT_ASSERT_EQUAL(eps, ikvelsolver.getEps());
+    CPPUNIT_ASSERT_EQUAL(maxiter, ikvelsolver.getMaxIter());
     ikvelsolver.setEps(epsnew);
-    CPPUNIT_ASSERT_EQUAL(epsnew,ikvelsolver.getEps());
+    CPPUNIT_ASSERT_EQUAL(epsnew, ikvelsolver.getEps());
     ikvelsolver.setMaxIter(maxiternew);
-    CPPUNIT_ASSERT_EQUAL(maxiternew,ikvelsolver.getMaxIter());
+    CPPUNIT_ASSERT_EQUAL(maxiternew, ikvelsolver.getMaxIter());
 
     unsigned int nj = motomansia10.getNrOfJoints();
     JntArray q(nj), dq(nj);
