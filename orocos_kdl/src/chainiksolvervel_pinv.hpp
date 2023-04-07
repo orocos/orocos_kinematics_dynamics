@@ -101,7 +101,7 @@ namespace KDL
         /**
          * Request the minimum of the first six singular values
          */
-        double getSigmaMin()const {return sigmaMin;};
+        double getSigmaMin( )const { return sigmaMin; };
 
         /**
          * Request the singular values of the Jacobian
