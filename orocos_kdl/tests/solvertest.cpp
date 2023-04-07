@@ -721,13 +721,13 @@ void SolverTest::IkVelSolverPinvTest()
 
     std::cout << "smallest singular value is above threshold (no Pinv)" << std::endl;
 
-    q(0) = 0. ;
-    q(1) = 0.5 ;
-    q(2) = 0.4 ;
-    q(3) = -PI_2 ;
-    q(4) = 0. ;
-    q(5) = 0. ;
-    q(6) = 0. ;
+    q(0) = 0.0;
+    q(1) = 0.5;
+    q(2) = 0.4;
+    q(3) = -PI_2;
+    q(4) = 0.0;
+    q(5) = 0.0;
+    q(6) = 0.0;
 
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR,
                          ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
