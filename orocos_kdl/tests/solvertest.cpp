@@ -758,17 +758,15 @@ void SolverTest::IkVelSolverPinvTest()
 
     q(1) = 0.0;
 
-    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
-                         ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
-    CPPUNIT_ASSERT_EQUAL((unsigned int)2,ikvelsolver.getNrZeroSigmas()) ;        //    2 singular values
+    CPPUNIT_ASSERT_EQUAL(ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR, ikvelsolver.CartToJnt(q, dx, dq));  // pinv mode
+    CPPUNIT_ASSERT_EQUAL(2u, ikvelsolver.getNrZeroSigmas()); // 2 singular values
 
-    // fully singular
-    q(2) = 0.0 ;
-    q(3) = 0.0 ;
+    // Fully singular
+    q(2) = 0.0;
+    q(3) = 0.0;
 
-    CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
-                         ikvelsolver.CartToJnt(q, dx, dq)) ;    // pinv mode
-    CPPUNIT_ASSERT_EQUAL(4,(int)ikvelsolver.getNrZeroSigmas()) ;
+    CPPUNIT_ASSERT_EQUAL(ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR, ikvelsolver.CartToJnt(q, dx, dq));  // pinv mode
+    CPPUNIT_ASSERT_EQUAL(4u, ikvelsolver.getNrZeroSigmas());
 }
 
 
