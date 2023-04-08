@@ -80,7 +80,7 @@ namespace KDL
     {
         if (Sout.rows() != Smaxtomin.rows())
             return (error = E_SIZE_MISMATCH);
-        for (unsigned int i=0;i<Sout.rows();i++)
+        for (unsigned int i=0; i<Sout.rows(); ++i)
             Sout(i)=Smaxtomin(i);
         return (error = E_NOERROR);
     }
