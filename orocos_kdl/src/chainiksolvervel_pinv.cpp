@@ -120,11 +120,13 @@ namespace KDL
         Smaxtomin = S;
         SortJntArrayMaxToMin(Smaxtomin);
         // Minimum of six largest singular values of J is S(5) if number of joints >=6 and 0 for <6
-        if ( jac.columns() >= 6 ) {
+        if (jac.columns() >= 6)
+        {
             sigmaMin = Smaxtomin(5);
         }
-        else {
-            sigmaMin = 0.;
+        else
+        {
+            sigmaMin = 0;
         }
 
         // We have to calculate qdot_out = jac_pinv*v_in
