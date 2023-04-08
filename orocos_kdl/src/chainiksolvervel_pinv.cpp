@@ -170,25 +170,28 @@ namespace KDL
 
     void ChainIkSolverVel_pinv::SortJntArrayMaxToMin(JntArray& Smaxtomin)
     {
-        int n=Smaxtomin.rows();
-        for (int i=0; i<n; i++){
+        unsigned int n = Smaxtomin.rows();
+        for (unsigned int i=0; i<n; ++i)
+        {
             double S_max = Smaxtomin(i);
-            int i_max = i;
-            for (int j=i+1; j<n; j++){
+            unsigned int i_max = i;
+            for (unsigned int j=i+1; j<n; ++j)
+            {
                 double Sj = Smaxtomin(j);
-                if (Sj > S_max){
+                if (Sj > S_max)
+                {
                     S_max = Sj;
                     i_max = j;
                 }
             }
-            if (i_max != i){
+            if (i_max != i)
+            {
                 /* swap eigenvalues */
                 double tmp = Smaxtomin(i);
-                Smaxtomin(i)=Smaxtomin(i_max);
-                Smaxtomin(i_max)=tmp;
+                Smaxtomin(i) =Smaxtomin(i_max);
+                Smaxtomin(i_max) = tmp;
             }
         }
-        return;
     }
 
     const char* ChainIkSolverVel_pinv::strError(const int error) const
