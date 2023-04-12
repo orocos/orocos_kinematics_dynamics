@@ -1,0 +1,5 @@
+- builder: doxygen
+  name: C++ API
+  file_patterns: '*.cpp *.cxx *.h *.hpp *.inl'
+  tab_size: 4
+  exclude_patterns: '*.svn* CMake*'

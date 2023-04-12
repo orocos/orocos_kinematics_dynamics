@@ -26,6 +26,7 @@
 
   <export>
     <build_type>cmake</build_type>
+    <rosdoc config="rosdoc.yaml"/>
   </export>
 
 </package>
