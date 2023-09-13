@@ -12,10 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-20.04, ubuntu-22.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
-        python_version: ['3.8']
+        python_version: ['3.8', '3.10']
+        exclude:
+          - os: ubuntu-20.04
+            python_version: '3.10'
+          - os: ubuntu-22.04
+            python_version: '3.8'
         include:
           - os: ubuntu-20.04
             orocos_build_type: Release
@@ -26,6 +31,10 @@ jobs:
             compiler: gcc
             python_version: '3.10'
           - os: ubuntu-20.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: '3.11'
+          - os: ubuntu-22.04
             orocos_build_type: Release
             compiler: gcc
             python_version: '3.11'
