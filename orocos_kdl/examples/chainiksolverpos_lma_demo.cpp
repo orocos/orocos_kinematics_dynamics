@@ -90,9 +90,9 @@ void test_inverseposkin(KDL::Chain& chain) {
     KDL::JntArray q_sol(n);
     for (int trial=0;trial<num_of_trials;++trial) {
         q.data.setRandom();
-        q.data *= PI;
+        q.data *= KDL::PI;
         q_init.data.setRandom();
-        q_init.data *= PI;
+        q_init.data *= KDL::PI;
         KDL::Frame pos_goal,pos_reached;
         fwdkin.JntToCart(q,pos_goal);
         //solver.compute_fwdpos(q.data);
