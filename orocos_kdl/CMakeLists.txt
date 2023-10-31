@@ -60,7 +60,7 @@ if(NOT EIGEN3_FOUND)
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
 endif()
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
-SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
+SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${EIGEN3_INCLUDE_DIR}\"")
 
 # Check the platform STL containers capabilities
 include(cmake/CheckSTLContainers.cmake)

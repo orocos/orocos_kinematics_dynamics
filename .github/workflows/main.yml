@@ -12,10 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-20.04, ubuntu-22.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
-        python_version: ['3.8']
+        python_version: ['3.8', '3.10']
+        exclude:
+          - os: ubuntu-20.04
+            python_version: '3.10'
+          - os: ubuntu-22.04
+            python_version: '3.8'
         include:
           - os: ubuntu-20.04
             orocos_build_type: Release
@@ -29,12 +34,16 @@ jobs:
             orocos_build_type: Release
             compiler: gcc
             python_version: '3.11'
+          - os: ubuntu-22.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: '3.11'
     env:
       CC: ${{ matrix.compiler }}
       OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
       ROS_PYTHON_VERSION: ${{ matrix.python_version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - uses: actions/setup-python@v4
@@ -88,7 +97,7 @@ jobs:
             branch: release-1.5
     env: ${{ matrix.env }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
         if: ${{ (github.event_name == 'push' && endsWith(github.ref, matrix.branch)) || (github.event_name == 'pull_request' && endsWith(github.base_ref, matrix.branch)) }}
