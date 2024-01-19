@@ -49,7 +49,7 @@ inline void Twist_to_Eigen(const KDL::Twist& t,Eigen::MatrixBase<Derived>& e) {
 
 ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 		const KDL::Chain& _chain,
-		const Eigen::Matrix<double,6,1>& _L,
+		const Eigen::Matrix<double,6,1>& _l,
 		double _eps,
 		int _maxiter,
 		double _eps_joints
@@ -68,7 +68,7 @@ ChainIkSolverPos_LMA::ChainIkSolverPos_LMA(
 	maxiter(_maxiter),
 	eps(_eps),
 	eps_joints(_eps_joints),
-	L(_L.cast<ScalarType>()),
+	L(_l.cast<ScalarType>()),
 	T_base_jointroot(nj),
 	T_base_jointtip(nj),
 	q(nj),
