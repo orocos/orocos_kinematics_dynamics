@@ -75,7 +75,7 @@ namespace KDL {
         return 0;
     }
 
-    double VelocityProfile_Dirac::Acc(double time) const {
+    double VelocityProfile_Dirac::Acc(double /*time*/) const {
         throw Error_MotionPlanning_Incompatible();
         return 0;
     }

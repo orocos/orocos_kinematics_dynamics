@@ -247,9 +247,9 @@ void init_kinfam(pybind11::module &m)
     });
 
     m.def("SetToZero", (void (*)(Jacobian&)) &KDL::SetToZero, py::arg("jac"));
-    m.def("changeRefPoint", (void (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint, py::arg("src"), py::arg("base"), py::arg("dest"));
-    m.def("changeBase", (void (*)(const Jacobian&, const Rotation&, Jacobian&)) &KDL::changeBase, py::arg("src"), py::arg("rot"), py::arg("dest"));
-    m.def("SetToZero", (void (*)(const Jacobian&, const Frame&, Jacobian&)) &KDL::changeRefFrame, py::arg("src"), py::arg("frame"), py::arg("dest"));
+    m.def("changeRefPoint", (bool (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint, py::arg("src"), py::arg("base"), py::arg("dest"));
+    m.def("changeBase", (bool (*)(const Jacobian&, const Rotation&, Jacobian&)) &KDL::changeBase, py::arg("src"), py::arg("rot"), py::arg("dest"));
+    m.def("SetToZero", (bool (*)(const Jacobian&, const Frame&, Jacobian&)) &KDL::changeRefFrame, py::arg("src"), py::arg("frame"), py::arg("dest"));
 
 
     // --------------------
