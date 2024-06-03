@@ -56,7 +56,12 @@ estimate of shortest time per invposkin (ms) 0.155544
 #include <chainfksolverpos_recursive.hpp>
 #include <utilities/utility.h>
 
+#include <boost/version.hpp>
+#if BOOST_VERSION < 108300
 #include <boost/timer.hpp>
+#else
+#include <boost/timer/timer.hpp>
+#endif
 
 /**
  * tests the inverse kinematics on the given kinematic chain for a
@@ -64,7 +69,11 @@ estimate of shortest time per invposkin (ms) 0.155544
  * \TODO provide other examples.
  */
 void test_inverseposkin(KDL::Chain& chain) {
+#if BOOST_VERSION < 108300
     boost::timer timer;
+#else
+    boost::timer::cpu_timer timer;
+#endif
     int num_of_trials = 1000000;
     int total_number_of_iter = 0;
     int n = chain.getNrOfJoints();
@@ -159,7 +168,12 @@ void test_inverseposkin(KDL::Chain& chain) {
     std::cout << "max. trans. difference after solving " << max_trans_diff << std::endl;
     std::cout << "min. rot. difference after solving " << min_rot_diff << std::endl;
     std::cout << "max. rot. difference after solving " << max_rot_diff << std::endl;
+#if BOOST_VERSION < 108300
     double el = timer.elapsed();
+#else
+    boost::timer::cpu_times const ct(timer.elapsed());
+    double el = ct.user / 1e9;
+#endif
     std::cout << "elapsed time " << el << std::endl;
     std::cout << "estimate of average time per invposkin (ms)" << el/num_of_trials*1000 << std::endl;
     std::cout << "estimate of longest time per invposkin (ms) " << el/total_number_of_iter*max_num_of_iter *1000 << std::endl;
