@@ -23,6 +23,8 @@ MESSAGE( STATUS "Orocos KDL version ${VERSION} (${KDL_VERSION_MAJOR}.${KDL_VERSI
 SET( PROJ_SOURCE_DIR ${orocos_kdl_SOURCE_DIR} )
 SET( PROJ_BINARY_DIR ${orocos_kdl_BINARY_DIR} )
 
+include(GNUInstallDirs)
+
 # catkin-specific configuration (optional)
 find_package(catkin QUIET)
 if(catkin_FOUND)
@@ -47,20 +49,23 @@ ELSE ( NOT CMAKE_BUILD_TYPE )
   MESSAGE( STATUS "Build type set to '${CMAKE_BUILD_TYPE}' by user." )
 ENDIF ( NOT CMAKE_BUILD_TYPE )
 
-SET( KDL_CFLAGS "")
+if(MSVC)
+  add_compile_options(/W4 /WX)
+else(MSVC)
+  add_compile_options(-Wall -Werror=all -Wextra -Werror=extra)
+endif(MSVC)
 
 find_package(Eigen3 QUIET)
 if(NOT EIGEN3_FOUND)
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
 endif()
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${EIGEN3_INCLUDE_DIR}\"")
 
 # Check the platform STL containers capabilities
 include(cmake/CheckSTLContainers.cmake)
 CHECK_STL_CONTAINERS()
-
-# Set the default option appropriately
+# Set the default option accordingly
 if(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
     set(KDL_USE_NEW_TREE_INTERFACE_DEFAULT OFF)
 else(HAVE_STL_CONTAINER_INCOMPLETE_TYPES)
@@ -80,7 +85,7 @@ endif()
 if(KDL_USE_NEW_TREE_INTERFACE)
     # We need shared_ptr from boost since not all compilers are c++11 capable
     find_package(Boost REQUIRED)
-    include_directories(${Boost_INCLUDE_DIRS})
+    include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 endif(KDL_USE_NEW_TREE_INTERFACE)
 
 OPTION(ENABLE_TESTS OFF "Enable building of tests")
@@ -112,20 +117,42 @@ export(TARGETS orocos-kdl
 
 export(PACKAGE orocos_kdl)
 
+include(CMakePackageConfigHelpers)
 # Generate CMake package configuration
-CONFIGURE_FILE(orocos_kdl-config.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl-config.cmake.in
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl
+)
 
-INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
+write_basic_package_version_file(
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  VERSION ${KDL_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(
+  FILES
+    ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+    ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl
+)
+
+INSTALL(FILES cmake/FindEigen3.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
+INSTALL(EXPORT OrocosKDLTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
 
 # Generate pkg-config package configuration
-CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
-CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl.pc.in
+  ${PROJECT_BINARY_DIR}/orocos_kdl.pc
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/orocos_kdl.pc.in
+  ${PROJECT_BINARY_DIR}/orocos-kdl.pc
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
 
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+install(
+  FILES
+    ${PROJECT_BINARY_DIR}/orocos_kdl.pc
+    ${PROJECT_BINARY_DIR}/orocos-kdl.pc
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)

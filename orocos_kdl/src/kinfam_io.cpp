@@ -29,7 +29,7 @@ std::ostream& operator <<(std::ostream& os, const Joint& joint) {
               <<", axis: "<<joint.JointAxis() << ", origin"<<joint.JointOrigin()<<"]";
 }
 
-std::istream& operator >>(std::istream& is, Joint& joint) {
+std::istream& operator >>(std::istream& is, Joint& /*joint*/) {
 	return is;
 }
 
@@ -38,7 +38,7 @@ std::ostream& operator <<(std::ostream& os, const Segment& segment) {
 	return os;
 }
 
-std::istream& operator >>(std::istream& is, Segment& segment) {
+std::istream& operator >>(std::istream& is, Segment& /*segment*/) {
 	return is;
 }
 
@@ -50,7 +50,7 @@ std::ostream& operator <<(std::ostream& os, const Chain& chain) {
 	return os;
 }
 
-std::istream& operator >>(std::istream& is, Chain& chain) {
+std::istream& operator >>(std::istream& is, Chain& /*chain*/) {
 	return is;
 }
 
@@ -68,7 +68,7 @@ std::ostream& operator <<(std::ostream& os, SegmentMap::const_iterator root) {
 	return os << "\n";
 }
 
-std::istream& operator >>(std::istream& is, Tree& tree) {
+std::istream& operator >>(std::istream& is, Tree& /*tree*/) {
 	return is;
 }
 
@@ -80,7 +80,7 @@ std::ostream& operator <<(std::ostream& os, const JntArray& array) {
 	return os;
 }
 
-std::istream& operator >>(std::istream& is, JntArray& array) {
+std::istream& operator >>(std::istream& is, JntArray& /*array*/) {
 	return is;
 }
 
@@ -95,7 +95,7 @@ std::ostream& operator <<(std::ostream& os, const Jacobian& jac) {
 	return os;
 }
 
-std::istream& operator >>(std::istream& is, Jacobian& jac) {
+std::istream& operator >>(std::istream& is, Jacobian& /*jac*/) {
 	return is;
 }
 std::ostream& operator <<(std::ostream& os, const JntSpaceInertiaMatrix& jntspaceinertiamatrix) {
@@ -109,7 +109,7 @@ std::ostream& operator <<(std::ostream& os, const JntSpaceInertiaMatrix& jntspac
 	return os;
 }
 
-std::istream& operator >>(std::istream& is, JntSpaceInertiaMatrix& jntspaceinertiamatrix) {
+std::istream& operator >>(std::istream& is, JntSpaceInertiaMatrix& /*jntspaceinertiamatrix*/) {
 	return is;
 }
 

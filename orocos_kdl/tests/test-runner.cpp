@@ -12,7 +12,7 @@
 #include <iostream>
 #include <fstream>
 
-int main(int argc, char** argv)
+int main(int /*argc*/, char** /*argv*/)
 {
     // Get the top level suite from the registry
     CppUnit::Test *suite = CppUnit::TestFactoryRegistry::getRegistry().makeTest();

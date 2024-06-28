@@ -190,9 +190,4 @@ void VelocityProfile_Trap::Write(std::ostream& os) const {
 	os << "TRAPEZOIDAL[" << maxvel << "," << maxacc <<"]";
 }
 
-
-
-
-
 }
-
