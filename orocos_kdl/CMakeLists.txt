@@ -118,10 +118,10 @@ CONFIGURE_FILE(orocos_kdl-config.cmake.in
 CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
   ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
 
-INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
+INSTALL(FILES cmake/FindEigen3.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
+INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
+INSTALL(EXPORT OrocosKDLTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/orocos_kdl)
 
 # Generate pkg-config package configuration
 CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
