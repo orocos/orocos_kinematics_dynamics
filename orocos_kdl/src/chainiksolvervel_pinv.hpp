@@ -80,6 +80,18 @@ namespace KDL
         virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return (error = E_NOT_IMPLEMENTED);};
 
         /**
+         * Set eps
+         * \pre 0 < eps, otherwise eps is ignored
+         */
+        void setEps(const double eps_in);
+
+        /**
+         * Set maxIter
+         * \pre 1 <= maxiter, otherwise maxiter is ignored
+         */
+        void setMaxIter(const unsigned int maxiter_in);
+
+        /**
          * Retrieve the number of singular values of the jacobian that are < eps;
          * if the number of near zero singular values is > jac.col()-jac.row(),
          * then the jacobian pseudoinverse is singular
@@ -87,10 +99,36 @@ namespace KDL
         unsigned int getNrZeroSigmas()const {return nrZeroSigmas;};
 
         /**
+         * Request the minimum of the first six singular values
+         */
+        double getSigmaMin( )const { return sigmaMin; };
+
+        /**
+         * Request the singular values of the Jacobian
+         */
+        int getSigma(JntArray& Sout);
+
+        /**
+         * Request the value of eps
+         */
+        double getEps() const { return eps; };
+
+        /**
+         * Get maximum number of iterations
+         * \pre maxiter >= 1, otherwise maxiter is ignored
+         */
+        unsigned int getMaxIter() const { return static_cast<unsigned int>(maxiter); }
+
+        /**
          * Retrieve the latest return code from the SVD algorithm
 		 * @return 0 if CartToJnt() not yet called, otherwise latest SVD result code.
          */
         int getSVDResult()const {return svdResult;};
+
+        /**
+         * Sort a JntArray from maximum to minimum value
+         */
+        void SortJntArrayMaxToMin(JntArray& Smaxtomin);
 
         /// @copydoc KDL::SolverI::strError()
         virtual const char* strError(const int error) const;
@@ -108,10 +146,11 @@ namespace KDL
         std::vector<JntArray> V;
         JntArray tmp;
         double eps;
-        int maxiter;
+        unsigned int maxiter;
         unsigned int nrZeroSigmas;
         int svdResult;
-
+        double sigmaMin;
+        JntArray Smaxtomin;
     };
 }
 #endif
