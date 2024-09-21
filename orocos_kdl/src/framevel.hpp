@@ -92,6 +92,7 @@ public:
     Vector v;       // velocity vector
 public:
     VectorVel():p(),v(){}
+    VectorVel(const VectorVel& arg) = default;
     VectorVel(const Vector& _p,const Vector& _v):p(_p),v(_v) {}
     explicit VectorVel(const Vector& _p):p(_p),v(Vector::Zero()) {}
 
@@ -154,6 +155,7 @@ public:
     Vector   w; // rotation vector
 public:
     RotationVel():R(),w() {}
+    RotationVel(const RotationVel& arg) = default;
     explicit RotationVel(const Rotation& _R):R(_R),w(Vector::Zero()){}
     RotationVel(const Rotation& _R,const Vector& _w):R(_R),w(_w){}
 
@@ -219,6 +221,7 @@ public:
     VectorVel   p;
 public:
     FrameVel(){}
+    FrameVel(const FrameVel& arg) = default;
 
     explicit FrameVel(const Frame& _T):
         M(_T.M),p(_T.p) {}
@@ -277,6 +280,7 @@ public:
 
 // = Constructors
     TwistVel():vel(),rot() {};
+    TwistVel(const TwistVel& arg) = default;
     TwistVel(const VectorVel& _vel,const VectorVel& _rot):vel(_vel),rot(_rot) {};
     TwistVel(const Twist& p,const Twist& v):vel(p.vel, v.vel), rot( p.rot, v.rot) {};
     TwistVel(const Twist& p):vel(p.vel), rot( p.rot) {};

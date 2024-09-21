@@ -12,10 +12,10 @@
 
 
 
-#include <kdl/rall1d.h>
-#include <kdl/rall1d_io.h>
-#include <kdl/rall2d.h>
-#include <kdl/rall2d_io.h>
+#include <kdl/utilities/rall1d.h>
+#include <kdl/utilities/rall1d_io.h>
+#include <kdl/utilities/rall2d.h>
+#include <kdl/utilities/rall2d_io.h>
 #include <kdl/fvector.h>
 #include <kdl/fvector_io.h>
 #include <kdl/fvector2.h>
