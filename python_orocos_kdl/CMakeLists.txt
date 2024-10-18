@@ -1,6 +1,10 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.12.0)
 if(POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
+endif()
+# Avoid warning from pybind11 on Windows
+if(POLICY CMP0054)
+  cmake_policy(SET CMP0054 NEW)
 endif()
 if(POLICY CMP0057)
   cmake_policy(SET CMP0057 NEW)  # support IN_LISTS which is required for PyBind11 2.6 and newer
@@ -21,11 +25,10 @@ endif()
 
 set(PYBIND11_PYTHON_VERSION ${PYTHON_VERSION} CACHE STRING "Python version used by PyBind11")
 
-find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
-find_package(PythonLibs ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR} REQUIRED)
+find_package(Python ${PYTHON_VERSION} COMPONENTS Interpreter Development REQUIRED)
 # get_python_lib in python3 produces path which isn't in sys.path: https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
 # execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(plat_specific=True, prefix=''))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/dist-packages")  # This might be overridden below if built with catkin.
+set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${Python_VERSION_MAJOR}.${Python_VERSION_MINOR}/dist-packages" CACHE STRING "Install location of the python package")  # This might be overridden below if built with catkin.
 set(LIBRARY_NAME "PyKDL")
 
 # catkin-specific configuration (optional)
@@ -46,7 +49,13 @@ else()
   set(PYTHON_MODULE_EXTENSION ".so")
 endif()
 
-add_subdirectory(pybind11)
+find_package(pybind11 2.6 QUIET)
+if(NOT ${pybind11_FOUND})
+  message(STATUS "pybind11 not found, building from source")
+  add_subdirectory(pybind11)
+else()
+  message(STATUS "pybind11 found, building against installed version")
+endif()
 pybind11_add_module(${LIBRARY_NAME}
   PyKDL/PyKDL.h
   PyKDL/PyKDL.cpp

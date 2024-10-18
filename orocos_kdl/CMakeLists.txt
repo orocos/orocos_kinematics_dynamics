@@ -1,11 +1,7 @@
 #
 # Test CMake version
 #
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-IF(POLICY CMP0048)
-  CMAKE_POLICY(SET CMP0048 NEW)
-ENDIF()
-#MARK_AS_ADVANCED( FORCE CMAKE_BACKWARDS_COMPATIBILITY )
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
 
 
 ###################################################
@@ -58,7 +54,7 @@ if(NOT EIGEN3_FOUND)
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
 endif()
 include_directories(${EIGEN3_INCLUDE_DIR})
-SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
+SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${EIGEN3_INCLUDE_DIR}\"")
 
 # Check the platform STL containers capabilities
 include(cmake/CheckSTLContainers.cmake)
