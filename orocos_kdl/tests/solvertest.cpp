@@ -517,7 +517,7 @@ void SolverTest::FkPosAndIkPosTest()
 
 void SolverTest::IkSingularValueTest()
 {
-	unsigned int maxiter = 30;
+	int maxiter = 30;
 	double	eps = 1e-6 ;
 	int maxiter_vel = 30;
 	double	eps_vel = 0.1 ;
@@ -697,9 +697,9 @@ void SolverTest::IkVelSolverWDLSTest()
 }
 void SolverTest::IkVelSolverPinvTest()
 {
-    unsigned int maxiter = 30;
+    int maxiter = 30;
     double eps = 1e-6;
-    unsigned int maxiternew = 10;
+    int maxiternew = 10;
     double epsnew = 0.1;
 
     std::cout << "KDL-IK Pinv Vel Solver Tests for Near Zero SVs" << std::endl;

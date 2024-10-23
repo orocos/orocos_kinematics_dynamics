@@ -69,7 +69,7 @@ namespace KDL
         // else silently ignore
     }
 
-    void ChainIkSolverVel_pinv::setMaxIter(const unsigned int maxiter_in)
+    void ChainIkSolverVel_pinv::setMaxIter(const int maxiter_in)
     {
         if (maxiter_in >= 1)
             maxiter = maxiter_in;

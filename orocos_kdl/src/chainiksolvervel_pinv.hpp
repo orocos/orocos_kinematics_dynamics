@@ -87,9 +87,9 @@ namespace KDL
 
         /**
          * Set maxIter
-         * \pre 1 <= maxiter, otherwise maxiter is ignored
+         * \pre maxiter >= 1, otherwise maxiter is ignored
          */
-        void setMaxIter(const unsigned int maxiter_in);
+        void setMaxIter(const int maxiter_in);
 
         /**
          * Retrieve the number of singular values of the jacobian that are < eps;
@@ -117,7 +117,7 @@ namespace KDL
          * Get maximum number of iterations
          * \pre maxiter >= 1, otherwise maxiter is ignored
          */
-        unsigned int getMaxIter() const { return static_cast<unsigned int>(maxiter); }
+        int getMaxIter() const { return maxiter; }
 
         /**
          * Retrieve the latest return code from the SVD algorithm
@@ -146,7 +146,7 @@ namespace KDL
         std::vector<JntArray> V;
         JntArray tmp;
         double eps;
-        unsigned int maxiter;
+        int maxiter;
         unsigned int nrZeroSigmas;
         int svdResult;
         double sigmaMin;
