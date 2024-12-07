@@ -48,12 +48,12 @@ namespace KDL {
 Path_Cyclic_Closed::Path_Cyclic_Closed(Path* _geom,int _times, bool _aggregate):
 times(_times),geom(_geom), aggregate(_aggregate) {}
 
-double Path_Cyclic_Closed::LengthToS(double length) {
+double Path_Cyclic_Closed::LengthToS(double length) const {
 	throw Error_MotionPlanning_Not_Applicable();
 	return 0;
 }
 
-double Path_Cyclic_Closed::PathLength(){
+double Path_Cyclic_Closed::PathLength() const {
 	return geom->PathLength()*times;
 }
 
@@ -75,11 +75,11 @@ Path_Cyclic_Closed::~Path_Cyclic_Closed() {
         delete geom;
 }
 
-Path* Path_Cyclic_Closed::Clone() {
-	return new Path_Cyclic_Closed(geom->Clone(),times, aggregate);
+Path* Path_Cyclic_Closed::Clone() const {
+	return new Path_Cyclic_Closed(geom->Clone(),times, true);
 }
 
-void Path_Cyclic_Closed::Write(std::ostream& os)  {
+void Path_Cyclic_Closed::Write(std::ostream& os) const {
 	os << "CYCLIC_CLOSED[ ";
 	os << "  ";geom->Write(os);os << std::endl;
 	os << "  " << times << std::endl;

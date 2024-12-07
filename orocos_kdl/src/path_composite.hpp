@@ -91,14 +91,14 @@ namespace KDL {
 		void Add(Path* geom, bool aggregate=true);
 
 
-		virtual double LengthToS(double length);
+		virtual double LengthToS(double length) const;
 		/**
 		 * Returns the total path length of the trajectory
 		 * (has dimension LENGTH)
 		 * This is not always a physical length , ie when dealing with rotations
 		 * that are dominant.
 		 */
-		virtual double PathLength();
+		virtual double PathLength() const;
 
 		/**
 		 * Returns the Frame at the current path length s
@@ -117,17 +117,17 @@ namespace KDL {
 		 */
 		virtual Twist Acc(double s,double sd,double sdd) const;
 
-		virtual Path* Clone();
+		virtual Path* Clone() const;
 
 		/**
 		 * Writes one of the derived objects to the stream
 		 */
-		virtual void Write(std::ostream& os);
+		virtual void Write(std::ostream& os) const;
 
 		/**
 		 * returns the number of underlying segments.
 		 */
-		virtual int GetNrOfSegments();
+		virtual int GetNrOfSegments() const;
 
 		/**
 		 * returns a pointer to the underlying Path of the given segment number i.
@@ -144,14 +144,14 @@ namespace KDL {
 		 * \return length to the end of the segment, i.e. the value for s corresponding to the end of
 		 *         this segment.
 		 */
-		virtual double GetLengthToEndOfSegment(int i);
+		virtual double GetLengthToEndOfSegment(int i) const;
 
 		/**
 		 * \param s [INPUT] path length variable for the composite.
 		 * \param segment_number [OUTPUT] segments that corresponds to the path length variable s.
 		 * \param inner_s [OUTPUT] path length to use within the segment.
 		 */
-		virtual void GetCurrentSegmentLocation(double s, int &segment_number, double& inner_s);
+		virtual void GetCurrentSegmentLocation(double s, int &segment_number, double& inner_s) const;
 
 		/**
 		 * gets an identifier indicating the type of this Path object

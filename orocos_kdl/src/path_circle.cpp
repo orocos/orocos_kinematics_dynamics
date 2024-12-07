@@ -97,12 +97,12 @@ Path_Circle::Path_Circle(const Frame& F_base_start,
 }
 
 
-double Path_Circle::LengthToS(double length) {
+double Path_Circle::LengthToS(double length) const {
 	return length/scalelin;
 }
 
 
-double Path_Circle::PathLength() {
+double Path_Circle::PathLength() const {
 	return pathlength;
 }
 
@@ -137,7 +137,7 @@ Twist Path_Circle::Acc(double s,double sd,double sdd) const {
 		   );
 }
 
-Path* Path_Circle::Clone() {
+Path* Path_Circle::Clone() const {
 	return new Path_Circle(
 		Pos(0),
 		F_base_center.p,
@@ -155,7 +155,7 @@ Path_Circle::~Path_Circle() {
         delete orient;
 }
 
-void Path_Circle::Write(std::ostream& os) {
+void Path_Circle::Write(std::ostream& os) const {
 	os << "CIRCLE[ ";
 	os << "  " << Pos(0) << std::endl;
 	os << "  " << F_base_center.p << std::endl;
