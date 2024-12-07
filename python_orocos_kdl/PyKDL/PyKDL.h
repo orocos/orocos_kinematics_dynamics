@@ -33,3 +33,4 @@ void init_frames(pybind11::module &m);
 void init_framevel(pybind11::module &m);
 void init_kinfam(pybind11::module &m);
 void init_dynamics(pybind11::module &m);
+void init_motion(pybind11::module &m);
