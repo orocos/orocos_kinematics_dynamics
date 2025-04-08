@@ -30,7 +30,6 @@
 #include "frames.hpp"
 
 
-
 namespace KDL {
 
 typedef Rall1d<double> doubleVel;
@@ -80,6 +79,7 @@ IMETHOD bool Equal(const FrameVel& r1,const Frame& r2,double eps=epsilon);
 IMETHOD bool Equal(const TwistVel& a,const TwistVel& b,double eps=epsilon);
 IMETHOD bool Equal(const Twist& a,const TwistVel& b,double eps=epsilon);
 IMETHOD bool Equal(const TwistVel& a,const Twist& b,double eps=epsilon);
+
 
 class VectorVel
 // = TITLE
@@ -141,7 +141,6 @@ public:
     IMETHOD friend doubleVel dot(const VectorVel& lhs,const Vector& rhs);
     IMETHOD friend doubleVel dot(const Vector& lhs,const VectorVel& rhs);
 };
-
 
 
 class RotationVel
@@ -207,8 +206,6 @@ public:
 };
 
 
-
-
 class FrameVel
 // = TITLE
 //     An FrameVel is a Frame and its first derivative, a Twist vector
@@ -266,9 +263,6 @@ public:
     IMETHOD TwistVel operator * (const TwistVel& arg) const;
     IMETHOD TwistVel operator * (const Twist& arg) const;
 };
-
-
-
 
 
 //very similar to Wrench class.
@@ -416,10 +410,61 @@ IMETHOD void posrandom(FrameVel& F) {
 #include "framevel.inl"
 #endif
 
-} // namespace
+} // namespace KDL
+
+template<> struct std::hash<KDL::doubleVel>
+{
+    std::size_t operator()(KDL::doubleVel const& dv) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, dv.value());
+        KDL::hash_combine(seed, dv.deriv());
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::VectorVel>
+{
+    std::size_t operator()(KDL::VectorVel const& vv) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, vv.p);
+        KDL::hash_combine(seed, vv.v);
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::RotationVel>
+{
+    std::size_t operator()(KDL::RotationVel const& rv) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, rv.R);
+        KDL::hash_combine(seed, rv.w);
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::FrameVel>
+{
+    std::size_t operator()(KDL::FrameVel const& fv) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, fv.M);
+        KDL::hash_combine(seed, fv.p);
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::TwistVel>
+{
+    std::size_t operator()(KDL::TwistVel const& tv) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, tv.vel);
+        KDL::hash_combine(seed, tv.rot);
+        return seed;
+    }
+};
 
 #endif
-
-
-
-

@@ -24,7 +24,6 @@
 
 from math import radians
 from PyKDL import *
-import sys
 import unittest
 
 
@@ -32,6 +31,7 @@ class FrameVelTestFunctions(unittest.TestCase):
     def testdoubleVel(self):
         d = doubleVel()
         self.assertEqual(doubleVel(d), d)
+        self.assertEqual(hash(d), hash(doubleVel(d)))
         self.assertEqual(d.t, 0)
         self.assertEqual(d.grad, 0)
         self.assertEqual(d.value(), 0)
@@ -65,6 +65,11 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(v != -v)  # Doesn't work for zero VectorVel
         self.assertTrue(not Equal(v, -v))  # Doesn't work for zero VectorVel
 
+        # Hash
+        self.assertEqual(hash(v), 2049006275376269995)
+
+        self.assertEqual(hash(VectorVel()), 730713428471863)
+
         v = VectorVel(v1)
         self.assertEqual(v, v1)
         self.assertEqual(v1, v)
@@ -88,6 +93,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(v+v+v-2*v, v)
         v2 = VectorVel(v)
         self.assertEqual(v, v2)
+        self.assertEqual(hash(v), hash(v2))
         v2 += v
         self.assertEqual(2*v, v2)
         v2 -= v
@@ -135,6 +141,10 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(t, t2)
         self.assertEqual(t2, t)
 
+        # Hash
+        self.assertEqual(hash(t), 141466195908239803)
+        self.assertEqual(hash(TwistVel()), 48409940491385244)
+
         # Zero
         SetToZero(t)
         self.assertEqual(t, TwistVel())
@@ -146,6 +156,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(t+t+t-2*t, t)
         t2 = TwistVel(t)
         self.assertEqual(t, t2)
+        self.assertEqual(hash(t), hash(t2))
         t2 += t
         self.assertEqual(2*t, t2)
         t2 -= t
@@ -180,9 +191,14 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(RotationVel(rot), rot)
         self.assertEqual(rot, RotationVel(rot))
 
+        # Hash
+        self.assertEqual(hash(r), 6921222406909663069)
+        self.assertEqual(hash(RotationVel()), 4775665235973850935)
+
     def testRotationVelImpl(self, r, v, vt):
         r2 = RotationVel(r)
         self.assertEqual(r, r2)
+        self.assertEqual(hash(r), hash(r2))
         self.assertEqual((r*v).Norm(), v.Norm())
         self.assertEqual(r.Inverse(r*v), v)
         self.assertEqual(r*r.Inverse(v), v)
@@ -231,9 +247,14 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(f, fr)
         self.assertEqual(fr, f)
 
+        # Hash
+        self.assertEqual(hash(fr), 6112004106257185417)
+        self.assertEqual(hash(FrameVel()), 35564562501293795)
+
     def testFrameVelImpl(self, f, v, vt):
         f2 = FrameVel(f)
         self.assertEqual(f, f2)
+        self.assertEqual(hash(f), hash(f2))
         self.assertEqual(f.Inverse(f*v), v)
         self.assertEqual(f.Inverse(f*vt), vt)
         self.assertEqual(f*f.Inverse(v), v)
@@ -247,10 +268,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertEqual(f.Inverse()*vt, f.Inverse(vt))
 
     def testPickle(self):
-        if sys.version_info < (3, 0):
-            import cPickle as pickle
-        else:
-            import pickle
+        import pickle
         data = {}
         data['vv'] = VectorVel(Vector(1, 2, 3), Vector(4, 5, 6))
         data['rv'] = RotationVel(Rotation.RotX(1.3), Vector(4.1, 5.1, 6.1))
@@ -302,6 +320,7 @@ def suite():
 
 
 if __name__ == '__main__':
+    import sys
     suite = suite()
     result = unittest.TextTestRunner(verbosity=3).run(suite)
 

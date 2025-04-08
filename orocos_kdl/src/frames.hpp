@@ -127,11 +127,13 @@
 
 #include "utilities/kdl-config.h"
 #include "utilities/utility.h"
+#include "utilities/hash_combine.h"
+
+#include <functional>
 
 /////////////////////////////////////////////////////////////
 
 namespace KDL {
-
 
 
 class Vector;
@@ -711,6 +713,7 @@ public:
      inline friend bool operator!=(const Frame& a,const Frame& b);
 };
 
+
 /**
  * \brief represents both translational and rotational velocities.
  *
@@ -788,8 +791,8 @@ public:
 // = Friends
     friend class Rotation;
     friend class Frame;
-
 };
+
 
 /**
  * 	\brief represents both translational and rotational acceleration.
@@ -950,8 +953,6 @@ public:
 
     friend class Rotation;
     friend class Frame;
-
-
 };
 
 
@@ -1090,6 +1091,7 @@ public:
      //! different.  It compares whether the 2 arguments are equal in an eps-interval
      inline friend bool Equal(const Rotation2& a,const Rotation2& b,double eps);
 };
+
 
 //! A 2D frame class, for further documentation see the Frames class
 //! for methods with unchanged semantics.
@@ -1257,5 +1259,96 @@ IMETHOD Wrench addDelta(const Wrench& a,const Wrench&da,double dt=1);
 
 }
 
+template<> struct std::hash<KDL::Vector>
+{
+    std::size_t operator()(KDL::Vector const& v) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, v.x());
+        KDL::hash_combine(seed, v.y());
+        KDL::hash_combine(seed, v.z());
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::Rotation>
+{
+    std::size_t operator()(KDL::Rotation const& r) const noexcept
+    {
+        size_t seed = 0;
+        double x, y, z, w;
+        r.GetQuaternion(x, y, z, w);
+        KDL::hash_combine(seed, x);
+        KDL::hash_combine(seed, y);
+        KDL::hash_combine(seed, z);
+        KDL::hash_combine(seed, w);
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::Frame>
+{
+    std::size_t operator()(KDL::Frame const& f) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, f.p);
+        KDL::hash_combine(seed, f.M);
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::Wrench>
+{
+    std::size_t operator()(KDL::Wrench const& w) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, w.force);
+        KDL::hash_combine(seed, w.torque);
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::Twist>
+{
+    std::size_t operator()(KDL::Twist const& t) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, t.vel);
+        KDL::hash_combine(seed, t.rot);
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::Vector2>
+{
+    std::size_t operator()(KDL::Vector2 const& v) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, v.x());
+        KDL::hash_combine(seed, v.y());
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::Rotation2>
+{
+    std::size_t operator()(KDL::Rotation2 const& r) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, r.GetRot());
+        return seed;
+    }
+};
+
+template<> struct std::hash<KDL::Frame2>
+{
+    std::size_t operator()(KDL::Frame2 const& f) const noexcept
+    {
+        size_t seed = 0;
+        KDL::hash_combine(seed, f.p);
+        KDL::hash_combine(seed, f.M);
+        return seed;
+    }
+};
 
 #endif

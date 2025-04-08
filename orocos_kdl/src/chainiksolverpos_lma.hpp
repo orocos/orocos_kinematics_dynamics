@@ -83,7 +83,7 @@ public:
 	 * \f$ E = \Delta \mathbf{x}^T \mathbf{L} \mathbf{L}^T \Delta \mathbf{x} \f$, with \f$\mathbf{L}\f$ a diagonal matrix.
 	 *
 	 * \param _chain specifies the kinematic chain.
-	 * \param _L specifies the "square root" of the weight (diagonal) matrix in task space. This diagonal matrix is specified as a vector.
+	 * \param _l specifies the "square root" of the weight (diagonal) matrix in task space. This diagonal matrix is specified as a vector.
 	 * \param _eps specifies the desired accuracy in task space; <B>after</B> weighing with
 	 *        the weight matrix, it is applied on \f$E\f$.
 	 * \param _maxiter specifies the maximum number of iterations.
@@ -94,7 +94,7 @@ public:
      */
     ChainIkSolverPos_LMA(
     		const KDL::Chain& _chain,
-    		const Eigen::Matrix<double,6,1>& _L,
+		const Eigen::Matrix<double,6,1>& _l,
     		double _eps=1E-5,
     		int _maxiter=500,
     		double _eps_joints=1E-15

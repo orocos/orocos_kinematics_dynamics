@@ -62,7 +62,7 @@ void init_framevel(pybind11::module &m)
 
     double_vel.def(py::self == py::self);
     double_vel.def(py::self != py::self);
-
+    double_vel.def(py::hash(py::self));
     double_vel.def("__neg__", [](const doubleVel &a)
     {
         return operator-(a);
@@ -132,6 +132,7 @@ void init_framevel(pybind11::module &m)
     vector_vel.def(Vector() != py::self);
     vector_vel.def(py::self == Vector());
     vector_vel.def(py::self != Vector());
+    vector_vel.def(py::hash(py::self));
     vector_vel.def("__neg__", [](const VectorVel &a)
     {
         return operator-(a);
@@ -152,7 +153,7 @@ void init_framevel(pybind11::module &m)
                 return vv;
             }));
 
-    m.def("SetToZero", (void (*)(VectorVel&)) &KDL::SetToZero);
+    m.def("SetToZero", (void (*)(VectorVel&)) &KDL::SetToZero, py::arg("vector_vel"));
     m.def("Equal", (bool (*)(const VectorVel&, const VectorVel&, double)) &KDL::Equal,
           py::arg("r1"), py::arg("r2"), py::arg("eps")=epsilon);
     m.def("Equal", (bool (*)(const Vector&, const VectorVel&, double)) &KDL::Equal,
@@ -217,6 +218,7 @@ void init_framevel(pybind11::module &m)
     twist_vel.def(Twist() != py::self);
     twist_vel.def(py::self == Twist());
     twist_vel.def(py::self != Twist());
+    twist_vel.def(py::hash(py::self));
     twist_vel.def("__neg__", [](const TwistVel &a)
     {
         return operator-(a);
@@ -237,7 +239,7 @@ void init_framevel(pybind11::module &m)
                 return tv;
             }));
 
-    m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero);
+    m.def("SetToZero", (void (*)(TwistVel&)) &KDL::SetToZero, py::arg("twist_vel"));
     m.def("Equal", (bool (*)(const TwistVel&, const TwistVel&, double)) &KDL::Equal,
           py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
     m.def("Equal", (bool (*)(const Twist&, const TwistVel&, double)) &KDL::Equal,
@@ -279,14 +281,14 @@ void init_framevel(pybind11::module &m)
     rotation_vel.def("Inverse", (RotationVel (RotationVel::*)(void) const) &RotationVel::Inverse);
     rotation_vel.def("Inverse", (VectorVel (RotationVel::*)(const VectorVel&) const) &RotationVel::Inverse);
     rotation_vel.def("Inverse", (VectorVel (RotationVel::*)(const Vector&) const) &RotationVel::Inverse);
-    rotation_vel.def("DoRotX", &RotationVel::DoRotX);
-    rotation_vel.def("DoRotY", &RotationVel::DoRotY);
-    rotation_vel.def("DoRotZ", &RotationVel::DoRotZ);
-    rotation_vel.def_static("RotX", &RotationVel::RotX);
-    rotation_vel.def_static("RotY", &RotationVel::RotY);
-    rotation_vel.def_static("RotZ", &RotationVel::RotZ);
-    rotation_vel.def_static("Rot", &RotationVel::Rot);
-    rotation_vel.def_static("Rot2", &RotationVel::Rot2);
+    rotation_vel.def("DoRotX", &RotationVel::DoRotX, py::arg("angle"));
+    rotation_vel.def("DoRotY", &RotationVel::DoRotY, py::arg("angle"));
+    rotation_vel.def("DoRotZ", &RotationVel::DoRotZ, py::arg("angle"));
+    rotation_vel.def_static("RotX", &RotationVel::RotX, py::arg("angle"));
+    rotation_vel.def_static("RotY", &RotationVel::RotY, py::arg("angle"));
+    rotation_vel.def_static("RotZ", &RotationVel::RotZ, py::arg("angle"));
+    rotation_vel.def_static("Rot", &RotationVel::Rot, py::arg("rotvec"), py::arg("angle"));
+    rotation_vel.def_static("Rot2", &RotationVel::Rot2, py::arg("rotvec"), py::arg("angle"));
 
     rotation_vel.def("Inverse", (TwistVel (RotationVel::*)(const TwistVel&) const) &RotationVel::Inverse);
     rotation_vel.def("Inverse", (TwistVel (RotationVel::*)(const Twist&) const) &RotationVel::Inverse);
@@ -305,6 +307,7 @@ void init_framevel(pybind11::module &m)
     rotation_vel.def(Rotation() != py::self);
     rotation_vel.def(py::self == Rotation());
     rotation_vel.def(py::self != Rotation());
+    rotation_vel.def(py::hash(py::self));
     rotation_vel.def(py::pickle(
             [](const RotationVel &rv)
             { // __getstate__
@@ -378,6 +381,7 @@ void init_framevel(pybind11::module &m)
     frame_vel.def(Frame() != py::self);
     frame_vel.def(py::self == Frame());
     frame_vel.def(py::self != Frame());
+    frame_vel.def(py::hash(py::self));
     frame_vel.def(py::pickle(
             [](const FrameVel &fv)
             { // __getstate__
