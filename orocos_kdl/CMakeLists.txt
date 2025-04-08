@@ -1,7 +1,7 @@
 #
 # Test CMake version
 #
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12.0)
 
 
 ###################################################
