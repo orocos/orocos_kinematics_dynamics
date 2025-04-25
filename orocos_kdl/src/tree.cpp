@@ -156,8 +156,8 @@ bool Tree::getChain(const std::string& chain_root, const std::string& chain_tip,
     }
 
     // add the segments from the common frame to the tip frame
-    for (int s=parents_chain_tip.size()-1; s>-1; s--){
-        chain.addSegment(GetTreeElementSegment(getSegment(parents_chain_tip[s])->second));
+    for (auto rit=parents_chain_tip.rbegin(); rit != parents_chain_tip.rend(); ++rit){
+        chain.addSegment(GetTreeElementSegment(getSegment(*rit)->second));
     }
     return true;
 }
