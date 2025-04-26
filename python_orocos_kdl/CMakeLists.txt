@@ -62,6 +62,7 @@ pybind11_add_module(${LIBRARY_NAME}
   PyKDL/frames.cpp
   PyKDL/kinfam.cpp
   PyKDL/framevel.cpp
-  PyKDL/dynamics.cpp)
+  PyKDL/dynamics.cpp
+  PyKDL/trajectory.cpp)
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${orocos_kdl_LIBRARIES})
 install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
