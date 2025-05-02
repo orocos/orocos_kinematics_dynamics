@@ -1,0 +1,53 @@
+name: Build Python Wheel
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.04
+
+    steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y cmake libeigen3-dev libcppunit-dev git build-essential
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build module
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Build orocos_kdl
+        working-directory: orocos_kdl
+        run: |
+          mkdir build && cd build
+          cmake -DENABLE_TESTS=ON -DCMAKE_BUILD_TYPE=Release ..
+          cmake --build . --parallel $(nproc)
+          make check
+          cmake --install .
+
+      - name: Build Python wheel
+        working-directory: python_orocos_kdl
+        run: |
+          python3 -m build
+
+      - name: Upload wheel as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-wheel
+          path: python_orocos_kdl/dist/*.whl

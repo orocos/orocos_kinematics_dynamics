@@ -24,6 +24,12 @@ set(Python3_FIND_UNVERSIONED_NAMES FIRST)
 
 project(python_orocos_kdl VERSION 1.5.2)
 
+# Determine if we are being built via scikit-build-core
+if(SKBUILD)
+  message(STATUS "Building with scikit-build-core")
+  set(PYTHON_PACKAGE_BUILD TRUE)
+endif()
+
 # find a matching version of orocos_kdl
 find_package(orocos_kdl ${PROJECT_VERSION} EXACT REQUIRED)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
@@ -32,20 +38,21 @@ link_directories(${orocos_kdl_LIBRARY_DIRS})
 set(PYBIND11_PYTHON_VERSION 3 CACHE STRING "Python version used by PyBind11")
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-# get_python_lib in python3 produces path which isn't in sys.path: https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
-# execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(plat_specific=True, prefix=''))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/dist-packages" CACHE STRING "Install location of the python package")  # This might be overridden below if built with catkin.
 set(LIBRARY_NAME "PyKDL")
 
-# catkin-specific configuration (optional)
-find_package(catkin QUIET)
-if(catkin_FOUND)
-  catkin_package(
-    SKIP_CMAKE_CONFIG_GENERATION
-    SKIP_PKG_CONFIG_GENERATION
-  )
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${PYTHON_INSTALL_DIR})
-  set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
+# catkin-specific configuration (optional, only if not building as Python package)
+if(NOT PYTHON_PACKAGE_BUILD)
+    find_package(catkin QUIET)
+    if(catkin_FOUND)
+        catkin_package(
+            SKIP_CMAKE_CONFIG_GENERATION
+            SKIP_PKG_CONFIG_GENERATION
+        )
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${PYTHON_INSTALL_DIR})
+        set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
+    else()
+        set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/dist-packages" CACHE STRING "Install location of the python package")
+    endif()
 endif()
 
 # Build the module
@@ -56,6 +63,7 @@ if(NOT ${pybind11_FOUND})
 else()
   message(STATUS "pybind11 found, building against installed version")
 endif()
+
 pybind11_add_module(${LIBRARY_NAME}
   PyKDL/PyKDL.h
   PyKDL/PyKDL.cpp
@@ -65,4 +73,10 @@ pybind11_add_module(${LIBRARY_NAME}
   PyKDL/dynamics.cpp
   PyKDL/trajectory.cpp)
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${orocos_kdl_LIBRARIES})
-install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
+
+# Install target - different behaviour for Python package vs. system install
+if(PYTHON_PACKAGE_BUILD)
+    install(TARGETS ${LIBRARY_NAME} DESTINATION .)
+else()
+    install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
+endif()
