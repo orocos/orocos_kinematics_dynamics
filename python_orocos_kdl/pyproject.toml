@@ -1,25 +1,20 @@
 [build-system]
-requires = [
-    "scikit-build-core>=0.4.3",
-    "pybind11>=2.6.0",
-]
+requires = ["scikit-build-core>=0.4.3", "pybind11>=2.6.0"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "python_orocos_kdl"
+name = "PyKDL"
 version = "1.5.2"
 description = "Python bindings for Orocos KDL (Kinematics and Dynamics Library)"
 readme = "README.md"
 requires-python = ">=3.7"
 license = { text = "LGPL-2.1-or-later" }
 authors = [
-    {name = "Ruben Smits", email = "ruben.smits@intermodalics.eu"},
-    {name = "Matthijs van der Burgh", email = "MatthijsBurgh@outlook.com"}
+    { name = "Ruben Smits", email = "ruben.smits@intermodalics.eu" },
+    { name = "Matthijs van der Burgh", email = "MatthijsBurgh@outlook.com" },
 ]
 # Add yourself as a maintainer
-maintainers = [
-    {name = "Vlad Banea", email = "vlad.banea@vention.cc"}
-]
+maintainers = [{ name = "Vlad Banea", email = "vlad.banea@vention.cc" }]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
@@ -28,7 +23,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)"
+    "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
 ]
 
 # Python dependencies
@@ -41,21 +36,21 @@ dependencies = []
 "Upstream" = "https://github.com/orocos/orocos_kinematics_dynamics"
 
 [tool.scikit-build]
-wheel.packages = ["python_orocos_kdl"]
+wheel.packages = ["PyKDL"]
 build.targets = ["PyKDL"]
-wheel.install-dir = "python_orocos_kdl"
+wheel.install-dir = "PyKDL"
 
 # Exclude virtual environments and build directories
 sdist.exclude = [
-    "build-env/**/*",    # Your build virtual environment
-    "venv*/**/*",        # Any other virtual environments
+    "build-env/**/*", # Your build virtual environment
+    "venv*/**/*",     # Any other virtual environments
     "build/**/*",
     "_skbuild/**/*",
     "dist/**/*",
     "**/__pycache__",
     "**/*.egg-info",
-    "**/.eggs"
+    "**/.eggs",
 ]
 # Orocos KDL is an external dependency
 [tool.scikit-build.cmake.define]
-CMAKE_PREFIX_PATH = {env="CMAKE_PREFIX_PATH"}
+CMAKE_PREFIX_PATH = { env = "CMAKE_PREFIX_PATH" }
