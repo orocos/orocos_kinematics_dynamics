@@ -161,6 +161,7 @@ void init_kinfam(pybind11::module &m)
     segment.def("getJoint", &Segment::getJoint);
     segment.def("getInertia", &Segment::getInertia);
     segment.def("setInertia", &Segment::setInertia, py::arg("I_in"));
+    segment.def("setFrameToTip", &Segment::setFrameToTip, py::arg_v("f_tip_new", Frame::Identity(), "Frame.Identity"));
 
 
     // --------------------
