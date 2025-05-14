@@ -46,7 +46,7 @@
 namespace KDL {
 
 
-RotationalInterpolation_SingleAxis::RotationalInterpolation_SingleAxis()
+RotationalInterpolation_SingleAxis::RotationalInterpolation_SingleAxis() :rotate_long_way(false)
 	{}
 
 void RotationalInterpolation_SingleAxis::SetStartEnd(Rotation start,Rotation end) {
@@ -54,6 +54,20 @@ void RotationalInterpolation_SingleAxis::SetStartEnd(Rotation start,Rotation end
 	R_base_end   = end;
 	Rotation R_start_end = R_base_start.Inverse()*R_base_end;
 	angle = R_start_end.GetRotAngle(rot_start_end);
+
+	if (!rotate_long_way)
+	    return;
+
+	// Adjust the angle to go the "long way round"
+	if (angle > 0) {
+	    angle = 2 * KDL::PI - angle;  // "Long way round": equivalent to 3π/2 if angle was π/2
+	    rot_start_end = -1 * rot_start_end; // Change the rotation axis orientation
+	}
+}
+
+void RotationalInterpolation_SingleAxis::RotateLongWay()
+{
+    rotate_long_way = true;
 }
 
 Rotation RotationalInterpolation_SingleAxis::Pos(double theta) const {
@@ -85,4 +99,3 @@ RotationalInterpolation* RotationalInterpolation_SingleAxis::Clone() const {
 }
 
 }
-

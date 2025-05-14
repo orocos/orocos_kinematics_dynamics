@@ -109,6 +109,7 @@ void init_trajectory(py::module &m) {
       .def(py::init<>())
       .def("SetStartEnd", &RotationalInterpolation_SingleAxis::SetStartEnd,
            py::arg("start"), py::arg("end"))
+      .def("RotateLongWay", &RotationalInterpolation_SingleAxis::RotateLongWay)
       .def("Angle", &RotationalInterpolation_SingleAxis::Angle)
       .def("Pos", &RotationalInterpolation_SingleAxis::Pos, py::arg("theta"))
       .def("Vel", &RotationalInterpolation_SingleAxis::Vel, py::arg("theta"),

@@ -56,7 +56,7 @@ namespace KDL {
 	  * An interpolation algorithm which rotates a frame over the existing
 	  * single rotation axis
 	  * formed by start and end rotation. If more than one rotational axis
-	  * exist, an arbitrary one will be chosen, therefore it is not recommended 
+	  * exist, an arbitrary one will be chosen, therefore it is not recommended
 	  * to try to interpolate a 180 degrees rotation.
 	  * @ingroup Motion
 	  */
@@ -66,9 +66,12 @@ class RotationalInterpolation_SingleAxis: public RotationalInterpolation
 		Rotation R_base_end;
 		Vector rot_start_end;
 		double angle;
+		bool rotate_long_way;
 	public:
 		RotationalInterpolation_SingleAxis();
 		virtual void SetStartEnd(Rotation start,Rotation end);
+		// Rotate Long Way Around: set this after SetStartEnd
+		void RotateLongWay();
 		virtual double Angle();
 		virtual Rotation Pos(double th) const;
 		virtual Vector Vel(double th,double thd) const;
