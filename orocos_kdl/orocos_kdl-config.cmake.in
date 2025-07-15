@@ -28,6 +28,7 @@ set(orocos_kdl_INCLUDE_DIRS
   ${EIGEN3_INCLUDE_DIR}
 )
 set(orocos_kdl_LIBRARIES orocos-kdl)
+set(orocos_kdl_TARGETS orocos-kdl)
 
 # where the .pc pkgconfig files are installed
 set(orocos_kdl_PKGCONFIG_DIR "${orocos_kdl_PREFIX}/lib/pkgconfig")

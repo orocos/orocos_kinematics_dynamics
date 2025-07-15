@@ -71,7 +71,15 @@ namespace KDL {
         double getMass() const{
             return m;
         };
-        
+
+        /**
+         * Get the spatial momentum of the rigid body
+         */
+        const Vector& getSpatialMomentum() const
+        {
+            return h;
+        }
+
         /**
          * Get the center of gravity of the rigid body
          */

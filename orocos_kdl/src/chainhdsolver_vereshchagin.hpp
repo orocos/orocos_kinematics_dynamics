@@ -311,7 +311,7 @@ namespace KDL
  * simulate constraint forces in certain situations, however, there, final derivation of this principle in the software is different. However, in
  * the case of this more advanced forward dynamics computations, the user needs to be aware of prioritizations between input interfaces
  * (mentioned in "Prioritizations" section above) and internal policies on
- * handling singularities (mentioned in "Singularities and matrix inversions" section bellow).
+ * handling singularities (mentioned in "Singularities and matrix inversions" section below).
  *
  * ### Singularities and matrix inversions
  *
