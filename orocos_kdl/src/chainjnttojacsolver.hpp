@@ -53,6 +53,7 @@ namespace KDL
          * @return success/error code
          */
         virtual int JntToJac(const JntArray& q_in, Jacobian& jac, int seg_nr=-1);
+        virtual int JntToJac(const JntArray& q_in, std::vector<Jacobian>& jac, int seg_nr=-1);
 
         /**
          *
