@@ -265,7 +265,7 @@ class KinfamTestFunctions(unittest.TestCase):
         for i in range(q.rows()):
             q[i] = random.uniform(-0.99, 0.99)
 
-        v_out: list[Frame | None] = [None] * self.chain.getNrOfSegments()  # Cheaper than Frames
+        v_out: list[Frame | None] = [None] * self.chain.getNrOfSegments()  # Initialize with None to avoid the overhead of creating Frame objects for unused entries
         f_out = Frame()
         self.assertEqual(self.fksolverpos.JntToCart(q, f_out), 0)
         self.assertEqual(self.fksolverpos.JntToCart(q, v_out), 0)
@@ -283,7 +283,7 @@ class KinfamTestFunctions(unittest.TestCase):
             q[i] = random.uniform(-0.99, 0.99)
             qdot[i] = random.uniform(-0.99, 0.99)
 
-        v_out: list[FrameVel | None] = [None] * self.chain.getNrOfSegments()  # Cheaper than FrameVels
+        v_out: list[FrameVel | None] = [None] * self.chain.getNrOfSegments()  # Using None as placeholders avoids the overhead of creating multiple FrameVel objects upfront.
         f_out = FrameVel()
         q_vel = JntArrayVel(q, qdot)
         self.assertEqual(self.fksolvervel.JntToCart(q_vel, f_out), 0)
