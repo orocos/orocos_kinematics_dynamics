@@ -843,7 +843,7 @@ void SolverTest::JacAllSegments()
     for (unsigned int seg=0; seg<ns; seg++)
     {
         jacsolver.JntToJac(q, jac, seg+1);
-        for ( unsigned int i=0; i<6; i++ ) {
+        for ( unsigned int i=0; i<jac.rows(); i++ ) {
             for ( unsigned int j=0; j<nj; j++ ) {
                 CPPUNIT_ASSERT(Equal(jac(i,j), jac_all[seg](i,j), eps));
             }
