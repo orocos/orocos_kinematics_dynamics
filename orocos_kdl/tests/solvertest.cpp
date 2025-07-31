@@ -819,7 +819,7 @@ void SolverTest::JacAllSegments()
 {
     std::cout << "KDL Jac Solver Test for returning all segment Jacobians" << std::endl;
 
-    double	eps = 1e-6;
+    double eps = 1e-6;
 
     unsigned int nj = motomansia10.getNrOfJoints();
     unsigned int ns = motomansia10.getNrOfSegments();
