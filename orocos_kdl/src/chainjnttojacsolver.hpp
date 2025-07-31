@@ -48,7 +48,7 @@ namespace KDL
          * KDL::ChainFkSolverVel_recursive
          *
          * @param q_in input joint positions
-         * @param jac output jacobian
+         * @param jac output jacobian of last segment or array of jacobians for each segment
          * @param seg_nr The final segment to compute
          * @return success/error code
          */
