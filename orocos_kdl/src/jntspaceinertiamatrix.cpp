@@ -67,12 +67,12 @@ namespace KDL
 
     unsigned int JntSpaceInertiaMatrix::rows()const
     {
-        return data.rows();
+        return static_cast<unsigned int>(data.rows());
     }
 
     unsigned int JntSpaceInertiaMatrix::columns()const
     {
-        return data.cols();
+        return static_cast<unsigned int>(data.cols());
     }
     
 
