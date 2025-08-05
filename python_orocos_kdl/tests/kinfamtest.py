@@ -257,6 +257,41 @@ class KinfamTestFunctions(unittest.TestCase):
         epsJ = 1e-3
         self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens, epsJ)
 
+    def testFkPosVect(self):
+        epsC = 1e-5
+    
+        q = JntArray(self.chain.getNrOfJoints())
+
+        for i in range(q.rows()):
+            q[i] = random.uniform(-0.99, 0.99)
+
+        v_out: list[Frame | None] = [None] * self.chain.getNrOfSegments()  # Initialize with None to avoid the overhead of creating Frame objects for unused entries
+        f_out = Frame()
+        self.assertEqual(self.fksolverpos.JntToCart(q, f_out), 0)
+        self.assertEqual(self.fksolverpos.JntToCart(q, v_out), 0)
+
+        self.assertEqual(len(v_out), self.chain.getNrOfSegments())
+        self.assertTrue(Equal(v_out[self.chain.getNrOfSegments() - 1], f_out, epsC))
+
+    def testFkVelVect(self):
+        epsC = 1e-5
+    
+        q = JntArray(self.chain.getNrOfJoints())
+        qdot = JntArray(self.chain.getNrOfJoints())
+
+        for i in range(q.rows()):
+            q[i] = random.uniform(-0.99, 0.99)
+            qdot[i] = random.uniform(-0.99, 0.99)
+
+        v_out: list[FrameVel | None] = [None] * self.chain.getNrOfSegments()  # Using None as placeholders avoids the overhead of creating multiple FrameVel objects upfront.
+        f_out = FrameVel()
+        q_vel = JntArrayVel(q, qdot)
+        self.assertEqual(self.fksolvervel.JntToCart(q_vel, f_out), 0)
+        self.assertEqual(self.fksolvervel.JntToCart(q_vel, v_out), 0)
+
+        self.assertEqual(len(v_out), self.chain.getNrOfSegments())
+        self.assertTrue(Equal(v_out[self.chain.getNrOfSegments() - 1], f_out, epsC))
+
     def compare_Jdot_Diff_vs_Solver(self, dt, representation):
         NrOfJoints = self.chain.getNrOfJoints()
         q = JntArray(NrOfJoints)
@@ -357,6 +392,8 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVelGivens'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPosGivens'))
+    suite.addTest(KinfamTestFunctions('testFkPosVect'))
+    suite.addTest(KinfamTestFunctions('testFkVelVect'))
     suite.addTest(KinfamTestFunctions('testJacDot'))
     suite.addTest(KinfamTestTree('testTreeGetChainMemLeak'))
     return suite
