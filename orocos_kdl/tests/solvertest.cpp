@@ -815,6 +815,43 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
 }
 
 
+void SolverTest::JacAllSegments()
+{
+    std::cout << "KDL Jac Solver Test for returning all segment Jacobians" << std::endl;
+
+    double eps = 1e-6;
+
+    unsigned int nj = motomansia10.getNrOfJoints();
+    unsigned int ns = motomansia10.getNrOfSegments();
+
+    JntArray q(nj);
+    Jacobian jac(nj);
+    std::vector<Jacobian> jac_all(ns, Jacobian(nj));
+
+    ChainJntToJacSolver jacsolver(motomansia10);
+
+    //  random
+    q(0) = 0.2;
+    q(1) = 0.6;
+    q(2) = 1.;
+    q(3) = 0.5;
+    q(4) = -1.4;
+    q(5) = 0.3;
+    q(6) = -0.8;
+
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, jacsolver.JntToJac(q, jac_all, ns));
+    for (unsigned int seg=0; seg<ns; seg++)
+    {
+        jacsolver.JntToJac(q, jac, seg+1);
+        for ( unsigned int i=0; i<jac.rows(); i++ ) {
+            for ( unsigned int j=0; j<nj; j++ ) {
+                CPPUNIT_ASSERT(Equal(jac(i,j), jac_all[seg](i,j), eps));
+            }
+        }
+    }
+}
+
+
 void SolverTest::VereshchaginTest()
 {
     std::cout << "KDL Vereshchagin Hybrid Dynamics Tests" <<std::endl;
