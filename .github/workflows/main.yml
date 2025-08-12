@@ -1,6 +1,6 @@
 name: CI
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 env:
   CXXFLAGS: "-Wall -Wextra -Wno-unused-parameter"
@@ -12,28 +12,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-22.04, ubuntu-24.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
-        python_version: ['3.8']
+        python_version: ['3.10', '3.12']
         include:
-          - os: ubuntu-18.04
+          - os: ubuntu-24.04
             orocos_build_type: Release
             compiler: gcc
-            python_version: '2'
-          - os: ubuntu-20.04
+            python_version: '3.8'
+          - os: ubuntu-24.04
             orocos_build_type: Release
             compiler: gcc
             python_version: '3.9'
+          - os: ubuntu-24.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: '3.11'
     env:
       CC: ${{ matrix.compiler }}
       OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
       ROS_PYTHON_VERSION: ${{ matrix.python_version }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python_version }}
       - name: Install
@@ -77,18 +81,6 @@ jobs:
       matrix:
         include:
           - env:
-              ROS_DISTRO: kinetic
-              ROS_REPO: ros
-              ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.3
-              ABICHECK_MERGE: false
-            branch: release-1.3
-          - env:
-              ROS_DISTRO: melodic
-              ROS_REPO: ros
-              ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.4
-              ABICHECK_MERGE: false
-            branch: release-1.4
-          - env:
               ROS_DISTRO: noetic
               ROS_REPO: ros
               ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.5
@@ -96,7 +88,7 @@ jobs:
             branch: release-1.5
     env: ${{ matrix.env }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
         if: ${{ (github.event_name == 'push' && endsWith(github.ref, matrix.branch)) || (github.event_name == 'pull_request' && endsWith(github.base_ref, matrix.branch)) }}

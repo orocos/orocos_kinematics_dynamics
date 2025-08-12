@@ -25,7 +25,7 @@ namespace KDL{
 
     int ldl_solver_eigen(const Eigen::MatrixXd& A, const Eigen::VectorXd& v, Eigen::MatrixXd& L, Eigen::VectorXd& D, Eigen::VectorXd& vtmp, Eigen::VectorXd& q)
     {
-        const int n = A.rows();
+        const int n = static_cast<int>(A.rows());
         int error=SolverI::E_NOERROR;
 
         //Check sizes
