@@ -193,6 +193,26 @@ namespace KDL {
         };
 
         /**
+         * Request the scale of the joint.
+         *
+         * @return const reference to the scale of the joint
+         */
+        const double& getScale() const
+        {
+            return scale;
+        }
+
+        /**
+         * Request the offset of the joint.
+         *
+         * @return const reference to the offset of the joint
+         */
+        const double& getOffset() const
+        {
+            return offset;
+        }
+
+        /**
          * Request the inertia of the joint.
          *
          * @return const reference to the inertia of the joint
@@ -222,6 +242,26 @@ namespace KDL {
             return stiffness;
         };
 
+        /**
+         * Request the axis of the joint.
+         *
+         * @return const reference to the axis of the joint
+         */
+        const Vector& getAxis() const
+        {
+            return axis;
+        }
+
+        /**
+         * Request the origin of the joint.
+         *
+         * @return const reference to the origin of the joint
+         */
+        const Vector& getOrigin() const
+        {
+            return origin;
+        }
+
         virtual ~Joint();
 
     private:
@@ -235,10 +275,8 @@ namespace KDL {
 
         // variables for RotAxis joint
         Vector axis, origin;
-        mutable Frame  joint_pose;
-        mutable double q_previous;
-
-
+        mutable Frame  joint_pose; // Deprecated, but keeping for ABI compatibility
+        mutable double q_previous; // Deprecated, but keeping for ABI compatibility
 
       class joint_type_exception: public std::exception{
 	virtual const char* what() const throw(){
