@@ -26,6 +26,7 @@
  ***************************************************************************/
 
 #include "frames.hpp"
+#include <Eigen/Eigen>
 #include "utilities/utility.h"
 
 #include <algorithm>
@@ -339,11 +340,24 @@ Vector Rotation::GetRot() const
      {
        Vector axis;
        double angle;
-       angle = Rotation::GetRotAngle(axis,epsilon);
+       angle = Rotation::GetRotAngle(axis);
        return axis * angle;
      }
 
 
+Eigen::Matrix3d toEigenMatrix3d(const KDL::Rotation& rot){
+    Eigen::Matrix3d mat;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            mat(i, j) = rot.data[i * 3 + j];
+        }
+    }
+    return mat;
+}
+
+KDL::Vector toKDLVector(const Eigen::Vector3d& vec){
+    return KDL::Vector(vec(0), vec(1), vec(2));
+}
 
 /** Returns the rotation angle around the equiv. axis
  * @param axis the rotation axis is returned in this variable
@@ -355,77 +369,14 @@ Vector Rotation::GetRot() const
  * /todo :
  *   Check corresponding routines in rframes and rrframes
  */
-double Rotation::GetRotAngle(Vector& axis,double eps) const {
-    double angle,x,y,z; // variables for result
-    double epsilon = eps; // margin to allow for rounding errors
-    double epsilon2 = eps*10; // margin to distinguish between 0 and 180 degrees
-
-    // optional check that input is pure rotation, 'isRotationMatrix' is defined at:
-    // http://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/
-
-    if ((std::abs(data[1] - data[3]) < epsilon)
-        && (std::abs(data[2] - data[6])< epsilon)
-        && (std::abs(data[5] - data[7]) < epsilon))
-    {
-        // singularity found
-        // first check for identity matrix which must have +1 for all terms
-        //  in leading diagonal and zero in other terms
-        if ((std::abs(data[1] + data[3]) < epsilon2)
-            && (std::abs(data[2] + data[6]) < epsilon2)
-            && (std::abs(data[5] + data[7]) < epsilon2)
-            && (std::abs(data[0] + data[4] + data[8]-3) < epsilon2))
-        {
-            // this singularity is identity matrix so angle = 0, axis is arbitrary
-            // Choose 0, 0, 1 to pass orocos tests
-            axis = KDL::Vector(0,0,1);
-            angle = 0.0;
-            return angle;
-        }
-
-        // otherwise this singularity is angle = 180
-        angle = PI;
-        double xx = (data[0] + 1) / 2;
-        double yy = (data[4] + 1) / 2;
-        double zz = (data[8] + 1) / 2;
-        double xy = (data[1] + data[3]) / 4;
-        double xz = (data[2] + data[6]) / 4;
-        double yz = (data[5] + data[7]) / 4;
-
-        if ((xx > yy) && (xx > zz))
-        {
-            // data[0] is the largest diagonal term
-            x = sqrt(xx);
-            y = xy/x;
-            z = xz/x;
-        }
-        else if (yy > zz)
-        {
-            // data[4] is the largest diagonal term
-            y = sqrt(yy);
-            x = xy/y;
-            z = yz/y;
-        }
-        else
-        {
-            // data[8] is the largest diagonal term so base result on this
-            z = sqrt(zz);
-            x = xz/z;
-            y = yz/z;
-        }
-        axis = KDL::Vector(x, y, z);
-        return angle; // return 180 deg rotation
-    }
-
-    double f = (data[0] + data[4] + data[8] - 1) / 2;
-
-    x = (data[7] - data[5]);
-    y = (data[2] - data[6]);
-    z = (data[3] - data[1]);
-    axis = KDL::Vector(x, y, z);
-    angle = atan2(axis.Norm()/2,f);
-    axis.Normalize();
-    return angle;
+double Rotation::GetRotAngle(Vector& axis) const {
+    Eigen::AngleAxisd relative_rotation = Eigen::AngleAxisd(toEigenMatrix3d(*this));
+    axis.x(toKDLVector(relative_rotation.axis()).x());
+    axis.y(toKDLVector(relative_rotation.axis()).y());
+    axis.z(toKDLVector(relative_rotation.axis()).z());
+    return relative_rotation.angle();
 }
+
 
 bool operator==(const Rotation& a,const Rotation& b) {
 #ifdef KDL_USE_EQUAL

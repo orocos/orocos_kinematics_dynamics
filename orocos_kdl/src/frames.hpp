@@ -386,7 +386,7 @@ public:
 	 *                                            of the axis is chosen.
 	 * @result returns the rotation angle (between [0..PI] )
 	 */
-	double GetRotAngle(Vector& axis,double eps=epsilon) const;
+	double GetRotAngle(Vector& axis) const;
 
 
 /**     Gives back a rotation matrix specified with EulerZYZ convention :
