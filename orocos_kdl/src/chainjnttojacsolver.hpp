@@ -48,14 +48,27 @@ namespace KDL
          * KDL::ChainFkSolverVel_recursive
          *
          * @param q_in input joint positions
-         * @param jac output jacobian of last segment or array of jacobians for each segment
+         * @param jac output jacobian of last segment
          * @param seg_nr The final segment to compute
          * @return success/error code
          */
         virtual int JntToJac(const JntArray& q_in, Jacobian& jac, int seg_nr=-1);
+
+        virtual ~ChainJntToJacSolver();
+        /**
+         * Calculate the jacobian expressed in the base frame of the
+         * chain, with reference point at the end effector of the
+         * *chain. The algorithm is similar to the one used in
+         * KDL::ChainFkSolverVel_recursive
+         *
+         * @param q_in input joint positions
+         * @param jac output array of jacobians for each segment
+         * @param seg_nr The final segment to compute
+         * @return success/error code
+         */
         virtual int JntToJac(const JntArray& q_in, std::vector<Jacobian>& jac, int seg_nr=-1);
 
-        /**
+/**
          *
          * @param locked_joints new values for locked joints
          * @return success/error code
