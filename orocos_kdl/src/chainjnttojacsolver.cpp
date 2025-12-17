@@ -144,14 +144,15 @@ namespace KDL
                 total = T_tmp * chain.getSegment(i).pose(0.0);
             }
 
-            //Changing Refpoint of all columns to new ee
-            changeRefPoint(jac[i],total.p-T_tmp.p,jac[i]);
+            // Changing Refpoint of all columns to new ee
+            changeRefPoint(jac[i], total.p - T_tmp.p, jac[i]);
 
-            //Only increase jointnr if the segment has a joint
-            if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
+            // Only increase jointnr if the segment has a joint
+            if (chain.getSegment(i).getJoint().getType() != Joint::Fixed)
+            {
                 //Only put the twist inside if it is not locked
-                if(!locked_joints_[j])
-                    jac[i].setColumn(k++,t_tmp);
+                if (!locked_joints_[j])
+                    jac[i].setColumn(k++, t_tmp);
                 j++;
             }
 
@@ -159,6 +160,5 @@ namespace KDL
         }
         return (error = E_NOERROR);
     }
-
 }
 
