@@ -125,20 +125,23 @@ namespace KDL
         Frame total;
 
         // Loop through segments
-        for (unsigned int i=0;i<segmentNr;i++) {
-            if ( i!=0 ) {
+        for (unsigned int i=0;i<segmentNr;i++)
+        {
+            if (i > 0)
                 jac[i] = jac[i-1];
+
+            // Calculate new Frame_base_ee
+            if (chain.getSegment(i).getJoint().getType() != Joint::Fixed)
+            {
+                // Pose of the new end-point expressed in the base
+                total = T_tmp * chain.getSegment(i).pose(q_in(j));
+                // Changing base of new segment's twist to base frame if it is not locked
+                if (!locked_joints_[j])
+                    t_tmp = T_tmp.M * chain.getSegment(i).twist(q_in(j),1.0);
             }
-            //Calculate new Frame_base_ee
-            if(chain.getSegment(i).getJoint().getType()!=Joint::Fixed) {
-                //pose of the new end-point expressed in the base
-                total = T_tmp*chain.getSegment(i).pose(q_in(j));
-                //changing base of new segment's twist to base frame if it is not locked
-                //t_tmp = T_tmp.M*chain.getSegment(i).twist(1.0);
-                if(!locked_joints_[j])
-                    t_tmp = T_tmp.M*chain.getSegment(i).twist(q_in(j),1.0);
-            }else{
-                total = T_tmp*chain.getSegment(i).pose(0.0);
+            else
+            {
+                total = T_tmp * chain.getSegment(i).pose(0.0);
             }
 
             //Changing Refpoint of all columns to new ee
