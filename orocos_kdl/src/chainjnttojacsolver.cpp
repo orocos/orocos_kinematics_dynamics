@@ -97,5 +97,68 @@ namespace KDL
         }
         return (error = E_NOERROR);
     }
+
+    int ChainJntToJacSolver::JntToJac(const JntArray& q_in, std::vector<Jacobian>& jac, int seg_nr)
+    {
+        if(locked_joints_.size() != chain.getNrOfJoints())
+            return (error = E_NOT_UP_TO_DATE);
+        unsigned int segmentNr;
+        if(seg_nr<0)
+            segmentNr=chain.getNrOfSegments();
+        else
+            segmentNr = seg_nr;
+
+        //Initialize Jacobian to zero since only segmentNr columns are computed
+        SetToZero(jac[0]);
+
+        if( q_in.rows()!=chain.getNrOfJoints() || jac[0].columns() != chain.getNrOfJoints())
+            return (error = E_SIZE_MISMATCH);
+        else if(segmentNr>chain.getNrOfSegments())
+            return (error = E_OUT_OF_RANGE);
+        else if(jac.size() < segmentNr)
+            return (error = E_SIZE_MISMATCH);
+
+        T_tmp = Frame::Identity();
+        SetToZero(t_tmp);
+        int j=0;
+        int k=0;
+        Frame total;
+
+        // Loop through segments
+        for (unsigned int i=0;i<segmentNr;i++)
+        {
+            if (i > 0)
+                jac[i] = jac[i-1];
+
+            // Calculate new Frame_base_ee
+            if (chain.getSegment(i).getJoint().getType() != Joint::Fixed)
+            {
+                // Pose of the new end-point expressed in the base
+                total = T_tmp * chain.getSegment(i).pose(q_in(j));
+                // Changing base of new segment's twist to base frame if it is not locked
+                if (!locked_joints_[j])
+                    t_tmp = T_tmp.M * chain.getSegment(i).twist(q_in(j),1.0);
+            }
+            else
+            {
+                total = T_tmp * chain.getSegment(i).pose(0.0);
+            }
+
+            // Changing Refpoint of all columns to new ee
+            changeRefPoint(jac[i], total.p - T_tmp.p, jac[i]);
+
+            // Only increase jointnr if the segment has a joint
+            if (chain.getSegment(i).getJoint().getType() != Joint::Fixed)
+            {
+                //Only put the twist inside if it is not locked
+                if (!locked_joints_[j])
+                    jac[i].setColumn(k++, t_tmp);
+                j++;
+            }
+
+            T_tmp = total;
+        }
+        return (error = E_NOERROR);
+    }
 }
 
