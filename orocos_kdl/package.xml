@@ -13,10 +13,10 @@
   <url>http://wiki.ros.org/orocos_kdl</url>
   <license>LGPL-2.1-or-later</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
   <build_depend>eigen</build_depend>
 
-  <exec_depend>catkin</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
   <exec_depend>eigen</exec_depend>
   <exec_depend>pkg-config</exec_depend>
 
