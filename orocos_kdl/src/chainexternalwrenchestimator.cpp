@@ -87,6 +87,10 @@ int ChainExternalWrenchEstimator::setInitialMomentum(const JntArray &joint_posit
     SetToZero(estimated_momentum_integral);
     SetToZero(filtered_estimated_ext_torque);
 
+    // Initialize the mass matrix used by the finite-difference computation of its derivative,
+    // to avoid a spike in the first estimation step
+    previous_jnt_mass_matrix = jnt_mass_matrix;
+
     return (error = E_NOERROR);
 }
 
