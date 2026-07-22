@@ -33,6 +33,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(FkVelAndJacTest );
     CPPUNIT_TEST(FkVelAndIkVelTest );
     CPPUNIT_TEST(FkPosAndIkPosTest );
+    CPPUNIT_TEST(JacAllSegments );
     CPPUNIT_TEST(VereshchaginTest );
     CPPUNIT_TEST(ExternalWrenchEstimatorTest );
     CPPUNIT_TEST(IkSingularValueTest );
@@ -54,6 +55,7 @@ public:
     void FkVelAndJacTest();
     void FkVelAndIkVelTest();
     void FkPosAndIkPosTest();
+    void JacAllSegments();
     void VereshchaginTest();
     void ExternalWrenchEstimatorTest();
     void IkSingularValueTest() ;

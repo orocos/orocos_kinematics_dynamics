@@ -336,6 +336,22 @@ class KinfamTestFunctions(unittest.TestCase):
                + jdot_qdot_by_diff.rot.Norm() - jdot_qdot_by_solver.rot.Norm())
         return abs(err), jdot_qdot_by_solver, jdot_qdot_by_diff
 
+    def testJacVect(self):
+        epsC = 1e-5
+
+        q = JntArray(self.chain.getNrOfJoints())
+
+        for i in range(q.rows()):
+            q[i] = random.uniform(-0.99, 0.99)
+
+        v_out: list[Jacobian | None] = [None] * self.chain.getNrOfSegments()  # Initialize with None to avoid the overhead of creating Jacobian objects for unused entries
+        j_out = Jacobian()
+        self.assertEqual(self.fksolverpos.JntToCart(q, j_out), 0)
+        self.assertEqual(self.fksolverpos.JntToCart(q, v_out), 0)
+
+        self.assertEqual(len(v_out), self.chain.getNrOfSegments())
+        self.assertTrue(Equal(v_out[self.chain.getNrOfSegments() - 1], j_out, epsC))
+
     def testJacDot(self):
         dt = 1e-6
         success = True
