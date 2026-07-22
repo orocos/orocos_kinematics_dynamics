@@ -790,23 +790,35 @@ void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel,
 void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, ChainIkSolverPos& iksolverpos)
 {
     JntArray q(chain.getNrOfJoints());
-    for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
-    {
-        random(q(i));
-    }
     JntArray q_init(chain.getNrOfJoints());
+    JntArray q_solved(chain.getNrOfJoints());
     double tmp;
-    for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
-    {
-        random(tmp);
-        q_init(i)=q(i)+0.1*tmp;
-    }
-    JntArray q_solved(q);
 
     Frame F1,F2;
 
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q,F1));
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, iksolverpos.CartToJnt(q_init,F1,q_solved));
+    // The Newton-Raphson position IK solver is a local method, so its convergence is not
+    // guaranteed for every random configuration, e.g. when the chain is close to a singularity.
+    // Nonconvergence is a valid outcome there (correctly reported as E_MAX_ITERATIONS_EXCEEDED),
+    // so retry with a new random configuration when it happens.
+    int ik_ret = (int)SolverI::E_MAX_ITERATIONS_EXCEEDED;
+    for(unsigned int attempt=0; attempt<5 && ik_ret==(int)SolverI::E_MAX_ITERATIONS_EXCEEDED; attempt++)
+    {
+        for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
+        {
+            random(q(i));
+        }
+        for(unsigned int i=0; i<chain.getNrOfJoints(); i++)
+        {
+            random(tmp);
+            q_init(i)=q(i)+0.1*tmp;
+        }
+
+        CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q,F1));
+        ik_ret = iksolverpos.CartToJnt(q_init,F1,q_solved);
+    }
+    // Positive return codes (e.g. E_DEGRADED) mean the solver converged, possibly with a
+    // degraded solution. The pose comparison below verifies the quality of the solution.
+    CPPUNIT_ASSERT(ik_ret >= (int)SolverI::E_NOERROR);
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q_solved,F2));
 
     CPPUNIT_ASSERT_EQUAL(F1,F2);
@@ -1684,6 +1696,16 @@ void SolverTest::ExternalWrenchEstimatorTest()
     // Control gains for a simple PD controller
     double k_p = 1500.0; // Proportional
     double k_d = 300.0; // Derivative
+    // Rotational gains: keep the end-effector's orientation close to its initial state.
+    // Without orientation control, the random external moments can drive the arm into a
+    // near-singular configuration, in which the applied wrench cannot be observed from
+    // the joint torques (the Jacobian-transpose inverse amplifies the estimation errors).
+    double k_p_rot = 100.0; // Proportional
+    double k_d_rot = 20.0; // Derivative
+    // Joint-space damping: the arm is redundant (7 DOF), so the Cartesian controller above
+    // leaves the null-space self-motion undamped. Without this term, the random initial
+    // joint velocities can keep the arm drifting into a near-singular configuration.
+    double k_d_jnt = 5.0; // Derivative
 
     // Time required to complete the task
     double simulationTime = 0.4; // in seconds
@@ -1716,6 +1738,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
         desired_end_eff_pose.p(0) = end_effector_pose.p(0) + 0.02;
         desired_end_eff_pose.p(1) = end_effector_pose.p(1) + 0.02;
         desired_end_eff_pose.p(2) = end_effector_pose.p(2) + 0.02;
+        desired_end_eff_pose.M = end_effector_pose.M;
         desired_end_eff_twist.p.v(0) = 0.0;
         desired_end_eff_twist.p.v(1) = 0.0;
         desired_end_eff_twist.p.v(2) = 0.0;
@@ -1753,7 +1776,19 @@ void SolverTest::ExternalWrenchEstimatorTest()
             end_eff_vel_error(1) = end_eff_twist.p.v(1) - desired_end_eff_twist.p.v(1);
             end_eff_vel_error(2) = end_eff_twist.p.v(2) - desired_end_eff_twist.p.v(2);
 
+            const Vector rot_error = diff(end_effector_pose.M, desired_end_eff_pose.M);
+            end_eff_pos_error(3) = -rot_error(0);
+            end_eff_pos_error(4) = -rot_error(1);
+            end_eff_pos_error(5) = -rot_error(2);
+
+            end_eff_vel_error(3) = end_eff_twist.M.w(0);
+            end_eff_vel_error(4) = end_eff_twist.M.w(1);
+            end_eff_vel_error(5) = end_eff_twist.M.w(2);
+
             end_eff_force = -end_eff_pos_error * k_p - end_eff_vel_error * k_d;
+            end_eff_force(3) = -end_eff_pos_error(3) * k_p_rot - end_eff_vel_error(3) * k_d_rot;
+            end_eff_force(4) = -end_eff_pos_error(4) * k_p_rot - end_eff_vel_error(4) * k_d_rot;
+            end_eff_force(5) = -end_eff_pos_error(5) * k_p_rot - end_eff_vel_error(5) * k_d_rot;
 
             // Compute gravity joint torques (hide external wrench from this dynamics calculation)
             ret = IdSolver.CartToJnt(q, jnt_array_zero, jnt_array_zero, f_ext_zero, gravity_torque);
@@ -1766,6 +1801,7 @@ void SolverTest::ExternalWrenchEstimatorTest()
             // Compute joint control commands
             command_torque.data =  jacobian_end_eff.data.transpose() * end_eff_force;
             command_torque.data += gravity_torque.data;
+            command_torque.data -= qd.data * k_d_jnt;
 
             // Start simulating the external force
             if (t > 0.2) f_ext_base[ns - 1] = end_effector_pose.M * wrench_reference[i];
