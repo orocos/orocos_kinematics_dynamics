@@ -36,7 +36,9 @@ namespace KDL
         eps(_eps),
         maxiter(_maxiter),
         nrZeroSigmas(0),
-        svdResult(0)
+        svdResult(0),
+        sigmaMin(0),
+        Smaxtomin(nj)
     {
     }
 
@@ -52,12 +54,36 @@ namespace KDL
         for(unsigned int i = 0 ; i < V.size(); i++)
             V[i].resize(nj);
         tmp.resize(nj);
+        Smaxtomin.resize(nj);
     }
 
     ChainIkSolverVel_pinv::~ChainIkSolverVel_pinv()
     {
     }
 
+
+    void ChainIkSolverVel_pinv::setEps(const double eps_in)
+    {
+        if (eps_in > 0)
+            eps = eps_in;
+        // else silently ignore
+    }
+
+    void ChainIkSolverVel_pinv::setMaxIter(const int maxiter_in)
+    {
+        if (maxiter_in >= 1)
+            maxiter = maxiter_in;
+        // else silently ignore
+    }
+
+    int ChainIkSolverVel_pinv::getSigma(JntArray& Sout)
+    {
+        if (Sout.rows() != Smaxtomin.rows())
+            return (error = E_SIZE_MISMATCH);
+        for (unsigned int i=0; i<Sout.rows(); ++i)
+            Sout(i)=Smaxtomin(i);
+        return (error = E_NOERROR);
+    }
 
     int ChainIkSolverVel_pinv::CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out)
     {
@@ -75,8 +101,9 @@ namespace KDL
         double sum;
         unsigned int i,j;
 
-        // Initialize near zero singular value counter
+        // Initialize (internal) return values
         nrZeroSigmas = 0 ;
+        sigmaMin = 0.;
 
         //Do a singular value decomposition of "jac" with maximum
         //iterations "maxiter", put the results in "U", "S" and "V"
@@ -86,6 +113,20 @@ namespace KDL
         {
             qdot_out.data.setZero();
             return (error = E_SVD_FAILED);
+        }
+
+        // Sort S in descending order (S is not sorted in SVD_HH)
+        // Copied from svd_eigen_HH.cpp
+        Smaxtomin = S;
+        SortJntArrayMaxToMin(Smaxtomin);
+        // Minimum of six largest singular values of J is S(5) if number of joints >=6 and 0 for <6
+        if (jac.columns() >= 6)
+        {
+            sigmaMin = Smaxtomin(5);
+        }
+        else
+        {
+            sigmaMin = 0;
         }
 
         // We have to calculate qdot_out = jac_pinv*v_in
@@ -126,6 +167,32 @@ namespace KDL
             return (error = E_CONVERGE_PINV_SINGULAR);   // converged but pinv singular
         } else {
             return (error = E_NOERROR);                 // have converged
+        }
+    }
+
+    void ChainIkSolverVel_pinv::SortJntArrayMaxToMin(JntArray& Smaxtomin)
+    {
+        unsigned int n = Smaxtomin.rows();
+        for (unsigned int i=0; i<n; ++i)
+        {
+            double S_max = Smaxtomin(i);
+            unsigned int i_max = i;
+            for (unsigned int j=i+1; j<n; ++j)
+            {
+                double Sj = Smaxtomin(j);
+                if (Sj > S_max)
+                {
+                    S_max = Sj;
+                    i_max = j;
+                }
+            }
+            if (i_max != i)
+            {
+                /* swap eigenvalues */
+                double tmp = Smaxtomin(i);
+                Smaxtomin(i) =Smaxtomin(i_max);
+                Smaxtomin(i_max) = tmp;
+            }
         }
     }
 
