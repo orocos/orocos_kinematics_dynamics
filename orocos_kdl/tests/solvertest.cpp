@@ -816,7 +816,9 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
         CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q,F1));
         ik_ret = iksolverpos.CartToJnt(q_init,F1,q_solved);
     }
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, ik_ret);
+    // Positive return codes (e.g. E_DEGRADED) mean the solver converged, possibly with a
+    // degraded solution. The pose comparison below verifies the quality of the solution.
+    CPPUNIT_ASSERT(ik_ret >= (int)SolverI::E_NOERROR);
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q_solved,F2));
 
     CPPUNIT_ASSERT_EQUAL(F1,F2);
