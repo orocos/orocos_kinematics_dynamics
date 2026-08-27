@@ -7,31 +7,28 @@ version: 1
 
 ---
 
-settings: {
-    ## The C++ API is the whole point of this package's documentation, and there is
-    ## no Python source tree here, so never look for one.
-    never_run_sphinx_apidoc: true,
-}
+settings:
+  ## The C++ API is the whole point of this package's documentation, and there is
+  ## no Python source tree here, so never look for one.
+  never_run_sphinx_apidoc: true
+
 builders:
-    - doxygen: {
-        name: 'orocos_kdl Public C++ API',
-        ## Public headers live next to the sources in 'src'; there is no 'include'
-        ## folder to point at.
-        doxygen_input_dir: 'src',
-        ## rosdoc2's default Doxyfile only picks up headers. KDL also documents
-        ## its .inl and .cxx/.cpp files, matching the old rosdoc.yaml patterns.
-        extra_doxyfile_statements: [
-          'FILE_PATTERNS = *.cpp *.cxx *.h *.hpp *.inl',
-          'EXCLUDE_PATTERNS = */CMake* */.svn/*',
-          'TAB_SIZE = 4',
-          'EXTRACT_ALL = YES',
-          'EXTRACT_STATIC = YES',
-        ],
-      }
-    - sphinx: {
-        name: 'orocos_kdl',
-        ## 'doc' holds the Doxyfile template, the LaTeX user manual and doxygen
-        ## input snippets rather than sphinx sources, so do not pull it in as
-        ## user documentation.
-        user_doc_dir: null,
-      }
+  - doxygen:
+      name: 'orocos_kdl Public C++ API'
+      ## Public headers live next to the sources in 'src'; there is no 'include'
+      ## folder to point at.
+      doxygen_input_dir: 'src'
+      ## rosdoc2's default Doxyfile only picks up headers. KDL also documents
+      ## its .inl and .cxx/.cpp files, matching the old rosdoc.yaml patterns.
+      extra_doxyfile_statements:
+        - 'FILE_PATTERNS = *.cpp *.cxx *.h *.hpp *.inl'
+        - 'EXCLUDE_PATTERNS = */CMake* */.svn/*'
+        - 'TAB_SIZE = 4'
+        - 'EXTRACT_ALL = YES'
+        - 'EXTRACT_STATIC = YES'
+  - sphinx:
+      name: 'orocos_kdl'
+      ## 'doc' holds the Doxyfile template, the LaTeX user manual and doxygen
+      ## input snippets rather than sphinx sources, so do not pull it in as
+      ## user documentation.
+      user_doc_dir: null

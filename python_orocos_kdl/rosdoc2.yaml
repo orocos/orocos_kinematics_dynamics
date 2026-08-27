@@ -7,20 +7,19 @@ version: 1
 
 ---
 
-settings: {
-    ## PyKDL is a compiled pybind11 extension module, so there is no Python source
-    ## tree for sphinx-apidoc to walk. Without this, the ament_cmake_python
-    ## buildtool dependency would make rosdoc2 run it anyway and find nothing.
-    never_run_sphinx_apidoc: true,
-    ## The C++ here is only pybind11 binding glue; the C++ API is documented by
-    ## the orocos_kdl package instead.
-    never_run_doxygen: true,
-}
+settings:
+  ## PyKDL is a compiled pybind11 extension module, so there is no Python source
+  ## tree for sphinx-apidoc to walk. Without this, the ament_cmake_python
+  ## buildtool dependency would make rosdoc2 run it anyway and find nothing.
+  never_run_sphinx_apidoc: true
+  ## The C++ here is only pybind11 binding glue; the C++ API is documented by
+  ## the orocos_kdl package instead.
+  never_run_doxygen: true
+
 builders:
-    - sphinx: {
-        name: 'python_orocos_kdl Python API',
-        ## Use the existing sphinx project in 'doc' as-is. Its conf.py runs autodoc
-        ## against the built PyKDL module, so PyKDL must be importable when this
-        ## runs. This mirrors the old rosdoc.yaml sphinx_root_dir setting.
-        sphinx_sourcedir: 'doc',
-      }
+  - sphinx:
+      name: 'python_orocos_kdl Python API'
+      ## Use the existing sphinx project in 'doc' as-is. Its conf.py runs autodoc
+      ## against the built PyKDL module, so PyKDL must be importable when this
+      ## runs. This mirrors the old rosdoc.yaml sphinx_root_dir setting.
+      sphinx_sourcedir: 'doc'
