@@ -92,6 +92,11 @@ jobs:
           - env:
               ROS_DISTRO: rolling
               ROS_REPO: ros
+              # industrial_ci derives OS_CODE_NAME from ROS_DISTRO, which points rolling at
+              # ubuntu resolute. That dist exists in the ROS 2 apt repository but does not
+              # carry ros-rolling-* binaries yet, so setup_rosdep fails before anything is
+              # built. Pin to noble until resolute is populated.
+              OS_CODE_NAME: noble
             branch: master
     env: ${{ matrix.env }}
     steps:
