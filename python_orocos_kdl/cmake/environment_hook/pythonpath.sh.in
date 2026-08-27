@@ -1,0 +1,3 @@
+# generated from python_orocos_kdl/cmake/environment_hook/pythonpath.sh.in
+
+ament_prepend_unique_value PYTHONPATH "$AMENT_CURRENT_PREFIX/@PYTHON_INSTALL_DIR@"

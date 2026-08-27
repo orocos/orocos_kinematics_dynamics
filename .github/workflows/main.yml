@@ -81,6 +81,18 @@ jobs:
               ABICHECK_URL: github:orocos/orocos_kinematics_dynamics#release-1.5
               ABICHECK_MERGE: false
             branch: release-1.5
+          - env:
+              ROS_DISTRO: humble
+              ROS_REPO: ros
+            branch: master
+          - env:
+              ROS_DISTRO: jazzy
+              ROS_REPO: ros
+            branch: master
+          - env:
+              ROS_DISTRO: rolling
+              ROS_REPO: ros
+            branch: master
     env: ${{ matrix.env }}
     steps:
       - uses: actions/checkout@v7

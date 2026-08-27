@@ -10,15 +10,15 @@ These install instructions are focused on Debian/Ubuntu systems.
 
 ## Compilation
 
-### With catkin
+### With colcon
 
-1. Clone the repository inside the workspace
-2. Build with your catkin tool of preference
-3. Source the workspace
-4. (Optional) To generate the API-documentation use either [rosdoc_lite](http://wiki.ros.org/rosdoc_lite) or
-[catkin_tools_document](https://github.com/mikepurvis/catkin_tools_document)
+1. Clone the repository inside the `src` folder of the workspace
+2. Build the workspace: `colcon build`
+3. Source the workspace: `source install/setup.bash`
+4. (Optional) To generate the API-documentation use
+[rosdoc2](https://github.com/ros-infrastructure/rosdoc2)
 
-### Without catkin
+### Without colcon
 
 1. Clone the repository where you want
 2. Go to the `orocos_kdl` folder": `cd orocos_kdl`

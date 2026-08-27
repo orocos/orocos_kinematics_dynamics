@@ -10,20 +10,20 @@ These install instructions are focused on Debian/Ubuntu systems.
 
 ## Compilation
 
-### With catkin
+### With colcon
 
-1. Clone the repository inside the workspace
+1. Clone the repository inside the `src` folder of the workspace
 2. Initialize the [PyBind11](https://github.com/pybind/pybind11) submodule: `git submodule update --init`
-3. Build with your catkin tool of preference. This will also build the C++ library
-4. Source the workspace
-5. (Optional) To generate the API-documentation use either [rosdoc_lite](http://wiki.ros.org/rosdoc_lite) or
-[catkin_tools_document](https://github.com/mikepurvis/catkin_tools_document)
+3. Build the workspace: `colcon build`. This will also build the C++ library
+4. Source the workspace: `source install/setup.bash`. This puts `PyKDL` on the `PYTHONPATH`
+5. (Optional) To generate the API-documentation use
+[rosdoc2](https://github.com/ros-infrastructure/rosdoc2)
 
-### Without catkin
+### Without colcon
 
 1. Clone the repository where you want
 2. Initialize the [PyBind11](https://github.com/pybind/pybind11) submodule: `git submodule update --init`
-3. Follow the mandatory instruction to compile the C++ library from [orocos_kdl/INSTALL.md](../orocos_kdl/INSTALL.md#without-catkin)
+3. Follow the mandatory instruction to compile the C++ library from [orocos_kdl/INSTALL.md](../orocos_kdl/INSTALL.md#without-colcon)
 4. Create a new build folder (it is always better not to build in the source folder): `mkdir build`
 5. Go to the build folder `cd build`
 6. Execute cmake: `cmake ..`

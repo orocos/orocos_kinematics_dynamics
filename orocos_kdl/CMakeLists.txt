@@ -23,15 +23,11 @@ MESSAGE( STATUS "Orocos KDL version ${VERSION} (${KDL_VERSION_MAJOR}.${KDL_VERSI
 SET( PROJ_SOURCE_DIR ${orocos_kdl_SOURCE_DIR} )
 SET( PROJ_BINARY_DIR ${orocos_kdl_BINARY_DIR} )
 
-# catkin-specific configuration (optional)
-if(DEFINED ENV{ROS_VERSION} AND "$ENV{ROS_VERSION}" STREQUAL "1")
-  find_package(catkin QUIET)
-  if(catkin_FOUND)
-    catkin_package(
-      SKIP_CMAKE_CONFIG_GENERATION
-      SKIP_PKG_CONFIG_GENERATION
-    )
-  endif()
+# ament-specific configuration (optional)
+# Only the lookup happens here; ament_package() has to be called after all
+# targets and install() rules and therefore lives at the end of this file.
+if(DEFINED ENV{ROS_VERSION} AND "$ENV{ROS_VERSION}" STREQUAL "2")
+  find_package(ament_cmake QUIET)
 endif()
 
 IF(NOT CMAKE_INSTALL_PREFIX)
@@ -131,3 +127,13 @@ CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc @ONLY)
 
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc DESTINATION lib${LIB_SUFFIX}/pkgconfig)
+
+# ament-specific configuration (optional)
+# ament_package() always generates orocos_kdlConfig.cmake, which find_package()
+# prefers over the orocos_kdl-config.cmake generated above, and which does not
+# define orocos_kdl_INCLUDE_DIRS/orocos_kdl_LIBRARIES itself. Registering our own
+# config file as a config extra makes the generated config include it, so
+# consumers get the same variables under either file name.
+if(ament_cmake_FOUND)
+  ament_package(CONFIG_EXTRAS "${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake")
+endif()

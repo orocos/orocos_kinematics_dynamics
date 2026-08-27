@@ -36,18 +36,26 @@ link_directories(${orocos_kdl_LIBRARY_DIRS})
 find_package(Python3 3.10 COMPONENTS Interpreter Development REQUIRED)
 # get_python_lib in python3 produces path which isn't in sys.path: https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
 # execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(plat_specific=True, prefix=''))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/dist-packages" CACHE STRING "Install location of the python package")  # This might be overridden below if built with catkin.
+set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/dist-packages" CACHE STRING "Install location of the python package")  # This might be overridden below if built with ament.
 set(LIBRARY_NAME "PyKDL")
 
-# catkin-specific configuration (optional)
-if(DEFINED ENV{ROS_VERSION} AND "$ENV{ROS_VERSION}" STREQUAL "1")
-  find_package(catkin QUIET)
-  if(catkin_FOUND)
-    catkin_package(
-      SKIP_CMAKE_CONFIG_GENERATION
-      SKIP_PKG_CONFIG_GENERATION
-    )
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${PYTHON_INSTALL_DIR})
+# ament-specific configuration (optional)
+# ament_package() has to be called after all targets and install() rules, so it
+# lives at the end of this file together with the environment hook.
+if(DEFINED ENV{ROS_VERSION} AND "$ENV{ROS_VERSION}" STREQUAL "2")
+  find_package(ament_cmake QUIET)
+  if(ament_cmake_FOUND)
+    find_package(ament_cmake_python REQUIRED)
+    # ament_cmake_python knows the install prefix-relative site-packages
+    # directory ROS 2 uses, but only exposes it through a private macro. Fall
+    # back to the ROS 2 layout if that macro ever disappears.
+    if(COMMAND _ament_cmake_python_get_python_install_dir)
+      _ament_cmake_python_get_python_install_dir()
+    endif()
+    if(NOT PYTHON_INSTALL_DIR)
+      set(PYTHON_INSTALL_DIR
+        "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
+    endif()
     set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
   endif()
 endif()
@@ -69,3 +77,14 @@ pybind11_add_module(${LIBRARY_NAME}
   PyKDL/dynamics.cpp)
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${orocos_kdl_LIBRARIES})
 install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
+
+# ament-specific configuration (optional)
+# Unlike catkin, ament does not put site-packages on the PYTHONPATH by itself,
+# so register an environment hook that does. The .dsv descriptor lets colcon
+# generate the equivalent for every shell it supports.
+if(ament_cmake_FOUND)
+  set(AMENT_CMAKE_ENVIRONMENT_HOOKS_DESC_pythonpath
+    "prepend-non-duplicate;PYTHONPATH;${PYTHON_INSTALL_DIR}")
+  ament_environment_hooks("cmake/environment_hook/pythonpath.sh.in")
+  ament_package()
+endif()
