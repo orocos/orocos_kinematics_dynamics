@@ -10,7 +10,9 @@
     Library (KDL), distributed by the Orocos Project.
   </description>
   <maintainer email="ruben.smits@intermodalics.eu">Ruben Smits</maintainer>
-  <url>http://wiki.ros.org/orocos_kdl</url>
+  <url type="website">https://www.orocos.org/kdl</url>
+  <url type="repository">https://github.com/orocos/orocos_kinematics_dynamics</url>
+  <url type="bugtracker">https://github.com/orocos/orocos_kinematics_dynamics/issues</url>
   <license>LGPL-2.1-or-later</license>
 
   <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
@@ -22,10 +24,12 @@
   <test_depend>cppunit</test_depend>
 
   <doc_depend>doxygen</doc_depend>
+  <doc_depend>graphviz</doc_depend>
+  <doc_depend>python3-sphinx</doc_depend>
 
   <export>
     <build_type>cmake</build_type>
-    <rosdoc config="rosdoc.yaml"/>
+    <rosdoc2>rosdoc2.yaml</rosdoc2>
   </export>
 
 </package>

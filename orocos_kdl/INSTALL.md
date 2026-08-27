@@ -15,8 +15,10 @@ These install instructions are focused on Debian/Ubuntu systems.
 1. Clone the repository inside the `src` folder of the workspace
 2. Build the workspace: `colcon build`
 3. Source the workspace: `source install/setup.bash`
-4. (Optional) To generate the API-documentation use
-[rosdoc2](https://github.com/ros-infrastructure/rosdoc2)
+4. (Optional) To generate the API-documentation, install
+[rosdoc2](https://github.com/ros-infrastructure/rosdoc2) and run
+`rosdoc2 build --package-path src/orocos_kinematics_dynamics/orocos_kdl`. The result is written
+to `docs_output/orocos_kdl`.
 
 ### Without colcon
 

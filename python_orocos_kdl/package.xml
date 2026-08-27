@@ -11,7 +11,9 @@
   </description>
   <maintainer email="ruben.smits@intermodalics.eu">Ruben Smits</maintainer>
   <maintainer email="MatthijsBurgh@outlook.com">Matthijs van der Burgh</maintainer>
-  <url>http://wiki.ros.org/python_orocos_kdl</url>
+  <url type="website">https://www.orocos.org/kdl</url>
+  <url type="repository">https://github.com/orocos/orocos_kinematics_dynamics</url>
+  <url type="bugtracker">https://github.com/orocos/orocos_kinematics_dynamics/issues</url>
   <license>LGPL-2.1-or-later</license>
 
   <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
@@ -29,7 +31,7 @@
 
   <export>
     <build_type>cmake</build_type>
-    <rosdoc config="rosdoc.yaml"/>
+    <rosdoc2>rosdoc2.yaml</rosdoc2>
   </export>
 
 </package>
