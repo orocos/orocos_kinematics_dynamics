@@ -1,26 +1,46 @@
-This is kdl, written and maintained by the orocos development team <orocos-dev@lists.mech.kuleuven.be>
+This is kdl, written by the orocos development team <orocos-dev@lists.mech.kuleuven.be> and others and maintained by many
 on Wed, 24 Oct 2007 13:20:52 +0200.
 
 The original source can always be found at:
-    http://www.orocos.org/kdl
+    https://github.com/orocos/orocos_kinematics_dynamics
 
-Copyright Holder:  Orocos Dev Team
+Copyright Holder:  Orocos Dev Team and other explicitly mentioned authors/contributors/copyright holders
 
 License:
 
-  This program is free software; you can redistribute it and/or
+  This package is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+  version 3 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
+  This package is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
 
-  You should have received a copy of the GNU Lesser General Public License
-  along with this package; if not, write to the Free Software Foundation,
-  Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+  This license is extended with the following `linking' exception.
+
+    As a special exception to the GNU Lesser General Public License version 3
+    ("LGPL3"), the copyright holders of this Library give you permission to
+    convey to a third party a Combined Work that links statically or dynamically
+    to this Library without providing any Minimal Corresponding Source or
+    Minimal Application Code as set out in 4d or providing the installation
+    information set out in section 4e, provided that you comply with the other
+    provisions of LGPL3 and provided that you meet, for the Application the
+    terms and conditions of the license(s) which apply to the Application.
+
+    Except as stated in this special exception, the provisions of LGPL3 will
+    continue to comply in full to this Library. If you modify this Library, you
+    may apply this exception to your version of this Library, but you are not
+    obliged to do so. If you do not wish to do so, delete this exception
+    statement from your version. This exception does not (and cannot) modify any
+    license terms which apply to the Application, with which you must still
+    comply.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this package; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 On Debian systems, the complete text of the GNU Lesser General
-Public License can be found in `/usr/share/common-licenses/LGPL'.
+Public License can be found in `/usr/share/common-licenses/LGPL-3'.
+This file does not include the `linking' exception.
