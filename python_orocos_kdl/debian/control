@@ -1,0 +1,36 @@
+Source: python-orocos-kdl
+Section: python
+Priority: optional
+Maintainer: Ruben Smits <ruben.smits@intermodalics.eu>
+Uploaders: Matthijs van der Burgh <MatthijsBurgh@outlook.com>
+Build-Depends:
+ cmake (>= 3.20),
+ debhelper-compat (= 13),
+ dh-python,
+ liborocos-kdl-dev (>= 1.5.4),
+ liborocos-kdl-dev (<< 1.5.5~),
+ pybind11-dev (>= 3.0),
+ python3-all-dev,
+ python3-psutil <!nocheck>,
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+X-Python3-Version: >= 3.10
+Homepage: https://www.orocos.org/kdl
+Vcs-Browser: https://github.com/orocos/orocos_kinematics_dynamics
+Vcs-Git: https://github.com/orocos/orocos_kinematics_dynamics.git
+
+Package: python3-pykdl
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ ${shlibs:Depends},
+Provides: ${python3:Provides}
+Description: Kinematics and Dynamics Library Python 3 bindings
+ Orocos project to supply RealTime usable kinematics and dynamics code,
+ it contains code for rigid body kinematics calculations and
+ representations for kinematic structures and their inverse and forward
+ kinematic solvers.
+ .
+ This package contains the PyKDL extension module, the Python 3 bindings
+ for the library, built with pybind11.

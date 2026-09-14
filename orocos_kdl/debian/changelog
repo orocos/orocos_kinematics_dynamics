@@ -1,3 +1,21 @@
+orocos-kdl (1.5.4) unstable; urgency=medium
+
+  * Modernise the packaging:
+    - Drop the Python 2 / SIP era build dependencies (python-all-dev,
+      python-sip4-dev, python-sip4, python-support, sip4) and the
+      python-orocos-kdl binary package.  The bindings are no longer built
+      by this CMake project; they live in the python_orocos_kdl source
+      package and are built against pybind11.
+    - Switch to debhelper compat 13 and the dh sequencer.
+    - Build against libeigen3-dev instead of the long-gone libeigen2-dev.
+    - Rename the runtime package to liborocos-kdl1.5 to match the SONAME.
+    - Install into the multiarch library directory.
+    - Machine-readable (DEP-5) debian/copyright.
+  * Drop the dh-make template leftovers (README, README.Debian,
+    manpage.1.ex, kdl.doc-base.EX) and the generated debian/substvars.
+
+ -- Matthijs van der Burgh <MatthijsBurgh@outlook.com>  Mon, 14 Sep 2026 00:00:00 +0200
+
 orocos-kdl (1.0.0) UNRELEASED; urgency=low
 
   * First major number release

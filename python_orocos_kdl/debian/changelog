@@ -1,0 +1,8 @@
+python-orocos-kdl (1.5.4) unstable; urgency=medium
+
+  * Initial packaging of the pybind11 based Python 3 bindings, replacing the
+    python-orocos-kdl binary package that the orocos-kdl source package used
+    to build from the removed SIP bindings.
+  * Require Python >= 3.10 and pybind11 >= 3.0.
+
+ -- Matthijs van der Burgh <MatthijsBurgh@outlook.com>  Mon, 14 Sep 2026 00:00:00 +0200

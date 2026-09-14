@@ -5,7 +5,7 @@ These install instructions are focused on Debian/Ubuntu systems.
 ## Shared instructions
 
 1. Follow the shared instructions of the C++ library from [orocos_kdl/INSTALL.md](../orocos_kdl/INSTALL.md#shared-instructions)
-2. Install the `future` and `psutil` module: `sudo apt-get install python3-psutil python3-future`
+2. Install the `psutil` module: `sudo apt-get install python3-psutil`
 3. (Optional) Install `Sphinx` to generate API-documentation: `sudo apt-get install python3-sphinx`
 
 ## Compilation
