@@ -17,4 +17,10 @@ Always use the same version of the C++ library and the python bindings. As a mis
 
 Also when using ROS 2, it is preferred to use the colcon installation method over the `cmake/make` method.
 
-There will be no ROS Noetic release.
+## ROS support
+
+The `master` branch targets ROS 2 and builds with `colcon`/`ament`. The `release-1.5` branch is
+the last one supporting ROS 1 and `catkin`; there will be no ROS Noetic release.
+
+Both packages declare `<build_type>cmake</build_type>`, so they also build with plain `cmake` and
+`make` without ROS, ament or colcon installed.
