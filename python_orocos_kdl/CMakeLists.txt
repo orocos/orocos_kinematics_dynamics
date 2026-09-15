@@ -47,15 +47,8 @@ if(DEFINED ENV{ROS_VERSION} AND "$ENV{ROS_VERSION}" STREQUAL "2")
   if(ament_cmake_FOUND)
     find_package(ament_cmake_python REQUIRED)
     # ament_cmake_python knows the install prefix-relative site-packages
-    # directory ROS 2 uses, but only exposes it through a private macro. Fall
-    # back to the ROS 2 layout if that macro ever disappears.
-    if(COMMAND _ament_cmake_python_get_python_install_dir)
-      _ament_cmake_python_get_python_install_dir()
-    endif()
-    if(NOT PYTHON_INSTALL_DIR)
-      set(PYTHON_INSTALL_DIR
-        "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
-    endif()
+    # directory ROS 2 uses; ask it rather than reconstructing the layout here.
+    ament_get_python_install_dir(PYTHON_INSTALL_DIR)
     set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
   endif()
 endif()
@@ -82,6 +75,9 @@ install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}
 # Unlike catkin, ament does not put site-packages on the PYTHONPATH by itself,
 # so register an environment hook that does. The .dsv descriptor lets colcon
 # generate the equivalent for every shell it supports.
+# This only takes effect because package.xml declares the ament_cmake build
+# type; under the plain cmake build type colcon overwrites the generated
+# package.dsv and the hook is never sourced.
 if(ament_cmake_FOUND)
   set(AMENT_CMAKE_ENVIRONMENT_HOOKS_DESC_pythonpath
     "prepend-non-duplicate;PYTHONPATH;${PYTHON_INSTALL_DIR}")

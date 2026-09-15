@@ -30,7 +30,7 @@
   <doc_depend>python3-sphinx</doc_depend>
 
   <export>
-    <build_type>cmake</build_type>
+    <build_type>ament_cmake</build_type>
     <rosdoc2>rosdoc2.yaml</rosdoc2>
   </export>
 
