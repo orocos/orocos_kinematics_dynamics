@@ -71,6 +71,20 @@ pybind11_add_module(${LIBRARY_NAME}
 target_link_libraries(${LIBRARY_NAME} PRIVATE ${orocos_kdl_LIBRARIES})
 install(TARGETS ${LIBRARY_NAME} DESTINATION "${PYTHON_SITE_PACKAGES_INSTALL_DIR}")
 
+# Tests
+option(ENABLE_TESTS "Enable building of tests" OFF)
+if(ENABLE_TESTS)
+  enable_testing()
+  # PyKDLtest.py imports its cases as top level modules, so it has to run from
+  # tests/. PYTHONPATH points at the freshly built module rather than an
+  # installed one; psutil comes from the interpreter's own site-packages.
+  add_test(NAME PyKDLtest
+    COMMAND ${CMAKE_COMMAND} -E env
+      "PYTHONPATH=$<TARGET_FILE_DIR:${LIBRARY_NAME}>"
+      ${Python3_EXECUTABLE} PyKDLtest.py
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+endif()
+
 # ament-specific configuration (optional)
 # Unlike catkin, ament does not put site-packages on the PYTHONPATH by itself,
 # so register an environment hook that does. The .dsv descriptor lets colcon
