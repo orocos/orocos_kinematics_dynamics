@@ -9,18 +9,24 @@
     This package contains the python bindings PyKDL for the Kinematics and Dynamics
     Library (KDL), distributed by the Orocos Project.
   </description>
-  <maintainer email="ruben.smits@intermodalics.eu">Ruben Smits</maintainer>
   <maintainer email="MatthijsBurgh@outlook.com">Matthijs van der Burgh</maintainer>
-  <url>http://wiki.ros.org/python_orocos_kdl</url>
+  <url type="website">https://www.orocos.org/kdl</url>
+  <url type="repository">https://github.com/orocos/orocos_kinematics_dynamics</url>
+  <url type="bugtracker">https://github.com/orocos/orocos_kinematics_dynamics/issues</url>
   <license>LGPL-2.1-or-later</license>
 
-  <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
+  <author>Ruben Smits</author>
+  <author>Erwin Aertbelien</author>
+  <author>Orocos Developers</author>
+  <author email="MatthijsBurgh@outlook.com">Matthijs van der Burgh</author>
+
+  <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
+  <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake_python</buildtool_depend>
 
   <build_depend>orocos_kdl</build_depend>
 
   <depend>python3</depend>
 
-  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
   <exec_depend>orocos_kdl</exec_depend>
 
   <test_depend>python3-psutil</test_depend>
@@ -28,7 +34,8 @@
   <doc_depend>python3-sphinx</doc_depend>
 
   <export>
-    <rosdoc config="rosdoc.yaml"/>
+    <build_type>ament_cmake</build_type>
+    <rosdoc2>rosdoc2.yaml</rosdoc2>
   </export>
 
 </package>
