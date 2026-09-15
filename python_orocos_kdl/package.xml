@@ -9,7 +9,6 @@
     This package contains the python bindings PyKDL for the Kinematics and Dynamics
     Library (KDL), distributed by the Orocos Project.
   </description>
-  <maintainer email="ruben.smits@intermodalics.eu">Ruben Smits</maintainer>
   <maintainer email="MatthijsBurgh@outlook.com">Matthijs van der Burgh</maintainer>
   <url type="website">https://www.orocos.org/kdl</url>
   <url type="repository">https://github.com/orocos/orocos_kinematics_dynamics</url>
@@ -19,6 +18,7 @@
   <author>Ruben Smits</author>
   <author>Erwin Aertbelien</author>
   <author>Orocos Developers</author>
+  <author email="MatthijsBurgh@outlook.com">Matthijs van der Burgh</author>
 
   <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
   <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake_python</buildtool_depend>
