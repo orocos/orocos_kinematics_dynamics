@@ -23,7 +23,6 @@
   <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
   <exec_depend>orocos_kdl</exec_depend>
 
-  <test_depend>python3-future</test_depend>
   <test_depend>python3-psutil</test_depend>
 
   <doc_depend>python3-sphinx</doc_depend>

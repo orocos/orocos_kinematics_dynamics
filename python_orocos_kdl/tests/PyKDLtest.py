@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # Copyright  (C)  2007  Ruben Smits <ruben dot smits at intermodalics dot eu>
 
 # Version: 1.0
