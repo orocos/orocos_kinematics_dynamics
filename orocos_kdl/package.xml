@@ -15,6 +15,10 @@
   <url type="bugtracker">https://github.com/orocos/orocos_kinematics_dynamics/issues</url>
   <license>LGPL-2.1-or-later</license>
 
+  <author>Ruben Smits</author>
+  <author>Erwin Aertbelien</author>
+  <author>Orocos Developers</author>
+
   <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
   <build_depend>eigen</build_depend>
 
