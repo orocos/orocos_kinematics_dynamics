@@ -13,6 +13,23 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.12.0)
 PROJECT(orocos_kdl)
 
 SET(KDL_VERSION 1.5.4)
+
+# package.xml carries the same version, and under ament, ament_package()
+# generates orocos_kdlConfig-version.cmake from it while the config-version file
+# below is generated from KDL_VERSION. A divergence would make
+# find_package(orocos_kdl <v> EXACT) - which python_orocos_kdl does - answer
+# differently on the colcon and plain cmake paths, so fail loudly instead.
+IF( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/package.xml" )
+  FILE( READ "${CMAKE_CURRENT_SOURCE_DIR}/package.xml" KDL_PACKAGE_XML )
+  IF( KDL_PACKAGE_XML MATCHES "<version>([^<]+)</version>" )
+    IF( NOT CMAKE_MATCH_1 STREQUAL KDL_VERSION )
+      MESSAGE( FATAL_ERROR
+        "Version mismatch: KDL_VERSION is ${KDL_VERSION} but package.xml says ${CMAKE_MATCH_1}. Update both." )
+    ENDIF()
+  ENDIF()
+  UNSET( KDL_PACKAGE_XML )
+ENDIF()
+
 STRING( REGEX MATCHALL "[0-9]+" KDL_VERSIONS ${KDL_VERSION} )
 LIST( GET KDL_VERSIONS 0 KDL_VERSION_MAJOR)
 LIST( GET KDL_VERSIONS 1 KDL_VERSION_MINOR)
