@@ -84,10 +84,16 @@ jobs:
           - env:
               ROS_DISTRO: humble
               ROS_REPO: ros
+              # orocos_kdl only registers its ctest suite when ENABLE_TESTS is on; without
+              # this industrial_ci builds but runs 0 tests.
+              TARGET_CMAKE_ARGS: -DENABLE_TESTS=ON
             branch: master
           - env:
               ROS_DISTRO: jazzy
               ROS_REPO: ros
+              # orocos_kdl only registers its ctest suite when ENABLE_TESTS is on; without
+              # this industrial_ci builds but runs 0 tests.
+              TARGET_CMAKE_ARGS: -DENABLE_TESTS=ON
             branch: master
           - env:
               ROS_DISTRO: rolling
@@ -97,6 +103,7 @@ jobs:
               # carry ros-rolling-* binaries yet, so setup_rosdep fails before anything is
               # built. Pin to noble until resolute is populated.
               OS_CODE_NAME: noble
+              TARGET_CMAKE_ARGS: -DENABLE_TESTS=ON
             branch: master
     env: ${{ matrix.env }}
     steps:
