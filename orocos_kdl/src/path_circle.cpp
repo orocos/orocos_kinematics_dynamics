@@ -141,9 +141,9 @@ Path* Path_Circle::Clone() {
 	return new Path_Circle(
 		Pos(0),
 		F_base_center.p,
-		F_base_center.M.UnitY(),
+		F_base_center.p + F_base_center.M.UnitY(),
 		orient->Pos(pathlength*scalerot),
-		pathlength*scalelin/radius/deg2rad,
+		pathlength*scalelin/radius,
 		orient->Clone(),
 		eqradius,
         aggregate
@@ -159,7 +159,7 @@ void Path_Circle::Write(std::ostream& os) {
 	os << "CIRCLE[ ";
 	os << "  " << Pos(0) << std::endl;
 	os << "  " << F_base_center.p << std::endl;
-	os << "  " << F_base_center.M.UnitY() << std::endl;
+	os << "  " << F_base_center.p + F_base_center.M.UnitY() << std::endl;
 	os << "  " << orient->Pos(pathlength*scalerot) << std::endl;
 	os << "  " << pathlength*scalelin/radius/deg2rad << std::endl;
 	os << "  ";orient->Write(os);
