@@ -52,6 +52,13 @@ IF(ENABLE_TESTS)
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(NAME velocityprofiletest COMMAND velocityprofiletest)
 
+ ADD_EXECUTABLE(pathtest pathtest.cpp test-runner.cpp)
+ SET(TESTNAME "pathtest")
+ TARGET_LINK_LIBRARIES(pathtest orocos-kdl ${CPPUNIT})
+ SET_TARGET_PROPERTIES( pathtest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+ ADD_TEST(NAME pathtest COMMAND pathtest)
+
  ADD_EXECUTABLE(treeinvdyntest treeinvdyntest.cpp test-runner.cpp)
  SET(TESTNAME "treeinvdyntest")
  TARGET_LINK_LIBRARIES(treeinvdyntest orocos-kdl ${CPPUNIT})
