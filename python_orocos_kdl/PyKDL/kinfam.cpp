@@ -489,8 +489,21 @@ void init_kinfam(pybind11::module &m)
     // ------------------------------
     py::class_<ChainJntToJacSolver, SolverI> chain_jnt_to_jac_solver(m, "ChainJntToJacSolver");
     chain_jnt_to_jac_solver.def(py::init<const Chain&>(), py::arg("chain"));
-    chain_jnt_to_jac_solver.def("JntToJac", &ChainJntToJacSolver::JntToJac,
+    chain_jnt_to_jac_solver.def("JntToJac", (int (ChainJntToJacSolver::*)(const JntArray&, Jacobian&, int)) &ChainJntToJacSolver::JntToJac,
                                 py::arg("q_in"), py::arg("jac"), py::arg("seg_nr")=-1);
+    chain_jnt_to_jac_solver.def("JntToJac", [](ChainJntToJacSolver& self, const JntArray& q_in, py::list& p_out, int seg_nr)
+    {
+        std::vector<Jacobian> temp;
+        temp.resize(p_out.size());
+        int result = self.JntToJac(q_in, temp, seg_nr);
+        p_out.clear();
+        for (const Jacobian& f : temp)
+        {
+            p_out.append(f);
+        }
+        return result;
+    },
+    py::arg("q_in"), py::arg("p_out"), py::arg("seg_nr")=-1);
     chain_jnt_to_jac_solver.def("setLockedJoints", &ChainJntToJacSolver::setLockedJoints, py::arg("locked_joints"));
 
 
