@@ -244,8 +244,15 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertTrue(0 == iksolverpos.CartToJnt(q_init, F1, q_solved))
         self.assertTrue(0 == fksolverpos.JntToCart(q_solved, F2))
 
+        # Only the resulting pose can be checked. Inverse position kinematics is a many-to-one
+        # mapping: the same pose is reached by infinitely many joint configurations, e.g. those
+        # differing by a multiple of 2*pi or an equivalent "flipped" configuration. The
+        # Newton-Raphson solver is a local method, so it returns whichever solution its iteration
+        # converges to, which is not necessarily the configuration q was seeded from, even though
+        # q_init lies close to q. Asserting Equal(q, q_solved) therefore fails for a small
+        # fraction of the random configurations. The equivalent C++ test in
+        # orocos_kdl/tests/solvertest.cpp deliberately does not assert it either.
         self.assertEqual(F1, F2)
-        self.assertTrue(Equal(q, q_solved, epsJ), "{} != {}".format(q, q_solved))
 
     def testFkPosAndIkPos(self):
         epsJ = 1e-3
