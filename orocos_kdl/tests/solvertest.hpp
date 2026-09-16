@@ -37,6 +37,7 @@ class SolverTest : public CppUnit::TestFixture
     CPPUNIT_TEST(ExternalWrenchEstimatorTest );
     CPPUNIT_TEST(IkSingularValueTest );
     CPPUNIT_TEST(IkVelSolverWDLSTest );
+    CPPUNIT_TEST(IkVelSolverPinvTest );
     CPPUNIT_TEST(FkPosVectTest );
     CPPUNIT_TEST(FkVelVectTest );
     CPPUNIT_TEST(FdSolverDevelopmentTest );
@@ -58,6 +59,7 @@ public:
     void ExternalWrenchEstimatorTest();
     void IkSingularValueTest() ;
     void IkVelSolverWDLSTest();
+    void IkVelSolverPinvTest();
     void FkPosVectTest();
     void FkVelVectTest();
     void FdSolverDevelopmentTest();
