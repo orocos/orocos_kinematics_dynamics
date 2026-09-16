@@ -576,7 +576,7 @@ void SolverTest::IkSingularValueTest()
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q,F));
 	F_des = F * dF ;
 
-	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_MAX_ITERATIONS_EXCEEDED,
+	CPPUNIT_ASSERT_EQUAL((int)SolverI::E_DEGRADED,
                          iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
 	CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
                          ikvelsolver1.getError());        	// truncated SV solution
@@ -627,7 +627,7 @@ void SolverTest::IkSingularValueTest()
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolver.JntToCart(q,F));
     F_des = F * dF ;
 
-    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_MAX_ITERATIONS_EXCEEDED,
+    CPPUNIT_ASSERT_EQUAL((int)SolverI::E_DEGRADED,
                          iksolver1.CartToJnt(q,F_des,q_solved)); // no converge
     CPPUNIT_ASSERT_EQUAL((int)ChainIkSolverVel_pinv::E_CONVERGE_PINV_SINGULAR,
                          ikvelsolver1.getError());        	// truncated SV solution
