@@ -122,6 +122,12 @@ void init_kinfam(pybind11::module &m)
     rotational_inertia.def(double() * py::self);
     rotational_inertia.def(py::self + py::self);
     rotational_inertia.def(py::self * Vector());
+	rotational_inertia.def_property("data", [](py::object& obj)
+			{
+				RotationalInertia * M = obj.cast<RotationalInertia *>();
+				// preserve behavior of C++ code: return (9,) object instead of (3,3)
+				return py::array_t<double>({9,}, {sizeof(double),}, M->data, obj);
+			}, nullptr);
 
 
     // --------------------
@@ -245,6 +251,11 @@ void init_kinfam(pybind11::module &m)
         oss << jac;
         return oss.str();
     });
+	jacobian.def_property("data", [](py::object& obj)
+			{
+				Jacobian * jac = obj.cast<Jacobian *>();
+				return py::array_t<double>({jac->rows(), jac->columns()}, {sizeof(double), sizeof(double)*jac->rows()}, jac->data.data(), obj);
+			}, nullptr);
 
     m.def("SetToZero", (void (*)(Jacobian&)) &KDL::SetToZero, py::arg("jac"));
     m.def("changeRefPoint", (bool (*)(const Jacobian&, const Vector&, Jacobian&)) &KDL::changeRefPoint, py::arg("src"), py::arg("base"), py::arg("dest"));
@@ -283,6 +294,11 @@ void init_kinfam(pybind11::module &m)
         return oss.str();
     });
     jnt_array.def(py::self == py::self);
+	jnt_array.def_property("data", [](py::object& obj)
+			{
+				JntArray * jnt = obj.cast<JntArray *>();
+				return py::array_t<double>({jnt->rows()}, {sizeof(double)}, jnt->data.data(), obj);
+			}, nullptr);
 
     m.def("Add", (void (*)(const JntArray&, const JntArray&, JntArray&)) &KDL::Add, py::arg("src1"), py::arg("src2"), py::arg("dest"));
     m.def("Subtract", (void (*)(const JntArray&, const JntArray&, JntArray&)) &KDL::Subtract, py::arg("src1"), py::arg("src2"), py::arg("dest"));

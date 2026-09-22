@@ -83,6 +83,29 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(v, Vector(0, 0, 0))
         self.assertEqual(Vector.Zero(), Vector(0, 0, 0))
 
+    def testVectorData(self):
+        v = Vector(1, 2, 3)
+        arr = v.data
+        self.assertEqual(arr.shape, (3,))
+        self.assertEqual(list(arr), [1, 2, 3])
+
+        # It's a live view: mutating through .data mutates the Vector, and
+        # mutating the Vector is reflected back through the same array.
+        arr[0] = 42
+        self.assertEqual(v.x(), 42)
+        v.y(99)
+        self.assertEqual(arr[1], 99)
+
+        # The array keeps its owning Vector alive via pybind11's base-object
+        # mechanism, even once the only Python reference to that Vector is
+        # the array itself (regression coverage for a dangling-pointer bug).
+        arr2 = Vector(7, 8, 9).data
+        self.assertEqual(list(arr2), [7, 8, 9])
+
+        # data has no setter: the whole property can't be reassigned.
+        with self.assertRaises(AttributeError):
+            v.data = Vector(0, 0, 0)
+
     def testVectorImpl(self, v):
         self.assertTrue(v == v)
         self.assertTrue(Equal(v, v))
@@ -295,6 +318,24 @@ class FramesTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             r[2, 3] = 1
 
+    def testRotationData(self):
+        # A non-symmetric matrix, so a transposed .data view would be caught.
+        r = Rotation(*range(1, 10))
+        arr = r.data
+        self.assertEqual(arr.shape, (3, 3))
+        for i in range(3):
+            for j in range(3):
+                self.assertEqual(arr[i, j], r[i, j])
+
+        # Live view, both directions.
+        arr[0, 1] = 42
+        self.assertEqual(r[0, 1], 42)
+        r[2, 0] = 99
+        self.assertEqual(arr[2, 0], 99)
+
+        with self.assertRaises(AttributeError):
+            r.data = Rotation()
+
     def testRotationImpl(self, r, v):
         w = Wrench(Vector(7, -1, 3), Vector(2, -3, 3))
         t = Twist(Vector(6, 3, 5), Vector(4, -2, 7))
@@ -437,7 +478,10 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(f.Inverse()*v, f.Inverse(v))
 
     def testPickle(self):
-        import pickle
+        if sys.version_info < (3, 0):
+            import cPickle as pickle
+        else:
+            import pickle
         data = dict()
         data['v'] = Vector(1, 2, 3)
         data['rot'] = Rotation().EulerZYZ(1, 2, 3)
@@ -482,9 +526,11 @@ class FramesTestFunctions(unittest.TestCase):
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(FramesTestFunctions('testVector'))
+    suite.addTest(FramesTestFunctions('testVectorData'))
     suite.addTest(FramesTestFunctions('testTwist'))
     suite.addTest(FramesTestFunctions('testWrench'))
     suite.addTest(FramesTestFunctions('testRotation'))
+    suite.addTest(FramesTestFunctions('testRotationData'))
     suite.addTest(FramesTestFunctions('testFrame'))
     suite.addTest(FramesTestFunctions('testPickle'))
     suite.addTest(FramesTestFunctions('testCopy'))
