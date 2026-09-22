@@ -66,6 +66,13 @@ IF(ENABLE_TESTS)
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(NAME rotationalinterpolation COMMAND rotationalinterpolation)
 
+ ADD_EXECUTABLE(trajectorytest trajectorytest.cpp test-runner.cpp)
+ SET(TESTNAME "trajectorytest")
+ TARGET_LINK_LIBRARIES(trajectorytest orocos-kdl ${CPPUNIT})
+ SET_TARGET_PROPERTIES( trajectorytest PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+ ADD_TEST(NAME trajectorytest COMMAND trajectorytest)
+
  ADD_EXECUTABLE(treeinvdyntest treeinvdyntest.cpp test-runner.cpp)
  SET(TESTNAME "treeinvdyntest")
  TARGET_LINK_LIBRARIES(treeinvdyntest orocos-kdl ${CPPUNIT})
