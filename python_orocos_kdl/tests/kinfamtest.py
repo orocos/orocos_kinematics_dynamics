@@ -255,6 +255,38 @@ class KinfamTestFunctions(unittest.TestCase):
         epsJ = 1e-3
         self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens, epsJ)
 
+    def testIkPosLMAWeighted(self):
+        """
+        The weighted constructor takes L as a plain sequence of 6 doubles, so that PyKDL does not
+        need numpy at runtime. Both constructors must reach the same solution for a reachable pose.
+        """
+        L = [1.0, 1.0, 1.0, 0.01, 0.01, 0.01]  # the default weights of the other constructor
+        iksolverpos_lma = ChainIkSolverPos_LMA(self.chain, L)
+        iksolverpos_lma_default = ChainIkSolverPos_LMA(self.chain)
+
+        q = JntArray(self.chain.getNrOfJoints())
+        for i in range(q.rows()):
+            q[i] = random.uniform(-3.14, 3.14)
+
+        F_goal = Frame.Identity()
+        self.assertEqual(0, self.fksolverpos.JntToCart(q, F_goal))
+
+        q_init = JntArray(self.chain.getNrOfJoints())
+        for i in range(q_init.rows()):
+            q_init[i] = q[i] + 0.1 * random.random()
+
+        q_weighted = JntArray(q.rows())
+        q_default = JntArray(q.rows())
+        self.assertEqual(0, iksolverpos_lma.CartToJnt(q_init, F_goal, q_weighted))
+        self.assertEqual(0, iksolverpos_lma_default.CartToJnt(q_init, F_goal, q_default))
+        self.assertTrue(Equal(q_weighted, q_default, 1e-3),
+                        "{} != {}".format(q_weighted, q_default))
+
+        # A tuple is accepted too, and a wrong length is reported rather than read past the end
+        ChainIkSolverPos_LMA(self.chain, tuple(L))
+        with self.assertRaises(ValueError):
+            ChainIkSolverPos_LMA(self.chain, [1.0, 1.0, 1.0])
+
     def testFkPosVect(self):
         epsC = 1e-5
     
@@ -390,6 +422,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVelGivens'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPosGivens'))
+    suite.addTest(KinfamTestFunctions('testIkPosLMAWeighted'))
     suite.addTest(KinfamTestFunctions('testFkPosVect'))
     suite.addTest(KinfamTestFunctions('testFkVelVect'))
     suite.addTest(KinfamTestFunctions('testJacDot'))
