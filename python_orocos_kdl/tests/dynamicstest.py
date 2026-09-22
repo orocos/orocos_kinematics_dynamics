@@ -126,7 +126,7 @@ class DynamicsTestFunctions(unittest.TestCase):
 
         # Magnitude of the constraint forces acting on the end-effector: Lagrange multiplier.
         # Elements 3 and 4 correspond to the constraints disabled in the task specification.
-        nu = solver.getContraintForceMagnitude([0.0] * number_of_constraints)
+        nu = solver.getConstraintForceMagnitude([0.0] * number_of_constraints)
         for value, expected in zip(nu, [669693.30355, 5930.60826, -639.5238, 0.0, 0.0, 573.90485]):
             self.assertAlmostEqual(value, expected, delta=eps)
 

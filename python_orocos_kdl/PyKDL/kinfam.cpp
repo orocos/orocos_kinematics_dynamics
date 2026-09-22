@@ -559,10 +559,14 @@ void init_kinfam(pybind11::module &m)
         self.getTransformedLinkAcceleration(x_dotdot);
         return x_dotdot;
     }, py::arg("x_dotdot"));
-    chain_hd_solver_vereshchagin.def("getContraintForceMagnitude",
-                                     [](ChainHdSolver_Vereshchagin& self, Eigen::VectorXd nu)
+
+    // Exposed as a list of doubles rather than an Eigen vector: pybind11 converts Eigen types
+    // through numpy, which would make numpy a runtime dependency of this module.
+    chain_hd_solver_vereshchagin.def("getConstraintForceMagnitude",
+                                     [](ChainHdSolver_Vereshchagin& self, const std::vector<double>& nu)
     {
-        self.getContraintForceMagnitude(nu);
-        return nu;
+        Eigen::VectorXd nu_eigen = Eigen::VectorXd::Map(nu.data(), nu.size());
+        self.getConstraintForceMagnitude(nu_eigen);
+        return std::vector<double>(nu_eigen.data(), nu_eigen.data() + nu_eigen.size());
     }, py::arg("nu"));
 }
