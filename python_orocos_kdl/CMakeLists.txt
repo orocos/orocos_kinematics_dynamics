@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 if(POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
 endif()
@@ -22,34 +22,38 @@ endif()
 # so set this to FIRST.
 set(Python3_FIND_UNVERSIONED_NAMES FIRST)
 
-project(python_orocos_kdl VERSION 1.5.2)
+project(python_orocos_kdl VERSION 1.5.4)
 
 # find a matching version of orocos_kdl
 find_package(orocos_kdl ${PROJECT_VERSION} EXACT REQUIRED)
 include_directories(${orocos_kdl_INCLUDE_DIRS})
 link_directories(${orocos_kdl_LIBRARY_DIRS})
 
-set(PYBIND11_PYTHON_VERSION 3 CACHE STRING "Python version used by PyBind11")
-
-find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+# Note: this find_package must stay ahead of the pybind11 subdirectory/package below.
+# pybind11 only runs its own find_package(Python ...) when neither Python_FOUND nor
+# Python3_FOUND is set, so this call is the single place where the minimum Python
+# version for PyKDL is enforced.
+find_package(Python3 3.10 COMPONENTS Interpreter Development REQUIRED)
 # get_python_lib in python3 produces path which isn't in sys.path: https://bugs.launchpad.net/ubuntu/+source/python3-stdlib-extensions/+bug/1832215
 # execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(plat_specific=True, prefix=''))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/dist-packages" CACHE STRING "Install location of the python package")  # This might be overridden below if built with catkin.
 set(LIBRARY_NAME "PyKDL")
 
 # catkin-specific configuration (optional)
-find_package(catkin QUIET)
-if(catkin_FOUND)
-  catkin_package(
-    SKIP_CMAKE_CONFIG_GENERATION
-    SKIP_PKG_CONFIG_GENERATION
-  )
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${PYTHON_INSTALL_DIR})
-  set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
+if(DEFINED ENV{ROS_VERSION} AND "$ENV{ROS_VERSION}" STREQUAL "1")
+  find_package(catkin QUIET)
+  if(catkin_FOUND)
+    catkin_package(
+      SKIP_CMAKE_CONFIG_GENERATION
+      SKIP_PKG_CONFIG_GENERATION
+    )
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/${PYTHON_INSTALL_DIR})
+    set(PYTHON_SITE_PACKAGES_INSTALL_DIR "${PYTHON_INSTALL_DIR}")
+  endif()
 endif()
 
 # Build the module
-find_package(pybind11 2.6 QUIET)
+find_package(pybind11 3.0 QUIET)
 if(NOT ${pybind11_FOUND})
   message(STATUS "pybind11 not found, building from source")
   add_subdirectory(pybind11)

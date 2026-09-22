@@ -4,7 +4,7 @@
   schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>orocos_kdl</name>
-  <version>1.5.2</version>
+  <version>1.5.4</version>
   <description>
     This package contains a recent version of the Kinematics and Dynamics
     Library (KDL), distributed by the Orocos Project.
@@ -13,10 +13,10 @@
   <url>http://wiki.ros.org/orocos_kdl</url>
   <license>LGPL-2.1-or-later</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend condition="$ROS_VERSION == 1">catkin</buildtool_depend>
   <build_depend>eigen</build_depend>
 
-  <exec_depend>catkin</exec_depend>
+  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
   <exec_depend>eigen</exec_depend>
   <exec_depend>pkg-config</exec_depend>
 

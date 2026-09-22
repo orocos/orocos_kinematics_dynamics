@@ -335,9 +335,19 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainFkSolverPos, SolverI> chain_fk_solver_pos(m, "ChainFkSolverPos");
     chain_fk_solver_pos.def("JntToCart", (int (ChainFkSolverPos::*)(const JntArray&, Frame&, int)) &ChainFkSolverPos::JntToCart,
                             py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
-//    Argument by reference doesn't work for container types
-//    chain_fk_solver_pos.def("JntToCart", (int (ChainFkSolverPos::*)(const JntArray&, std::vector<Frame>&, int)) &ChainFkSolverPos::JntToCart,
-//                            py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
+    chain_fk_solver_pos.def("JntToCart", [](ChainFkSolverPos& self, const JntArray& q_in, py::list& p_out, int segmentNr)
+    {
+        std::vector<Frame> temp;
+        temp.resize(p_out.size());
+        int result = self.JntToCart(q_in, temp, segmentNr);
+        p_out.clear();
+        for (const Frame& f : temp)
+        {
+            p_out.append(f);
+        }
+        return result;
+    },
+    py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
 
 
     // --------------------
@@ -346,9 +356,19 @@ void init_kinfam(pybind11::module &m)
     py::class_<ChainFkSolverVel, SolverI> chain_fk_solver_vel(m, "ChainFkSolverVel");
     chain_fk_solver_vel.def("JntToCart", (int (ChainFkSolverVel::*)(const JntArrayVel&, FrameVel&, int)) &ChainFkSolverVel::JntToCart,
                             py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
-//    Argument by reference doesn't work for container types
-//    chain_fk_solver_vel.def("JntToCart", (int (ChainFkSolverVel::*)(const JntArrayVel&, std::vector<FrameVel>&, int)) &ChainFkSolverVel::JntToCart,
-//                            py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
+    chain_fk_solver_vel.def("JntToCart", [](ChainFkSolverVel& self, const JntArrayVel& q_in, py::list& p_out, int segmentNr)
+    {
+        std::vector<FrameVel> temp;
+        temp.resize(p_out.size());
+        int result = self.JntToCart(q_in, temp, segmentNr);
+        p_out.clear();
+        for (const FrameVel& f : temp)
+        {
+            p_out.append(f);
+        }
+        return result;
+    },
+    py::arg("q_in"), py::arg("p_out"), py::arg("segmentNr")=-1);
 
 
     // ------------------------------

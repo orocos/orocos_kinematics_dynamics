@@ -15,35 +15,30 @@ jobs:
         os: [ubuntu-22.04, ubuntu-24.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
-        python_version: ['3.10', '3.12']
+        python_version: ['3.10', '3.12', '3.14']
         include:
           - os: ubuntu-24.04
             orocos_build_type: Release
             compiler: gcc
-            python_version: '3.8'
-          - os: ubuntu-24.04
-            orocos_build_type: Release
-            compiler: gcc
-            python_version: '3.9'
-          - os: ubuntu-24.04
-            orocos_build_type: Release
-            compiler: gcc
             python_version: '3.11'
+          - os: ubuntu-24.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: '3.13'
     env:
       CC: ${{ matrix.compiler }}
-      OROCOS_BUILD_TYPE: ${{ matrix.orocos_build_type }}
-      ROS_PYTHON_VERSION: ${{ matrix.python_version }}
+      OROCOS_KDL_BUILD_TYPE: ${{ matrix.orocos_build_type }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python_version }}
       - name: Install
         run: |
           sudo apt-get install libeigen3-dev libcppunit-dev
-          pip install psutil future
+          pip install psutil
       - name: Build orocos_kdl
         run: |
           cd orocos_kdl
@@ -88,7 +83,7 @@ jobs:
             branch: release-1.5
     env: ${{ matrix.env }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
         if: ${{ (github.event_name == 'push' && endsWith(github.ref, matrix.branch)) || (github.event_name == 'pull_request' && endsWith(github.base_ref, matrix.branch)) }}
