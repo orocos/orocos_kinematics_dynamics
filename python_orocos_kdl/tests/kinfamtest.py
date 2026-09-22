@@ -226,7 +226,7 @@ class KinfamTestFunctions(unittest.TestCase):
         epsJ = 1e-7
         self.testFkVelAndIkVelImpl(self.fksolvervel, self.iksolvervel_givens, epsJ)
 
-    def testFkPosAndIkPosImpl(self, fksolverpos, iksolverpos, epsJ):
+    def testFkPosAndIkPosImpl(self, fksolverpos, iksolverpos):
         q = JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
             q[i] = random.uniform(-3.14, 3.14)
@@ -244,16 +244,32 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertTrue(0 == iksolverpos.CartToJnt(q_init, F1, q_solved))
         self.assertTrue(0 == fksolverpos.JntToCart(q_solved, F2))
 
+        # Only the reached pose is compared. The test chain has no joint limits, so the solver
+        # may return any configuration that reaches the goal, including one differing by a
+        # multiple of pi; comparing q against q_solved would reject those valid solutions.
+        # The C++ counterpart, SolverTest::FkPosAndIkPosLocal, omits that comparison too.
         self.assertEqual(F1, F2)
-        self.assertTrue(Equal(q, q_solved, epsJ), "{} != {}".format(q, q_solved))
 
     def testFkPosAndIkPos(self):
-        epsJ = 1e-3
-        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos, epsJ)
+        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos)
 
     def testFkPosAndIkPosGivens(self):
-        epsJ = 1e-3
-        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens, epsJ)
+        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens)
+
+    def testIkPosEquivalentSolution(self):
+        """
+        Regression test for the intermittent failure of testFkPosAndIkPos.
+
+        With these seeds ChainIkSolverPos_NR converges (returning E_NOERROR) onto a
+        configuration that reaches the goal pose exactly, but differs from the original joint
+        values by a multiple of pi. Comparing the joint values rejected those valid solutions,
+        which made the test fail for roughly 1 in 1500 random configurations. Seeding makes
+        those configurations deterministic, so re-introducing such a comparison fails here
+        immediately rather than intermittently.
+        """
+        for seed, iksolverpos in ((1084, self.iksolverpos), (1175, self.iksolverpos_givens)):
+            random.seed(seed)
+            self.testFkPosAndIkPosImpl(self.fksolverpos, iksolverpos)
 
     def testFkPosVect(self):
         epsC = 1e-5
@@ -390,6 +406,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVelGivens'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPosGivens'))
+    suite.addTest(KinfamTestFunctions('testIkPosEquivalentSolution'))
     suite.addTest(KinfamTestFunctions('testFkPosVect'))
     suite.addTest(KinfamTestFunctions('testFkVelVect'))
     suite.addTest(KinfamTestFunctions('testJacDot'))
