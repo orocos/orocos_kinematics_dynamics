@@ -363,7 +363,7 @@ namespace KDL
  * @ingroup KinematicFamily
  */
 
-class ChainHdSolver_Vereshchagin : KDL::SolverI
+class ChainHdSolver_Vereshchagin : public KDL::SolverI
 {
     typedef std::vector<Twist> Twists;
     typedef std::vector<Frame> Frames;
