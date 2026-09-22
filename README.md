@@ -15,6 +15,12 @@ The python bindings, are located in the `python_orocos_kdl` folder. The installa
 
 Always use the same version of the C++ library and the python bindings. As a mismatch between these two can cause many issues.
 
-Also when using ROS/catkin, it is preferred to use the catkin installation method over the `cmake/make` method.
+Also when using ROS 2, it is preferred to use the colcon installation method over the `cmake/make` method.
 
-There will be no ROS Noetic release.
+## ROS support
+
+The `master` branch targets ROS 2 and builds with `colcon`/`ament`. The `release-1.5` branch is
+the last one supporting ROS 1 and `catkin`; there will be no ROS Noetic release.
+
+Both packages declare `<build_type>cmake</build_type>`, so they also build with plain `cmake` and
+`make` without ROS, ament or colcon installed.
