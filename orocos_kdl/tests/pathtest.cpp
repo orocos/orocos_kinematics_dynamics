@@ -1,6 +1,6 @@
 #include "pathtest.hpp"
 #include <frames_io.hpp>
-#include <rotational_interpolation_sa.hpp>
+#include <utilities/error.h>
 #include <utilities/scoped_ptr.hpp>
 #include <sstream>
 
@@ -14,6 +14,90 @@ void PathTest::setUp()
 
 void PathTest::tearDown()
 {
+}
+
+void PathTest::TestPathPoint()
+{
+    Frame f(Rotation::RPY(0.1, 0.2, 0.3), Vector(1, 2, 3));
+    Path_Point p(f);
+
+    CPPUNIT_ASSERT_EQUAL(Path::ID_POINT, p.getIdentifier());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, p.PathLength(), epsilon);
+    CPPUNIT_ASSERT_EQUAL(f, p.Pos(0.0));
+    CPPUNIT_ASSERT_EQUAL(f, p.Pos(1.234));
+    CPPUNIT_ASSERT_EQUAL(Twist::Zero(), p.Vel(0.0, 1.0));
+    CPPUNIT_ASSERT_EQUAL(Twist::Zero(), p.Acc(0.0, 1.0, 1.0));
+}
+
+void PathTest::TestPathPoint_Clone()
+{
+    Frame f(Rotation::Identity(), Vector(1, 0, 0));
+    Path_Point p(f);
+
+    scoped_ptr<Path> p2(p.Clone());
+    CPPUNIT_ASSERT_EQUAL(Path::ID_POINT, p2->getIdentifier());
+    CPPUNIT_ASSERT_EQUAL(f, p2->Pos(0.0));
+}
+
+void PathTest::TestPathLine()
+{
+    Frame start(Rotation::Identity(), Vector(0, 0, 0));
+    Frame end(Rotation::Identity(), Vector(3, 4, 0));
+    Path_Line line(start, end, new RotationalInterpolation_SingleAxis(), 1.0);
+
+    CPPUNIT_ASSERT_EQUAL(Path::ID_LINE, line.getIdentifier());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(5.0, line.PathLength(), epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(5.0, line.LengthToS(5.0), epsilon);
+
+    CPPUNIT_ASSERT_EQUAL(start, line.Pos(0.0));
+    CPPUNIT_ASSERT_EQUAL(end, line.Pos(5.0));
+    CPPUNIT_ASSERT_EQUAL(Vector(1.5, 2.0, 0.0), line.Pos(2.5).p);
+
+    Twist vel = line.Vel(2.5, 2.0);
+    CPPUNIT_ASSERT_EQUAL(Vector(1.2, 1.6, 0.0), vel.vel);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), vel.rot);
+}
+
+void PathTest::TestPathLine_Clone()
+{
+    Frame start(Rotation::Identity(), Vector(0, 0, 0));
+    Frame end(Rotation::Identity(), Vector(1, 0, 0));
+    Path_Line line(start, end, new RotationalInterpolation_SingleAxis(), 1.0);
+
+    scoped_ptr<Path> line2(line.Clone());
+    CPPUNIT_ASSERT_EQUAL(Path::ID_LINE, line2->getIdentifier());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(line.PathLength(), line2->PathLength(), epsilon);
+}
+
+void PathTest::TestPathCircle()
+{
+    double radius = 1.0;
+    double alpha = PI_2;
+    Vector center(0, 0, 0);
+    Frame start(Rotation::Identity(), Vector(radius, 0, 0));
+    Vector plane_point(0, radius, 0);
+
+    Path_Circle circle(start, center, plane_point, Rotation::Identity(),
+                        alpha, new RotationalInterpolation_SingleAxis(), 1.0);
+
+    CPPUNIT_ASSERT_EQUAL(Path::ID_CIRCLE, circle.getIdentifier());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(radius * alpha, circle.PathLength(), epsilon);
+    CPPUNIT_ASSERT_EQUAL(start.p, circle.Pos(0.0).p);
+
+    Frame end_pos = circle.Pos(circle.PathLength());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(radius, (end_pos.p - center).Norm(), epsilon);
+
+    Frame mid_pos = circle.Pos(circle.PathLength() / 2);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(radius, (mid_pos.p - center).Norm(), epsilon);
+}
+
+void PathTest::TestPathCircle_TooSmall()
+{
+    Frame start(Rotation::Identity(), Vector(0, 0, 0));
+    CPPUNIT_ASSERT_THROW(
+        Path_Circle(start, Vector(0, 0, 0), Vector(0, 1, 0), Rotation::Identity(),
+                    PI_2, new RotationalInterpolation_SingleAxis(), 1.0),
+        Error_MotionPlanning_Circle_ToSmall);
 }
 
 // A quarter circle of radius 1 in the XY plane, centered on the origin,
@@ -125,4 +209,74 @@ void PathTest::TestCircleWriteReadEqualsOriginalOffOriginCenter()
     scoped_ptr<Path> restored(Path::Read(ss));
 
     AssertSamePath("Write/Read of circle with off origin center", circle.get(), restored.get());
+}
+
+void PathTest::TestPathComposite()
+{
+    Frame f0(Rotation::Identity(), Vector(0, 0, 0));
+    Frame f1(Rotation::Identity(), Vector(3, 4, 0));
+    Frame f2(Rotation::Identity(), Vector(3, 4, 4));
+
+    Path_Composite comp;
+    comp.Add(new Path_Line(f0, f1, new RotationalInterpolation_SingleAxis(), 1.0));
+    comp.Add(new Path_Line(f1, f2, new RotationalInterpolation_SingleAxis(), 1.0));
+
+    CPPUNIT_ASSERT_EQUAL(Path::ID_COMPOSITE, comp.getIdentifier());
+    CPPUNIT_ASSERT_EQUAL(2, comp.GetNrOfSegments());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(5.0, comp.GetLengthToEndOfSegment(0), epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(9.0, comp.GetLengthToEndOfSegment(1), epsilon);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(9.0, comp.PathLength(), epsilon);
+
+    CPPUNIT_ASSERT_EQUAL(f0, comp.Pos(0.0));
+    CPPUNIT_ASSERT_EQUAL(f1, comp.Pos(5.0));
+    CPPUNIT_ASSERT_EQUAL(f2, comp.Pos(9.0));
+
+    // LengthToS() is only applicable to non-composed paths
+    CPPUNIT_ASSERT_THROW(comp.LengthToS(1.0), Error_MotionPlanning_Not_Applicable);
+}
+
+void PathTest::TestPathComposite_Clone()
+{
+    Frame f0(Rotation::Identity(), Vector(0, 0, 0));
+    Frame f1(Rotation::Identity(), Vector(1, 0, 0));
+
+    Path_Composite comp;
+    comp.Add(new Path_Line(f0, f1, new RotationalInterpolation_SingleAxis(), 1.0));
+
+    scoped_ptr<Path> comp2(comp.Clone());
+    CPPUNIT_ASSERT_EQUAL(Path::ID_COMPOSITE, comp2->getIdentifier());
+    CPPUNIT_ASSERT_EQUAL(1, static_cast<Path_Composite*>(comp2.get())->GetNrOfSegments());
+}
+
+void PathTest::TestPathRoundedComposite()
+{
+    Path_RoundedComposite path(0.5, 0.1, new RotationalInterpolation_SingleAxis());
+    path.Add(Frame(Rotation::Identity(), Vector(0, 0, 0)));
+    path.Add(Frame(Rotation::Identity(), Vector(4, 0, 0)));
+    path.Add(Frame(Rotation::Identity(), Vector(4, 4, 0)));
+    path.Finish();
+
+    CPPUNIT_ASSERT_EQUAL(Path::ID_ROUNDED_COMPOSITE, path.getIdentifier());
+    CPPUNIT_ASSERT_EQUAL(3, path.GetNrOfSegments());
+
+    // rounding the corner shortens the path compared to the two unrounded
+    // segments (8), but it cannot be shorter than a straight line from
+    // start to end
+    CPPUNIT_ASSERT(path.PathLength() > 7.0);
+    CPPUNIT_ASSERT(path.PathLength() < 8.0);
+
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, (path.Pos(0.0).p - Vector(0, 0, 0)).Norm(), 1e-6);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.0, (path.Pos(path.PathLength()).p - Vector(4, 4, 0)).Norm(), 1e-6);
+}
+
+void PathTest::TestPathCyclicClosed()
+{
+    Frame f0(Rotation::Identity(), Vector(0, 0, 0));
+    Frame f1(Rotation::Identity(), Vector(1, 0, 0));
+
+    Path_Cyclic_Closed cyclic(new Path_Line(f0, f1, new RotationalInterpolation_SingleAxis(), 1.0), 3);
+
+    CPPUNIT_ASSERT_EQUAL(Path::ID_CYCLIC_CLOSED, cyclic.getIdentifier());
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(3.0, cyclic.PathLength(), epsilon);
+    CPPUNIT_ASSERT_EQUAL(f0, cyclic.Pos(0.0));
 }
