@@ -59,6 +59,13 @@ IF(ENABLE_TESTS)
    COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
  ADD_TEST(NAME pathtest COMMAND pathtest)
 
+ ADD_EXECUTABLE(rotationalinterpolation rotationalinterpolation.cpp test-runner.cpp)
+ SET(TESTNAME "rotationalinterpolation")
+ TARGET_LINK_LIBRARIES(rotationalinterpolation orocos-kdl ${CPPUNIT})
+ SET_TARGET_PROPERTIES( rotationalinterpolation PROPERTIES
+   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
+ ADD_TEST(NAME rotationalinterpolation COMMAND rotationalinterpolation)
+
  ADD_EXECUTABLE(treeinvdyntest treeinvdyntest.cpp test-runner.cpp)
  SET(TESTNAME "treeinvdyntest")
  TARGET_LINK_LIBRARIES(treeinvdyntest orocos-kdl ${CPPUNIT})
