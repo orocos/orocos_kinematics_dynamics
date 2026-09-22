@@ -414,7 +414,7 @@ public:
     void getTotalTorque(JntArray &total_tau);
 
     // Returns magnitude of the constraint forces acting on the end-effector: Lagrange Multiplier
-    void getContraintForceMagnitude(Eigen::VectorXd &nu_);
+    void getConstraintForceMagnitude(Eigen::VectorXd &nu_);
 
     /*
     //Returns cartesian positions of links in base coordinates

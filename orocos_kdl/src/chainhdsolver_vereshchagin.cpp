@@ -365,7 +365,7 @@ void ChainHdSolver_Vereshchagin::getTotalTorque(JntArray &total_tau)
 }
 
 // Returns magnitude of the constraint forces acting on the end-effector: Lagrange Multiplier
-void ChainHdSolver_Vereshchagin::getContraintForceMagnitude(Eigen::VectorXd &nu_)
+void ChainHdSolver_Vereshchagin::getConstraintForceMagnitude(Eigen::VectorXd &nu_)
 {
     assert(nu_.size() == nu.size());
     nu_ = nu;
