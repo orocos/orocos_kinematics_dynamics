@@ -70,6 +70,11 @@ void init_dynamics(pybind11::module &m)
         oss << jm;
         return oss.str();
     });
+	jnt_space_inertia_matrix.def_property("data", [](py::object& obj)
+			{
+				JntSpaceInertiaMatrix * H = obj.cast<JntSpaceInertiaMatrix *>();
+				return py::array_t<double>({H->rows(), H->columns()}, {sizeof(double), sizeof(double)*H->rows()}, H->data.data(), obj);
+			}, nullptr);
     jnt_space_inertia_matrix.def(py::self == py::self);
 
     m.def("Add", (void (*)(const JntSpaceInertiaMatrix&, const JntSpaceInertiaMatrix&, JntSpaceInertiaMatrix&)) &KDL::Add, py::arg("src1"), py::arg("src2"), py::arg("dest"));

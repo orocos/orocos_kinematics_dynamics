@@ -122,6 +122,12 @@ void init_kinfam(pybind11::module &m)
     rotational_inertia.def(double() * py::self);
     rotational_inertia.def(py::self + py::self);
     rotational_inertia.def(py::self * Vector());
+	rotational_inertia.def_property("data", [](py::object& obj)
+			{
+				RotationalInertia * M = obj.cast<RotationalInertia *>();
+				// preserve behavior of C++ code: return (9,) object instead of (3,3)
+				return py::array_t<double>({9,}, {sizeof(double),}, M->data, obj);
+			}, nullptr);
 
 
     // --------------------
