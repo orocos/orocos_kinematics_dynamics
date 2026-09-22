@@ -43,6 +43,7 @@
 #include <kdl/chainjnttojacsolver.hpp>
 #include <kdl/chainjnttojacdotsolver.hpp>
 #include <kdl/chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/chainhdsolver_vereshchagin.hpp>
 #include <kdl/kinfam_io.hpp>
 #include "PyKDL.h"
 
@@ -533,4 +534,35 @@ void init_kinfam(pybind11::module &m)
     // ------------------------------
     py::class_<ChainIdSolver_RNE, ChainIdSolver> chain_id_solver_RNE(m, "ChainIdSolver_RNE");
     chain_id_solver_RNE.def(py::init<const Chain&, Vector>(), py::arg("chain"), py::arg("grav"));
+
+
+    // ------------------------------
+    // ChainHdSolver_Vereshchagin
+    // ------------------------------
+    py::class_<ChainHdSolver_Vereshchagin, SolverI> chain_hd_solver_vereshchagin(m, "ChainHdSolver_Vereshchagin");
+    chain_hd_solver_vereshchagin.def(py::init<const Chain&, const Twist&, const unsigned int>(),
+                                     py::arg("chain"), py::arg("root_acc"), py::arg("nc"));
+    chain_hd_solver_vereshchagin.def("CartToJnt", &ChainHdSolver_Vereshchagin::CartToJnt,
+                                     py::arg("q"), py::arg("q_dot"), py::arg("q_dotdot"), py::arg("alfa"),
+                                     py::arg("beta"), py::arg("f_ext"), py::arg("ff_torques"),
+                                     py::arg("constraint_torques"));
+    chain_hd_solver_vereshchagin.def("getTotalTorque", &ChainHdSolver_Vereshchagin::getTotalTorque,
+                                     py::arg("total_tau"));
+
+    // The remaining getters write into std::vector and Eigen out-parameters. pybind11 converts
+    // those types by copy, so a C++ reference to them cannot be written back to the caller's
+    // object. They take the pre-sized container and return the filled one instead; the size is
+    // still the caller's responsibility, as the solver asserts on it.
+    chain_hd_solver_vereshchagin.def("getTransformedLinkAcceleration",
+                                     [](ChainHdSolver_Vereshchagin& self, std::vector<Twist> x_dotdot)
+    {
+        self.getTransformedLinkAcceleration(x_dotdot);
+        return x_dotdot;
+    }, py::arg("x_dotdot"));
+    chain_hd_solver_vereshchagin.def("getContraintForceMagnitude",
+                                     [](ChainHdSolver_Vereshchagin& self, Eigen::VectorXd nu)
+    {
+        self.getContraintForceMagnitude(nu);
+        return nu;
+    }, py::arg("nu"));
 }
