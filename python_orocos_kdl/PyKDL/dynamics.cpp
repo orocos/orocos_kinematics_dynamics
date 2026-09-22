@@ -86,7 +86,7 @@ void init_dynamics(pybind11::module &m)
     // --------------------
     // ChainDynParam
     // --------------------
-    py::class_<ChainDynParam> chain_dyn_param(m, "ChainDynParam");
+    py::class_<ChainDynParam, SolverI> chain_dyn_param(m, "ChainDynParam");
     chain_dyn_param.def(py::init<const Chain&, Vector>());
     chain_dyn_param.def("JntToCoriolis", &ChainDynParam::JntToCoriolis, py::arg("q"), py::arg("q_dot"), py::arg("coriolis"));
     chain_dyn_param.def("JntToMass", &ChainDynParam::JntToMass, py::arg("q"), py::arg("H"));
@@ -95,7 +95,7 @@ void init_dynamics(pybind11::module &m)
     // --------------------
     // ChainExternalWrenchEstimator
     // --------------------
-    py::class_<ChainExternalWrenchEstimator> chain_ext_wrench_estimator(m, "ChainExternalWrenchEstimator");
+    py::class_<ChainExternalWrenchEstimator, SolverI> chain_ext_wrench_estimator(m, "ChainExternalWrenchEstimator");
     chain_ext_wrench_estimator.def(py::init<const Chain&, const Vector&, const double, const double, const double, const double, const int>(),
                                    py::arg("chain"), py::arg("gravity"), py::arg("sample_frequency"),
                                    py::arg("estimation_gain"), py::arg("filter_constant"),
@@ -109,7 +109,10 @@ void init_dynamics(pybind11::module &m)
                                    py::arg("joint_torque"), py::arg("external_wrench"));
     chain_ext_wrench_estimator.def("getEstimatedJntTorque", &ChainExternalWrenchEstimator::getEstimatedJntTorque,
                                    py::arg("external_joint_torque"));
-    chain_ext_wrench_estimator.def("updateInternalDataStructures", &ChainExternalWrenchEstimator::updateInternalDataStructures);
-    chain_ext_wrench_estimator.def("strError", &ChainExternalWrenchEstimator::strError,
-                                   py::arg("error"));
+
+    chain_ext_wrench_estimator.def_readonly_static("E_FKSOLVERPOS_FAILED", &ChainExternalWrenchEstimator::E_FKSOLVERPOS_FAILED);
+    chain_ext_wrench_estimator.def_readonly_static("E_JACSOLVER_FAILED", &ChainExternalWrenchEstimator::E_JACSOLVER_FAILED);
+    chain_ext_wrench_estimator.def_readonly_static("E_DYNPARAMSOLVERMASS_FAILED", &ChainExternalWrenchEstimator::E_DYNPARAMSOLVERMASS_FAILED);
+    chain_ext_wrench_estimator.def_readonly_static("E_DYNPARAMSOLVERCORIOLIS_FAILED", &ChainExternalWrenchEstimator::E_DYNPARAMSOLVERCORIOLIS_FAILED);
+    chain_ext_wrench_estimator.def_readonly_static("E_DYNPARAMSOLVERGRAVITY_FAILED", &ChainExternalWrenchEstimator::E_DYNPARAMSOLVERGRAVITY_FAILED);
 }
