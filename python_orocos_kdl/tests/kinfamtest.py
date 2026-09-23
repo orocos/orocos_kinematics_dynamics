@@ -267,6 +267,8 @@ class KinfamTestFunctions(unittest.TestCase):
         those configurations deterministic, so re-introducing such a comparison fails here
         immediately rather than intermittently.
         """
+        # Restore the generator afterwards, so the other randomized tests stay random.
+        self.addCleanup(random.setstate, random.getstate())
         for seed, iksolverpos in ((1084, self.iksolverpos), (1175, self.iksolverpos_givens)):
             random.seed(seed)
             self.testFkPosAndIkPosImpl(self.fksolverpos, iksolverpos)
