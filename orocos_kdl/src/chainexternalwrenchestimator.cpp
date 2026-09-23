@@ -22,6 +22,12 @@
 
 namespace KDL {
 
+const int ChainExternalWrenchEstimator::E_FKSOLVERPOS_FAILED;
+const int ChainExternalWrenchEstimator::E_JACSOLVER_FAILED;
+const int ChainExternalWrenchEstimator::E_DYNPARAMSOLVERMASS_FAILED;
+const int ChainExternalWrenchEstimator::E_DYNPARAMSOLVERCORIOLIS_FAILED;
+const int ChainExternalWrenchEstimator::E_DYNPARAMSOLVERGRAVITY_FAILED;
+
 ChainExternalWrenchEstimator::ChainExternalWrenchEstimator(const Chain &chain, const Vector &gravity, const double sample_frequency, const double estimation_gain, const double filter_constant, const double eps, const int maxiter) :
     CHAIN(chain),
     DT_SEC(1.0 / sample_frequency), FILTER_CONST(filter_constant),

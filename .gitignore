@@ -1,3 +1,6 @@
+**/build*/
+/.vs/
+/.vscode/
 .claude/
 
 # rosdoc2 build artefacts (defaults are relative to the current directory)
