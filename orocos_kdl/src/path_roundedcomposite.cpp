@@ -144,12 +144,12 @@ void Path_RoundedComposite::Finish() {
 	}
 }
 
-double Path_RoundedComposite::LengthToS(double length) {
+double Path_RoundedComposite::LengthToS(double length) const {
 	return comp->LengthToS(length);
 }
 
 
-double Path_RoundedComposite::PathLength() {
+double Path_RoundedComposite::PathLength() const {
 	return comp->PathLength();
 }
 
@@ -165,11 +165,11 @@ Twist Path_RoundedComposite::Acc(double s, double sd, double sdd) const {
 	return comp->Acc(s, sd, sdd);
 }
 
-void Path_RoundedComposite::Write(std::ostream& os) {
+void Path_RoundedComposite::Write(std::ostream& os) const {
 	comp->Write(os);
 }
 
-int Path_RoundedComposite::GetNrOfSegments() {
+int Path_RoundedComposite::GetNrOfSegments() const {
 	return comp->GetNrOfSegments();
 }
 
@@ -177,12 +177,12 @@ Path* Path_RoundedComposite::GetSegment(int i) {
 	return comp->GetSegment(i);
 }
 
-double Path_RoundedComposite::GetLengthToEndOfSegment(int i) {
+double Path_RoundedComposite::GetLengthToEndOfSegment(int i) const {
 	return comp->GetLengthToEndOfSegment(i);
 }
 
 void Path_RoundedComposite::GetCurrentSegmentLocation(double s,
-		int& segment_number, double& inner_s) {
+		int& segment_number, double& inner_s) const {
 	comp->GetCurrentSegmentLocation(s,segment_number,inner_s);
 }
 
@@ -195,7 +195,7 @@ Path_RoundedComposite::~Path_RoundedComposite() {
 }
 
 
-Path* Path_RoundedComposite::Clone() {
+Path* Path_RoundedComposite::Clone() const {
 	return new Path_RoundedComposite(static_cast<Path_Composite*>(comp->Clone()),radius,eqradius,orient->Clone(), true, nrofpoints);
 }
 

@@ -37,4 +37,5 @@ PYBIND11_MODULE(PyKDL, m)
     init_framevel(m);
     init_kinfam(m);
     init_dynamics(m);
+    init_motion(m);
 }
