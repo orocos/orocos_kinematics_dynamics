@@ -22,8 +22,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-from builtins import range
-
 import gc
 import psutil
 from PyKDL import *
@@ -302,8 +300,15 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertTrue(0 == iksolverpos.CartToJnt(q_init, F1, q_solved))
         self.assertTrue(0 == fksolverpos.JntToCart(q_solved, F2))
 
+        # Only the resulting pose can be checked. Inverse position kinematics is a many-to-one
+        # mapping: the same pose is reached by infinitely many joint configurations, e.g. those
+        # differing by a multiple of 2*pi or an equivalent "flipped" configuration. The
+        # Newton-Raphson solver is a local method, so it returns whichever solution its iteration
+        # converges to, which is not necessarily the configuration q was seeded from, even though
+        # q_init lies close to q. Asserting Equal(q, q_solved) therefore fails for a small
+        # fraction of the random configurations. The equivalent C++ test in
+        # orocos_kdl/tests/solvertest.cpp deliberately does not assert it either.
         self.assertEqual(F1, F2)
-        self.assertTrue(Equal(q, q_solved, epsJ), "{} != {}".format(q, q_solved))
 
     def testFkPosAndIkPos(self):
         epsJ = 1e-3
@@ -312,6 +317,41 @@ class KinfamTestFunctions(unittest.TestCase):
     def testFkPosAndIkPosGivens(self):
         epsJ = 1e-3
         self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens, epsJ)
+
+    def testFkPosVect(self):
+        epsC = 1e-5
+    
+        q = JntArray(self.chain.getNrOfJoints())
+
+        for i in range(q.rows()):
+            q[i] = random.uniform(-0.99, 0.99)
+
+        v_out: list[Frame | None] = [None] * self.chain.getNrOfSegments()  # Initialize with None to avoid the overhead of creating Frame objects for unused entries
+        f_out = Frame()
+        self.assertEqual(self.fksolverpos.JntToCart(q, f_out), 0)
+        self.assertEqual(self.fksolverpos.JntToCart(q, v_out), 0)
+
+        self.assertEqual(len(v_out), self.chain.getNrOfSegments())
+        self.assertTrue(Equal(v_out[self.chain.getNrOfSegments() - 1], f_out, epsC))
+
+    def testFkVelVect(self):
+        epsC = 1e-5
+    
+        q = JntArray(self.chain.getNrOfJoints())
+        qdot = JntArray(self.chain.getNrOfJoints())
+
+        for i in range(q.rows()):
+            q[i] = random.uniform(-0.99, 0.99)
+            qdot[i] = random.uniform(-0.99, 0.99)
+
+        v_out: list[FrameVel | None] = [None] * self.chain.getNrOfSegments()  # Using None as placeholders avoids the overhead of creating multiple FrameVel objects upfront.
+        f_out = FrameVel()
+        q_vel = JntArrayVel(q, qdot)
+        self.assertEqual(self.fksolvervel.JntToCart(q_vel, f_out), 0)
+        self.assertEqual(self.fksolvervel.JntToCart(q_vel, v_out), 0)
+
+        self.assertEqual(len(v_out), self.chain.getNrOfSegments())
+        self.assertTrue(Equal(v_out[self.chain.getNrOfSegments() - 1], f_out, epsC))
 
     def compare_Jdot_Diff_vs_Solver(self, dt, representation):
         NrOfJoints = self.chain.getNrOfJoints()
@@ -416,6 +456,8 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVelGivens'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPosGivens'))
+    suite.addTest(KinfamTestFunctions('testFkPosVect'))
+    suite.addTest(KinfamTestFunctions('testFkVelVect'))
     suite.addTest(KinfamTestFunctions('testJacDot'))
     suite.addTest(KinfamTestTree('testTreeGetChainMemLeak'))
     return suite
