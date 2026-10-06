@@ -100,6 +100,24 @@ class KinfamTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             ri[9] = 1
 
+    def testRotationalInertiaData(self):
+        ri = RotationalInertia(1, 2, 3, 4, 5, 6)  # Ixx, Iyy, Izz, Ixy, Ixz, Iyz
+        arr = ri.data
+        # Kept flat ((9,), not (3,3)): the class doesn't define a canonical
+        # row/col-major convention for indexing pairs, only the flat layout
+        # used by __getitem__/__setitem__.
+        self.assertEqual(arr.shape, (9,))
+        for i in range(9):
+            self.assertEqual(arr[i], ri[i])
+
+        arr[0] = 42
+        self.assertEqual(ri[0], 42)
+        ri[8] = 99
+        self.assertEqual(arr[8], 99)
+
+        with self.assertRaises(AttributeError):
+            ri.data = RotationalInertia()
+
     def testJacobian(self):
         jac = Jacobian(3)
         for i in range(jac.columns()):
@@ -133,6 +151,27 @@ class KinfamTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             jac[5, 3] = 1
 
+    def testJacobianData(self):
+        jac = Jacobian(3)
+        for i in range(jac.columns()):
+            jac.setColumn(i, Twist(Vector(6*i+1, 6*i+2, 6*i+3), Vector(6*i+4, 6*i+5, 6*i+6)))
+
+        # Non-square (6x3), so a transposed view would show up as a shape
+        # mismatch, not just wrong values.
+        arr = jac.data
+        self.assertEqual(arr.shape, (6, 3))
+        for i in range(6):
+            for j in range(3):
+                self.assertEqual(arr[i, j], jac[i, j])
+
+        arr[0, 0] = 42
+        self.assertEqual(jac[0, 0], 42)
+        jac[5, 2] = 99
+        self.assertEqual(arr[5, 2], 99)
+
+        with self.assertRaises(AttributeError):
+            jac.data = Jacobian(3)
+
     def testJntArray(self):
         ja = JntArray(3)
         # __getitem__
@@ -152,6 +191,23 @@ class KinfamTestFunctions(unittest.TestCase):
             ja[-1] = 1
         with self.assertRaises(IndexError):
             ja[3] = 1
+
+    def testJntArrayData(self):
+        ja = JntArray(4)
+        for i in range(4):
+            ja[i] = i + 1
+
+        arr = ja.data
+        self.assertEqual(arr.shape, (4,))
+        self.assertEqual(list(arr), [1, 2, 3, 4])
+
+        arr[0] = 42
+        self.assertEqual(ja[0], 42)
+        ja[1] = 99
+        self.assertEqual(arr[1], 99)
+
+        with self.assertRaises(AttributeError):
+            ja.data = JntArray(4)
 
     def testFkPosAndJac(self):
         deltaq = 1E-4
@@ -421,8 +477,11 @@ class KinfamTestTree(unittest.TestCase):
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(KinfamTestFunctions('testRotationalInertia'))
+    suite.addTest(KinfamTestFunctions('testRotationalInertiaData'))
     suite.addTest(KinfamTestFunctions('testJacobian'))
+    suite.addTest(KinfamTestFunctions('testJacobianData'))
     suite.addTest(KinfamTestFunctions('testJntArray'))
+    suite.addTest(KinfamTestFunctions('testJntArrayData'))
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
