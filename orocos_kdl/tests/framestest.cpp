@@ -784,4 +784,47 @@ void FramesTest::TestJntArrayWhenEmpty()
     CPPUNIT_ASSERT(Equal(a1,a3));
 }
 
+void FramesTest::TestDiffIdenticalFrames() {
+    // Issue #491: diff with identical frames must return zero Twist
+    // Test with quaternion having norm slightly != 1.0 (e.g. from single-precision float conversion)
+    Frame f1(
+        Rotation::Quaternion(-0.728750, 0.129740, -0.190550, 0.644808),
+        Vector(0.042641, 0.618020, 0.595680)
+    );
 
+    // Identical object reference
+    Twist err_same = diff(f1, f1);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), err_same.vel);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), err_same.rot);
+
+    // Copied object instance
+    Frame f2 = f1;
+    Twist err_copy = diff(f1, f2);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), err_copy.vel);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), err_copy.rot);
+
+    // Separately constructed identical frame
+    Frame f3(
+        Rotation::Quaternion(-0.728750, 0.129740, -0.190550, 0.644808),
+        Vector(0.042641, 0.618020, 0.595680)
+    );
+    Twist err_constructed = diff(f1, f3);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), err_constructed.vel);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), err_constructed.rot);
+
+    // Rotations
+    Rotation r1 = f1.M;
+    Rotation r2 = f2.M;
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), diff(r1, r1));
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), diff(r1, r2));
+
+    // Vector, Twist, Wrench identity diffs
+    Vector v(1.0, 2.0, 3.0);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), diff(v, v));
+    Twist t(v, Vector(0.1, 0.2, 0.3));
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), diff(t, t).vel);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), diff(t, t).rot);
+    Wrench w(v, Vector(0.4, 0.5, 0.6));
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), diff(w, w).force);
+    CPPUNIT_ASSERT_EQUAL(Vector::Zero(), diff(w, w).torque);
+}
