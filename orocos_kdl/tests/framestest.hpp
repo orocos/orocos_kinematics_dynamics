@@ -21,6 +21,7 @@ class FramesTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestRotationDiff);
     CPPUNIT_TEST(TestEuler);
     CPPUNIT_TEST(TestGetRotAngle);
+    CPPUNIT_TEST(TestDiffIdenticalFrames);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -39,6 +40,7 @@ public:
 	void TestRotationDiff();
 	void TestEuler();
 	void TestGetRotAngle();
+	void TestDiffIdenticalFrames();
 
 private:
     void TestVector2(Vector& v);
