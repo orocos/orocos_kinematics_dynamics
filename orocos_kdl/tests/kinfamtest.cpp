@@ -152,6 +152,48 @@ void KinFamTest::ChainTest()
     chain2.addChain(chain1);
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfJoints(),chain1.getNrOfJoints()*(uint)2);
     CPPUNIT_ASSERT_EQUAL(chain2.getNrOfSegments(),chain1.getNrOfSegments()*(uint)2);
+
+    // Segment removal
+    Chain chain3(chain1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Non existent segment"),(uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(chain3.getNrOfSegments()),(uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(),chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(),chain1.getNrOfSegments());
+    // the last segment has a fixed joint
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(chain3.getNrOfSegments()-1),(uint)1);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(),chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(),chain1.getNrOfSegments()-1);
+    // "Segment 4" up to "Segment 6" contain two moving joints
+    chain3 = chain1;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Segment 4"),(uint)3);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(),chain1.getNrOfJoints()-2);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(),chain1.getNrOfSegments()-3);
+    CPPUNIT_ASSERT_EQUAL((uint)chain3.segments.size(),chain3.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(chain3.getSegment(chain3.getNrOfSegments()-1).getName(),std::string("Segment 3"));
+    // the chain can be extended again afterwards
+    chain3.addSegment(chain1.getSegment(4));
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(),chain1.getNrOfJoints()-1);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(),chain1.getNrOfSegments()-2);
+    // delete everything
+    chain3 = chain1;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(0),chain1.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(),(uint)0);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(),(uint)0);
+    CPPUNIT_ASSERT(chain3.segments.empty());
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom(0),(uint)0);
+    // duplicate names: the search starts at the tip
+    Chain chain4(chain1);
+    chain4.addSegment(Segment("Segment X", Joint("Joint X", Joint::None)));
+    chain4.addSegment(Segment("Segment Y", Joint("Joint Y", Joint::RotX)));
+    chain4.addSegment(Segment("Segment X", Joint("Joint X", Joint::None)));
+    chain4.addSegment(Segment("Segment Z", Joint("Joint Z", Joint::RotY)));
+    chain3 = chain4;
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Segment X"),(uint)2);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(),chain1.getNrOfJoints()+1);
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Segment X"),(uint)2);
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfJoints(),chain1.getNrOfJoints());
+    CPPUNIT_ASSERT_EQUAL(chain3.getNrOfSegments(),chain1.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(chain3.deleteSegmentsFrom("Segment X"),(uint)0);
 }
 
 // forward declaration, see below
@@ -243,6 +285,74 @@ void KinFamTest::TreeTest()
     std::cout << "Subtree (rooted at " << subroot << "):" << std::endl << tree2str(subtree) << std::endl;
     CPPUNIT_ASSERT(!isSubtree(tree1.getSegment(subroot), subtree.getRootSegment()));
     CPPUNIT_ASSERT(isSubtree(subtree.getRootSegment(), tree1.getSegment(subroot)));
+
+    // Segment removal
+    // root -> {S1, S2}, S2 -> {S3, S5}, S3 -> {S4}, S5 -> {S6, S7}
+    Tree tree3("root");
+    CPPUNIT_ASSERT(tree3.addSegment(Segment("S1", Joint("J1", Joint::RotX)), "root"));
+    CPPUNIT_ASSERT(tree3.addSegment(Segment("S2", Joint("J2", Joint::RotX)), "root"));
+    CPPUNIT_ASSERT(tree3.addSegment(Segment("S3", Joint("J3", Joint::RotX)), "S2"));
+    CPPUNIT_ASSERT(tree3.addSegment(Segment("S4", Joint("J4", Joint::None)), "S3"));
+    CPPUNIT_ASSERT(tree3.addSegment(Segment("S5", Joint("J5", Joint::RotX)), "S2"));
+    CPPUNIT_ASSERT(tree3.addSegment(Segment("S6", Joint("J6", Joint::RotX)), "S5"));
+    CPPUNIT_ASSERT(tree3.addSegment(Segment("S7", Joint("J7", Joint::None)), "S5"));
+    CPPUNIT_ASSERT_EQUAL(tree3.getNrOfSegments(), (uint)7);
+    CPPUNIT_ASSERT_EQUAL(tree3.getNrOfJoints(), (uint)5);
+
+    Tree tree4(tree3);
+    CPPUNIT_ASSERT_EQUAL(tree4.deleteSegmentsFrom("S1"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)6);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)4);
+    CPPUNIT_ASSERT(tree4.getSegment("S1") == tree4.getSegments().end());
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementChildren(tree4.getRootSegment()->second).size(), (size_t)1);
+
+    tree4 = tree3;
+    CPPUNIT_ASSERT_EQUAL(tree4.deleteSegmentsFrom("S2"), (uint)6);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(tree4.getSegments().size(), (size_t)2);  // root + S1
+
+    tree4 = tree3;
+    CPPUNIT_ASSERT_EQUAL(tree4.deleteSegmentsFrom(tree4.getSegment("S3")), (uint)2);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)5);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)4);
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementChildren(tree4.getSegment("S2")->second).size(), (size_t)1);
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementChildren(tree4.getSegment("S2")->second)[0]->first, std::string("S5"));
+
+    tree4 = tree3;
+    CPPUNIT_ASSERT_EQUAL(tree4.deleteSegmentsFrom("S7"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), (uint)6);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), (uint)5);
+
+    // invalid segment names and the root segment are ignored
+    tree4 = tree3;
+    CPPUNIT_ASSERT_EQUAL(tree4.deleteSegmentsFrom("ABCDEF"), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(tree4.deleteSegmentsFrom("root"), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(tree4.deleteSegmentsFrom(tree4.getSegments().end()), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfSegments(), tree3.getNrOfSegments());
+    CPPUNIT_ASSERT_EQUAL(tree4.getNrOfJoints(), tree3.getNrOfJoints());
+
+    // The joint numbers of the remaining segments stay contiguous and keep
+    // their order, also when that differs from the (alphabetical) map order.
+    Tree tree5("root");
+    CPPUNIT_ASSERT(tree5.addSegment(Segment("c", Joint(Joint::RotX)), "root"));   // q_nr 0
+    CPPUNIT_ASSERT(tree5.addSegment(Segment("b", Joint(Joint::RotX)), "root"));   // q_nr 1
+    CPPUNIT_ASSERT(tree5.addSegment(Segment("z", Joint(Joint::None)), "b"));
+    CPPUNIT_ASSERT(tree5.addSegment(Segment("a", Joint(Joint::RotX)), "z"));      // q_nr 2
+    CPPUNIT_ASSERT(tree5.addSegment(Segment("d", Joint(Joint::RotZ)), "root"));   // q_nr 3
+    CPPUNIT_ASSERT_EQUAL(tree5.deleteSegmentsFrom("c"), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(tree5.getNrOfJoints(), (uint)3);
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementQNr(tree5.getSegment("b")->second), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementQNr(tree5.getSegment("a")->second), (uint)1);
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementQNr(tree5.getSegment("d")->second), (uint)2);
+    // a new joint gets the next free number
+    CPPUNIT_ASSERT(tree5.addSegment(Segment("e", Joint(Joint::RotY)), "a"));
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementQNr(tree5.getSegment("e")->second), (uint)3);
+    CPPUNIT_ASSERT_EQUAL(tree5.deleteSegmentsFrom("z"), (uint)3);
+    CPPUNIT_ASSERT_EQUAL(tree5.getNrOfJoints(), (uint)2);
+    CPPUNIT_ASSERT_EQUAL(tree5.getNrOfSegments(), (uint)2);
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementQNr(tree5.getSegment("b")->second), (uint)0);
+    CPPUNIT_ASSERT_EQUAL(GetTreeElementQNr(tree5.getSegment("d")->second), (uint)1);
 }
 
 //Utility to check if the set of segments in contained is a subset of container.

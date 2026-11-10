@@ -95,6 +95,37 @@ namespace KDL {
          */
         Segment& getSegment(unsigned int nr);
 
+        /**
+         * Delete the nr'd segment and all segments after it, i.e. all
+         * segments closer to the tip of the chain.
+         *
+         * Solvers created for this chain have to be updated, see
+         * SolverI::updateInternalDataStructures().
+         *
+         * @param nr the nr of the first segment to delete, starting from 0
+         *
+         * @return the number of deleted segments, 0 if nr is not a valid
+         * segment index
+         */
+        unsigned int deleteSegmentsFrom(unsigned int nr);
+
+        /**
+         * Delete the segment with the given name and all segments after it,
+         * i.e. all segments closer to the tip of the chain.
+         *
+         * Segment names in a chain do not need to be unique. The search
+         * starts <strong>at the tip</strong> and stops at the first match.
+         *
+         * Solvers created for this chain have to be updated, see
+         * SolverI::updateInternalDataStructures().
+         *
+         * @param name the name of the first segment to delete
+         *
+         * @return the number of deleted segments, 0 if no segment has the
+         * given name
+         */
+        unsigned int deleteSegmentsFrom(const std::string& name);
+
         virtual ~Chain();
     };
 

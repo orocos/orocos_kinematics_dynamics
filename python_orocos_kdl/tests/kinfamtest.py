@@ -168,6 +168,26 @@ class KinfamTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             Chain().getSegment(0)
 
+    def testChainDeleteSegmentsFrom(self):
+        chain = Chain(self.chain)
+        n_segments = chain.getNrOfSegments()
+        n_joints = chain.getNrOfJoints()
+        self.assertEqual(chain.deleteSegmentsFrom(n_segments), 0)
+        self.assertEqual(chain.deleteSegmentsFrom("non existent"), 0)
+        # the last two segments: TransY and Fixed
+        self.assertEqual(chain.deleteSegmentsFrom(n_segments - 2), 2)
+        self.assertEqual(chain.getNrOfSegments(), n_segments - 2)
+        self.assertEqual(chain.getNrOfJoints(), n_joints - 1)
+        self.assertEqual(self.chain.getNrOfSegments(), n_segments)
+
+        chain = Chain()
+        chain.addSegment(Segment("a", Joint(Joint.RotZ)))
+        chain.addSegment(Segment("b", Joint(Joint.RotX)))
+        chain.addSegment(Segment("c", Joint(Joint.Fixed)))
+        self.assertEqual(chain.deleteSegmentsFrom("b"), 2)
+        self.assertEqual(chain.getNrOfSegments(), 1)
+        self.assertEqual(chain.getNrOfJoints(), 1)
+
     def testFkPosAndJac(self):
         deltaq = 1E-4
         epsJ = 1E-4
@@ -433,6 +453,18 @@ class KinfamTestTree(unittest.TestCase):
         self.tree.addSegment(Segment(Joint(Joint.Fixed),
                                      Frame(Vector(0.0, 0.0, 0.0))), "bar")
 
+    def testTreeDeleteSegmentsFrom(self):
+        tree = Tree("root")
+        tree.addSegment(Segment("S1", Joint(Joint.RotX)), "root")
+        tree.addSegment(Segment("S2", Joint(Joint.RotX)), "S1")
+        tree.addSegment(Segment("S3", Joint(Joint.Fixed)), "S2")
+        tree.addSegment(Segment("S4", Joint(Joint.RotY)), "root")
+        self.assertEqual(tree.deleteSegmentsFrom("root"), 0)
+        self.assertEqual(tree.deleteSegmentsFrom("non existent"), 0)
+        self.assertEqual(tree.deleteSegmentsFrom("S2"), 2)
+        self.assertEqual(tree.getNrOfSegments(), 2)
+        self.assertEqual(tree.getNrOfJoints(), 2)
+
     def testTreeGetChainMemLeak(self):
         # test for the memory leak in Tree.getChain described in issue #211
         process = psutil.Process()
@@ -454,6 +486,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testJacobian'))
     suite.addTest(KinfamTestFunctions('testJntArray'))
     suite.addTest(KinfamTestFunctions('testChainGetSegment'))
+    suite.addTest(KinfamTestFunctions('testChainDeleteSegmentsFrom'))
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
@@ -465,6 +498,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkPosVect'))
     suite.addTest(KinfamTestFunctions('testFkVelVect'))
     suite.addTest(KinfamTestFunctions('testJacDot'))
+    suite.addTest(KinfamTestTree('testTreeDeleteSegmentsFrom'))
     suite.addTest(KinfamTestTree('testTreeGetChainMemLeak'))
     return suite
 
