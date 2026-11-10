@@ -38,11 +38,23 @@ if(NOT TARGET orocos-kdl)
   include("${CMAKE_CURRENT_LIST_DIR}/OrocosKDLTargets.cmake")
 endif()
 
+# Eigen installs that only provide the Eigen3::Eigen target don't set
+# EIGEN3_INCLUDE_DIR, take the include directory from the target instead.
+if(EIGEN3_INCLUDE_DIR)
+  set(_orocos_kdl_eigen_include_dirs ${EIGEN3_INCLUDE_DIR})
+else()
+  get_target_property(_orocos_kdl_eigen_include_dirs Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+  if(NOT _orocos_kdl_eigen_include_dirs)
+    set(_orocos_kdl_eigen_include_dirs)
+  endif()
+endif()
+
 set(orocos_kdl_INCLUDE_DIRS
   ${orocos_kdl_PREFIX}/include
   ${Boost_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIR}
+  ${_orocos_kdl_eigen_include_dirs}
 )
+unset(_orocos_kdl_eigen_include_dirs)
 set(orocos_kdl_LIBRARIES orocos-kdl)
 set(orocos_kdl_TARGETS orocos-kdl)
 
