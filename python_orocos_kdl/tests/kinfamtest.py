@@ -153,6 +153,21 @@ class KinfamTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             ja[3] = 1
 
+    def testChainGetSegment(self):
+        n = self.chain.getNrOfSegments()
+        self.assertEqual(n, 9)
+        for i in range(n):
+            self.assertIsInstance(self.chain.getSegment(i), Segment)
+        self.assertEqual(self.chain.getSegment(0).getJoint().getType(), Joint.RotZ)
+        self.assertEqual(self.chain.getSegment(1).getFrameToTip(), Frame(Vector(0.0, 0.0, 0.9)))
+        self.assertEqual(self.chain.getSegment(n - 1).getJoint().getType(), Joint.Fixed)
+        with self.assertRaises(IndexError):
+            self.chain.getSegment(-1)
+        with self.assertRaises(IndexError):
+            self.chain.getSegment(n)
+        with self.assertRaises(IndexError):
+            Chain().getSegment(0)
+
     def testFkPosAndJac(self):
         deltaq = 1E-4
         epsJ = 1E-4
@@ -438,6 +453,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testRotationalInertia'))
     suite.addTest(KinfamTestFunctions('testJacobian'))
     suite.addTest(KinfamTestFunctions('testJntArray'))
+    suite.addTest(KinfamTestFunctions('testChainGetSegment'))
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
