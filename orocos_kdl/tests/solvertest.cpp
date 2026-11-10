@@ -979,7 +979,7 @@ void SolverTest::VereshchaginTest()
     // Additional getters for the intermediate solver's outputs: Useful for state- simulation and estimation purposes
     // Magnitude of the constraint forces acting on the end-effector: Lagrange Multiplier
     Eigen::VectorXd nu(number_of_constraints);
-    vereshchaginSolver.getContraintForceMagnitude(nu);
+    vereshchaginSolver.getConstraintForceMagnitude(nu);
     CPPUNIT_ASSERT(Equal(nu(0), 669693.30355, eps));
     CPPUNIT_ASSERT(Equal(nu(1), 5930.60826, eps));
     CPPUNIT_ASSERT(Equal(nu(2), -639.5238, eps));
