@@ -21,9 +21,8 @@
   <author email="MatthijsBurgh@outlook.com">Matthijs van der Burgh</author>
 
   <buildtool_depend condition="$ROS_VERSION == 2">ament_cmake</buildtool_depend>
-  <build_depend>eigen</build_depend>
+  <depend>eigen</depend>
 
-  <exec_depend>eigen</exec_depend>
   <exec_depend>pkg-config</exec_depend>
 
   <test_depend>cppunit</test_depend>

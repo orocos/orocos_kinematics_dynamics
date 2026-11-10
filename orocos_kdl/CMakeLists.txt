@@ -137,6 +137,13 @@ ADD_SUBDIRECTORY( examples )
 # directory, which older versions registered in the user package registry. A
 # config file there without the targets file next to it would make
 # find_package(orocos_kdl) fail instead of moving on to the installed package.
+# A build directory configured by an older version still has its build-tree
+# package files at the top, remove them so a stale registry entry pointing here
+# doesn't find them either.
+FILE(REMOVE
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  ${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake)
 INCLUDE(CMakePackageConfigHelpers)
 SET(KDL_CMAKE_INSTALL_DIR share/orocos_kdl/cmake)
 SET(KDL_CMAKE_CONFIG_BUILD_DIR ${PROJECT_BINARY_DIR}/package-config)
