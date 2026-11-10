@@ -81,7 +81,7 @@ RotationalInterpolation_SingleAxis::~RotationalInterpolation_SingleAxis() {
 
 
 RotationalInterpolation* RotationalInterpolation_SingleAxis::Clone() const {
-	return new RotationalInterpolation_SingleAxis();
+	return new RotationalInterpolation_SingleAxis(*this);
 }
 
 }
