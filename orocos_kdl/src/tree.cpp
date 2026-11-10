@@ -20,6 +20,7 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "tree.hpp"
+#include <algorithm>
 #include <sstream>
 
 namespace KDL {
@@ -171,6 +172,50 @@ bool Tree::getSubTree(const std::string& segment_name, Tree& tree) const
   //init the tree, segment_name is the new root.
   tree = Tree(root->first);
   return tree.addTreeRecursive(root, segment_name);
+}
+
+unsigned int Tree::deleteSegmentsFrom(SegmentMap::const_iterator segment) {
+    // the root segment can't be deleted
+    if (segment == segments.end() || segment == getRootSegment())
+        return 0;
+
+    // remove the segment from the children of its parent
+    SegmentMap::iterator parent = segments.find(GetTreeElementParent(segment->second)->first);
+    std::vector<SegmentMap::const_iterator>& siblings = GetTreeElementChildren(parent->second);
+    siblings.erase(std::remove(siblings.begin(), siblings.end(), segment), siblings.end());
+
+    // collect the segment and all its descendants
+    std::vector<SegmentMap::const_iterator> to_delete(1, segment);
+    for (std::size_t i = 0; i < to_delete.size(); ++i) {
+        const std::vector<SegmentMap::const_iterator>& children = GetTreeElementChildren(to_delete[i]->second);
+        to_delete.insert(to_delete.end(), children.begin(), children.end());
+    }
+
+    std::vector<unsigned int> deleted_q_nrs;
+    for (std::size_t i = 0; i < to_delete.size(); ++i) {
+        if (GetTreeElementSegment(to_delete[i]->second).getJoint().getType() != Joint::Fixed)
+            deleted_q_nrs.push_back(GetTreeElementQNr(to_delete[i]->second));
+        segments.erase(to_delete[i]);
+    }
+
+    // make the remaining joint numbers contiguous again, keeping their order
+    if (!deleted_q_nrs.empty()) {
+        std::sort(deleted_q_nrs.begin(), deleted_q_nrs.end());
+        for (SegmentMap::iterator it = segments.begin(); it != segments.end(); ++it) {
+            if (GetTreeElementSegment(it->second).getJoint().getType() == Joint::Fixed)
+                continue;
+            unsigned int& q_nr = GetTreeElementQNr(it->second);
+            q_nr -= std::lower_bound(deleted_q_nrs.begin(), deleted_q_nrs.end(), q_nr) - deleted_q_nrs.begin();
+        }
+    }
+
+    nrOfSegments -= to_delete.size();
+    nrOfJoints -= deleted_q_nrs.size();
+    return to_delete.size();
+}
+
+unsigned int Tree::deleteSegmentsFrom(const std::string& name) {
+    return deleteSegmentsFrom(segments.find(name));
 }
 
 }//end of namespace

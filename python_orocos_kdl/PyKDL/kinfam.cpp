@@ -176,6 +176,8 @@ void init_kinfam(pybind11::module &m)
     chain.def("getNrOfSegments", &Chain::getNrOfSegments);
     chain.def("getSegment", (Segment& (Chain::*)(unsigned int)) &Chain::getSegment, py::arg("index"));
     chain.def("getSegment", (const Segment& (Chain::*)(unsigned int) const) &Chain::getSegment, py::arg("index"));
+    chain.def("deleteSegmentsFrom", (unsigned int (Chain::*)(unsigned int)) &Chain::deleteSegmentsFrom, py::arg("index"));
+    chain.def("deleteSegmentsFrom", (unsigned int (Chain::*)(const std::string&)) &Chain::deleteSegmentsFrom, py::arg("name"));
     chain.def("__repr__", [](const Chain &c)
     {
         std::ostringstream oss;
@@ -194,6 +196,7 @@ void init_kinfam(pybind11::module &m)
     tree.def("addTree", &Tree::addTree, py::arg("tree"), py::arg("hook_name"));
     tree.def("getNrOfJoints", &Tree::getNrOfJoints);
     tree.def("getNrOfSegments", &Tree::getNrOfSegments);
+    tree.def("deleteSegmentsFrom", (unsigned int (Tree::*)(const std::string&)) &Tree::deleteSegmentsFrom, py::arg("name"));
     tree.def("getChain", [](const Tree &tree, const std::string& chain_root, const std::string& chain_tip)
     {
         Chain* chain = new Chain();

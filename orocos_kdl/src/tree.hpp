@@ -215,6 +215,36 @@ namespace KDL
            */
         bool getSubTree(const std::string& segment_name, Tree& tree)const;
 
+        /**
+         * Delete a segment and all its descendants from the tree.
+         *
+         * The joint numbers (q_nr) of the remaining segments are made
+         * contiguous again, keeping their relative order. Solvers created
+         * for this tree have to be recreated.
+         *
+         * @param segment iterator to the segment to delete, it is
+         * invalidated by this call
+         *
+         * @return the number of deleted segments, 0 if segment is
+         * getSegments().end() or the root segment, which can't be deleted
+         */
+        unsigned int deleteSegmentsFrom(SegmentMap::const_iterator segment);
+
+        /**
+         * Delete the segment with the given name and all its descendants
+         * from the tree.
+         *
+         * The joint numbers (q_nr) of the remaining segments are made
+         * contiguous again, keeping their relative order. Solvers created
+         * for this tree have to be recreated.
+         *
+         * @param name the name of the segment to delete
+         *
+         * @return the number of deleted segments, 0 if no segment has the
+         * given name or it is the root segment, which can't be deleted
+         */
+        unsigned int deleteSegmentsFrom(const std::string& name);
+
         const SegmentMap& getSegments()const
         {
             return segments;

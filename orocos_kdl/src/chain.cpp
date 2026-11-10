@@ -74,6 +74,28 @@ namespace KDL {
         return segments[nr];
     }
 
+    unsigned int Chain::deleteSegmentsFrom(unsigned int nr)
+    {
+        if(nr >= nrOfSegments)
+            return 0;
+        for(unsigned int i=nr;i<nrOfSegments;i++)
+            if(segments[i].getJoint().getType()!=Joint::Fixed)
+                nrOfJoints--;
+        const unsigned int nrDeleted = nrOfSegments - nr;
+        segments.resize(nr);
+        nrOfSegments = nr;
+        return nrDeleted;
+    }
+
+    unsigned int Chain::deleteSegmentsFrom(const std::string& name)
+    {
+        // Search from the tip, as names don't need to be unique
+        for(unsigned int i=nrOfSegments;i>0;i--)
+            if(segments[i-1].getName()==name)
+                return deleteSegmentsFrom(i-1);
+        return 0;
+    }
+
     Chain::~Chain()
     {
     }
