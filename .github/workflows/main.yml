@@ -1,6 +1,17 @@
 name: CI
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  # Branch pushes are already covered by their pull_request run; only build
+  # pushes to the long-lived branches.
+  push:
+    branches: [master, 'release-*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  # A new push to a PR supersedes the previous run; keep every run on master/release branches.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   CXXFLAGS: "-Wall -Wextra -Wno-unused-parameter"
@@ -12,11 +23,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # The full OS x build type x compiler cross product exercises the C++ library.
         os: [ubuntu-22.04, ubuntu-24.04]
         orocos_build_type: [Debug, Release]
         compiler: [gcc, clang]
-        python_version: ['3.10', '3.12', '3.14']
+        python_version: ['3.12']
+        # The Python version only affects PyKDL, so the remaining supported
+        # versions are tested on a single configuration.
         include:
+          - os: ubuntu-24.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: '3.10'
           - os: ubuntu-24.04
             orocos_build_type: Release
             compiler: gcc
@@ -25,8 +43,14 @@ jobs:
             orocos_build_type: Release
             compiler: gcc
             python_version: '3.13'
+          - os: ubuntu-24.04
+            orocos_build_type: Release
+            compiler: gcc
+            python_version: '3.14'
     env:
       CC: ${{ matrix.compiler }}
+      # The project is C++ only; without CXX the clang jobs silently built with g++.
+      CXX: ${{ matrix.compiler == 'clang' && 'clang++' || 'g++' }}
       OROCOS_KDL_BUILD_TYPE: ${{ matrix.orocos_build_type }}
     steps:
       - uses: actions/checkout@v7
