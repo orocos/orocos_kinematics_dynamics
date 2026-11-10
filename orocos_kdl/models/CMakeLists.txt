@@ -12,9 +12,6 @@ IF(BUILD_MODELS)
     PUBLIC_HEADER models.hpp)
   TARGET_LINK_LIBRARIES(orocos-kdl-models orocos-kdl)
 
-  export(TARGETS orocos-kdl-models APPEND
-  FILE "${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake")
-
   INSTALL( TARGETS orocos-kdl-models
       EXPORT OrocosKDLTargets
       ARCHIVE DESTINATION lib${LIB_SUFFIX}

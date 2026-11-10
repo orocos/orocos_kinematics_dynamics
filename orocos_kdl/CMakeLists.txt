@@ -65,10 +65,17 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
 SET( KDL_CFLAGS "")
 
 find_package(Eigen3 QUIET)
-if(NOT EIGEN3_FOUND)
+if(NOT TARGET Eigen3::Eigen)
+  # Fallback for Eigen installs without a CMake package, also creates Eigen3::Eigen
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
 endif()
-include_directories(${EIGEN3_INCLUDE_DIR})
+if(NOT TARGET Eigen3::Eigen)
+  message(FATAL_ERROR "Eigen3 not found")
+endif()
+if(NOT EIGEN3_INCLUDE_DIR)
+  get_target_property(EIGEN3_INCLUDE_DIR Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+endif()
+# Only needed for the pkg-config file, CMake targets get Eigen via orocos-kdl
 SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${EIGEN3_INCLUDE_DIR}\"")
 
 # Check the platform STL containers capabilities
@@ -121,22 +128,25 @@ ADD_SUBDIRECTORY( tests )
 ADD_SUBDIRECTORY( models )
 ADD_SUBDIRECTORY( examples )
 
-
-export(TARGETS orocos-kdl
-  FILE "${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake")
-
-export(PACKAGE orocos_kdl)
-
 # Generate CMake package configuration
-CONFIGURE_FILE(orocos_kdl-config.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
+# Only the install tree is exported. The build tree doesn't have the kdl/
+# header layout, so it can't be used as a package, and it isn't registered in
+# the user package registry (export(PACKAGE)) either.
+INCLUDE(CMakePackageConfigHelpers)
+SET(KDL_CMAKE_INSTALL_DIR share/orocos_kdl/cmake)
+CONFIGURE_PACKAGE_CONFIG_FILE(orocos_kdl-config.cmake.in
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+  INSTALL_DESTINATION ${KDL_CMAKE_INSTALL_DIR})
+WRITE_BASIC_PACKAGE_VERSION_FILE(${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  VERSION ${KDL_VERSION}
+  COMPATIBILITY AnyNewerVersion)
 
-INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
+INSTALL(FILES
+  cmake/FindEigen3.cmake
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  DESTINATION ${KDL_CMAKE_INSTALL_DIR})
+INSTALL(EXPORT OrocosKDLTargets DESTINATION ${KDL_CMAKE_INSTALL_DIR})
 
 # Generate pkg-config package configuration
 CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
