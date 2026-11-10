@@ -453,6 +453,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testRotationalInertia'))
     suite.addTest(KinfamTestFunctions('testJacobian'))
     suite.addTest(KinfamTestFunctions('testJntArray'))
+    suite.addTest(KinfamTestFunctions('testChainGetSegment'))
     suite.addTest(KinfamTestFunctions('testFkPosAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndJac'))
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVel'))
