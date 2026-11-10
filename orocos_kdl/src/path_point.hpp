@@ -66,13 +66,13 @@ class Path_Point : public Path
 		 * Constructs a Point Path
 		 */
 		Path_Point(const Frame& F_base_start);
-		double LengthToS(double length);
-		virtual double PathLength();
+		double LengthToS(double length) const;
+		virtual double PathLength() const;
 		virtual Frame Pos(double s) const;
 		virtual Twist Vel(double s,double sd) const ;
 		virtual Twist Acc(double s,double sd,double sdd) const;
-		virtual void Write(std::ostream& os);
-		virtual Path* Clone();
+		virtual void Write(std::ostream& os) const;
+		virtual Path* Clone() const;
 
 		/**
 		 * gets an identifier indicating the type of this Path object

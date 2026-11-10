@@ -126,10 +126,10 @@ Path_Line::Path_Line(const Frame& startpos,
         }
    }
 
-double Path_Line::LengthToS(double length) {
+double Path_Line::LengthToS(double length) const {
 	return length/scalelin;
 }
-double Path_Line::PathLength(){
+double Path_Line::PathLength() const {
 	return pathlength;
 }
 Frame Path_Line::Pos(double s) const  {
@@ -150,7 +150,7 @@ Path_Line::~Path_Line() {
         delete orient;
 }
 
-Path* Path_Line::Clone() {
+Path* Path_Line::Clone() const {
     if (aggregate )
         return new Path_Line(
                              Frame(orient->Pos(0),V_base_start),
@@ -170,7 +170,7 @@ Path* Path_Line::Clone() {
 
 }
 
-void Path_Line::Write(std::ostream& os)  {
+void Path_Line::Write(std::ostream& os) const {
 	os << "LINE[ ";
 	os << "  " << Frame(orient->Pos(0),V_base_start) << std::endl;
 	os << "  " << Frame(orient->Pos(pathlength*scalerot),V_base_end) << std::endl;

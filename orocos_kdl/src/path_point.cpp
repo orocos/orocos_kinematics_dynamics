@@ -49,10 +49,10 @@ Path_Point::Path_Point(const Frame& startpos)
    {
    }
 
-double Path_Point::LengthToS(double length) {
+double Path_Point::LengthToS(double length) const {
 	return length;
 }
-double Path_Point::PathLength(){
+double Path_Point::PathLength() const {
 	return 0;
 }
 Frame Path_Point::Pos(double s) const  {
@@ -70,11 +70,11 @@ Twist Path_Point::Acc(double s,double sd,double sdd) const  {
 Path_Point::~Path_Point() {
 }
 
-Path* Path_Point::Clone() {
+Path* Path_Point::Clone() const {
 	return new Path_Point( F_base_start	);
 }
 
-void Path_Point::Write(std::ostream& os)  {
+void Path_Point::Write(std::ostream& os) const {
 	os << "POINT[ "<< F_base_start  << "]"  << std::endl;
 }
 

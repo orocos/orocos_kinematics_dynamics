@@ -78,7 +78,7 @@ class Path
 		 * path objects.
 		 * @ingroup Motion
 		 */
-		virtual double LengthToS(double length)  = 0;
+		virtual double LengthToS(double length) const = 0;
 
 		/**
 		 * Returns the total path length of the trajectory
@@ -86,7 +86,7 @@ class Path
 		 * This is not always a physical length , ie when dealing with rotations
 		 * that are dominant.
 		 */
-		virtual double PathLength() = 0;
+		virtual double PathLength() const = 0;
 
 		/**
 		 * Returns the Frame at the current path length s
@@ -108,7 +108,7 @@ class Path
 		/**
 		 * Writes one of the derived objects to the stream
 		 */
-		virtual void Write(std::ostream& os)  = 0;
+		virtual void Write(std::ostream& os) const = 0;
 
 		/**
 		 * Reads one of the derived objects from the stream and returns a pointer
@@ -120,7 +120,7 @@ class Path
 		 * Virtual constructor, constructing by copying,
 		 * Returns a deep copy of this Path Object
 		 */
-		virtual Path* Clone() = 0;
+		virtual Path* Clone() const = 0;
 
 		/**
 		 * gets an identifier indicating the type of this Path object

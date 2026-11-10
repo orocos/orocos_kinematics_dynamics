@@ -85,12 +85,12 @@ void Path_Composite::Add(Path* geom, bool aggregate ) {
 	gv.insert( gv.end(),std::make_pair(geom,aggregate) );
 }
 
-double Path_Composite::LengthToS(double length) {
+double Path_Composite::LengthToS(double length) const {
 	throw Error_MotionPlanning_Not_Applicable();
 	return 0;
 }
 
-double Path_Composite::PathLength() {
+double Path_Composite::PathLength() const {
 	return pathlength;
 }
 
@@ -110,7 +110,7 @@ Twist Path_Composite::Acc(double s,double sd,double sdd) const {
 	return gv[cached_index].first->Acc(s,sd,sdd);
 }
 
-Path* Path_Composite::Clone()  {
+Path* Path_Composite::Clone() const {
 	scoped_ptr<Path_Composite> comp( new Path_Composite() );
 	for (unsigned int i = 0; i < dv.size(); ++i) {
 		comp->Add(gv[i].first->Clone(), gv[i].second);
@@ -118,7 +118,7 @@ Path* Path_Composite::Clone()  {
 	return comp.release();
 }
 
-void Path_Composite::Write(std::ostream& os)  {
+void Path_Composite::Write(std::ostream& os) const {
 	os << "COMPOSITE[ " << std::endl;
 	os << "   " << dv.size() << std::endl;
 	for (unsigned int i=0;i<dv.size();i++) {
@@ -127,7 +127,7 @@ void Path_Composite::Write(std::ostream& os)  {
 	os << "]" << std::endl;
 }
 
-int Path_Composite::GetNrOfSegments() {
+int Path_Composite::GetNrOfSegments() const {
 	return static_cast<int>(dv.size());
 }
 
@@ -137,14 +137,14 @@ Path* Path_Composite::GetSegment(int i) {
 	return gv[i].first;
 }
 
-double Path_Composite::GetLengthToEndOfSegment(int i) {
+double Path_Composite::GetLengthToEndOfSegment(int i) const {
 	assert(i>=0);
 	assert(i<static_cast<int>(dv.size()));
 	return dv[i];
 }
 
 void Path_Composite::GetCurrentSegmentLocation(double s, int& segment_number,
-		double& inner_s)
+		double& inner_s) const
 {
 	inner_s = Lookup(s);
 	segment_number= cached_index;

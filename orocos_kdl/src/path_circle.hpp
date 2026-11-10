@@ -92,14 +92,14 @@ class Path_Circle : public Path
 			double eqradius,
 			bool _aggregate=true);
 
-		double LengthToS(double length);
+		double LengthToS(double length) const;
 
-		virtual double PathLength();
+		virtual double PathLength() const;
 		virtual Frame Pos(double s) const;
 		virtual Twist Vel(double s,double sd) const;
 		virtual Twist Acc(double s,double sd,double sdd) const;
-		virtual Path* Clone();
-		virtual void Write(std::ostream& os);
+		virtual Path* Clone() const;
+		virtual void Write(std::ostream& os) const;
 
 		/**
 		 * gets an identifier indicating the type of this Path object
