@@ -61,6 +61,27 @@ class DynamicsTestFunctions(unittest.TestCase):
         with self.assertRaises(IndexError):
             jm[2, 3] = 1
 
+    def testJntSpaceInertiaMatrixData(self):
+        ll = 3
+        jm = JntSpaceInertiaMatrix(ll)
+        for i in range(ll):
+            for j in range(ll):
+                jm[i, j] = 3 * i + j
+
+        arr = jm.data
+        self.assertEqual(arr.shape, (ll, ll))
+        for i in range(ll):
+            for j in range(ll):
+                self.assertEqual(arr[i, j], jm[i, j])
+
+        arr[0, 0] = 42
+        self.assertEqual(jm[0, 0], 42)
+        jm[2, 2] = 99
+        self.assertEqual(arr[2, 2], 99)
+
+        with self.assertRaises(AttributeError):
+            jm.data = JntSpaceInertiaMatrix(ll)
+
 
     def testVereshchagin(self):
         """
@@ -327,6 +348,7 @@ class DynamicsTestFunctions(unittest.TestCase):
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(DynamicsTestFunctions('testJntSpaceInertiaMatrix'))
+    suite.addTest(DynamicsTestFunctions('testJntSpaceInertiaMatrixData'))
     suite.addTest(DynamicsTestFunctions('testVereshchagin'))
     suite.addTest(DynamicsTestFunctions('testExternalWrenchEstimator'))
     return suite

@@ -108,6 +108,11 @@ void init_frames(py::module &m)
                 Vector v(t[0].cast<double>(), t[1].cast<double>(), t[2].cast<double>());
                 return v;
             }));
+	vector.def_property("data", [](py::object& obj)
+			{
+				Vector * vec = obj.cast<Vector *>();
+				return py::array_t<double>({3,}, {sizeof(double),}, vec->data, obj);
+			}, nullptr);
 
     m.def("SetToZero", (void (*)(Vector&)) &KDL::SetToZero, py::arg("vector"));
     m.def("dot", (double (*)(const Vector&, const Vector&)) &KDL::dot);
@@ -389,6 +394,11 @@ void init_frames(py::module &m)
                 /* Create a new C++ instance */
                 return Rotation::RPY(t[0].cast<double>(), t[1].cast<double>(), t[2].cast<double>());
             }));
+	rotation.def_property("data", [](py::object& obj)
+			{
+				Rotation * rot = obj.cast<Rotation *>();
+				return py::array_t<double>({3, 3}, {sizeof(double)*3, sizeof(double)}, rot->data, obj);
+			}, nullptr);
 
     m.def("Equal", (bool (*)(const Rotation&, const Rotation&, double eps)) &KDL::Equal,
           py::arg("a"), py::arg("b"), py::arg("eps")=epsilon);
