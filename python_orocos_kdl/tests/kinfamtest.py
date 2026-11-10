@@ -226,7 +226,7 @@ class KinfamTestFunctions(unittest.TestCase):
         epsJ = 1e-7
         self.testFkVelAndIkVelImpl(self.fksolvervel, self.iksolvervel_givens, epsJ)
 
-    def testFkPosAndIkPosImpl(self, fksolverpos, iksolverpos, epsJ):
+    def testFkPosAndIkPosImpl(self, fksolverpos, iksolverpos):
         q = JntArray(self.chain.getNrOfJoints())
         for i in range(q.rows()):
             q[i] = random.uniform(-3.14, 3.14)
@@ -255,12 +255,27 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertEqual(F1, F2)
 
     def testFkPosAndIkPos(self):
-        epsJ = 1e-3
-        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos, epsJ)
+        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos)
 
     def testFkPosAndIkPosGivens(self):
-        epsJ = 1e-3
-        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens, epsJ)
+        self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos_givens)
+
+    def testIkPosEquivalentSolution(self):
+        """
+        Regression test for the intermittent failure of testFkPosAndIkPos.
+
+        With these seeds ChainIkSolverPos_NR converges (returning E_NOERROR) onto a
+        configuration that reaches the goal pose exactly, but differs from the original joint
+        values by a multiple of pi. Comparing the joint values rejected those valid solutions,
+        which made the test fail for roughly 1 in 1500 random configurations. Seeding makes
+        those configurations deterministic, so re-introducing such a comparison fails here
+        immediately rather than intermittently.
+        """
+        # Restore the generator afterwards, so the other randomized tests stay random.
+        self.addCleanup(random.setstate, random.getstate())
+        for seed, iksolverpos in ((1084, self.iksolverpos), (1175, self.iksolverpos_givens)):
+            random.seed(seed)
+            self.testFkPosAndIkPosImpl(self.fksolverpos, iksolverpos)
 
     def testIkPosLMAWeighted(self):
         """
@@ -429,6 +444,7 @@ def suite():
     suite.addTest(KinfamTestFunctions('testFkVelAndIkVelGivens'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPos'))
     suite.addTest(KinfamTestFunctions('testFkPosAndIkPosGivens'))
+    suite.addTest(KinfamTestFunctions('testIkPosEquivalentSolution'))
     suite.addTest(KinfamTestFunctions('testIkPosLMAWeighted'))
     suite.addTest(KinfamTestFunctions('testFkPosVect'))
     suite.addTest(KinfamTestFunctions('testFkVelVect'))
