@@ -72,12 +72,21 @@ endif()
 if(NOT TARGET Eigen3::Eigen)
   message(FATAL_ERROR "Eigen3 not found")
 endif()
-if(NOT EIGEN3_INCLUDE_DIR)
-  get_target_property(EIGEN3_INCLUDE_DIR Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+# Eigen installs that only provide the Eigen3::Eigen target don't set
+# EIGEN3_INCLUDE_DIR, take the include directories from the target instead.
+if(EIGEN3_INCLUDE_DIR)
+  set(KDL_EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+else()
+  get_target_property(KDL_EIGEN_INCLUDE_DIRS Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+  if(NOT KDL_EIGEN_INCLUDE_DIRS)
+    set(KDL_EIGEN_INCLUDE_DIRS)
+  endif()
 endif()
 # KDL_CFLAGS goes into the pkg-config file and the COMPILE_FLAGS of the in-tree
 # targets. CMake consumers of the package get Eigen via the orocos-kdl target.
-SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${EIGEN3_INCLUDE_DIR}\"")
+foreach(_dir ${KDL_EIGEN_INCLUDE_DIRS})
+  SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${_dir}\"")
+endforeach()
 
 # Check the platform STL containers capabilities
 include(cmake/CheckSTLContainers.cmake)

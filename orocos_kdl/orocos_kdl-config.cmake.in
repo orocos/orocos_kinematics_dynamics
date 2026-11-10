@@ -59,6 +59,6 @@ set(orocos_kdl_LIBRARIES orocos-kdl)
 set(orocos_kdl_TARGETS orocos-kdl)
 
 # where the .pc pkgconfig files are installed
-set(orocos_kdl_PKGCONFIG_DIR "${orocos_kdl_PREFIX}/lib/pkgconfig")
+set(orocos_kdl_PKGCONFIG_DIR "${orocos_kdl_PREFIX}/lib@LIB_SUFFIX@/pkgconfig")
 
 check_required_components(orocos_kdl)
