@@ -9,9 +9,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
-  # A new push to a PR supersedes the previous run; keep every run on master/release branches.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # A new push to a PR supersedes the previous run. Every other run gets a unique group:
+  # a shared group would still cancel pending runs (a group holds at most one running and
+  # one pending run), and we want to keep every run on master/release branches.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: true
 
 env:
   CXXFLAGS: "-Wall -Wextra -Wno-unused-parameter"
