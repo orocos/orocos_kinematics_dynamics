@@ -65,11 +65,28 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
 SET( KDL_CFLAGS "")
 
 find_package(Eigen3 QUIET)
-if(NOT EIGEN3_FOUND)
+if(NOT TARGET Eigen3::Eigen)
+  # Fallback for Eigen installs without a CMake package, also creates Eigen3::Eigen
   include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
 endif()
-include_directories(${EIGEN3_INCLUDE_DIR})
-SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${EIGEN3_INCLUDE_DIR}\"")
+if(NOT TARGET Eigen3::Eigen)
+  message(FATAL_ERROR "Eigen3 not found")
+endif()
+# Eigen installs that only provide the Eigen3::Eigen target don't set
+# EIGEN3_INCLUDE_DIR, take the include directories from the target instead.
+if(EIGEN3_INCLUDE_DIR)
+  set(KDL_EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+else()
+  get_target_property(KDL_EIGEN_INCLUDE_DIRS Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+  if(NOT KDL_EIGEN_INCLUDE_DIRS)
+    set(KDL_EIGEN_INCLUDE_DIRS)
+  endif()
+endif()
+# KDL_CFLAGS goes into the pkg-config file and the COMPILE_FLAGS of the in-tree
+# targets. CMake consumers of the package get Eigen via the orocos-kdl target.
+foreach(_dir ${KDL_EIGEN_INCLUDE_DIRS})
+  SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${_dir}\"")
+endforeach()
 
 # Check the platform STL containers capabilities
 include(cmake/CheckSTLContainers.cmake)
@@ -121,22 +138,37 @@ ADD_SUBDIRECTORY( tests )
 ADD_SUBDIRECTORY( models )
 ADD_SUBDIRECTORY( examples )
 
-
-export(TARGETS orocos-kdl
-  FILE "${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake")
-
-export(PACKAGE orocos_kdl)
-
 # Generate CMake package configuration
-CONFIGURE_FILE(orocos_kdl-config.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake @ONLY)
-CONFIGURE_FILE(orocos_kdl-config-version.cmake.in
-  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake @ONLY)
+# Only the install tree is exported. The build tree doesn't have the kdl/
+# header layout, so it can't be used as a package, and it isn't registered in
+# the user package registry (export(PACKAGE)) either.
+# The config files are generated in a subdirectory, not in the top of the build
+# directory, which older versions registered in the user package registry. A
+# config file there without the targets file next to it would make
+# find_package(orocos_kdl) fail instead of moving on to the installed package.
+# A build directory configured by an older version still has its build-tree
+# package files at the top, remove them so a stale registry entry pointing here
+# doesn't find them either.
+FILE(REMOVE
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake
+  ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake
+  ${PROJECT_BINARY_DIR}/OrocosKDLTargets.cmake)
+INCLUDE(CMakePackageConfigHelpers)
+SET(KDL_CMAKE_INSTALL_DIR share/orocos_kdl/cmake)
+SET(KDL_CMAKE_CONFIG_BUILD_DIR ${PROJECT_BINARY_DIR}/package-config)
+CONFIGURE_PACKAGE_CONFIG_FILE(orocos_kdl-config.cmake.in
+  ${KDL_CMAKE_CONFIG_BUILD_DIR}/orocos_kdl-config.cmake
+  INSTALL_DESTINATION ${KDL_CMAKE_INSTALL_DIR})
+WRITE_BASIC_PACKAGE_VERSION_FILE(${KDL_CMAKE_CONFIG_BUILD_DIR}/orocos_kdl-config-version.cmake
+  VERSION ${KDL_VERSION}
+  COMPATIBILITY AnyNewerVersion)
 
-INSTALL(FILES cmake/FindEigen3.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(FILES ${PROJECT_BINARY_DIR}/orocos_kdl-config-version.cmake DESTINATION share/orocos_kdl/cmake)
-INSTALL(EXPORT OrocosKDLTargets DESTINATION share/orocos_kdl/cmake)
+INSTALL(FILES
+  cmake/FindEigen3.cmake
+  ${KDL_CMAKE_CONFIG_BUILD_DIR}/orocos_kdl-config.cmake
+  ${KDL_CMAKE_CONFIG_BUILD_DIR}/orocos_kdl-config-version.cmake
+  DESTINATION ${KDL_CMAKE_INSTALL_DIR})
+INSTALL(EXPORT OrocosKDLTargets DESTINATION ${KDL_CMAKE_INSTALL_DIR})
 
 # Generate pkg-config package configuration
 CONFIGURE_FILE(orocos_kdl.pc.in ${CMAKE_CURRENT_BINARY_DIR}/orocos-kdl.pc @ONLY)
@@ -152,5 +184,5 @@ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/orocos_kdl.pc DESTINATION lib${LIB_SUF
 # config file as a config extra makes the generated config include it, so
 # consumers get the same variables under either file name.
 if(ament_cmake_FOUND)
-  ament_package(CONFIG_EXTRAS "${PROJECT_BINARY_DIR}/orocos_kdl-config.cmake")
+  ament_package(CONFIG_EXTRAS "${KDL_CMAKE_CONFIG_BUILD_DIR}/orocos_kdl-config.cmake")
 endif()

@@ -1,34 +1,64 @@
 # - Config file for the orocos-kdl package
-# It defines the following variables
-#  orocos_kdl_INCLUDE_DIRS - include directories for Orocos KDL
-#  orocos_kdl_LIBRARIES    - libraries to link against for Orocos KDL
+# It defines the imported target
+#  orocos-kdl               - links the library and adds its include directories
+#                             and dependencies (Eigen, Boost)
+# and, for backwards compatibility, the following variables
+#  orocos_kdl_INCLUDE_DIRS  - include directories for Orocos KDL
+#  orocos_kdl_LIBRARIES     - libraries to link against for Orocos KDL
 #  orocos_kdl_PKGCONFIG_DIR - directory containing the .pc pkgconfig files
 
-# Compute paths
-get_filename_component(orocos_kdl_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+@PACKAGE_INIT@
 
-# Find dependencies
+set(orocos_kdl_PREFIX "${PACKAGE_PREFIX_DIR}")
+
+# Find dependencies, the imported target refers to them. If one is missing,
+# report the package as not found, so find_package(orocos_kdl QUIET) fails
+# gracefully instead of the target failing to link at generate time.
 find_package(Eigen3 QUIET)
-if(NOT EIGEN3_FOUND)
-  include(${CMAKE_CURRENT_LIST_DIR}/FindEigen3.cmake)
+if(NOT TARGET Eigen3::Eigen)
+  include("${CMAKE_CURRENT_LIST_DIR}/FindEigen3.cmake")
+endif()
+if(NOT TARGET Eigen3::Eigen)
+  set(orocos_kdl_FOUND FALSE)
+  set(orocos_kdl_NOT_FOUND_MESSAGE "orocos_kdl requires Eigen3, which could not be found")
+  return()
 endif()
 
 set(KDL_USE_NEW_TREE_INTERFACE @KDL_USE_NEW_TREE_INTERFACE@)
 if(KDL_USE_NEW_TREE_INTERFACE)
-  find_package(Boost REQUIRED)
+  find_package(Boost QUIET)
+  if(NOT TARGET Boost::boost)
+    set(orocos_kdl_FOUND FALSE)
+    set(orocos_kdl_NOT_FOUND_MESSAGE "orocos_kdl requires Boost, which could not be found")
+    return()
+  endif()
 endif()
 
 if(NOT TARGET orocos-kdl)
   include("${CMAKE_CURRENT_LIST_DIR}/OrocosKDLTargets.cmake")
 endif()
 
+# Eigen installs that only provide the Eigen3::Eigen target don't set
+# EIGEN3_INCLUDE_DIR, take the include directory from the target instead.
+if(EIGEN3_INCLUDE_DIR)
+  set(_orocos_kdl_eigen_include_dirs ${EIGEN3_INCLUDE_DIR})
+else()
+  get_target_property(_orocos_kdl_eigen_include_dirs Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+  if(NOT _orocos_kdl_eigen_include_dirs)
+    set(_orocos_kdl_eigen_include_dirs)
+  endif()
+endif()
+
 set(orocos_kdl_INCLUDE_DIRS
   ${orocos_kdl_PREFIX}/include
   ${Boost_INCLUDE_DIRS}
-  ${EIGEN3_INCLUDE_DIR}
+  ${_orocos_kdl_eigen_include_dirs}
 )
+unset(_orocos_kdl_eigen_include_dirs)
 set(orocos_kdl_LIBRARIES orocos-kdl)
 set(orocos_kdl_TARGETS orocos-kdl)
 
 # where the .pc pkgconfig files are installed
-set(orocos_kdl_PKGCONFIG_DIR "${orocos_kdl_PREFIX}/lib/pkgconfig")
+set(orocos_kdl_PKGCONFIG_DIR "${orocos_kdl_PREFIX}/lib@LIB_SUFFIX@/pkgconfig")
+
+check_required_components(orocos_kdl)
