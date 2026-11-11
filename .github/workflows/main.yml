@@ -49,6 +49,16 @@ jobs:
             orocos_build_type: Release
             compiler: gcc
             python_version: '3.14'
+          # GCC contracts a*b+c into a fused multiply-add by default wherever the target has
+          # one, which aarch64, ppc64el and s390x always do (and so do their Debian package
+          # builds). FMA rounds differently, so a test that compares independently computed
+          # values with == instead of Equal fails there. This entry reproduces those builds on
+          # x86: build type None, like debhelper, with the optimisation and FMA flags in CXXFLAGS.
+          - os: ubuntu-24.04
+            orocos_build_type: 'None'
+            compiler: gcc
+            python_version: '3.12'
+            extra_cxxflags: -O2 -mfma -ffp-contract=fast
     env:
       CC: ${{ matrix.compiler }}
       # The project is C++ only; without CXX the clang jobs silently built with g++.
@@ -65,6 +75,14 @@ jobs:
         run: |
           sudo apt-get install libeigen3-dev libcppunit-dev
           pip install psutil
+      - name: Add extra compiler flags
+        if: matrix.extra_cxxflags
+        run: |
+          if [[ "${{ matrix.extra_cxxflags }}" == *-mfma* ]] && ! grep -qw fma /proc/cpuinfo; then
+            echo "::error::this runner's CPU does not support FMA"
+            exit 1
+          fi
+          echo "CXXFLAGS=${CXXFLAGS} ${{ matrix.extra_cxxflags }}" >> "$GITHUB_ENV"
       - name: Build orocos_kdl
         run: |
           cd orocos_kdl

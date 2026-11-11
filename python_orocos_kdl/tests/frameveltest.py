@@ -199,7 +199,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         r2 = RotationVel(r)
         self.assertEqual(r, r2)
         self.assertEqual(hash(r), hash(r2))
-        self.assertEqual((r*v).Norm(), v.Norm())
+        self.assertTrue(Equal((r*v).Norm(), v.Norm()))
         self.assertTrue(Equal(r.Inverse(r*v), v))
         self.assertTrue(Equal(r*r.Inverse(v), v))
         self.assertEqual(r*Rotation.Identity(), r)
@@ -265,7 +265,7 @@ class FrameVelTestFunctions(unittest.TestCase):
         self.assertTrue(Equal(f*(f*(f*vt)), (f*f*f)*vt))
         self.assertTrue(Equal(f*f.Inverse(), FrameVel.Identity()))
         self.assertTrue(Equal(f.Inverse()*f, Frame.Identity()))
-        self.assertEqual(f.Inverse()*vt, f.Inverse(vt))
+        self.assertTrue(Equal(f.Inverse()*vt, f.Inverse(vt)))
 
     def testPickle(self):
         import pickle

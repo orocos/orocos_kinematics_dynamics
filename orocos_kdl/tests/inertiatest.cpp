@@ -93,7 +93,7 @@ void InertiaTest::TestRigidBodyInertia() {
     Frame T(R);
     I4 = T*I2;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I3.getMass(),I4.getMass(), epsilon);
-    CPPUNIT_ASSERT_EQUAL(I3.getCOG(),I4.getCOG());
+    CPPUNIT_ASSERT(Equal(I3.getCOG(),I4.getCOG()));
     CPPUNIT_ASSERT((Eigen::Map<Eigen::Matrix3d>(I3.getRotationalInertia().data)-Eigen::Map<Eigen::Matrix3d>(I4.getRotationalInertia().data)).isZero());
     
     //Check only transformation
@@ -107,7 +107,7 @@ void InertiaTest::TestRigidBodyInertia() {
     T=Frame(-p);
     I4 = T*I2;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I3.getMass(),I4.getMass(),epsilon);
-    CPPUNIT_ASSERT_EQUAL(I3.getCOG(),I4.getCOG());
+    CPPUNIT_ASSERT(Equal(I3.getCOG(),I4.getCOG()));
     CPPUNIT_ASSERT((Eigen::Map<Eigen::Matrix3d>(I3.getRotationalInertia().data)-Eigen::Map<Eigen::Matrix3d>(I4.getRotationalInertia().data)).isZero());
     
     random(T);

@@ -130,7 +130,7 @@ void TreeInvDynTest::TwoChainsTest() {
     JntArray tau12(tau.rows());
     for(unsigned int i=0; i<n1; i++) tau12(i) = tau1(i);
     for(unsigned int i=0; i<n2; i++) tau12(i+n1) = tau2(i);
-    CPPUNIT_ASSERT_EQUAL(tau, tau12);
+    CPPUNIT_ASSERT(Equal(tau, tau12));
   }
 }
 
