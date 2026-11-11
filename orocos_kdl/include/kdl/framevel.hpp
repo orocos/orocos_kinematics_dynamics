@@ -23,9 +23,9 @@
 #ifndef KDL_FRAMEVEL_H
 #define KDL_FRAMEVEL_H
 
-#include "utilities/utility.h"
-#include "utilities/rall1d.h"
-#include "utilities/traits.h"
+#include "utilities/utility.hpp"
+#include "utilities/rall1d.hpp"
+#include "utilities/traits.hpp"
 
 #include "frames.hpp"
 

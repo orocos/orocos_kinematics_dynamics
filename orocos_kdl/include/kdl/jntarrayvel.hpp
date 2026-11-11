@@ -22,7 +22,7 @@
 #ifndef KDL_JNTARRAYVEL_HPP
 #define KDL_JNTARRAYVEL_HPP
 
-#include "utilities/utility.h"
+#include "utilities/utility.hpp"
 #include "jntarray.hpp"
 #include "framevel.hpp"
 

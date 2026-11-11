@@ -12,7 +12,7 @@ automatically, even when they set a lower `CMAKE_CXX_STANDARD`. Consumers that d
 the CMake target must pass `-std=c++17` themselves.
 
 All installed headers are now self-contained: `kdl/framevel_io.hpp` includes
-`kdl/framevel.hpp`, and `kdl/utilities/rallNd.h` is now a valid, standalone header (its
+`kdl/framevel.hpp`, and `kdl/utilities/rallNd.hpp` is now a valid, standalone header (its
 templates live in `namespace KDL`).
 
 ## Removed configuration macros
@@ -124,7 +124,7 @@ the unpickled value is `Equal` to, but generally not `==`, the original.
 ## `epsilon`, `PI` and the other constants are immutable
 
 `KDL::epsilon`, `PI`, `PI_2`, `PI_4`, `deg2rad` and `rad2deg` are now `inline constexpr double`
-in `utilities/utility.h` instead of `extern` globals, with unchanged values (`epsilon` is still
+in `utilities/utility.hpp` instead of `extern` globals, with unchanged values (`epsilon` is still
 `1e-6`). They are usable in constant expressions, and reading them no longer races with a
 writer.
 
@@ -161,3 +161,25 @@ had the same defect. The overflow- and underflow-safe scaling is unchanged, and
   `sed -i 's/ChainIdSolver_Vereshchagin/ChainHdSolver_Vereshchagin/g; s/chainidsolver_vereshchagin/chainhdsolver_vereshchagin/g'`
 - Binary incompatible: the library no longer exports the `ChainIdSolver_Vereshchagin` symbols.
   Rebuild against 2.0.
+
+## Every header is `.hpp`; the `.h` names are deprecated
+
+All installed headers now end in `.hpp`. These were renamed:
+
+- `kdl/config.h` -> `kdl/config.hpp`
+- `kdl/utilities/error.h`, `error_stack.h`, `hash_combine.h`, `rall1d.h`, `rall1d_io.h`,
+  `rall2d.h`, `rall2d_io.h`, `rallNd.h`, `traits.h`, `utility.h` and `utility_io.h` ->
+  the same names with `.hpp`
+
+The old names are still installed as stubs for the 2.x series. Each includes the new header
+and emits a compiler warning (`#warning`, or `#pragma message` on MSVC), so code built with
+`-Werror` fails until it switches to the new name:
+`sed -i -E 's#(kdl/(config|utilities/(error|error_stack|hash_combine|rall1d|rall1d_io|rall2d|rall2d_io|rallNd|traits|utility|utility_io)))\.h([">])#\1.hpp\4#'`
+(this matches includes spelled with the `kdl/` prefix; adapt it for includes relative to
+`kdl/`).
+
+The source tree now has the install layout: the headers live in `orocos_kdl/include/kdl/`
+instead of next to the sources in `orocos_kdl/src/`. A project that builds KDL as a
+subproject (`add_subdirectory`) and links the `orocos-kdl` target includes
+`<kdl/frames.hpp>`, as it would against an installed KDL; adding `orocos_kdl/src` to the
+include path and writing `#include <frames.hpp>` no longer works.

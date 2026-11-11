@@ -2,7 +2,7 @@
 // undefined on purpose so the check is active in every build type.
 #undef NDEBUG
 
-#include "frames.hpp"
+#include <kdl/frames.hpp>
 
 int main()
 {

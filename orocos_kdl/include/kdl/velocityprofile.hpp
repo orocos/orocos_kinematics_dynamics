@@ -45,8 +45,8 @@
 #ifndef KDL_VELOCITYPROFILE_H
 #define KDL_VELOCITYPROFILE_H
 
-#include "utilities/utility.h"
-#include "utilities/utility_io.h"
+#include "utilities/utility.hpp"
+#include "utilities/utility_io.hpp"
 
 
 namespace KDL {

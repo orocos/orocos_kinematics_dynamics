@@ -1,8 +1,8 @@
 #include "treeinvdyntest.hpp"
-#include <kinfam_io.hpp>
-#include <frames_io.hpp>
-#include <chainidsolver_recursive_newton_euler.hpp>
-#include <treeidsolver_recursive_newton_euler.hpp>
+#include <kdl/kinfam_io.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/treeidsolver_recursive_newton_euler.hpp>
 #include <time.h>
 #include <cmath>
 

@@ -19,8 +19,8 @@
 #ifndef RRFRAMES_IO
 #define RRFRAMES_IO
 
-#include "utilities/utility_io.h"
-#include "utilities/rall2d_io.h"
+#include "utilities/utility_io.hpp"
+#include "utilities/rall2d_io.hpp"
 
 #include "frames_io.hpp"
 #include "frameacc.hpp"

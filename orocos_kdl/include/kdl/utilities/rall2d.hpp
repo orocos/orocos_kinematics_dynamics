@@ -28,7 +28,7 @@
 
 #include <math.h>
 #include <assert.h>
-#include "utility.h"
+#include "utility.hpp"
 
 
 namespace KDL {

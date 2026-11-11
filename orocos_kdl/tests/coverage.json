@@ -1,1 +1,1 @@
-{"min_lines": 69.1, "min_functions": 67.3, "tolerance": 0.2, "full_function_coverage": ["src/frames.hpp", "src/frames.cpp", "src/framevel.hpp", "src/framevel.cpp", "src/frameacc.hpp", "src/frameacc.cpp", "src/utilities/utility.h"]}
+{"min_lines": 69.1, "min_functions": 67.3, "tolerance": 0.2, "full_function_coverage": ["include/kdl/frames.hpp", "src/frames.cpp", "include/kdl/framevel.hpp", "src/framevel.cpp", "include/kdl/frameacc.hpp", "src/frameacc.cpp", "include/kdl/utilities/utility.hpp"]}

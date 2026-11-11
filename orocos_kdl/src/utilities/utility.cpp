@@ -7,7 +7,7 @@
  *   - changed layout of the comments to accommodate doxygen
  */
  
-#include "utility.h"
+#include "utilities/utility.hpp"
 
 namespace KDL {
 

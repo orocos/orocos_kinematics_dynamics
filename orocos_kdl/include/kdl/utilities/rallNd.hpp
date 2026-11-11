@@ -1,10 +1,10 @@
 #ifndef RALLND_H
 #define RALLND_H
 
-#include "rall1d.h"
-#include "rall1d_io.h"
-#include "rall2d.h"
-#include "rall2d_io.h"
+#include "rall1d.hpp"
+#include "rall1d_io.hpp"
+#include "rall2d.hpp"
+#include "rall2d_io.hpp"
 
 namespace KDL {
 /**

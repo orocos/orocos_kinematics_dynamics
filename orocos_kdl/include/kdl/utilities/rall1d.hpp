@@ -26,7 +26,7 @@
 #ifndef Rall1D_H
 #define Rall1D_H
 #include <assert.h>
-#include "utility.h"
+#include "utility.hpp"
 
 namespace KDL {
 /**

@@ -1,5 +1,5 @@
 #include "jacobiantest.hpp"
-#include <kinfam_io.hpp>
+#include <kdl/kinfam_io.hpp>
 #include <Eigen/Core>
 
 CPPUNIT_TEST_SUITE_REGISTRATION(JacobianTest);

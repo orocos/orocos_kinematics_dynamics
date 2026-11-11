@@ -22,7 +22,7 @@
 #ifndef KDL_JNTARRAYACC_HPP
 #define KDL_JNTARRAYACC_HPP
 
-#include "utilities/utility.h"
+#include "utilities/utility.hpp"
 #include "jntarray.hpp"
 #include "jntarrayvel.hpp"
 #include "frameacc.hpp"

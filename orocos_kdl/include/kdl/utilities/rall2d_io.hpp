@@ -20,8 +20,8 @@
 
 
 #include <typeinfo>
-#include "utility_io.h"
-#include "rall2d.h"
+#include "utility_io.hpp"
+#include "rall2d.hpp"
 
 namespace KDL {
 

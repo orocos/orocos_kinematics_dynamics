@@ -2,9 +2,9 @@
 #define JACOBIANDOT_TEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "chainjnttojacdotsolver.hpp"
-#include "frames_io.hpp"
-#include "kinfam_io.hpp"
+#include <kdl/chainjnttojacdotsolver.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/kinfam_io.hpp>
 
 class JacobianDotTest : public CppUnit::TestFixture
 {

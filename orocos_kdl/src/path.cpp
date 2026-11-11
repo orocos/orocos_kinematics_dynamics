@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path.cpp
 
-                        path.cxx -  description
+                        path.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -41,8 +41,8 @@
  ****************************************************************************/
 
 
-#include "utilities/error.h"
-#include "utilities/error_stack.h"
+#include "utilities/error.hpp"
+#include "utilities/error_stack.hpp"
 #include "path.hpp"
 #include "path_line.hpp"
 #include "path_point.hpp"

@@ -125,8 +125,8 @@
 #define KDL_FRAMES_H
 
 
-#include "utilities/utility.h"
-#include "utilities/hash_combine.h"
+#include "utilities/utility.hpp"
+#include "utilities/hash_combine.hpp"
 
 #include <cassert>
 #include <functional>

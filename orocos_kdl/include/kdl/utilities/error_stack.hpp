@@ -38,8 +38,8 @@
 #ifndef ERROR_STACK_H
 #define ERROR_STACK_H
 
-#include "utility.h"
-#include "utility_io.h"
+#include "utility.hpp"
+#include "utility_io.hpp"
 #include <string>
 
 

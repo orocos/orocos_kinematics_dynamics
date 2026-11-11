@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_circle.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_circle.cpp
 
-                        path_circle.cxx -  description
+                        path_circle.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -41,7 +41,7 @@
 
 
 #include "path_circle.hpp"
-#include "utilities/error.h"
+#include "utilities/error.hpp"
 
 namespace KDL {
 

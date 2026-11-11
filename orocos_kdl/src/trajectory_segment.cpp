@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  trajectory_segment.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  trajectory_segment.cpp
 
-                        trajectory_segment.cxx -  description
+                        trajectory_segment.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien

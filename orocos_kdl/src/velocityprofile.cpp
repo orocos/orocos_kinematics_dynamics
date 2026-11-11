@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile.cpp
 
-                        velocityprofile.cxx -  description
+                        velocityprofile.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -40,8 +40,8 @@
  ****************************************************************************/
 
 
-#include "utilities/error.h"
-#include "utilities/error_stack.h"
+#include "utilities/error.hpp"
+#include "utilities/error_stack.hpp"
 #include "velocityprofile_rect.hpp"
 #include "velocityprofile_dirac.hpp"
 #include "velocityprofile_trap.hpp"

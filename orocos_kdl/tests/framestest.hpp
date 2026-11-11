@@ -2,12 +2,12 @@
 #define FRAMES_TEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <frames.hpp>
-#include <framevel.hpp>
-#include <frameacc.hpp>
-#include <jntarray.hpp>
-#include <jacobian.hpp>
-#include <jntspaceinertiamatrix.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/framevel.hpp>
+#include <kdl/frameacc.hpp>
+#include <kdl/jntarray.hpp>
+#include <kdl/jacobian.hpp>
+#include <kdl/jntspaceinertiamatrix.hpp>
 
 using namespace KDL;
 

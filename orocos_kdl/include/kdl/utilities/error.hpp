@@ -45,7 +45,7 @@
 #ifndef ERROR_H_84822 // to make it unique, a random number
 #define ERROR_H_84822
 
-#include "utility.h"
+#include "utility.hpp"
 #include <string.h>
 #include <string>
 namespace KDL {

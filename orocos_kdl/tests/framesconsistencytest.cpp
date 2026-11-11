@@ -1,5 +1,5 @@
-// Consistency tests for the frame core: every function of frames.hpp/.inl/.cpp,
-// framevel.hpp/.inl, frameacc.hpp/.inl and utilities/utility.h is checked against
+// Consistency tests for the frame core: every function of frames.hpp/.cpp,
+// framevel.hpp/.cpp, frameacc.hpp/.cpp and utilities/utility.hpp is checked against
 // a reference that does not go through KDL:
 //
 //  - the double types against Eigen (Vector <-> Vector3d, Rotation <-> Matrix3d,
@@ -15,10 +15,10 @@
 
 #include "framesconsistencytest.hpp"
 
-#include <frameacc.hpp>
-#include <frames.hpp>
-#include <framevel.hpp>
-#include <utilities/utility.h>
+#include <kdl/frameacc.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/framevel.hpp>
+#include <kdl/utilities/utility.hpp>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>

@@ -51,13 +51,13 @@ set(KDL_SOURCES
   treeiksolverpos_online.cpp
   treeiksolvervel_wdls.cpp
   treejnttojacsolver.cpp
-  utilities/error_stack.cxx
+  utilities/error_stack.cpp
   utilities/ldl_solver_eigen.cpp
   utilities/svd_HH.cpp
   utilities/svd_eigen_HH.cpp
   utilities/svd_eigen_Macie.cpp
-  utilities/utility.cxx
-  utilities/utility_io.cxx
+  utilities/utility.cpp
+  utilities/utility_io.cpp
   velocityprofile.cpp
   velocityprofile_dirac.cpp
   velocityprofile_rect.cpp
@@ -142,22 +142,50 @@ set(KDL_PUBLIC_HEADERS
 )
 
 set(KDL_UTILITY_HEADERS
+  utilities/error.hpp
+  utilities/error_stack.hpp
+  utilities/hash_combine.hpp
+  utilities/ldl_solver_eigen.hpp
+  utilities/rall1d.hpp
+  utilities/rall1d_io.hpp
+  utilities/rall2d.hpp
+  utilities/rall2d_io.hpp
+  utilities/rallNd.hpp
+  utilities/svd_HH.hpp
+  utilities/svd_eigen_HH.hpp
+  utilities/svd_eigen_Macie.hpp
+  utilities/traits.hpp
+  utilities/utility.hpp
+  utilities/utility_io.hpp
+)
+
+# The 1.x header names, kept as stubs that warn and include the new name for the
+# 2.x series. They are only installed, never on the build-tree include path, so
+# nothing in this repository can use them by accident.
+set(KDL_COMPAT_HEADERS
+  config.h
+)
+
+set(KDL_COMPAT_UTILITY_HEADERS
   utilities/error.h
   utilities/error_stack.h
   utilities/hash_combine.h
-  utilities/ldl_solver_eigen.hpp
   utilities/rall1d.h
   utilities/rall1d_io.h
   utilities/rall2d.h
   utilities/rall2d_io.h
   utilities/rallNd.h
-  utilities/svd_HH.hpp
-  utilities/svd_eigen_HH.hpp
-  utilities/svd_eigen_Macie.hpp
   utilities/traits.h
   utilities/utility.h
   utilities/utility_io.h
 )
+
+# The header lists are relative to include/kdl (compat/kdl for the stubs), the
+# source tree has the same layout as the install tree.
+list(TRANSFORM KDL_PUBLIC_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/include/kdl/)
+list(TRANSFORM KDL_UTILITY_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/include/kdl/)
+list(TRANSFORM KDL_COMPAT_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/compat/kdl/)
+list(TRANSFORM KDL_COMPAT_UTILITY_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/compat/kdl/)
 
 #In Windows (Visual Studio) it is necessary to specify the postfix
 #of the debug library name and no symbols are exported by kdl, 
@@ -169,7 +197,7 @@ ELSE(MSVC)
     SET(LIB_TYPE SHARED)
 ENDIF(MSVC)
 
-CONFIGURE_FILE(config.h.in config.h @ONLY)
+CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/include/kdl/config.hpp.in ${PROJECT_BINARY_DIR}/include/kdl/config.hpp @ONLY)
 
 #### Settings for rpath
 IF(NOT MSVC)
@@ -211,14 +239,23 @@ ADD_LIBRARY(orocos-kdl ${LIB_TYPE} ${KDL_SOURCES})
 # Consumers need C++17 too: the public headers rely on it.
 TARGET_COMPILE_FEATURES(orocos-kdl PUBLIC cxx_std_17)
 
-TARGET_INCLUDE_DIRECTORIES(orocos-kdl PUBLIC
-  "$<INSTALL_INTERFACE:include>")
+# Consumers include <kdl/...> from the source tree, the generated config.hpp from
+# the build tree, or both from the install tree. The library's own sources use
+# the short names ("frames.hpp", "utilities/utility.hpp").
+TARGET_INCLUDE_DIRECTORIES(orocos-kdl
+  PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  PRIVATE
+    ${PROJECT_SOURCE_DIR}/include/kdl
+    ${PROJECT_BINARY_DIR}/include/kdl)
 
 SET_TARGET_PROPERTIES( orocos-kdl PROPERTIES
   SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
   VERSION "${KDL_VERSION}"
   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD}"
-  PUBLIC_HEADER "${KDL_PUBLIC_HEADERS};${CMAKE_CURRENT_BINARY_DIR}/config.h"
+  PUBLIC_HEADER "${KDL_PUBLIC_HEADERS};${PROJECT_BINARY_DIR}/include/kdl/config.hpp"
   )
 
 #### Settings for rpath disabled (back-compatibility)
@@ -228,9 +265,6 @@ IF(NOT OROCOSKDL_ENABLE_RPATH)
 ENDIF()
 #####end RPATH
 
-# Needed so that the generated config.h can be used
-TARGET_INCLUDE_DIRECTORIES(orocos-kdl PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>")
 # Public dependencies, so consumers linking orocos-kdl get their include directories too
 TARGET_LINK_LIBRARIES(orocos-kdl PUBLIC Eigen3::Eigen)
 IF(KDL_USE_NEW_TREE_INTERFACE)
@@ -246,3 +280,5 @@ INSTALL(TARGETS orocos-kdl
 )
 
 INSTALL(FILES ${KDL_UTILITY_HEADERS} DESTINATION include/kdl/utilities)
+INSTALL(FILES ${KDL_COMPAT_HEADERS} DESTINATION include/kdl)
+INSTALL(FILES ${KDL_COMPAT_UTILITY_HEADERS} DESTINATION include/kdl/utilities)

@@ -6,7 +6,7 @@ IF(ENABLE_TESTS)
   FUNCTION(kdl_add_test name)
     ADD_EXECUTABLE(${name} ${name}.cpp test-runner.cpp ${ARGN})
     TARGET_LINK_LIBRARIES(${name} PRIVATE orocos-kdl ${CPPUNIT})
-    TARGET_INCLUDE_DIRECTORIES(${name} PRIVATE ${CPPUNIT_HEADERS} ${PROJ_SOURCE_DIR}/src)
+    TARGET_INCLUDE_DIRECTORIES(${name} PRIVATE ${CPPUNIT_HEADERS})
     TARGET_COMPILE_DEFINITIONS(${name} PRIVATE TESTNAME="${name}")
     ADD_TEST(NAME ${name} COMMAND ${name})
     SET_PROPERTY(GLOBAL APPEND PROPERTY KDL_TEST_TARGETS ${name})
@@ -28,7 +28,6 @@ IF(ENABLE_TESTS)
   # ones killed by SIGABRT, so the shell turns the abort into an ordinary exit status.
   ADD_EXECUTABLE(indexcheck indexcheck.cpp)
   TARGET_LINK_LIBRARIES(indexcheck PRIVATE orocos-kdl)
-  TARGET_INCLUDE_DIRECTORIES(indexcheck PRIVATE ${PROJ_SOURCE_DIR}/src)
   ADD_TEST(NAME indexcheck COMMAND sh -c "$<TARGET_FILE:indexcheck> 2>&1; true")
   SET_TESTS_PROPERTIES(indexcheck PROPERTIES PASS_REGULAR_EXPRESSION "Assertion.*failed|Assertion failed")
 
@@ -42,7 +41,7 @@ IF(ENABLE_TESTS)
       COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR} ctest
       COMMAND lcov --capture -d ${CMAKE_BINARY_DIR} -o ${KDL_COVERAGE_DIR}/raw.info
               --ignore-errors mismatch,inconsistent,unused,negative,gcov
-      COMMAND lcov --extract ${KDL_COVERAGE_DIR}/raw.info "*/orocos_kdl/src/*"
+      COMMAND lcov --extract ${KDL_COVERAGE_DIR}/raw.info "*/orocos_kdl/src/*" "*/orocos_kdl/include/kdl/*"
               -o ${KDL_COVERAGE_DIR}/kdl.info --ignore-errors unused,inconsistent
       COMMAND genhtml ${KDL_COVERAGE_DIR}/kdl.info -o ${KDL_COVERAGE_DIR}/html
               --ignore-errors inconsistent

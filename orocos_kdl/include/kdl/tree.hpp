@@ -22,7 +22,7 @@
 #ifndef KDL_TREE_HPP
 #define KDL_TREE_HPP
 
-#include "config.h"
+#include <kdl/config.hpp>
 
 #include "segment.hpp"
 #include "chain.hpp"

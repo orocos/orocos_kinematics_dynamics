@@ -1,6 +1,6 @@
 #include "pathtest.hpp"
-#include <frames_io.hpp>
-#include <rotational_interpolation_sa.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/rotational_interpolation_sa.hpp>
 #include <memory>
 #include <sstream>
 

@@ -76,7 +76,7 @@
 #ifndef FRAMES_IO_H
 #define FRAMES_IO_H
 
-#include "utilities/utility_io.h"
+#include "utilities/utility_io.hpp"
 #include "frames.hpp"
 #include "jntarray.hpp"
 #include "jacobian.hpp"

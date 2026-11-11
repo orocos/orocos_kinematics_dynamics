@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation.cpp
 
-                        rotational_interpolation.cxx -  description
+                        rotational_interpolation.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -39,8 +39,8 @@
  *		$Name:  $
  ****************************************************************************/
 
-#include "utilities/error.h"
-#include "utilities/error_stack.h"
+#include "utilities/error.hpp"
+#include "utilities/error_stack.hpp"
 #include "rotational_interpolation.hpp"
 #include "rotational_interpolation_sa.hpp"
 #include <memory>

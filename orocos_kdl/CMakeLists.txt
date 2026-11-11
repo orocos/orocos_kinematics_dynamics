@@ -154,9 +154,9 @@ ADD_SUBDIRECTORY( models )
 ADD_SUBDIRECTORY( examples )
 
 # Generate CMake package configuration
-# Only the install tree is exported. The build tree doesn't have the kdl/
-# header layout, so it can't be used as a package, and it isn't registered in
-# the user package registry (export(PACKAGE)) either.
+# Only the install tree is exported. The build tree isn't exported as a package
+# (export(EXPORT)), and it isn't registered in the user package registry
+# (export(PACKAGE)) either.
 # The config files are generated in a subdirectory, not in the top of the build
 # directory, which older versions registered in the user package registry. A
 # config file there without the targets file next to it would make

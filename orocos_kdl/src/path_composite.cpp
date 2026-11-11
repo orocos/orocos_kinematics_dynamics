@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_composite.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_composite.cpp
 
-                        path_composite.cxx -  description
+                        path_composite.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -41,7 +41,7 @@
 
 
 #include "path_composite.hpp"
-#include "utilities/error.h"
+#include "utilities/error.hpp"
 #include <memory>
 
 namespace KDL {

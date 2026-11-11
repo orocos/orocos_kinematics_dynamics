@@ -1,9 +1,9 @@
 #include <math.h>
 #include "inertiatest.hpp"
-#include <frames_io.hpp>
-#include <rotationalinertia.hpp>
-#include <rigidbodyinertia.hpp>
-#include <articulatedbodyinertia.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/rotationalinertia.hpp>
+#include <kdl/rigidbodyinertia.hpp>
+#include <kdl/articulatedbodyinertia.hpp>
 
 #include <Eigen/Core>
 CPPUNIT_TEST_SUITE_REGISTRATION( InertiaTest );

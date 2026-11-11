@@ -13,12 +13,12 @@
 #include <cstdio>
 #include <vector>
 
-#include <frames.hpp>
-#include <chain.hpp>
-#include <chainfksolverpos_recursive.hpp>
-#include <chainfksolvervel_recursive.hpp>
-#include <jntarray.hpp>
-#include <jntarrayvel.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/chain.hpp>
+#include <kdl/chainfksolverpos_recursive.hpp>
+#include <kdl/chainfksolvervel_recursive.hpp>
+#include <kdl/jntarray.hpp>
+#include <kdl/jntarrayvel.hpp>
 
 using namespace KDL;
 

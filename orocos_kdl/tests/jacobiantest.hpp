@@ -2,7 +2,7 @@
 #define JACOBIAN_TEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <jacobian.hpp>
+#include <kdl/jacobian.hpp>
 
 using namespace KDL;
 

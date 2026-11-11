@@ -1,5 +1,5 @@
 /***************************************************************************
-                        frames.cxx -  description
+                        frames.cpp -  description
                        -------------------------
     begin                : June 2006
     copyright            : (C) 2006 Erwin Aertbelien
@@ -26,7 +26,7 @@
  ***************************************************************************/
 
 #include "frames.hpp"
-#include "utilities/utility.h"
+#include "utilities/utility.hpp"
 
 #include <algorithm>
 

@@ -1,7 +1,7 @@
 #include "kinfamtest.hpp"
-#include <frames_io.hpp>
-#include <kinfam_io.hpp>
-#include <chainfksolverpos_recursive.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/kinfam_io.hpp>
+#include <kdl/chainfksolverpos_recursive.hpp>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( KinFamTest );
 

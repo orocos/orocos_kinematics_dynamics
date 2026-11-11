@@ -1,6 +1,6 @@
 #include "framestest.hpp"
-#include <frames_io.hpp>
-#include <utilities/utility.h>
+#include <kdl/frames_io.hpp>
+#include <kdl/utilities/utility.hpp>
 #include <type_traits>
 #include <cmath>
 #include <functional>

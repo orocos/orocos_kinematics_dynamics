@@ -19,8 +19,8 @@
 #define Rall_IO_H
 
 #include <typeinfo>
-#include "utility_io.h"
-#include "rall1d.h"
+#include "utility_io.hpp"
+#include "rall1d.hpp"
 
 namespace KDL {
 

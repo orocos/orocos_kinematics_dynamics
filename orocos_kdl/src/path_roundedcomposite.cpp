@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_roundedcomposite.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_roundedcomposite.cpp
 
-                        path_roundedcomposite.cxx -  description
+                        path_roundedcomposite.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -43,7 +43,7 @@
 #include "path_roundedcomposite.hpp"
 #include "path_line.hpp"
 #include "path_circle.hpp"
-#include "utilities/error.h"
+#include "utilities/error.hpp"
 #include <memory>
 
 

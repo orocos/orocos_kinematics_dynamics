@@ -26,8 +26,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "utilities/error.h"
-#include "utilities/error_stack.h"
+#include "utilities/error.hpp"
+#include "utilities/error_stack.hpp"
 #include "frames.hpp"
 #include "frames_io.hpp"
 

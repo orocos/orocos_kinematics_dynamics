@@ -23,7 +23,7 @@
 //Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-#include <kdl/config.h>
+#include <kdl/config.hpp>
 #include "PyKDL.h"
 
 namespace py = pybind11;

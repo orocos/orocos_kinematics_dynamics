@@ -75,11 +75,30 @@ jobs:
           sudo make install
       - name: Check installed headers are self-contained
         run: |
+          shopt -s globstar
           fail=0
           cd /usr/local/include
-          for h in kdl/*.hpp kdl/utilities/*.hpp kdl/utilities/*.h; do
+          for h in kdl/**/*.hpp; do
             if ! echo "#include <$h>" | ${CXX} -std=c++17 -I/usr/include/eigen3 -fsyntax-only -x c++ - ; then
               echo "::error::$h is not self-contained"
+              fail=1
+            fi
+          done
+          exit $fail
+      - name: Check the deprecated .h stubs warn and still work
+        run: |
+          shopt -s globstar
+          fail=0
+          cd /usr/local/include
+          for h in kdl/**/*.h; do
+            # Without -Werror the stub compiles; with it, its deprecation warning is an error.
+            if ! echo "#include <$h>" | ${CXX} -std=c++17 -I/usr/include/eigen3 -fsyntax-only -x c++ - 2>/dev/null; then
+              echo "::error::$h does not compile"
+              fail=1
+            fi
+            if out=$(echo "#include <$h>" | ${CXX} -std=c++17 -I/usr/include/eigen3 -Werror -fsyntax-only -x c++ - 2>&1) \
+               || ! grep -q "$h is deprecated, include ${h}pp" <<<"$out"; then
+              echo "::error::$h does not fail -Werror with its deprecation warning"
               fail=1
             fi
           done

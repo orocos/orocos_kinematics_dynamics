@@ -16,8 +16,8 @@
  ****************************************************************************/
 
 
-#include "utility_io.h"
-#include "error.h"
+#include "utilities/utility_io.hpp"
+#include "utilities/error.hpp"
 
 #include <stdlib.h>
 #include <ctype.h>

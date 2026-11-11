@@ -18,8 +18,8 @@
 #ifndef KDL_FRAMESVEL_IO
 #define KDL_FRAMESVEL_IO
 
-#include "utilities/utility_io.h"
-#include "utilities/rall1d_io.h"
+#include "utilities/utility_io.hpp"
+#include "utilities/rall1d_io.hpp"
 
 #include "frames_io.hpp"
 #include "framevel.hpp"
