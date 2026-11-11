@@ -1,12 +1,12 @@
-#include <chain.hpp>
+#include <kdl/chain.hpp>
 #include "models.hpp"
-#include <frames_io.hpp>
-#include <kinfam_io.hpp> //know  how to print different types on screen
+#include <kdl/frames_io.hpp>
+#include <kdl/kinfam_io.hpp> //know  how to print different types on screen
 
-#include <chainfksolverpos_recursive.hpp>
-#include <chainidsolver_recursive_newton_euler.hpp>
-#include <jntspaceinertiamatrix.hpp>
-#include <chaindynparam.hpp>
+#include <kdl/chainfksolverpos_recursive.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/jntspaceinertiamatrix.hpp>
+#include <kdl/chaindynparam.hpp>
 
 #include <iostream>
 

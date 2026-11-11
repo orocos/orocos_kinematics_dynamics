@@ -3,25 +3,25 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <chain.hpp>
-#include <chainfksolverpos_recursive.hpp>
-#include <chainfksolvervel_recursive.hpp>
-#include <chainiksolvervel_pinv.hpp>
-#include <chainiksolvervel_pinv_givens.hpp>
-#include <chainiksolvervel_pinv_nso.hpp>
-#include <chainiksolvervel_wdls.hpp>
-#include <chainiksolverpos_nr.hpp>
-#include <chainiksolverpos_lma.hpp>
-#include <chainiksolverpos_nr_jl.hpp>
-#include <chainjnttojacsolver.hpp>
-#include <chainjnttojacdotsolver.hpp>
-#include <chainhdsolver_vereshchagin.hpp>
-#include <chainidsolver_recursive_newton_euler.hpp>
-#include <chaindynparam.hpp>
-#include <chainidsolver_recursive_newton_euler.hpp>
-#include <chainfdsolver_recursive_newton_euler.hpp>
-#include <chainexternalwrenchestimator.hpp>
-#include <utilities/ldl_solver_eigen.hpp>
+#include <kdl/chain.hpp>
+#include <kdl/chainfksolverpos_recursive.hpp>
+#include <kdl/chainfksolvervel_recursive.hpp>
+#include <kdl/chainiksolvervel_pinv.hpp>
+#include <kdl/chainiksolvervel_pinv_givens.hpp>
+#include <kdl/chainiksolvervel_pinv_nso.hpp>
+#include <kdl/chainiksolvervel_wdls.hpp>
+#include <kdl/chainiksolverpos_nr.hpp>
+#include <kdl/chainiksolverpos_lma.hpp>
+#include <kdl/chainiksolverpos_nr_jl.hpp>
+#include <kdl/chainjnttojacsolver.hpp>
+#include <kdl/chainjnttojacdotsolver.hpp>
+#include <kdl/chainhdsolver_vereshchagin.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/chaindynparam.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/chainfdsolver_recursive_newton_euler.hpp>
+#include <kdl/chainexternalwrenchestimator.hpp>
+#include <kdl/utilities/ldl_solver_eigen.hpp>
 
 
 using namespace KDL;

@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Peter Soetens  Mon May 10 19:10:36 CEST 2004  velocityprofile_dirac.cxx
+  tag: Peter Soetens  Mon May 10 19:10:36 CEST 2004  velocityprofile_dirac.cpp
 
-                        velocityprofile_dirac.cxx -  description
+                        velocityprofile_dirac.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Peter Soetens
@@ -25,7 +25,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "utilities/error.h"
+#include "utilities/error.hpp"
 #include "velocityprofile_dirac.hpp"
 
 namespace KDL {

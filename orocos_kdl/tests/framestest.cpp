@@ -1,6 +1,26 @@
 #include "framestest.hpp"
-#include <frames_io.hpp>
-#include <utilities/utility.h>
+#include <kdl/frames_io.hpp>
+#include <kdl/utilities/utility.hpp>
+#include <type_traits>
+#include <cmath>
+#include <functional>
+#include <limits>
+#include <kdl/config.hpp>
+
+// KDL_VERSION must behave as one value in comparisons, both in #if and in C++
+// expressions. Unparenthesised, `KDL_VERSION >= x` parses as
+// `(MAJOR << 16) | (MINOR << 8) | (PATCH >= x)`, which is always true.
+#define KDL_TEST_EXPECTED_VERSION ((KDL_VERSION_MAJOR << 16) | (KDL_VERSION_MINOR << 8) | KDL_VERSION_PATCH)
+#if KDL_VERSION != KDL_TEST_EXPECTED_VERSION || KDL_VERSION >= ((KDL_VERSION_MAJOR + 1) << 16) \
+    || KDL_VERSION < (KDL_VERSION_MAJOR << 16)
+#error "KDL_VERSION does not compare as a single value"
+#endif
+static_assert((KDL_VERSION == KDL_TEST_EXPECTED_VERSION) == true, "KDL_VERSION == x must be a bool comparison");
+static_assert(!(KDL_VERSION >= ((KDL_VERSION_MAJOR + 1) << 16)), "KDL_VERSION >= next major must be false");
+static_assert(!(KDL_VERSION < (KDL_VERSION_MAJOR << 16)), "KDL_VERSION < this major must be false");
+static_assert(KDL_VERSION_MAJOR != 2 || (KDL_VERSION >= 0x020000 && KDL_VERSION < 0x030000),
+              "a 2.x release lies in [0x020000, 0x030000)");
+#undef KDL_TEST_EXPECTED_VERSION
 
 CPPUNIT_TEST_SUITE_REGISTRATION( FramesTest );
 
@@ -136,17 +156,17 @@ void FramesTest::TestRotation2(const Vector& v,double a,double b,double c) {
 	CPPUNIT_ASSERT_EQUAL(R,R2);
     CPPUNIT_ASSERT_EQUAL(std::hash<Rotation>{}(R), std::hash<Rotation>{}(R2));
 	CPPUNIT_ASSERT_DOUBLES_EQUAL((R*v).Norm(),v.Norm(),epsilon);
-	CPPUNIT_ASSERT_EQUAL(R.Inverse(R*v),v);
-	CPPUNIT_ASSERT_EQUAL(R.Inverse(R*t),t);
-	CPPUNIT_ASSERT_EQUAL(R.Inverse(R*w),w);
-	CPPUNIT_ASSERT_EQUAL(R*R.Inverse(v),v);
+	CPPUNIT_ASSERT(Equal(R.Inverse(R*v),v));
+	CPPUNIT_ASSERT(Equal(R.Inverse(R*t),t));
+	CPPUNIT_ASSERT(Equal(R.Inverse(R*w),w));
+	CPPUNIT_ASSERT(Equal(R*R.Inverse(v),v));
 	CPPUNIT_ASSERT_EQUAL(R*Rotation::Identity(),R);
 	CPPUNIT_ASSERT_EQUAL(Rotation::Identity()*R,R);
-	CPPUNIT_ASSERT_EQUAL(R*(R*(R*v)),(R*R*R)*v);
-	CPPUNIT_ASSERT_EQUAL(R*(R*(R*t)),(R*R*R)*t);
-	CPPUNIT_ASSERT_EQUAL(R*(R*(R*w)),(R*R*R)*w);
-	CPPUNIT_ASSERT_EQUAL(R*R.Inverse(),Rotation::Identity());
-	CPPUNIT_ASSERT_EQUAL(R.Inverse()*R,Rotation::Identity());
+	CPPUNIT_ASSERT(Equal(R*(R*(R*v)),(R*R*R)*v));
+	CPPUNIT_ASSERT(Equal(R*(R*(R*t)),(R*R*R)*t));
+	CPPUNIT_ASSERT(Equal(R*(R*(R*w)),(R*R*R)*w));
+	CPPUNIT_ASSERT(Equal(R*R.Inverse(),Rotation::Identity()));
+	CPPUNIT_ASSERT(Equal(R.Inverse()*R,Rotation::Identity()));
 	CPPUNIT_ASSERT_EQUAL(R.Inverse()*v,R.Inverse(v));
 	R.GetRPY(ra,rb,rc);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(ra,a,epsilon);
@@ -164,9 +184,9 @@ void FramesTest::TestRotation2(const Vector& v,double a,double b,double c) {
     CPPUNIT_ASSERT_DOUBLES_EQUAL(rc,c,epsilon);
 	double angle= R.GetRotAngle(v2);
 	R2=Rotation::Rot2(v2,angle);
-	CPPUNIT_ASSERT_EQUAL(R2,R);
+	CPPUNIT_ASSERT(Equal(R2,R));
 	R2=Rotation::Rot(v2*1E20,angle);
-	CPPUNIT_ASSERT_EQUAL(R,R2);
+	CPPUNIT_ASSERT(Equal(R,R2));
 	v2=Vector(6,2,4);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL((v2).Norm(),::sqrt(dot(v2,v2)),epsilon);
 }
@@ -183,11 +203,11 @@ void FramesTest::TestOneRotation(const std::string& msg,
 
 	angle = R.GetRotAngle(axis);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE(msg, expectedAngle, angle, epsilon);
-	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, expectedAxis, axis);
-	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, expectedAngle * expectedAxis, R.GetRot());
-	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, Rotation::Rot(axis, angle), R);
+	CPPUNIT_ASSERT_MESSAGE(msg, Equal(expectedAxis, axis));
+	CPPUNIT_ASSERT_MESSAGE(msg, Equal(expectedAngle * expectedAxis, R.GetRot()));
+	CPPUNIT_ASSERT_MESSAGE(msg, Equal(Rotation::Rot(axis, angle), R));
 	(void)axis.Normalize();
-	CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, Rotation::Rot2(axis, angle), R);
+	CPPUNIT_ASSERT_MESSAGE(msg, Equal(Rotation::Rot2(axis, angle), R));
 }
 
 
@@ -468,14 +488,14 @@ void FramesTest::TestGetRotAngle() {
     CPPUNIT_ASSERT_EQUAL(det,-1.0);
     angle = R.GetRotAngle(axis);
     Rout = KDL::Rotation::Rot(axis, angle);
-    CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(R,Rout));
+    CPPUNIT_ASSERT(!Equal(R,Rout));
     // Improper Rotation matrix for 180 deg rotation (singular)
     R = KDL::Rotation( -1, 0, 0, 0, -1, 0, 0, 0, -1);
     det = +R(0,0)*(R(1,1)*R(2,2)-R(2,1)*R(1,2))-R(0,1)*(R(1,0)*R(2,2)-R(2,0)*R(1,2))+R(0,2)*(R(1,0)*R(2,1)-R(2,0)*R(1,1));
     CPPUNIT_ASSERT_EQUAL(det,-1.0);
     angle = R.GetRotAngle(axis);
     Rout = KDL::Rotation::Rot(axis, angle);
-    CPPUNIT_ASSERT_ASSERTION_FAIL(CPPUNIT_ASSERT_EQUAL(R,Rout));
+    CPPUNIT_ASSERT(!Equal(R,Rout));
   }
 
 }
@@ -499,11 +519,11 @@ void FramesTest::TestQuaternion() {
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(z, 0, epsilon);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(w, cos((45*deg2rad)/2), epsilon);
     R2 = Rotation::Quaternion(x,y,z,w);
-	CPPUNIT_ASSERT_EQUAL(R,R2);    
+	CPPUNIT_ASSERT(Equal(R,R2));
 
     // direct 45 deg rotation in X
     R2 = Rotation::Quaternion(sin((45*deg2rad)/2), 0, 0, cos((45*deg2rad)/2));
-	CPPUNIT_ASSERT_EQUAL(R,R2);
+	CPPUNIT_ASSERT(Equal(R,R2));
     R2.GetQuaternion(x2,y2,z2,w2);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, x2, epsilon);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(y, y2, epsilon);
@@ -514,7 +534,7 @@ void FramesTest::TestQuaternion() {
     R = Rotation::EulerZYX(45*deg2rad,0,45*deg2rad);
     R.GetQuaternion(x,y,z,w);
     R2 = Rotation::Quaternion(x,y,z,w);
-	CPPUNIT_ASSERT_EQUAL(R,R2);    
+	CPPUNIT_ASSERT(Equal(R,R2));
     R2.GetQuaternion(x2,y2,z2,w2);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(x, x2, epsilon);
 	CPPUNIT_ASSERT_DOUBLES_EQUAL(y, y2, epsilon);
@@ -527,8 +547,8 @@ void FramesTest::TestOneRotationDiff(
         const Rotation& R_a_b1,
         const Rotation& R_a_b2,
         const Vector& expectedDiff) {
-    CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, diff(R_a_b1, R_a_b2), expectedDiff);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE(msg, addDelta(R_a_b1, expectedDiff), R_a_b2);
+    CPPUNIT_ASSERT_MESSAGE(msg, Equal(diff(R_a_b1, R_a_b2), expectedDiff));
+    CPPUNIT_ASSERT_MESSAGE(msg, Equal(addDelta(R_a_b1, expectedDiff), R_a_b2));
 }
 
 void FramesTest::TestRotationDiff() {
@@ -636,20 +656,20 @@ void FramesTest::TestFrame() {
 	F2=F   ;
 	CPPUNIT_ASSERT_EQUAL(F,F2);
     CPPUNIT_ASSERT_EQUAL(std::hash<Frame>{}(F), std::hash<Frame>{}(F2));
-	CPPUNIT_ASSERT_EQUAL(F.Inverse(F*v),v);
-	CPPUNIT_ASSERT_EQUAL(F.Inverse(F*t),t);
-	CPPUNIT_ASSERT_EQUAL(F.Inverse(F*w),w);
-	CPPUNIT_ASSERT_EQUAL(F*F.Inverse(v),v);
-	CPPUNIT_ASSERT_EQUAL(F*F.Inverse(t),t);
-	CPPUNIT_ASSERT_EQUAL(F*F.Inverse(w),w);
+	CPPUNIT_ASSERT(Equal(F.Inverse(F*v),v));
+	CPPUNIT_ASSERT(Equal(F.Inverse(F*t),t));
+	CPPUNIT_ASSERT(Equal(F.Inverse(F*w),w));
+	CPPUNIT_ASSERT(Equal(F*F.Inverse(v),v));
+	CPPUNIT_ASSERT(Equal(F*F.Inverse(t),t));
+	CPPUNIT_ASSERT(Equal(F*F.Inverse(w),w));
 	CPPUNIT_ASSERT_EQUAL(F*Frame::Identity(),F);
 	CPPUNIT_ASSERT_EQUAL(Frame::Identity()*F,F);
-	CPPUNIT_ASSERT_EQUAL(F*(F*(F*v)),(F*F*F)*v);
-	CPPUNIT_ASSERT_EQUAL(F*(F*(F*t)),(F*F*F)*t);
-	CPPUNIT_ASSERT_EQUAL(F*(F*(F*w)),(F*F*F)*w);
-	CPPUNIT_ASSERT_EQUAL(F*F.Inverse(),Frame::Identity());
-	CPPUNIT_ASSERT_EQUAL(F.Inverse()*F,Frame::Identity());
-	CPPUNIT_ASSERT_EQUAL(F.Inverse()*v,F.Inverse(v));
+	CPPUNIT_ASSERT(Equal(F*(F*(F*v)),(F*F*F)*v));
+	CPPUNIT_ASSERT(Equal(F*(F*(F*t)),(F*F*F)*t));
+	CPPUNIT_ASSERT(Equal(F*(F*(F*w)),(F*F*F)*w));
+	CPPUNIT_ASSERT(Equal(F*F.Inverse(),Frame::Identity()));
+	CPPUNIT_ASSERT(Equal(F.Inverse()*F,Frame::Identity()));
+	CPPUNIT_ASSERT(Equal(F.Inverse()*v,F.Inverse(v)));
 
 	// Denavit-Hartenberg
     Frame F_DH = Frame(Rotation(1, 0, 0,
@@ -784,4 +804,200 @@ void FramesTest::TestJntArrayWhenEmpty()
     CPPUNIT_ASSERT(Equal(a1,a3));
 }
 
+// The value types are plain aggregates of doubles: user-written copy operations would make
+// them non-trivially copyable, which costs register passing and memcpy in containers.
+void FramesTest::TestTriviallyCopyable() {
+    static_assert(std::is_trivially_copyable_v<Vector>, "Vector must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Rotation>, "Rotation must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Frame>, "Frame must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Twist>, "Twist must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Wrench>, "Wrench must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Vector2>, "Vector2 must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Rotation2>, "Rotation2 must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Frame2>, "Frame2 must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<VectorVel>, "VectorVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<RotationVel>, "RotationVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<FrameVel>, "FrameVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<TwistVel>, "TwistVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<VectorAcc>, "VectorAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<RotationAcc>, "RotationAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<FrameAcc>, "FrameAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<TwistAcc>, "TwistAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<doubleVel>, "doubleVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<doubleAcc>, "doubleAcc must be trivially copyable");
+    // The asserts are compile-time; this keeps the test case from being empty.
+    CPPUNIT_ASSERT(true);
+}
 
+// D4: Norm() returns 0 only for the exact zero vector, whichever component dominates, and keeps
+// the overflow- and underflow-safe scaling.
+void FramesTest::TestNormSmallVectors() {
+    CPPUNIT_ASSERT_EQUAL(5e-7, Vector(5e-7,0,0).Norm());
+    CPPUNIT_ASSERT_EQUAL(5e-7, Vector(0,5e-7,0).Norm());
+    CPPUNIT_ASSERT_EQUAL(5e-7, Vector(0,0,5e-7).Norm());
+    CPPUNIT_ASSERT_EQUAL(5e-7, Vector2(5e-7,0).Norm());
+    CPPUNIT_ASSERT_EQUAL(0.0, Vector::Zero().Norm());
+    CPPUNIT_ASSERT_EQUAL(1e-200, Vector(1e-200,0,0).Norm());                    // no underflow
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.4142135623730951e200, Vector(1e200,1e200,0).Norm(), 1e185); // no overflow
+
+    CPPUNIT_ASSERT_EQUAL(0.0, Vector2(0,0).Norm());
+    CPPUNIT_ASSERT_EQUAL(5e-7, Vector2(0,-5e-7).Norm());
+    const double denorm = std::numeric_limits<double>::denorm_min();
+    CPPUNIT_ASSERT_EQUAL(denorm, Vector(0,0,-denorm).Norm());                   // subnormal is not zero
+    const doubleVel nv = VectorVel(Vector(5e-7,0,0), Vector(1,0,0)).Norm();
+    CPPUNIT_ASSERT_EQUAL(5e-7, nv.t);
+    CPPUNIT_ASSERT_EQUAL(1.0, nv.grad);
+    const doubleVel nz = VectorVel(Vector::Zero(), Vector(1,0,0)).Norm();
+    CPPUNIT_ASSERT_EQUAL(0.0, nz.t);
+    CPPUNIT_ASSERT_EQUAL(0.0, nz.grad);
+    const doubleAcc na = VectorAcc(Vector(5e-7,0,0), Vector(1,0,0), Vector(0,1,0)).Norm();
+    CPPUNIT_ASSERT_EQUAL(5e-7, na.t);
+    CPPUNIT_ASSERT_EQUAL(1.0, na.d);
+    // At the exact zero vector the derivatives are undefined; VectorAcc follows VectorVel and
+    // returns zeros instead of NaN.
+    const doubleAcc nza = VectorAcc(Vector::Zero(), Vector(1,0,0), Vector(0,1,0)).Norm();
+    CPPUNIT_ASSERT(std::isfinite(nza.t) && std::isfinite(nza.d) && std::isfinite(nza.dd));
+    CPPUNIT_ASSERT_EQUAL(nz.t, nza.t);
+    CPPUNIT_ASSERT_EQUAL(nz.grad, nza.d);
+    CPPUNIT_ASSERT_EQUAL(0.0, nza.dd);
+}
+
+// D3: Equal(a, b, eps) <=> a == b || (isfinite(a-b) && |a-b| <= eps * max(1, |a|, |b|)).
+void FramesTest::TestEqualTolerance() {
+    const double inf = std::numeric_limits<double>::infinity(), nan = std::numeric_limits<double>::quiet_NaN();
+    CPPUNIT_ASSERT(Equal(1.0, 1.0, 0.0));
+    CPPUNIT_ASSERT(!Equal(1.0, std::nextafter(1.0, 2.0), 0.0));
+    CPPUNIT_ASSERT(Equal(inf, inf));   CPPUNIT_ASSERT(!Equal(inf, -inf));
+    CPPUNIT_ASSERT(!Equal(inf, 1.0));  CPPUNIT_ASSERT(!Equal(nan, nan));
+    CPPUNIT_ASSERT(Equal(0.0, 0.9e-6)); CPPUNIT_ASSERT(!Equal(0.0, 1.1e-6));    // absolute regime unchanged
+    CPPUNIT_ASSERT(Equal(1e9, 1e9 + 900.0)); CPPUNIT_ASSERT(!Equal(1e9, 1e9 + 1100.0)); // relative above 1
+    CPPUNIT_ASSERT(Equal(Vector(1e9,0,0), Vector(1e9+2e-6,0,0)));
+    CPPUNIT_ASSERT(Equal(Vector(inf,0,0), Vector(inf,0,0)));
+    CPPUNIT_ASSERT(!Equal(Vector(inf,0,0), Vector(inf,1,0)));                  // inf must not loosen other components
+    static_assert(KDL::epsilon == 1e-6, "epsilon is a compile-time constant");
+
+    // Edge cases of the scalar rule.
+    const double big = std::numeric_limits<double>::max();
+    const double denorm = std::numeric_limits<double>::denorm_min();
+    CPPUNIT_ASSERT(Equal(0.0, -0.0, 0.0));
+    CPPUNIT_ASSERT(Equal(-inf, -inf, 0.0));
+    CPPUNIT_ASSERT(!Equal(nan, 1.0));  CPPUNIT_ASSERT(!Equal(1.0, nan, inf));
+    CPPUNIT_ASSERT(!Equal(big, -big));                                          // a-b overflows: not equal
+    CPPUNIT_ASSERT(Equal(big, std::nextafter(big, 0.0)));                       // relative at the top of the range
+    CPPUNIT_ASSERT(Equal(denorm, 0.0)); CPPUNIT_ASSERT(!Equal(denorm, 0.0, 0.0));
+    CPPUNIT_ASSERT(Equal(1.0, 1.0 + 1e-6));                                     // boundary is inclusive
+    CPPUNIT_ASSERT(!Equal(1.0, 1.5, -1.0));                                     // negative eps: exact only
+    CPPUNIT_ASSERT(Equal(1.0, 1.0, -1.0));
+
+    // Edge cases of the per-quantity rule.
+    CPPUNIT_ASSERT(Equal(Vector(1,2,3), Vector(1,2,3), 0.0));
+    CPPUNIT_ASSERT(!Equal(Vector(1,2,3), Vector(1,2,std::nextafter(3.0, 4.0)), 0.0));
+    CPPUNIT_ASSERT(!Equal(Vector(nan,0,0), Vector(nan,0,0)));
+    CPPUNIT_ASSERT(!Equal(Vector(0,nan,0), Vector(0,1,0), inf));                // nan ignored in the scale, still unequal
+    CPPUNIT_ASSERT(!Equal(Vector(big,0,0), Vector(-big,0,0)));
+    CPPUNIT_ASSERT(Equal(Vector(big,0,0), Vector(std::nextafter(big, 0.0),0,0)));
+    CPPUNIT_ASSERT(!Equal(Vector(-inf,0,0), Vector(inf,0,0)));
+    CPPUNIT_ASSERT(Equal(Vector2(1e9,0), Vector2(1e9,9e2)));
+    CPPUNIT_ASSERT(!Equal(Vector2(1,0), Vector2(1,1.1e-6)));
+}
+
+// D3: one scale per physical quantity, never shared between quantities or array elements.
+void FramesTest::TestEqualPerQuantity() {
+    CPPUNIT_ASSERT(Equal(Vector(1000,1e-3,0), Vector(1000,1.1e-3,0)));         // one scale per vector
+    CPPUNIT_ASSERT(!Equal(Vector(1,1e-3,0), Vector(1,1.1e-3,0)));
+    const Rotation R = Rotation::RPY(0.1,0.2,0.3), R2 = Rotation::RPY(0.1,0.2,0.3+1e-5);
+    CPPUNIT_ASSERT(!Equal(Frame(R, Vector(1e3,0,0)), Frame(R2, Vector(1e3,0,0))));   // translation doesn't loosen M
+    CPPUNIT_ASSERT(!Equal(Twist(Vector(1e3,0,0), Vector::Zero()), Twist(Vector(1e3,0,0), Vector(1e-4,0,0))));
+    JntArray q1(2), q2(2); q1(0) = q2(0) = 1000; q1(1) = 0; q2(1) = 1e-4;
+    CPPUNIT_ASSERT(!Equal(q1, q2));                                             // per element
+
+    CPPUNIT_ASSERT(Equal(Frame(R, Vector(1e3,0,0)), Frame(R, Vector(1e3,1e-4,0))));
+    CPPUNIT_ASSERT(!Equal(Wrench(Vector(1e3,0,0), Vector::Zero()), Wrench(Vector(1e3,0,0), Vector(1e-4,0,0))));
+    CPPUNIT_ASSERT(Equal(Wrench(Vector(1e3,0,0), Vector::Zero()), Wrench(Vector(1e3,1e-4,0), Vector::Zero())));
+    CPPUNIT_ASSERT(!Equal(Frame2(Rotation2(0.3), Vector2(1e3,0)), Frame2(Rotation2(0.3+1e-5), Vector2(1e3,0))));
+    CPPUNIT_ASSERT(Equal(Frame2(Rotation2(0.3), Vector2(1e3,0)), Frame2(Rotation2(0.3), Vector2(1e3,1e-4))));
+    CPPUNIT_ASSERT(!Equal(Rotation2(0.3), Rotation2(0.3+1e-5)));
+    CPPUNIT_ASSERT(Equal(Rotation2(0.3), Rotation2(0.3+1e-7)));
+    // The velocity part of a Vel type has its own scale.
+    CPPUNIT_ASSERT(!Equal(VectorVel(Vector(1e3,0,0), Vector::Zero()), VectorVel(Vector(1e3,0,0), Vector(1e-4,0,0))));
+    CPPUNIT_ASSERT(!Equal(Vector(1e3,0,0), VectorVel(Vector(1e3,0,0), Vector(1e-4,0,0))));
+    CPPUNIT_ASSERT(!Equal(VectorAcc(Vector(1e3,0,0), Vector::Zero(), Vector::Zero()),
+                          VectorAcc(Vector(1e3,0,0), Vector::Zero(), Vector(1e-4,0,0))));
+    CPPUNIT_ASSERT(!Equal(doubleVel(1e3, 0), doubleVel(1e3, 1e-4)));
+    CPPUNIT_ASSERT(!Equal(doubleAcc(1e3, 0, 0), doubleAcc(1e3, 0, 1e-4)));
+    // Every element of an array type has its own scale.
+    Jacobian J1(2), J2(2); J1.data.setZero(); J1(0,0) = 1000; J2 = J1; J2(1,1) = 1e-4;
+    CPPUNIT_ASSERT(!Equal(J1, J2));
+    J2 = J1; J2(0,0) = 1000 + 1e-4;
+    CPPUNIT_ASSERT(Equal(J1, J2));
+    CPPUNIT_ASSERT(!Equal(J1, Jacobian(3)));
+    JntSpaceInertiaMatrix H1(2), H2(2); H1.data.setZero(); H1(0,0) = 1000; H2 = H1; H2(1,1) = 1e-4;
+    CPPUNIT_ASSERT(!Equal(H1, H2));
+    H2 = H1; H2(0,0) = 1000 + 1e-4;
+    CPPUNIT_ASSERT(Equal(H1, H2));
+    CPPUNIT_ASSERT(!Equal(H1, JntSpaceInertiaMatrix(3)));
+    q2 = q1; q2(0) = 1000 + 1e-4;
+    CPPUNIT_ASSERT(Equal(q1, q2));
+    CPPUNIT_ASSERT(!Equal(q1, JntArray(3)));
+}
+
+// D6+D7: operator== is exact and consistent with std::hash; Equal is the tolerant comparison.
+void FramesTest::TestExactEqualityAndHash() {
+    CPPUNIT_ASSERT(!(Vector(1,0,0) == Vector(1+1e-9,0,0)));
+    CPPUNIT_ASSERT(Vector(1,0,0) != Vector(1+1e-9,0,0));
+    CPPUNIT_ASSERT(Equal(Vector(1,0,0), Vector(1+1e-9,0,0)));
+    CPPUNIT_ASSERT(Vector(0,0,0) == Vector(-0.0,0,0));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Vector>{}(Vector(0,0,0)), std::hash<Vector>{}(Vector(-0.0,0,0)));
+    const Frame F(Rotation::RPY(0.1,0.2,0.3), Vector(1,2,3));
+    CPPUNIT_ASSERT(F == Frame(F));
+    CPPUNIT_ASSERT_EQUAL(std::hash<Frame>{}(F), std::hash<Frame>{}(Frame(F)));
+
+    const double d = 1e-9;
+    const double nan = std::numeric_limits<double>::quiet_NaN();
+    CPPUNIT_ASSERT(!(Vector(nan,0,0) == Vector(nan,0,0)));
+    const Rotation R = F.M, Rd = Rotation(R.data[0]+d, R.data[1], R.data[2], R.data[3], R.data[4],
+                                          R.data[5], R.data[6], R.data[7], R.data[8]);
+    CPPUNIT_ASSERT(R != Rd && Equal(R, Rd));
+    CPPUNIT_ASSERT(F != Frame(Rd, F.p) && Equal(F, Frame(Rd, F.p)));
+    CPPUNIT_ASSERT(Frame(R, Vector(0,0,0)) == Frame(R, Vector(0,-0.0,0)));
+    const Twist t(Vector(1,2,3), Vector(4,5,6)), td(Vector(1,2,3), Vector(4,5,6+d));
+    CPPUNIT_ASSERT(t == Twist(t) && t != td && Equal(t, td));
+    const Wrench w(Vector(1,2,3), Vector(4,5,6)), wd(Vector(1,2,3+d), Vector(4,5,6));
+    CPPUNIT_ASSERT(w == Wrench(w) && w != wd && Equal(w, wd));
+    CPPUNIT_ASSERT(Vector2(1,2) == Vector2(1,2) && Vector2(1,2) != Vector2(1,2+d) && Equal(Vector2(1,2), Vector2(1,2+d)));
+    CPPUNIT_ASSERT(Equal(Rotation2(0.3), Rotation2(0.3+d)) && Equal(Frame2(Rotation2(0.3), Vector2(1,2)), Frame2(Rotation2(0.3), Vector2(1,2+d))));
+
+    // The Vel types, including the mixed comparisons with the double type.
+    const VectorVel vv(Vector(1,2,3), Vector(4,5,6)), vvd(Vector(1,2,3), Vector(4,5,6+d));
+    CPPUNIT_ASSERT(vv == VectorVel(vv) && vv != vvd && Equal(vv, vvd));
+    CPPUNIT_ASSERT(Vector(1,2,3) == VectorVel(Vector(1,2,3)) && VectorVel(Vector(1,2,3)) == Vector(1,2,3));
+    CPPUNIT_ASSERT(Vector(1,2,3) != VectorVel(Vector(1,2,3), Vector(0,0,d)) && VectorVel(Vector(1,2,3), Vector(0,0,d)) != Vector(1,2,3));
+    const RotationVel rv(R, Vector(1,2,3)), rvd(R, Vector(1,2,3+d));
+    CPPUNIT_ASSERT(rv == RotationVel(rv) && rv != rvd && Equal(rv, rvd));
+    CPPUNIT_ASSERT(R == RotationVel(R) && RotationVel(R) == R && R != RotationVel(Rd) && RotationVel(Rd) != R);
+    const FrameVel fv(rv, vv), fvd(rv, vvd);
+    CPPUNIT_ASSERT(fv == FrameVel(fv) && fv != fvd && Equal(fv, fvd));
+    CPPUNIT_ASSERT(F == FrameVel(F) && FrameVel(F) == F && F != FrameVel(Frame(Rd, F.p)) && FrameVel(Frame(Rd, F.p)) != F);
+    const TwistVel tv(vv, vv), tvd(vv, vvd);
+    CPPUNIT_ASSERT(tv == TwistVel(tv) && tv != tvd && Equal(tv, tvd));
+    CPPUNIT_ASSERT(t == TwistVel(t) && TwistVel(t) == t && t != TwistVel(td) && TwistVel(td) != t);
+    CPPUNIT_ASSERT_EQUAL(std::hash<VectorVel>{}(VectorVel(Vector(0,0,0))), std::hash<VectorVel>{}(VectorVel(Vector(-0.0,0,0))));
+
+    // R16: the scalar Vel and Acc types compare exactly, too.
+    CPPUNIT_ASSERT(doubleVel(1, 2) == doubleVel(1, 2) && doubleVel(1, 2) != doubleVel(1, 2+d) && Equal(doubleVel(1, 2), doubleVel(1, 2+d)));
+    CPPUNIT_ASSERT(doubleAcc(1, 2, 3) == doubleAcc(1, 2, 3) && doubleAcc(1, 2, 3) != doubleAcc(1, 2, 3+d)
+                   && Equal(doubleAcc(1, 2, 3), doubleAcc(1, 2, 3+d)));
+    CPPUNIT_ASSERT(doubleVel(0, 0) == doubleVel(-0.0, 0));
+    CPPUNIT_ASSERT_EQUAL(std::hash<doubleVel>{}(doubleVel(0, 0)), std::hash<doubleVel>{}(doubleVel(-0.0, 0)));
+
+    // R17: the array types compare exactly, too.
+    JntArray q1(2), q2(2); q1(0) = 1; q1(1) = 2; q2 = q1; q2(1) = 2+d;
+    CPPUNIT_ASSERT(q1 == JntArray(q1) && !(q1 == q2) && Equal(q1, q2));
+    CPPUNIT_ASSERT(!(q1 == JntArray(3)));
+    Jacobian J1(2), J2(2); J1.data.setConstant(1); J2 = J1; J2(5,1) = 1+d;
+    CPPUNIT_ASSERT(J1 == Jacobian(J1) && !(J1 == J2) && J1 != J2 && Equal(J1, J2));
+    CPPUNIT_ASSERT(J1 != Jacobian(3));
+    JntSpaceInertiaMatrix H1(2), H2(2); H1.data.setConstant(1); H2 = H1; H2(1,1) = 1+d;
+    CPPUNIT_ASSERT(H1 == JntSpaceInertiaMatrix(H1) && !(H1 == H2) && Equal(H1, H2));
+    CPPUNIT_ASSERT(!(H1 == JntSpaceInertiaMatrix(3)));
+}

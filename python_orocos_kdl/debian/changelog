@@ -1,3 +1,10 @@
+python-orocos-kdl (2.0.0) unstable; urgency=medium
+
+  * New upstream release 2.0.0.
+  * Build against liborocos-kdl-dev 2.0.x, which has a new SONAME.
+
+ -- Matthijs van der Burgh <MatthijsBurgh@outlook.com>  Wed, 11 Nov 2026 00:00:00 +0100
+
 python-orocos-kdl (1.5.4) unstable; urgency=medium
 
   * Initial packaging of the pybind11 based Python 3 bindings, replacing the

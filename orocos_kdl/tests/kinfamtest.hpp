@@ -2,11 +2,11 @@
 #define KINFAM_TEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <frames.hpp>
-#include <joint.hpp>
-#include <segment.hpp>
-#include <chain.hpp>
-#include <tree.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/joint.hpp>
+#include <kdl/segment.hpp>
+#include <kdl/chain.hpp>
+#include <kdl/tree.hpp>
 
 using namespace KDL;
 

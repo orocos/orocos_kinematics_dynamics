@@ -2,7 +2,7 @@
 #define PATHTEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <path_circle.hpp>
+#include <kdl/path_circle.hpp>
 
 class PathTest : public CppUnit::TestFixture
 {

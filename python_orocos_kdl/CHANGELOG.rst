@@ -7,8 +7,17 @@ repository-wide `CHANGELOG.md
 <https://github.com/orocos/orocos_kinematics_dynamics/blob/master/CHANGELOG.md>`_
 for that history.
 
-Forthcoming
------------
+2.0.0 (2026-11-11)
+------------------
+* Release 2.0.0, to match orocos_kdl 2.0.0 (SONAME 2.0).
+* ``__eq__`` and ``!=`` now compare exactly, like C++ ``operator==``, for the frame types, the
+  ``Vel`` types, ``JntArray`` and ``JntSpaceInertiaMatrix``; they used to be tolerant. A
+  pickled ``Rotation`` (or a frame containing one) round-trips through roll, pitch and yaw, so
+  it is generally not ``==`` to the original after unpickling. Use ``PyKDL.Equal(a, b)`` or
+  ``PyKDL.Equal(a, b, eps)`` to compare computed values.
+* ``Vector.Norm()`` and ``VectorVel.Norm()`` no longer accept ``eps``; ``diff(FrameVel, FrameVel)``
+  returns the translational and rotational parts in the right order.
+* See ``orocos_kdl/MIGRATING.md`` for every change and how to migrate.
 * Convert from an optionally-catkin to an optionally-ament package. The package keeps
   ``<build_type>cmake</build_type>`` and still builds with plain cmake/make when neither ament
   nor colcon is installed.

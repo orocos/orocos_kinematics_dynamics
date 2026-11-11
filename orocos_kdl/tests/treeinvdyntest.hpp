@@ -3,8 +3,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <chain.hpp>
-#include <tree.hpp>
+#include <kdl/chain.hpp>
+#include <kdl/tree.hpp>
 
 
 using namespace KDL;

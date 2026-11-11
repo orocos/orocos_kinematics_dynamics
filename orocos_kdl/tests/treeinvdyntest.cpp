@@ -1,8 +1,8 @@
 #include "treeinvdyntest.hpp"
-#include <kinfam_io.hpp>
-#include <frames_io.hpp>
-#include <chainidsolver_recursive_newton_euler.hpp>
-#include <treeidsolver_recursive_newton_euler.hpp>
+#include <kdl/kinfam_io.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/treeidsolver_recursive_newton_euler.hpp>
 #include <time.h>
 #include <cmath>
 
@@ -130,7 +130,7 @@ void TreeInvDynTest::TwoChainsTest() {
     JntArray tau12(tau.rows());
     for(unsigned int i=0; i<n1; i++) tau12(i) = tau1(i);
     for(unsigned int i=0; i<n2; i++) tau12(i+n1) = tau2(i);
-    CPPUNIT_ASSERT_EQUAL(tau, tau12);
+    CPPUNIT_ASSERT(Equal(tau, tau12));
   }
 }
 
@@ -171,7 +171,7 @@ void TreeInvDynTest::YTreeTest() {
     eff(2) = (Ie+mLL*c3) * qdd(0) + Ie * qdd(2) + mLL*s3*qd(0)*qd(0) + 0.5*m*g*L*c13;
 
     //compare efforts
-    CPPUNIT_ASSERT_EQUAL(tau, eff);
+    CPPUNIT_ASSERT(Equal(tau,eff));
   }
 
 }

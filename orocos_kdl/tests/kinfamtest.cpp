@@ -1,7 +1,7 @@
 #include "kinfamtest.hpp"
-#include <frames_io.hpp>
-#include <kinfam_io.hpp>
-#include <chainfksolverpos_recursive.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/kinfam_io.hpp>
+#include <kdl/chainfksolverpos_recursive.hpp>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( KinFamTest );
 
@@ -268,7 +268,7 @@ void KinFamTest::TreeTest()
     }
     solver1.JntToCart(jnt1, f1);
     solver2.JntToCart(jnt2, f2);
-    CPPUNIT_ASSERT(f1 == f2.Inverse());
+    CPPUNIT_ASSERT(Equal(f1, f2.Inverse()));
 
     Tree subtree;
     const std::string subroot("Segment 2");

@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation_sa.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation_sa.cpp
 
-                        rotational_interpolation_sa.cxx -  description
+                        rotational_interpolation_sa.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien

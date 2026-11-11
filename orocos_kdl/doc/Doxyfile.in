@@ -82,16 +82,10 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = @PROJ_SOURCE_DIR@/src \
-			  @PROJ_SOURCE_DIR@/src/bindings/rtt \
-			  @PROJ_SOURCE_DIR@/src/utilities/svd_eigen_Macie.hpp
-FILE_PATTERNS          = *.cpp \
-                         *.cxx \
-                         *.h \
-                         *.hpp \
-                         *.inl 
+INPUT                  = @PROJ_SOURCE_DIR@/include/kdl
+FILE_PATTERNS          = *.hpp
 			 
-RECURSIVE              = NO
+RECURSIVE              = YES
 EXCLUDE                = 
 	
 EXCLUDE_SYMLINKS       = NO

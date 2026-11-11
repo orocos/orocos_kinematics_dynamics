@@ -310,17 +310,17 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertEqual(r, r2)
         self.assertEqual(hash(r), hash(r2))
         self.assertAlmostEqual((r*v).Norm(), v.Norm(), 14)
-        self.assertEqual(r.Inverse(r*v), v)
-        self.assertEqual(r.Inverse(r*t), t)
-        self.assertEqual(r.Inverse(r*w), w)
-        self.assertEqual(r*r.Inverse(v), v)
+        self.assertTrue(Equal(r.Inverse(r*v), v))
+        self.assertTrue(Equal(r.Inverse(r*t), t))
+        self.assertTrue(Equal(r.Inverse(r*w), w))
+        self.assertTrue(Equal(r*r.Inverse(v), v))
         self.assertEqual(r*Rotation.Identity(), r)
         self.assertEqual(Rotation.Identity()*r, r)
-        self.assertEqual(r*(r*(r*v)), (r*r*r)*v)
-        self.assertEqual(r*(r*(r*t)), (r*r*r)*t)
-        self.assertEqual(r*(r*(r*w)), (r*r*r)*w)
-        self.assertEqual(r*r.Inverse(), Rotation.Identity())
-        self.assertEqual(r.Inverse()*r, Rotation.Identity())
+        self.assertTrue(Equal(r*(r*(r*v)), (r*r*r)*v))
+        self.assertTrue(Equal(r*(r*(r*t)), (r*r*r)*t))
+        self.assertTrue(Equal(r*(r*(r*w)), (r*r*r)*w))
+        self.assertTrue(Equal(r*r.Inverse(), Rotation.Identity()))
+        self.assertTrue(Equal(r.Inverse()*r, Rotation.Identity()))
         self.assertEqual(r.Inverse()*v, r.Inverse(v))
         (ra, rb, rc) = r.GetRPY()
         self.assertEqual(ra, a)
@@ -338,9 +338,9 @@ class FramesTestFunctions(unittest.TestCase):
         self.assertAlmostEqual(rc, c, 15)
         (angle, v2) = r.GetRotAngle()
         r2 = Rotation.Rot(v2, angle)
-        self.assertEqual(r2, r)
+        self.assertTrue(Equal(r2, r))
         r2 = Rotation.Rot(v2*1E20, angle)
-        self.assertEqual(r, r2)
+        self.assertTrue(Equal(r, r2))
         v2 = Vector(6, 2, 4)
         self.assertAlmostEqual(v2.Norm(), sqrt(dot(v2, v2)), 14)
 
@@ -421,20 +421,20 @@ class FramesTestFunctions(unittest.TestCase):
             f[2, 4] = 1
 
     def testFrameImpl(self, v, w, t, f):
-        self.assertEqual(f.Inverse(f*v), v)
-        self.assertEqual(f.Inverse(f*t), t)
-        self.assertEqual(f.Inverse(f*w), w)
-        self.assertEqual(f*f.Inverse(v), v)
-        self.assertEqual(f*f.Inverse(t), t)
-        self.assertEqual(f*f.Inverse(w), w)
+        self.assertTrue(Equal(f.Inverse(f*v), v))
+        self.assertTrue(Equal(f.Inverse(f*t), t))
+        self.assertTrue(Equal(f.Inverse(f*w), w))
+        self.assertTrue(Equal(f*f.Inverse(v), v))
+        self.assertTrue(Equal(f*f.Inverse(t), t))
+        self.assertTrue(Equal(f*f.Inverse(w), w))
         self.assertEqual(f*Frame.Identity(), f)
         self.assertEqual(Frame.Identity()*f, f)
-        self.assertEqual(f*(f*(f*v)), (f*f*f)*v)
-        self.assertEqual(f*(f*(f*t)), (f*f*f)*t)
-        self.assertEqual(f*(f*(f*w)), (f*f*f)*w)
-        self.assertEqual(f*f.Inverse(), Frame.Identity())
-        self.assertEqual(f.Inverse()*f, Frame.Identity())
-        self.assertEqual(f.Inverse()*v, f.Inverse(v))
+        self.assertTrue(Equal(f*(f*(f*v)), (f*f*f)*v))
+        self.assertTrue(Equal(f*(f*(f*t)), (f*f*f)*t))
+        self.assertTrue(Equal(f*(f*(f*w)), (f*f*f)*w))
+        self.assertTrue(Equal(f*f.Inverse(), Frame.Identity()))
+        self.assertTrue(Equal(f.Inverse()*f, Frame.Identity()))
+        self.assertTrue(Equal(f.Inverse()*v, f.Inverse(v)))
 
     def testPickle(self):
         import pickle
@@ -451,7 +451,31 @@ class FramesTestFunctions(unittest.TestCase):
         with open('/tmp/pickle_test', 'rb') as f:
             data1 = pickle.load(f)
 
-        self.assertEqual(data, data1)
+        # Rotation pickles as roll, pitch and yaw, so the round trip is not exact
+        self.assertEqual(data.keys(), data1.keys())
+        for key in data:
+            self.assertTrue(Equal(data[key], data1[key]), key)
+
+    def testNormSmallVector(self):
+        self.assertEqual(Vector(5e-7, 0, 0).Norm(), 5e-7)
+        self.assertEqual(Vector(0, 0, 5e-7).Norm(), 5e-7)
+        self.assertEqual(Vector().Norm(), 0.0)
+        self.assertEqual(VectorVel(Vector(5e-7, 0, 0), Vector(1, 0, 0)).Norm().value(), 5e-7)
+        with self.assertRaises(TypeError):
+            Vector(1, 0, 0).Norm(1e-6)
+
+    def testHashConsistentWithEq(self):
+        for v in [Vector(1, 2, 3), Vector(0, 0, 0), Vector(-0.0, 0, 0)]:
+            self.assertTrue(v == Vector(v))
+            self.assertEqual(hash(v), hash(Vector(v)))
+        self.assertTrue(Vector(0, 0, 0) == Vector(-0.0, 0, 0))
+        self.assertEqual(hash(Vector(0, 0, 0)), hash(Vector(-0.0, 0, 0)))
+        self.assertTrue(Vector(1, 0, 0) != Vector(1+1e-9, 0, 0))
+        self.assertFalse(Vector(1, 0, 0) == Vector(1+1e-9, 0, 0))
+        self.assertTrue(Equal(Vector(1, 0, 0), Vector(1+1e-9, 0, 0)))
+        f = Frame(Rotation.RPY(0.1, 0.2, 0.3), Vector(1, 2, 3))
+        self.assertTrue(f == Frame(f))
+        self.assertEqual(hash(f), hash(Frame(f)))
 
     def testCopyImpl(self, copy):
         v1 = Vector(1, 2, 3)
@@ -489,6 +513,8 @@ def suite():
     suite.addTest(FramesTestFunctions('testPickle'))
     suite.addTest(FramesTestFunctions('testCopy'))
     suite.addTest(FramesTestFunctions('testDeepCopy'))
+    suite.addTest(FramesTestFunctions('testNormSmallVector'))
+    suite.addTest(FramesTestFunctions('testHashConsistentWithEq'))
     return suite
 
 

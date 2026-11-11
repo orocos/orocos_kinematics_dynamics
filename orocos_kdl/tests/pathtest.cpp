@@ -1,7 +1,7 @@
 #include "pathtest.hpp"
-#include <frames_io.hpp>
-#include <rotational_interpolation_sa.hpp>
-#include <utilities/scoped_ptr.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/rotational_interpolation_sa.hpp>
+#include <memory>
 #include <sstream>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PathTest );
@@ -78,16 +78,16 @@ static void AssertSamePath(const std::string& message, Path* original, Path* oth
 // radians, which made the cloned arc 180/pi times too long.
 void PathTest::TestCircleCloneKeepsPathLength()
 {
-    scoped_ptr<Path_Circle> circle(CreateCircle());
-    scoped_ptr<Path> clone(circle->Clone());
+    std::unique_ptr<Path_Circle> circle(CreateCircle());
+    std::unique_ptr<Path> clone(circle->Clone());
 
     CPPUNIT_ASSERT_DOUBLES_EQUAL(circle->PathLength(), clone->PathLength(), epsilon);
 }
 
 void PathTest::TestCircleCloneEqualsOriginal()
 {
-    scoped_ptr<Path_Circle> circle(CreateCircle());
-    scoped_ptr<Path> clone(circle->Clone());
+    std::unique_ptr<Path_Circle> circle(CreateCircle());
+    std::unique_ptr<Path> clone(circle->Clone());
 
     AssertSamePath("Clone of circle", circle.get(), clone.get());
 }
@@ -97,8 +97,8 @@ void PathTest::TestCircleCloneEqualsOriginal()
 // changing scalelin and scalerot, so Pos/Vel/Acc diverged as well.
 void PathTest::TestCircleCloneEqualsOriginalRotationLimited()
 {
-    scoped_ptr<Path_Circle> circle(CreateCircleRotationLimited());
-    scoped_ptr<Path> clone(circle->Clone());
+    std::unique_ptr<Path_Circle> circle(CreateCircleRotationLimited());
+    std::unique_ptr<Path> clone(circle->Clone());
 
     AssertSamePath("Clone of rotation limited circle", circle.get(), clone.get());
 }
@@ -108,8 +108,8 @@ void PathTest::TestCircleCloneEqualsOriginalRotationLimited()
 // circle in a different plane whenever the center is not the origin.
 void PathTest::TestCircleCloneEqualsOriginalOffOriginCenter()
 {
-    scoped_ptr<Path_Circle> circle(CreateCircleOffOriginCenter());
-    scoped_ptr<Path> clone(circle->Clone());
+    std::unique_ptr<Path_Circle> circle(CreateCircleOffOriginCenter());
+    std::unique_ptr<Path> clone(circle->Clone());
 
     AssertSamePath("Clone of circle with off origin center", circle.get(), clone.get());
 }
@@ -118,11 +118,11 @@ void PathTest::TestCircleCloneEqualsOriginalOffOriginCenter()
 // center away from the origin did not survive a Write()/Read() round trip.
 void PathTest::TestCircleWriteReadEqualsOriginalOffOriginCenter()
 {
-    scoped_ptr<Path_Circle> circle(CreateCircleOffOriginCenter());
+    std::unique_ptr<Path_Circle> circle(CreateCircleOffOriginCenter());
 
     std::stringstream ss;
     circle->Write(ss);
-    scoped_ptr<Path> restored(Path::Read(ss));
+    std::unique_ptr<Path> restored(Path::Read(ss));
 
     AssertSamePath("Write/Read of circle with off origin center", circle.get(), restored.get());
 }

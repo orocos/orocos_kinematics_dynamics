@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  rotational_interpolation.cpp
 
-                        rotational_interpolation.cxx -  description
+                        rotational_interpolation.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -39,8 +39,8 @@
  *		$Name:  $
  ****************************************************************************/
 
-#include "utilities/error.h"
-#include "utilities/error_stack.h"
+#include "utilities/error.hpp"
+#include "utilities/error_stack.hpp"
 #include "rotational_interpolation.hpp"
 #include "rotational_interpolation_sa.hpp"
 #include <memory>
@@ -65,18 +65,18 @@ RotationalInterpolation* RotationalInterpolation::Read(std::istream& is) {
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return NULL;
+		return nullptr;
 	} else if (strcmp(storage,"TWOAXIS")==0) {
 		IOTrace("TWOAXIS");
 		throw Error_Not_Implemented();
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
-		return NULL;
+		return nullptr;
 	} else {
 		throw Error_MotionIO_Unexpected_Traj();
 	}
-	return NULL; // just to avoid the warning;
+	return nullptr; // just to avoid the warning;
 }
 
 }
