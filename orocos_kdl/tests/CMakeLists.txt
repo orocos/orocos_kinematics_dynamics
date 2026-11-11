@@ -28,8 +28,11 @@ IF(ENABLE_TESTS)
   # ones killed by SIGABRT, so the shell turns the abort into an ordinary exit status.
   ADD_EXECUTABLE(indexcheck indexcheck.cpp)
   TARGET_LINK_LIBRARIES(indexcheck PRIVATE orocos-kdl)
-  ADD_TEST(NAME indexcheck COMMAND sh -c "$<TARGET_FILE:indexcheck> 2>&1; true")
-  SET_TESTS_PROPERTIES(indexcheck PROPERTIES PASS_REGULAR_EXPRESSION "Assertion.*failed|Assertion failed")
+  # The wrapper needs a POSIX shell, so the test is not registered on Windows.
+  IF(NOT WIN32)
+    ADD_TEST(NAME indexcheck COMMAND sh -c "$<TARGET_FILE:indexcheck> 2>&1; true")
+    SET_TESTS_PROPERTIES(indexcheck PROPERTIES PASS_REGULAR_EXPRESSION "Assertion.*failed|Assertion failed")
+  ENDIF()
 
   IF(ENABLE_COVERAGE)
     # Zero the counters, run the tests, capture, keep only the library sources,
