@@ -5,6 +5,22 @@
 #include <cmath>
 #include <functional>
 #include <limits>
+#include <kdl/config.hpp>
+
+// KDL_VERSION must behave as one value in comparisons, both in #if and in C++
+// expressions. Unparenthesised, `KDL_VERSION >= x` parses as
+// `(MAJOR << 16) | (MINOR << 8) | (PATCH >= x)`, which is always true.
+#define KDL_TEST_EXPECTED_VERSION ((KDL_VERSION_MAJOR << 16) | (KDL_VERSION_MINOR << 8) | KDL_VERSION_PATCH)
+#if KDL_VERSION != KDL_TEST_EXPECTED_VERSION || KDL_VERSION >= ((KDL_VERSION_MAJOR + 1) << 16) \
+    || KDL_VERSION < (KDL_VERSION_MAJOR << 16)
+#error "KDL_VERSION does not compare as a single value"
+#endif
+static_assert((KDL_VERSION == KDL_TEST_EXPECTED_VERSION) == true, "KDL_VERSION == x must be a bool comparison");
+static_assert(!(KDL_VERSION >= ((KDL_VERSION_MAJOR + 1) << 16)), "KDL_VERSION >= next major must be false");
+static_assert(!(KDL_VERSION < (KDL_VERSION_MAJOR << 16)), "KDL_VERSION < this major must be false");
+static_assert(KDL_VERSION_MAJOR != 2 || (KDL_VERSION >= 0x020000 && KDL_VERSION < 0x030000),
+              "a 2.x release lies in [0x020000, 0x030000)");
+#undef KDL_TEST_EXPECTED_VERSION
 
 CPPUNIT_TEST_SUITE_REGISTRATION( FramesTest );
 

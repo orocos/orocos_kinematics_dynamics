@@ -191,3 +191,52 @@ instead of next to the sources in `orocos_kdl/src/`. A project that builds KDL a
 subproject (`add_subdirectory`) and links the `orocos-kdl` target includes
 `<kdl/frames.hpp>`, as it would against an installed KDL; adding `orocos_kdl/src` to the
 include path and writing `#include <frames.hpp>` no longer works.
+
+## Supporting both KDL 1.x and 2.x
+
+A package that must build against both series can detect the version at compile time.
+`kdl/config.hpp` only exists in 2.x, and `kdl/config.h` still works there but is a deprecated
+stub that emits a `#warning`, which breaks `-Werror` builds (MoveIt's `kdl_kinematics_plugin`,
+for example, includes it). Pick the header with `__has_include` so neither series warns:
+
+```cpp
+#if __has_include(<kdl/config.hpp>)
+#include <kdl/config.hpp>  // KDL 2.x
+#else
+#include <kdl/config.h>    // KDL 1.x
+#endif
+```
+
+Then branch on `KDL_VERSION_MAJOR`. Prefer it over `KDL_VERSION`: in 1.x, `KDL_VERSION` is not
+parenthesised, so `#if KDL_VERSION >= 0x020000` is always true there. The same
+`__has_include` recipe works for the renamed `kdl/utilities/*.h` headers.
+
+The two most common divergences:
+
+- `Norm(eps)` lost its argument in 2.x. `Norm()` without an argument works in both series;
+  where 1.x code relies on the cutoff, keep the argument only there:
+  ```cpp
+  #if KDL_VERSION_MAJOR >= 2
+    const double n = v.Norm();
+  #else
+    const double n = v.Norm(eps);
+  #endif
+  ```
+- `operator==` is exact in 2.x and was tolerant in 1.x. Code that means "within a tolerance"
+  calls `KDL::Equal(a, b)` or `KDL::Equal(a, b, eps)`, which exists with the same signature in
+  both series, so it needs no `#if`.
+
+## Packaging: SONAME 2.0, one KDL per process
+
+The library's SONAME is `liborocos-kdl.so.2.0`, and the Debian package is `liborocos-kdl2.0`
+(it was `liborocos-kdl1.5`), so the two can be installed side by side.
+
+The CMake package version file uses `AnyNewerVersion`, so `find_package(orocos_kdl 1.4)` (or
+any other 1.x minimum) still finds 2.0. Such a consumer then builds against 2.0 and must
+compile with the changes listed above.
+
+Never load 1.x and 2.x into one process. Both define the same `KDL::` symbols, so objects built
+against one series silently call into the other, with a different ABI. This happens, for
+example, when a workspace overlays a source build of KDL 2.0 on binary `kdl_parser` or
+`robot_state_publisher` packages that link `liborocos-kdl.so.1.5`: a node then loads both.
+Rebuild every KDL consumer in the overlay against 2.0.
