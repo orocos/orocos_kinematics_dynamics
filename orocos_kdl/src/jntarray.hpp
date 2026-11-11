@@ -217,8 +217,10 @@ class MyTask : public RTT::TaskContext
      * @param src1
      * @param src2
      * @param eps default: epsilon
-     * @return true if each element of src1 is within eps of the same
-     * element in src2, or if both src1 and src2 have no data (ie 0==rows())
+     * @return true if the sizes match and each element of src1 is
+     * Equal(double, double, eps) to the same element in src2 (within eps,
+     * relative above magnitude 1), or if both have no data (ie 0==rows()).
+     * operator== compares exactly.
      */
     bool Equal(const JntArray& src1,const JntArray& src2,double eps=epsilon);
 

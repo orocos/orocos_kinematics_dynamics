@@ -135,13 +135,11 @@ public:
 
 
 
-/** 
- * /note linkage
- * Something fishy about the difference between C++ and C
- * in C++ const values default to INTERNAL linkage, in C they default
- * to EXTERNAL linkage.  Here the constants should have EXTERNAL linkage
- * because they, for at least some of them, can be changed by the user.
- * If you want to explicitly declare internal linkage, use "static".
+/**
+ * \note linkage
+ * STREAMBUFFERSIZE and MAXLENFILENAME are mutable globals with external linkage.
+ * The mathematical constants and the default tolerance epsilon are compile-time
+ * constants: they cannot be changed, so reading them never races with a writer.
  */
 //! 
 extern int          STREAMBUFFERSIZE;
@@ -150,22 +148,26 @@ extern int          STREAMBUFFERSIZE;
 extern int          MAXLENFILENAME;
 
 //! the value of pi
-extern const double PI;
+inline constexpr double PI      = 3.141592653589793238462643383279502884;
 
 //! the value of pi/2
-extern const double PI_2;
+inline constexpr double PI_2    = 1.570796326794896619231321691639751442;
 
 //! the value of pi/4
-extern const double PI_4;
+inline constexpr double PI_4    = 0.785398163397448309615660845819875721;
 
 //! the value pi/180
-extern const double deg2rad;
+inline constexpr double deg2rad = 0.017453292519943295769236907684886127;
 
 //! the value 180/pi
-extern const double rad2deg;
+inline constexpr double rad2deg = 57.29577951308232087679815481410517033;
 
-//! default precision while comparing with Equal(..,..) functions. Initialized at 0.0000001.
-extern double     epsilon;
+/**
+ * Default tolerance of the Equal(..,..) functions, and default degeneracy
+ * threshold of Normalize() and Rotation::GetRotAngle(). Pass a different value
+ * as their eps argument instead of changing a global.
+ */
+inline constexpr double epsilon = 1e-6;
 
 //! the number of derivatives used in the RN-... objects.
 extern int          VSIZE;
@@ -225,13 +227,40 @@ inline double hypot(double y,double x) { return ::_hypot(y,x);}
 inline double abs(double x) { return ::fabs(x);}
 #endif
 
-// compares whether 2 doubles are equal in an eps-interval.
-// Does not check whether a or b represents numbers
-// On VC6, if a/b is -INF, it returns false;
+/**
+ * Tolerant comparison of two doubles:
+ * a == b, or a-b is finite and |a-b| <= eps * max(1, |a|, |b|).
+ *
+ * The tolerance is absolute up to magnitude 1 and relative above it. eps = 0
+ * means exact equality, +-inf is equal only to itself and NaN is never equal.
+ * Use operator== for exact comparison.
+ */
 inline bool Equal(double a,double b,double eps=epsilon)
 {
-    double tmp=(a-b);
-    return ((eps>tmp)&& (tmp>-eps) );
+    if (a == b)
+        return true;
+    const double diff = a - b;
+    if (!std::isfinite(diff))
+        return false;
+    double scale = 1.0;
+    if (std::fabs(a) > scale)
+        scale = std::fabs(a);
+    if (std::fabs(b) > scale)
+        scale = std::fabs(b);
+    return std::fabs(diff) <= eps * scale;
+}
+
+namespace detail {
+/**
+ * Tolerant comparison of one physical quantity of n components a[i] and b[i]:
+ * every component satisfies a[i] == b[i], or a[i]-b[i] is finite and
+ * |a[i]-b[i]| <= eps * S, with S = max(1, largest finite |a[i]|, |b[i]|).
+ *
+ * Infinite components set no scale, so they don't loosen the others. This
+ * backs the Equal() of the geometric types, with one call per quantity
+ * (e.g. Frame::p and Frame::M separately).
+ */
+bool equalScaled(const double* a, const double* b, int n, double eps);
 }
 
 inline void random(double& a) {

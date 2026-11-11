@@ -19,12 +19,12 @@ void JacobianTest::TestChangeRefPoint(){
     
     Jacobian j2(5);
     CPPUNIT_ASSERT(changeRefPoint(j1,p,j2));
-    CPPUNIT_ASSERT(j1!=j2);
+    CPPUNIT_ASSERT(!Equal(j1,j2));
     Jacobian j3(4);
     CPPUNIT_ASSERT(!changeRefPoint(j1,p,j3));
     j3.resize(5);
     CPPUNIT_ASSERT(changeRefPoint(j2,-p,j3));
-    CPPUNIT_ASSERT_EQUAL(j1,j3);
+    CPPUNIT_ASSERT(Equal(j1,j3));
 
 }
 
@@ -38,12 +38,12 @@ void JacobianTest::TestChangeRefFrame(){
     
     Jacobian j2(5);
     CPPUNIT_ASSERT(changeRefFrame(j1,f,j2));
-    CPPUNIT_ASSERT(j1!=j2);
+    CPPUNIT_ASSERT(!Equal(j1,j2));
     Jacobian j3(4);
     CPPUNIT_ASSERT(!changeRefFrame(j1,f,j3));
     j3.resize(5);
     CPPUNIT_ASSERT(changeRefFrame(j2,f.Inverse(),j3));
-    CPPUNIT_ASSERT_EQUAL(j1,j3);
+    CPPUNIT_ASSERT(Equal(j1,j3));
 }
 
 void JacobianTest::TestChangeBase(){
@@ -56,12 +56,12 @@ void JacobianTest::TestChangeBase(){
     
     Jacobian j2(5);
     CPPUNIT_ASSERT(changeBase(j1,r,j2));
-    CPPUNIT_ASSERT(j1!=j2);
+    CPPUNIT_ASSERT(!Equal(j1,j2));
     Jacobian j3(4);
     CPPUNIT_ASSERT(!changeBase(j1,r,j3));
     j3.resize(5);
     CPPUNIT_ASSERT(changeBase(j2,r.Inverse(),j3));
-    CPPUNIT_ASSERT_EQUAL(j1,j3);
+    CPPUNIT_ASSERT(Equal(j1,j3));
 }
 
 void JacobianTest::TestConstructor(){

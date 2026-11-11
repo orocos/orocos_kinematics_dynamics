@@ -87,7 +87,7 @@ void InertiaTest::TestRigidBodyInertia() {
     I3 = R*I2;
     I4 = R.Inverse()*I3;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I2.getMass(),I4.getMass(), epsilon);
-    CPPUNIT_ASSERT_EQUAL(I2.getCOG(),I4.getCOG());
+    CPPUNIT_ASSERT(Equal(I2.getCOG(),I4.getCOG()));
     CPPUNIT_ASSERT((Eigen::Map<Eigen::Matrix3d>(I2.getRotationalInertia().data)-Eigen::Map<Eigen::Matrix3d>(I4.getRotationalInertia().data)).isZero());
     //rotation and total with p=0
     Frame T(R);
@@ -102,7 +102,7 @@ void InertiaTest::TestRigidBodyInertia() {
     I3 = I2.RefPoint(p);
     I4 = I3.RefPoint(-p);
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I2.getMass(),I4.getMass(),epsilon);
-    CPPUNIT_ASSERT_EQUAL(I2.getCOG(),I4.getCOG());
+    CPPUNIT_ASSERT(Equal(I2.getCOG(),I4.getCOG()));
     CPPUNIT_ASSERT((Eigen::Map<Eigen::Matrix3d>(I2.getRotationalInertia().data)-Eigen::Map<Eigen::Matrix3d>(I4.getRotationalInertia().data)).isZero());
     T=Frame(-p);
     I4 = T*I2;
@@ -117,13 +117,13 @@ void InertiaTest::TestRigidBodyInertia() {
     Twist a;
     random(a);
     Wrench f=I2*a;
-    CPPUNIT_ASSERT_EQUAL(T*f,(T*I2)*(T*a));
+    CPPUNIT_ASSERT(Equal(T*f,(T*I2)*(T*a)));
     
     random(T);
     I3 = T*I2;
     I4 = T.Inverse()*I3;
     CPPUNIT_ASSERT_DOUBLES_EQUAL(I2.getMass(),I4.getMass(),epsilon);
-    CPPUNIT_ASSERT_EQUAL(I2.getCOG(),I4.getCOG());
+    CPPUNIT_ASSERT(Equal(I2.getCOG(),I4.getCOG()));
     CPPUNIT_ASSERT((Eigen::Map<Eigen::Matrix3d>(I2.getRotationalInertia().data)-Eigen::Map<Eigen::Matrix3d>(I4.getRotationalInertia().data)).isZero());
 
 }
@@ -208,7 +208,7 @@ void InertiaTest::TestArticulatedBodyInertia() {
     Twist a;
     random(a);
     Wrench f=I2*a;
-    CPPUNIT_ASSERT_EQUAL(T*f,(T*I2)*(T*a));
+    CPPUNIT_ASSERT(Equal(T*f,(T*I2)*(T*a)));
     
     random(T);
     I3 = T*I2;

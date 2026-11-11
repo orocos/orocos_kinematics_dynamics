@@ -97,7 +97,8 @@ public:
     inline VectorVel& operator -= (const VectorVel& arg);
     inline static VectorVel Zero();
     inline void ReverseSign();
-    doubleVel Norm(double eps=epsilon) const;
+    //! The norm and its derivative; (0, 0) only for the exact zero vector p.
+    doubleVel Norm() const;
     inline friend VectorVel operator + (const VectorVel& r1,const VectorVel& r2);
     inline friend VectorVel operator - (const VectorVel& r1,const VectorVel& r2);
     inline friend VectorVel operator + (const Vector& r1,const VectorVel& r2);
@@ -312,8 +313,8 @@ public:
      // Complexity : 6M+6A
 
      // = Equality operators
-     // do not use operator == because the definition of Equal(.,.) is slightly
-     // different.  It compares whether the 2 arguments are equal in an eps-interval
+     // Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     // operator== compares exactly.
      friend bool Equal(const TwistVel& a,const TwistVel& b,double eps);
      friend bool Equal(const Twist& a,const TwistVel& b,double eps);
      friend bool Equal(const TwistVel& a,const Twist& b,double eps);
@@ -405,19 +406,19 @@ inline FrameVel& FrameVel::operator = (const Frame& arg) {
     return *this;
 }
 inline bool operator==(const FrameVel& r1,const FrameVel& r2) {
-    return Equal(r1, r2);
+    return r1.M == r2.M && r1.p == r2.p;
 }
 inline bool operator!=(const FrameVel& r1,const FrameVel& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const Frame& r1,const FrameVel& r2) {
-    return Equal(r1, r2);
+    return r1.M == r2.M && r1.p == r2.p;
 }
 inline bool operator!=(const Frame& r1,const FrameVel& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const FrameVel& r1,const Frame& r2) {
-    return Equal(r1, r2);
+    return r1.M == r2.M && r1.p == r2.p;
 }
 inline bool operator!=(const FrameVel& r1,const Frame& r2) {
     return !operator==(r1,r2);
@@ -592,56 +593,58 @@ inline void VectorVel::ReverseSign() {
     p.ReverseSign();
     v.ReverseSign();
 }
+// operator== is exact and member-wise, consistent with std::hash; a double type
+// equals a Vel type when the derivative is exactly zero. Use Equal() for tolerance.
 inline bool operator==(const VectorVel& r1,const VectorVel& r2) {
-    return Equal(r1, r2);
+    return r1.p == r2.p && r1.v == r2.v;
 }
 inline bool operator!=(const VectorVel& r1,const VectorVel& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const Vector& r1,const VectorVel& r2) {
-    return Equal(r1, r2);
+    return r1 == r2.p && r2.v == Vector::Zero();
 }
 inline bool operator!=(const Vector& r1,const VectorVel& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const VectorVel& r1,const Vector& r2) {
-    return Equal(r1, r2);
+    return r1.p == r2 && r1.v == Vector::Zero();
 }
 inline bool operator!=(const VectorVel& r1,const Vector& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const RotationVel& r1,const RotationVel& r2) {
-    return Equal(r1, r2);
+    return r1.R == r2.R && r1.w == r2.w;
 }
 inline bool operator!=(const RotationVel& r1,const RotationVel& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const Rotation& r1,const RotationVel& r2) {
-    return Equal(r1, r2);
+    return r1 == r2.R && r2.w == Vector::Zero();
 }
 inline bool operator!=(const Rotation& r1,const RotationVel& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const RotationVel& r1,const Rotation& r2) {
-    return Equal(r1, r2);
+    return r1.R == r2 && r1.w == Vector::Zero();
 }
 inline bool operator!=(const RotationVel& r1,const Rotation& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const TwistVel& a,const TwistVel& b) {
-    return Equal(a, b);
+    return a.vel == b.vel && a.rot == b.rot;
 }
 inline bool operator!=(const TwistVel& a,const TwistVel& b) {
     return !operator==(a,b);
 }
 inline bool operator==(const Twist& a,const TwistVel& b) {
-    return Equal(a, b);
+    return a.vel == b.vel && a.rot == b.rot;
 }
 inline bool operator!=(const Twist& r1,const TwistVel& r2) {
     return !operator==(r1,r2);
 }
 inline bool operator==(const TwistVel& r1,const Twist& r2) {
-    return Equal(r1, r2);
+    return r1.vel == r2.vel && r1.rot == r2.rot;
 }
 inline bool operator!=(const TwistVel& r1,const Twist& r2) {
     return !operator==(r1,r2);

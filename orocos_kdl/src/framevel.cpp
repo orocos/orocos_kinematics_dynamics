@@ -139,9 +139,9 @@ RotationVel RotationVel::Rot2(const Vector& rotvec,const doubleVel& angle)
 {
     return RotationVel(Rotation::Rot2(rotvec,angle.t),rotvec*angle.grad);
 }
-doubleVel VectorVel::Norm(double eps) const {
-    double n = p.Norm(eps);
-    if (n < eps) // Setting norm  of p and v to 0 in case norm of p is smaller than eps
+doubleVel VectorVel::Norm() const {
+    double n = p.Norm();
+    if (n == 0) // the derivative of the norm is undefined at the exact zero vector
         return doubleVel(0, 0);
     return doubleVel(n, dot(p,v)/n);
 }

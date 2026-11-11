@@ -75,7 +75,8 @@ public:
     VectorAcc& operator -= (const VectorAcc& arg);
     inline static VectorAcc Zero();
     inline void ReverseSign();
-    doubleAcc Norm(double eps=epsilon);
+    //! The norm and its two derivatives; the derivatives are undefined (NaN) when p is exactly zero.
+    doubleAcc Norm() const;
     friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
     friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
     friend VectorAcc operator + (const Vector& r1,const VectorAcc& r2);

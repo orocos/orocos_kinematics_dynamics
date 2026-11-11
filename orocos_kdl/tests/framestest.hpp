@@ -6,6 +6,8 @@
 #include <framevel.hpp>
 #include <frameacc.hpp>
 #include <jntarray.hpp>
+#include <jacobian.hpp>
+#include <jntspaceinertiamatrix.hpp>
 
 using namespace KDL;
 
@@ -24,6 +26,10 @@ class FramesTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestEuler);
     CPPUNIT_TEST(TestGetRotAngle);
     CPPUNIT_TEST(TestTriviallyCopyable);
+    CPPUNIT_TEST(TestNormSmallVectors);
+    CPPUNIT_TEST(TestEqualTolerance);
+    CPPUNIT_TEST(TestEqualPerQuantity);
+    CPPUNIT_TEST(TestExactEqualityAndHash);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -43,6 +49,10 @@ public:
 	void TestEuler();
 	void TestGetRotAngle();
     void TestTriviallyCopyable();
+    void TestNormSmallVectors();
+    void TestEqualTolerance();
+    void TestEqualPerQuantity();
+    void TestExactEqualityAndHash();
 
 private:
     void TestVector2(Vector& v);

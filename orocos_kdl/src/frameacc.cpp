@@ -90,9 +90,9 @@ VectorAcc& VectorAcc::operator -= (const VectorAcc& arg) {
     return *this;
 }
 
-doubleAcc VectorAcc::Norm(double eps) {
+doubleAcc VectorAcc::Norm() const {
     doubleAcc res;
-    res.t  = p.Norm(eps);
+    res.t  = p.Norm();
     res.d  = dot(p,v)/res.t;
     res.dd = (dot(p,dv)+dot(v,v)-res.d*res.d)/res.t;
     return res;

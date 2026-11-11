@@ -171,7 +171,7 @@ void TreeInvDynTest::YTreeTest() {
     eff(2) = (Ie+mLL*c3) * qdd(0) + Ie * qdd(2) + mLL*s3*qd(0)*qd(0) + 0.5*m*g*L*c13;
 
     //compare efforts
-    CPPUNIT_ASSERT_EQUAL(tau, eff);
+    CPPUNIT_ASSERT(Equal(tau,eff));
   }
 
 }

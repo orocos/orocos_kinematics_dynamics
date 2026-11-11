@@ -522,10 +522,11 @@ inline  bool Equal(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x,double eps=epsi
             );
 }
 
+//! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
 template <class T,class V,class S>
 inline  bool operator==(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
 {
-    return Equal(y, x);
+    return y.t == x.t && y.d == x.d && y.dd == x.dd;
 }
 
 template <class T,class V,class S>

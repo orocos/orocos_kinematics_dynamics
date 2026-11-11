@@ -463,10 +463,11 @@ inline  bool Equal(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x,double eps=epsi
     return (Equal(x.t,y.t,eps)&&Equal(x.grad,y.grad,eps));
 }
 
+//! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
 template <class T,class V,class S>
 inline  bool operator==(const Rall1d<T,V,S>& y,const Rall1d<T,V,S>& x)
 {
-    return Equal(y, x);
+    return y.t == x.t && y.grad == x.grad;
 }
 
 template <class T,class V,class S>

@@ -268,7 +268,7 @@ void KinFamTest::TreeTest()
     }
     solver1.JntToCart(jnt1, f1);
     solver2.JntToCart(jnt2, f2);
-    CPPUNIT_ASSERT(f1 == f2.Inverse());
+    CPPUNIT_ASSERT(Equal(f1, f2.Inverse()));
 
     Tree subtree;
     const std::string subroot("Segment 2");

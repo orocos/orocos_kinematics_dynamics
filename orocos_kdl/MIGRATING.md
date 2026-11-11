@@ -86,3 +86,64 @@ What this means for you:
 - Binary incompatible: the library exports 135 new functions and no longer exports
   `operator*(const Rotation&, const Rotation&)` or `operator==(const Rotation&, const Rotation&)`.
   Rebuild against 2.0.
+
+## `operator==` is exact, `Equal` is tolerant and scaled
+
+`operator==` and `operator!=` now compare exactly, member by member, for `Vector`,
+`Rotation`, `Frame`, `Twist`, `Wrench`, `Vector2`, the `Vel` types (`VectorVel`,
+`RotationVel`, `FrameVel`, `TwistVel`, including their comparisons with the double types),
+`doubleVel`, `doubleAcc`, `JntArray`, `Jacobian` and `JntSpaceInertiaMatrix`. In 1.x they
+called `Equal` with the default tolerance. Exact equality is transitive and consistent with
+`std::hash` and PyKDL's `__hash__` (`+0.0 == -0.0`, and both hash alike); tolerant equality
+is neither, so it cannot back hashing or sorting. This is the Eigen/`std` convention.
+
+Code that relied on `a == b` meaning "within 1e-6" must call `Equal(a, b)` (or
+`Equal(a, b, eps)`) instead. In PyKDL, `assertEqual(a, b)` on computed frames becomes
+`assertTrue(Equal(a, b))`. A pickled `Rotation` round-trips through roll, pitch and yaw, so
+the unpickled value is `Equal` to, but generally not `==`, the original.
+
+`Equal` itself changed too:
+
+- **Scalar rule:** `Equal(a, b, eps)` is true when `a == b`, or when `a - b` is finite and
+  `|a - b| <= eps * max(1, |a|, |b|)`. The tolerance is absolute up to magnitude 1 (so
+  rotations, unit vectors and angles behave as before) and relative above it. `eps = 0`
+  means exact, `+-inf` equals only itself, and `NaN` never equals anything. In 1.x the test
+  was the strict, purely absolute `|a - b| < eps` for the frame types (so `Equal(1.0, 1.0, 0.0)`
+  was false and two values of 1e9 one ulp apart could be unequal) and `<= eps` for the arrays.
+- **Geometric types scale per physical quantity:** every component satisfies `a[i] == b[i]` or
+  `|a[i] - b[i]| <= eps * S`, where `S = max(1, largest finite |a[i]|, |b[i]| of that
+  quantity)`. `Frame` compares `p` and `M` separately, `Twist` compares `vel` and `rot`,
+  `Wrench` compares `force` and `torque`, `Frame2` compares `p` and `M`, `Rotation2` its
+  cosine and sine, and the `Vel`/`Acc` types compare each member separately. A large
+  translation therefore never loosens the rotation check, and an infinite component never
+  loosens the others.
+- **Arrays compare per element** with the scalar rule (`JntArray`, `JntArrayVel`,
+  `JntArrayAcc`, `Jacobian`, `JntSpaceInertiaMatrix`), because their elements carry different
+  units.
+
+## `epsilon`, `PI` and the other constants are immutable
+
+`KDL::epsilon`, `PI`, `PI_2`, `PI_4`, `deg2rad` and `rad2deg` are now `inline constexpr double`
+in `utilities/utility.h` instead of `extern` globals, with unchanged values (`epsilon` is still
+`1e-6`). They are usable in constant expressions, and reading them no longer races with a
+writer.
+
+- Assigning to `KDL::epsilon` no longer compiles. Pass the tolerance explicitly instead:
+  `Equal(a, b, eps)`, `v.Normalize(eps)`, `R.GetRotAngle(axis, eps)`.
+- Binary incompatible: the library no longer exports the data symbols `KDL::epsilon`,
+  `KDL::PI`, `KDL::PI_2`, `KDL::PI_4`, `KDL::deg2rad` and `KDL::rad2deg`. Rebuild against 2.0.
+
+## `Norm()` takes no argument and is 0 only for the zero vector
+
+`Vector::Norm()`, `Vector2::Norm()`, `VectorVel::Norm()` and `VectorAcc::Norm()` lost their
+`eps` parameter (`VectorAcc::Norm()` is now also `const`). They return 0 only for the exact
+zero vector. In 1.x, `Vector(5e-7, 0, 0).Norm()` returned 0 while `Vector(0, 5e-7, 0).Norm()`
+returned 5e-7, because the cutoff was only checked when x was the largest component; `Vector2`
+had the same defect. The overflow- and underflow-safe scaling is unchanged, and
+`Normalize(eps)` keeps its degeneracy threshold. PyKDL's `Vector.Norm()` and
+`VectorVel.Norm()` no longer accept `eps` either.
+
+- Drop the argument: `sed -i -E 's/\.Norm\([^()]+\)/.Norm()/g'` (check the result: it also
+  matches other `Norm(...)` calls with an argument).
+- Binary incompatible: the mangled names of the four `Norm` functions changed. Rebuild
+  against 2.0.

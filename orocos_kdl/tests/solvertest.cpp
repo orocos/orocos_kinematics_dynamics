@@ -558,7 +558,7 @@ void SolverTest::IkSingularValueTest()
 
 	CPPUNIT_ASSERT_EQUAL(0, fksolver.JntToCart(q_solved,F_solved));
 	F_error = KDL::diff(F_solved,F_des);
-	CPPUNIT_ASSERT_EQUAL(F_des,F_solved);
+	CPPUNIT_ASSERT(Equal(F_des,F_solved));
 
 	std::cout<<"nonconvergence:  pseudoinverse singular"<<std::endl;
 
@@ -728,7 +728,7 @@ void SolverTest::FkPosAndJacLocal(Chain& chain,ChainFkSolverPos& fksolverpos,Cha
                     Vector(jac(3,i),jac(4,i),jac(5,i)));
 
         //CPPUNIT_ASSERT_EQUAL(true,Equal(Jcol1,Jcol2,epsJ));
-        CPPUNIT_ASSERT_EQUAL(Jcol1,Jcol2);
+        CPPUNIT_ASSERT(Equal(Jcol1,Jcol2));
     }
 }
 
@@ -751,7 +751,7 @@ void SolverTest::FkVelAndJacLocal(Chain& chain, ChainFkSolverVel& fksolvervel, C
     jacsolver.JntToJac(qvel.q,jac);
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolvervel.JntToCart(qvel,cart));
     MultiplyJacobian(jac,qvel.qdot,t);
-    CPPUNIT_ASSERT_EQUAL(cart.deriv(),t);
+    CPPUNIT_ASSERT(Equal(cart.deriv(),t));
 }
 
 void SolverTest::FkVelAndIkVelLocal(Chain& chain, ChainFkSolverVel& fksolvervel, ChainIkSolverVel& iksolvervel)
@@ -821,7 +821,7 @@ void SolverTest::FkPosAndIkPosLocal(Chain& chain,ChainFkSolverPos& fksolverpos, 
     CPPUNIT_ASSERT(ik_ret >= (int)SolverI::E_NOERROR);
     CPPUNIT_ASSERT_EQUAL((int)SolverI::E_NOERROR, fksolverpos.JntToCart(q_solved,F2));
 
-    CPPUNIT_ASSERT_EQUAL(F1,F2);
+    CPPUNIT_ASSERT(Equal(F1,F2));
     //CPPUNIT_ASSERT_EQUAL(q,q_solved);
 
 }

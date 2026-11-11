@@ -108,14 +108,21 @@ namespace KDL
         array.data.setZero();
     }
 
+    // Per element: the joints may carry different units, so no element scales another.
     bool Equal(const JntArray& src1, const JntArray& src2,double eps)
     {
         if(src1.rows()!=src2.rows())
             return false;
-        return (src1.data-src2.data).isZero(eps);
+        for(unsigned int i=0;i<src1.rows();i++)
+            if(!Equal(src1.data(i),src2.data(i),eps))
+                return false;
+        return true;
     }
 
-    bool operator==(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);}
+    bool operator==(const JntArray& src1,const JntArray& src2)
+    {
+        return src1.rows()==src2.rows() && src1.data==src2.data;
+    }
     //bool operator!=(const JntArray& src1,const JntArray& src2){return Equal(src1,src2);}
 
 }

@@ -80,12 +80,12 @@ namespace KDL {
                      );
     }
 
-    double Vector2::Norm(double eps) const
+    double Vector2::Norm() const
     {
         double tmp1 = fabs(data[0]);
         double tmp2 = fabs(data[1]);
         
-        if (tmp1 < eps && tmp2 < eps)
+        if (tmp1 == 0 && tmp2 == 0)
             return 0;
 
         if (tmp1 > tmp2) {
@@ -110,7 +110,7 @@ namespace KDL {
 
 
     // do some effort not to lose precision
-    double Vector::Norm(double eps) const
+    double Vector::Norm() const
     {
         double tmp1;
         double tmp2;
@@ -119,8 +119,8 @@ namespace KDL {
         if (tmp1 >= tmp2) {
             tmp2=fabs(data[2]);
             if (tmp1 >= tmp2) {
-                if (tmp1 < eps) {
-                    // only to everything exactly zero case, all other are handled correctly
+                if (tmp1 == 0) {
+                    // only the exactly zero vector, all others are handled correctly
                     return 0;
                 }
                 return tmp1*sqrt(1+sqr(data[1]/data[0])+sqr(data[2]/data[0]));
@@ -152,16 +152,10 @@ namespace KDL {
     }
 
 
+    // The nine entries are one quantity; for a rotation matrix they are <= 1 in
+    // magnitude, so the tolerance stays absolute.
     bool Equal(const Rotation& a,const Rotation& b,double eps) {
-        return (Equal(a.data[0],b.data[0],eps) &&
-                Equal(a.data[1],b.data[1],eps) &&
-                Equal(a.data[2],b.data[2],eps) &&
-                Equal(a.data[3],b.data[3],eps) &&
-                Equal(a.data[4],b.data[4],eps) &&
-                Equal(a.data[5],b.data[5],eps) &&
-                Equal(a.data[6],b.data[6],eps) &&
-                Equal(a.data[7],b.data[7],eps) &&
-                Equal(a.data[8],b.data[8],eps)    );
+        return detail::equalScaled(a.data, b.data, 9, eps);
     }
 
 
@@ -479,13 +473,12 @@ double Rotation2::GetRot() const {
     return atan2(s,c);
 }
 
-// Equality operators
+// Tolerant comparison: one detail::equalScaled call per physical quantity, so the
+// magnitude of one quantity (e.g. a translation) never loosens another (e.g. a rotation).
 
 bool Equal(const Vector& a,const Vector& b,double eps) {
-        return (Equal(a.data[0],b.data[0],eps)&&
-                Equal(a.data[1],b.data[1],eps)&&
-                Equal(a.data[2],b.data[2],eps)   );
-     }
+    return detail::equalScaled(a.data, b.data, 3, eps);
+}
 
 bool Equal(const Frame& a,const Frame& b,double eps) {
         return (Equal(a.p,b.p,eps)&&
@@ -503,12 +496,13 @@ bool Equal(const Twist& a,const Twist& b,double eps) {
 }
 
 bool Equal(const Vector2& a,const Vector2& b,double eps) {
-        return (Equal(a.data[0],b.data[0],eps)&&
-                Equal(a.data[1],b.data[1],eps)   );
-     }
+    return detail::equalScaled(a.data, b.data, 2, eps);
+}
 
 bool Equal(const Rotation2& a,const Rotation2& b,double eps) {
-    return ( Equal(a.c,b.c,eps) && Equal(a.s,b.s,eps) );
+    const double ca[2] = {a.c, a.s};
+    const double cb[2] = {b.c, b.s};
+    return detail::equalScaled(ca, cb, 2, eps);
 }
 
 bool Equal(const Frame2& a,const Frame2& b,double eps) {

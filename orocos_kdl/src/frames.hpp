@@ -232,8 +232,9 @@ public:
 	*/
      double Normalize(double eps=epsilon);
 
-     //!    @return the norm of the vector
-     double Norm(double eps=epsilon) const;
+     //!    @return the norm of the vector, 0 only for the exact zero vector.
+     //!    Overflow- and underflow-safe: scales by the largest component.
+     double Norm() const;
 
 
 
@@ -247,13 +248,13 @@ public:
      inline void Set2DPlane(const Frame& F_someframe_XY,const Vector2& v_XY);
 
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      friend bool Equal(const Vector& a,const Vector& b,double eps);
 
-	 //! The literal equality operator==(), also identical.
+	 //! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
      inline friend bool operator==(const Vector& a,const Vector& b);
-	 //! The literal inequality operator!=().
+	 //! Exact member-wise inequality: !(a == b).
      inline friend bool operator!=(const Vector& a,const Vector& b);
 
      friend class Rotation;
@@ -535,13 +536,13 @@ public:
         data[8] = X(2);
      }
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      friend bool Equal(const Rotation& a,const Rotation& b,double eps);
 
-	 //! The literal equality operator==(), also identical.
+	 //! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
      inline friend bool operator==(const Rotation& a,const Rotation& b);
-	 //! The literal inequality operator!=()
+	 //! Exact member-wise inequality: !(a == b).
      inline friend bool operator!=(const Rotation& a,const Rotation& b);
 
      friend class Frame;
@@ -689,13 +690,13 @@ public:
      static Frame DH(double a,double alpha,double d,double theta);
 
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      friend bool Equal(const Frame& a,const Frame& b,double eps);
 
-	 //! The literal equality operator==(), also identical.
+	 //! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
      inline friend bool operator==(const Frame& a,const Frame& b);
-	 //! The literal inequality operator!=().
+	 //! Exact member-wise inequality: !(a == b).
      inline friend bool operator!=(const Frame& a,const Frame& b);
 };
 
@@ -765,13 +766,13 @@ public:
      inline Twist RefPoint(const Vector& v_base_AB) const;
 
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      friend bool Equal(const Twist& a,const Twist& b,double eps);
 
-	 //! The literal equality operator==(), also identical.
+	 //! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
      inline friend bool operator==(const Twist& a,const Twist& b);
-	 //! The literal inequality operator!=().
+	 //! Exact member-wise inequality: !(a == b).
      inline friend bool operator!=(const Twist& a,const Twist& b);
 
 // = Friends
@@ -844,13 +845,13 @@ public:
      inline AccelerationTwist RefPoint(const Vector& v_base_AB) const;
 
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      inline friend bool Equal(const AccelerationTwist& a,const AccelerationTwist& b,double eps=epsilon);
 
-	 //! The literal equality operator==(), also identical.
+	 //! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
      inline friend bool operator==(const AccelerationTwist& a,const AccelerationTwist& b);
-	 //! The literal inequality operator!=().
+	 //! Exact member-wise inequality: !(a == b).
      inline friend bool operator!=(const AccelerationTwist& a,const AccelerationTwist& b);
 
 // = Friends
@@ -928,13 +929,13 @@ public:
      inline Wrench RefPoint(const Vector& v_base_AB) const;
 
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      friend bool Equal(const Wrench& a,const Wrench& b,double eps);
 
-	 //! The literal equality operator==(), also identical.
+	 //! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
      inline friend bool operator==(const Wrench& a,const Wrench& b);
-	 //! The literal inequality operator!=().
+	 //! Exact member-wise inequality: !(a == b).
      inline friend bool operator!=(const Wrench& a,const Wrench& b);
 
     friend class Rotation;
@@ -998,8 +999,9 @@ public:
 	*/
      double Normalize(double eps=epsilon);
 
-     //!  @return the norm of the vector
-     double Norm(double eps=epsilon) const;
+     //!  @return the norm of the vector, 0 only for the exact zero vector.
+     //!  Overflow- and underflow-safe: scales by the largest component.
+     double Norm() const;
 
      //! projects v in its XY plane, and sets *this to these values
      inline void Set3DXY(const Vector& v);
@@ -1016,13 +1018,13 @@ public:
      inline void Set3DPlane(const Frame& F_someframe_XY,const Vector& v_someframe);
 
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      friend bool Equal(const Vector2& a,const Vector2& b,double eps);
 
-	//! The literal equality operator==(), also identical.
+	//! Exact member-wise equality, consistent with std::hash. Use Equal() for tolerance.
 	inline friend bool operator==(const Vector2& a,const Vector2& b);
-	//! The literal inequality operator!=().
+	//! Exact member-wise inequality: !(a == b).
 	inline friend bool operator!=(const Vector2& a,const Vector2& b);
 
     friend class Rotation2;
@@ -1067,8 +1069,8 @@ public:
      //! Gets the angle (in radians)
      double GetRot() const;
 
-     //! do not use operator == because the definition of Equal(.,.) is slightly
-     //! different.  It compares whether the 2 arguments are equal in an eps-interval
+     //! Tolerant comparison: equal within eps, scaled per physical quantity (see KDL::Equal).
+     //! operator== compares exactly.
      friend bool Equal(const Rotation2& a,const Rotation2& b,double eps);
 };
 
@@ -2147,24 +2149,39 @@ void posrandom(Wrench& a);
 void posrandom(Rotation& R);
 void posrandom(Frame& F);
 
+// operator== is exact and member-wise, so it is consistent with std::hash
+// (+0.0 == -0.0, and std::hash<double> maps both to the same value). Use
+// Equal() for a tolerant comparison.
+
+inline bool operator==(const Vector& a,const Vector& b) {
+    return a.data[0] == b.data[0] && a.data[1] == b.data[1] && a.data[2] == b.data[2];
+}
+
+inline bool operator!=(const Vector& a,const Vector& b) {
+    return !operator==(a,b);
+}
+
+inline bool operator==(const Rotation& a,const Rotation& b) {
+    for (int i = 0; i < 9; ++i)
+        if (!(a.data[i] == b.data[i]))
+            return false;
+    return true;
+}
+
+inline bool operator!=(const Rotation& a,const Rotation& b) {
+    return !operator==(a,b);
+}
+
 inline bool operator==(const Frame& a,const Frame& b ) {
-    return Equal(a,b);
+    return a.p == b.p && a.M == b.M;
 }
 
 inline bool operator!=(const Frame& a,const Frame& b) {
     return !operator==(a,b);
 }
 
-inline bool operator==(const Vector& a,const Vector& b) {
-    return Equal(a,b);
-     }
-
-inline bool operator!=(const Vector& a,const Vector& b) {
-    return !operator==(a,b);
-}
-
 inline bool operator==(const Twist& a,const Twist& b) {
-    return Equal(a,b);
+    return a.vel == b.vel && a.rot == b.rot;
 }
 
 inline bool operator!=(const Twist& a,const Twist& b) {
@@ -2172,23 +2189,16 @@ inline bool operator!=(const Twist& a,const Twist& b) {
 }
 
 inline bool operator==(const Wrench& a,const Wrench& b ) {
-    return Equal(a,b);
+    return a.force == b.force && a.torque == b.torque;
 }
 
 inline bool operator!=(const Wrench& a,const Wrench& b) {
     return !operator==(a,b);
 }
 
-inline bool operator==(const Rotation& a,const Rotation& b) {
-    return Equal(a,b);
-}
-inline bool operator!=(const Rotation& a,const Rotation& b) {
-    return !operator==(a,b);
-}
-
 inline bool operator==(const Vector2& a,const Vector2& b) {
-    return Equal(a,b);
-     }
+    return a.data[0] == b.data[0] && a.data[1] == b.data[1];
+}
 
 inline bool operator!=(const Vector2& a,const Vector2& b) {
     return !operator==(a,b);
