@@ -1265,8 +1265,8 @@ IMETHOD void posrandom(Rotation& R) {
 }
 
 IMETHOD void posrandom(Frame& F) {
-	random(F.M);
-	random(F.p);
+	posrandom(F.M);
+	posrandom(F.p);
 }
 
 

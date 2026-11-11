@@ -25,3 +25,5 @@ workaround.
 - `Rotation2::operator()(i, j)`, and through it `Frame2::operator()(i, j)`, now return the
   entries of the rotation matrix (`R(0, 1) == -sin(angle)`). They used to return its
   transpose. `Rotation2 * Vector2` was already correct.
+- `posrandom(Frame&)` now draws both the rotation and the origin with `posrandom`, like the
+  other `posrandom` overloads. It used to call `random`, so the origin could be negative.
