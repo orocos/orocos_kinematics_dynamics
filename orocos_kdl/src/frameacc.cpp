@@ -93,6 +93,8 @@ VectorAcc& VectorAcc::operator -= (const VectorAcc& arg) {
 doubleAcc VectorAcc::Norm() const {
     doubleAcc res;
     res.t  = p.Norm();
+    if (res.t == 0) // the derivatives of the norm are undefined at the exact zero vector
+        return doubleAcc(0, 0, 0);
     res.d  = dot(p,v)/res.t;
     res.dd = (dot(p,dv)+dot(v,v)-res.d*res.d)/res.t;
     return res;

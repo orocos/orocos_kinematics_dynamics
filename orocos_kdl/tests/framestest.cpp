@@ -853,6 +853,13 @@ void FramesTest::TestNormSmallVectors() {
     const doubleAcc na = VectorAcc(Vector(5e-7,0,0), Vector(1,0,0), Vector(0,1,0)).Norm();
     CPPUNIT_ASSERT_EQUAL(5e-7, na.t);
     CPPUNIT_ASSERT_EQUAL(1.0, na.d);
+    // At the exact zero vector the derivatives are undefined; VectorAcc follows VectorVel and
+    // returns zeros instead of NaN.
+    const doubleAcc nza = VectorAcc(Vector::Zero(), Vector(1,0,0), Vector(0,1,0)).Norm();
+    CPPUNIT_ASSERT(std::isfinite(nza.t) && std::isfinite(nza.d) && std::isfinite(nza.dd));
+    CPPUNIT_ASSERT_EQUAL(nz.t, nza.t);
+    CPPUNIT_ASSERT_EQUAL(nz.grad, nza.d);
+    CPPUNIT_ASSERT_EQUAL(0.0, nza.dd);
 }
 
 // D3: Equal(a, b, eps) <=> a == b || (isfinite(a-b) && |a-b| <= eps * max(1, |a|, |b|)).

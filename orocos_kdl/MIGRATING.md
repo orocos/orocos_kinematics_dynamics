@@ -145,8 +145,11 @@ writer.
 zero vector. In 1.x, `Vector(5e-7, 0, 0).Norm()` returned 0 while `Vector(0, 5e-7, 0).Norm()`
 returned 5e-7, because the cutoff was only checked when x was the largest component; `Vector2`
 had the same defect. `VectorVel::Norm()` returned `(0, 0)` (value and derivative) for every
-`|p| < 1e-6`, on all axes; it now returns the true norm except for the exact zero vector. The overflow- and underflow-safe scaling is unchanged, and
-`Normalize(eps)` keeps its degeneracy threshold. PyKDL's `Vector.Norm()` and
+`|p| < 1e-6`, on all axes; it now returns the true norm except for the exact zero vector.
+`VectorAcc::Norm()` now returns `(0, 0, 0)` for the exact zero vector, like `VectorVel::Norm()`;
+in 1.x it divided by the zero norm there, so its derivatives were NaN or infinite. The
+overflow- and underflow-safe scaling is unchanged, and `Normalize(eps)` keeps its degeneracy
+threshold. PyKDL's `Vector.Norm()` and
 `VectorVel.Norm()` no longer accept `eps` either.
 
 - Drop the argument: `sed -i -E 's/\.Norm\([^()]+\)/.Norm()/g'` (check the result: it also

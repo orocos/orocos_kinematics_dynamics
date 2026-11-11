@@ -75,7 +75,7 @@ public:
     VectorAcc& operator -= (const VectorAcc& arg);
     inline static VectorAcc Zero();
     inline void ReverseSign();
-    //! The norm and its two derivatives; the derivatives are undefined (NaN) when p is exactly zero.
+    //! The norm and its two derivatives; (0, 0, 0) only for the exact zero vector p, like VectorVel::Norm().
     doubleAcc Norm() const;
     friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
     friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
