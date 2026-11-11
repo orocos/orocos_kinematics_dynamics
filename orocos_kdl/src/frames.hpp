@@ -125,10 +125,10 @@
 #define KDL_FRAMES_H
 
 
-#include "utilities/kdl-config.h"
 #include "utilities/utility.h"
 #include "utilities/hash_combine.h"
 
+#include <cassert>
 #include <functional>
 
 /////////////////////////////////////////////////////////////
@@ -1144,7 +1144,7 @@ public:
  * \param dt [optional][obsolete] time interval over which the numerical differentiation takes place.
  * \return the difference (b-a) expressed to the frame w.
  */
-IMETHOD Vector diff(const Vector& p_w_a,const Vector& p_w_b,double dt=1);
+inline Vector diff(const Vector& p_w_a,const Vector& p_w_b,double dt=1);
 
 
 /**
@@ -1174,7 +1174,7 @@ IMETHOD Vector diff(const Vector& p_w_a,const Vector& p_w_b,double dt=1);
  * \warning - For angles equal to \f$ \pi \f$, The negative of the
  *          return value is equally valid. 
  */
-IMETHOD Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt=1);
+inline Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt=1);
 
 /**
  * determines the rotation axis necessary to rotate the frame b1 to the same orientation as frame b2 and the vector
@@ -1184,19 +1184,19 @@ IMETHOD Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt=1);
  * \warning The result is not a Twist!  
  * see diff() for Rotation and Vector arguments for further detail on the semantics.
  */
-IMETHOD Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt=1);
+inline Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt=1);
 
 /**
  * determines the difference between two twists i.e. the difference between
  * the underlying velocity vectors and rotational velocity vectors. 
  */
-IMETHOD Twist diff(const Twist& a,const Twist& b,double dt=1);
+inline Twist diff(const Twist& a,const Twist& b,double dt=1);
 
 /**
  * determines the difference between two wrenches i.e. the difference between
  * the underlying torque vectors and force vectors. 
  */
-IMETHOD Wrench diff(const Wrench& W_a_p1,const Wrench& W_a_p2,double dt=1);
+inline Wrench diff(const Wrench& W_a_p1,const Wrench& W_a_p2,double dt=1);
 
 /**
  * \brief adds vector da to vector a.
@@ -1205,7 +1205,7 @@ IMETHOD Wrench diff(const Wrench& W_a_p1,const Wrench& W_a_p2,double dt=1);
  * \param p_w_da vector da expressed to some frame w.
  * \returns the vector resulting from the displacement of vector a by vector da, expressed in the frame w.
  */
-IMETHOD Vector addDelta(const Vector& p_w_a,const Vector& p_w_da,double dt=1);
+inline Vector addDelta(const Vector& p_w_a,const Vector& p_w_da,double dt=1);
 
 /**
  * returns the rotation matrix resulting from the rotation of frame a by the axis and angle
@@ -1219,7 +1219,7 @@ IMETHOD Vector addDelta(const Vector& p_w_a,const Vector& p_w_da,double dt=1);
  *          specified with da.   The resulting rotation matrix is expressed with respect to
  *          frame w.
  */
-IMETHOD Rotation addDelta(const Rotation& R_w_a,const Vector& da_w,double dt=1);
+inline Rotation addDelta(const Rotation& R_w_a,const Vector& da_w,double dt=1);
 
 /**
  * returns the frame resulting from the rotation of frame a by the axis and angle
@@ -1231,7 +1231,7 @@ IMETHOD Rotation addDelta(const Rotation& R_w_a,const Vector& da_w,double dt=1);
  * \returns the frame resulting from the rotation of frame a by the axis and angle
  *          specified with da.rot, and the translation of the origin da_w.vel .  The resulting frame is expressed with respect to frame w.
  */
-IMETHOD Frame addDelta(const Frame& F_w_a,const Twist& da_w,double dt=1);
+inline Frame addDelta(const Frame& F_w_a,const Twist& da_w,double dt=1);
 
 /**
  * \brief adds the twist da to the twist a.
@@ -1240,7 +1240,7 @@ IMETHOD Frame addDelta(const Frame& F_w_a,const Twist& da_w,double dt=1);
  * \param da a twist difference wrt some frame
  * \returns The twist (a+da) wrt the corresponding frame.
  */
-IMETHOD Twist addDelta(const Twist& a,const Twist&da,double dt=1);
+inline Twist addDelta(const Twist& a,const Twist&da,double dt=1);
 
 
 /**
@@ -1251,11 +1251,9 @@ IMETHOD Twist addDelta(const Twist& a,const Twist&da,double dt=1);
  * \param da a wrench difference wrt some frame
  * \returns the wrench (a+da) wrt the corresponding frame.
  */
-IMETHOD Wrench addDelta(const Wrench& a,const Wrench&da,double dt=1);
+inline Wrench addDelta(const Wrench& a,const Wrench&da,double dt=1);
 
-#ifdef KDL_INLINE
 #include "frames.inl"
-#endif
 
 }
 

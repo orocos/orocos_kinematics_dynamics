@@ -150,7 +150,6 @@ set(KDL_UTILITY_HEADERS
   utilities/error.h
   utilities/error_stack.h
   utilities/hash_combine.h
-  utilities/kdl-config.h
   utilities/ldl_solver_eigen.hpp
   utilities/rall1d.h
   utilities/rall1d_io.h

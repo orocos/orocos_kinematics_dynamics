@@ -23,6 +23,15 @@ IF(ENABLE_TESTS)
   kdl_add_test(treeinvdyntest)
   kdl_add_test(framesconsistencytest)
 
+  # indexcheck aborts on purpose (assert), so it has its own main and no CppUnit runner.
+  # CTest only evaluates PASS_REGULAR_EXPRESSION for processes that exit normally, not for
+  # ones killed by SIGABRT, so the shell turns the abort into an ordinary exit status.
+  ADD_EXECUTABLE(indexcheck indexcheck.cpp)
+  TARGET_LINK_LIBRARIES(indexcheck PRIVATE orocos-kdl)
+  TARGET_INCLUDE_DIRECTORIES(indexcheck PRIVATE ${PROJ_SOURCE_DIR}/src)
+  ADD_TEST(NAME indexcheck COMMAND sh -c "$<TARGET_FILE:indexcheck> 2>&1; true")
+  SET_TESTS_PROPERTIES(indexcheck PROPERTIES PASS_REGULAR_EXPRESSION "Assertion.*failed|Assertion failed")
+
   IF(ENABLE_COVERAGE)
     # Zero the counters, run the tests, capture, keep only the library sources,
     # render HTML and check the result against coverage.json.

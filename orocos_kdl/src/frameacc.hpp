@@ -44,18 +44,18 @@ class FrameAcc;
 class RotationAcc;
 class VectorAcc;
 
-IMETHOD bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps=epsilon);
-IMETHOD bool Equal(const Frame& r1,const FrameAcc& r2,double eps=epsilon);
-IMETHOD bool Equal(const FrameAcc& r1,const Frame& r2,double eps=epsilon);
-IMETHOD bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps=epsilon);
-IMETHOD bool Equal(const Rotation& r1,const RotationAcc& r2,double eps=epsilon);
-IMETHOD bool Equal(const RotationAcc& r1,const Rotation& r2,double eps=epsilon);
-IMETHOD bool Equal(const TwistAcc& a,const TwistAcc& b,double eps=epsilon);
-IMETHOD bool Equal(const Twist& a,const TwistAcc& b,double eps=epsilon);
-IMETHOD bool Equal(const TwistAcc& a,const Twist& b,double eps=epsilon);
-IMETHOD bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps=epsilon);
-IMETHOD bool Equal(const Vector& r1,const VectorAcc& r2,double eps=epsilon);
-IMETHOD bool Equal(const VectorAcc& r1,const Vector& r2,double eps=epsilon);
+inline bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps=epsilon);
+inline bool Equal(const Frame& r1,const FrameAcc& r2,double eps=epsilon);
+inline bool Equal(const FrameAcc& r1,const Frame& r2,double eps=epsilon);
+inline bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps=epsilon);
+inline bool Equal(const Rotation& r1,const RotationAcc& r2,double eps=epsilon);
+inline bool Equal(const RotationAcc& r1,const Rotation& r2,double eps=epsilon);
+inline bool Equal(const TwistAcc& a,const TwistAcc& b,double eps=epsilon);
+inline bool Equal(const Twist& a,const TwistAcc& b,double eps=epsilon);
+inline bool Equal(const TwistAcc& a,const Twist& b,double eps=epsilon);
+inline bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps=epsilon);
+inline bool Equal(const Vector& r1,const VectorAcc& r2,double eps=epsilon);
+inline bool Equal(const VectorAcc& r1,const Vector& r2,double eps=epsilon);
 
 
 class VectorAcc
@@ -70,39 +70,39 @@ public:
     VectorAcc(const Vector& _p,const Vector& _v):p(_p),v(_v),dv(Vector::Zero()) {}
     VectorAcc(const Vector& _p,const Vector& _v,const Vector& _dv):
         p(_p),v(_v),dv(_dv) {}
-    IMETHOD VectorAcc& operator = (const VectorAcc& arg);
-    IMETHOD VectorAcc& operator = (const Vector& arg);
-    IMETHOD VectorAcc& operator += (const VectorAcc& arg);
-    IMETHOD VectorAcc& operator -= (const VectorAcc& arg);
-    IMETHOD static VectorAcc Zero();
-    IMETHOD void ReverseSign();
-    IMETHOD doubleAcc Norm(double eps=epsilon);
-    IMETHOD friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator + (const Vector& r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator - (const Vector& r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator + (const VectorAcc& r1,const Vector& r2);
-    IMETHOD friend VectorAcc operator - (const VectorAcc& r1,const Vector& r2);
-    IMETHOD friend VectorAcc operator * (const VectorAcc& r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator * (const VectorAcc& r1,const Vector& r2);
-    IMETHOD friend VectorAcc operator * (const Vector& r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator * (const VectorAcc& r1,double r2);
-    IMETHOD friend VectorAcc operator * (double r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator * (const doubleAcc& r1,const VectorAcc& r2);
-    IMETHOD friend VectorAcc operator * (const VectorAcc& r2,const doubleAcc& r1);
-    IMETHOD friend VectorAcc operator*(const Rotation& R,const VectorAcc& x);
+    inline VectorAcc& operator = (const VectorAcc& arg);
+    inline VectorAcc& operator = (const Vector& arg);
+    inline VectorAcc& operator += (const VectorAcc& arg);
+    inline VectorAcc& operator -= (const VectorAcc& arg);
+    inline static VectorAcc Zero();
+    inline void ReverseSign();
+    inline doubleAcc Norm(double eps=epsilon);
+    inline friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
+    inline friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
+    inline friend VectorAcc operator + (const Vector& r1,const VectorAcc& r2);
+    inline friend VectorAcc operator - (const Vector& r1,const VectorAcc& r2);
+    inline friend VectorAcc operator + (const VectorAcc& r1,const Vector& r2);
+    inline friend VectorAcc operator - (const VectorAcc& r1,const Vector& r2);
+    inline friend VectorAcc operator * (const VectorAcc& r1,const VectorAcc& r2);
+    inline friend VectorAcc operator * (const VectorAcc& r1,const Vector& r2);
+    inline friend VectorAcc operator * (const Vector& r1,const VectorAcc& r2);
+    inline friend VectorAcc operator * (const VectorAcc& r1,double r2);
+    inline friend VectorAcc operator * (double r1,const VectorAcc& r2);
+    inline friend VectorAcc operator * (const doubleAcc& r1,const VectorAcc& r2);
+    inline friend VectorAcc operator * (const VectorAcc& r2,const doubleAcc& r1);
+    inline friend VectorAcc operator*(const Rotation& R,const VectorAcc& x);
 
-    IMETHOD friend VectorAcc operator / (const VectorAcc& r1,double r2);
-    IMETHOD friend VectorAcc operator / (const VectorAcc& r2,const doubleAcc& r1);
+    inline friend VectorAcc operator / (const VectorAcc& r1,double r2);
+    inline friend VectorAcc operator / (const VectorAcc& r2,const doubleAcc& r1);
 
 
-    IMETHOD friend bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps);
-    IMETHOD friend bool Equal(const Vector& r1,const VectorAcc& r2,double eps);
-    IMETHOD friend bool Equal(const VectorAcc& r1,const Vector& r2,double eps);
-    IMETHOD friend VectorAcc operator - (const VectorAcc& r);
-    IMETHOD friend doubleAcc dot(const VectorAcc& lhs,const VectorAcc& rhs);
-    IMETHOD friend doubleAcc dot(const VectorAcc& lhs,const Vector& rhs);
-    IMETHOD friend doubleAcc dot(const Vector& lhs,const VectorAcc& rhs);
+    inline friend bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps);
+    inline friend bool Equal(const Vector& r1,const VectorAcc& r2,double eps);
+    inline friend bool Equal(const VectorAcc& r1,const Vector& r2,double eps);
+    inline friend VectorAcc operator - (const VectorAcc& r);
+    inline friend doubleAcc dot(const VectorAcc& lhs,const VectorAcc& rhs);
+    inline friend doubleAcc dot(const VectorAcc& lhs,const Vector& rhs);
+    inline friend doubleAcc dot(const Vector& lhs,const VectorAcc& rhs);
 };
 
 
@@ -117,45 +117,45 @@ public:
     explicit RotationAcc(const Rotation& _R):R(_R),w(Vector::Zero()){}
     RotationAcc(const Rotation& _R,const Vector& _w,const Vector& _dw):
         R(_R),w(_w),dw(_dw) {}
-    IMETHOD RotationAcc& operator = (const RotationAcc& arg);
-    IMETHOD RotationAcc& operator = (const Rotation& arg);
-    IMETHOD static RotationAcc Identity();
-    IMETHOD RotationAcc Inverse() const;
-    IMETHOD VectorAcc Inverse(const VectorAcc& arg) const;
-    IMETHOD VectorAcc Inverse(const Vector& arg) const;
-    IMETHOD VectorAcc operator*(const VectorAcc& arg) const;
-    IMETHOD VectorAcc operator*(const Vector& arg) const;
+    inline RotationAcc& operator = (const RotationAcc& arg);
+    inline RotationAcc& operator = (const Rotation& arg);
+    inline static RotationAcc Identity();
+    inline RotationAcc Inverse() const;
+    inline VectorAcc Inverse(const VectorAcc& arg) const;
+    inline VectorAcc Inverse(const Vector& arg) const;
+    inline VectorAcc operator*(const VectorAcc& arg) const;
+    inline VectorAcc operator*(const Vector& arg) const;
 
     //  Rotations
     // The SetRot.. functions set the value of *this to the appropriate rotation matrix.
     // The Rot... static functions give the value of the appropriate rotation matrix back.
     // The DoRot... functions apply a rotation R to *this,such that *this = *this * R.
-    // IMETHOD void DoRotX(const doubleAcc& angle);
-    // IMETHOD void DoRotY(const doubleAcc& angle);
-    // IMETHOD void DoRotZ(const doubleAcc& angle);
-    // IMETHOD static RRotation RotX(const doubleAcc& angle);
-    // IMETHOD static RRotation RotY(const doubleAcc& angle);
-    // IMETHOD static RRotation RotZ(const doubleAcc& angle);
+    // inline void DoRotX(const doubleAcc& angle);
+    // inline void DoRotY(const doubleAcc& angle);
+    // inline void DoRotZ(const doubleAcc& angle);
+    // inline static RRotation RotX(const doubleAcc& angle);
+    // inline static RRotation RotY(const doubleAcc& angle);
+    // inline static RRotation RotZ(const doubleAcc& angle);
 
-    // IMETHOD void SetRot(const Vector& rotaxis,const doubleAcc& angle);
+    // inline void SetRot(const Vector& rotaxis,const doubleAcc& angle);
     // Along an arbitrary axes.  The norm of rotvec is neglected.
-    // IMETHOD static RotationAcc Rot(const Vector& rotvec,const doubleAcc& angle);
+    // inline static RotationAcc Rot(const Vector& rotvec,const doubleAcc& angle);
     // rotvec has arbitrary norm
     // rotation around a constant vector !
-    // IMETHOD static RotationAcc Rot2(const Vector& rotvec,const doubleAcc& angle);
+    // inline static RotationAcc Rot2(const Vector& rotvec,const doubleAcc& angle);
     // rotvec is normalized.
     // rotation around a constant vector !
 
-    IMETHOD friend RotationAcc operator* (const RotationAcc& r1,const RotationAcc& r2);
-    IMETHOD friend RotationAcc operator* (const Rotation& r1,const RotationAcc& r2);
-    IMETHOD friend RotationAcc operator* (const RotationAcc& r1,const Rotation& r2);
-    IMETHOD friend bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps);
-    IMETHOD friend bool Equal(const Rotation& r1,const RotationAcc& r2,double eps);
-    IMETHOD friend bool Equal(const RotationAcc& r1,const Rotation& r2,double eps);
-    IMETHOD TwistAcc Inverse(const TwistAcc& arg) const;
-    IMETHOD TwistAcc Inverse(const Twist& arg) const;
-    IMETHOD TwistAcc operator * (const TwistAcc& arg) const;
-    IMETHOD TwistAcc operator * (const Twist& arg) const;
+    inline friend RotationAcc operator* (const RotationAcc& r1,const RotationAcc& r2);
+    inline friend RotationAcc operator* (const Rotation& r1,const RotationAcc& r2);
+    inline friend RotationAcc operator* (const RotationAcc& r1,const Rotation& r2);
+    inline friend bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps);
+    inline friend bool Equal(const Rotation& r1,const RotationAcc& r2,double eps);
+    inline friend bool Equal(const RotationAcc& r1,const Rotation& r2,double eps);
+    inline TwistAcc Inverse(const TwistAcc& arg) const;
+    inline TwistAcc Inverse(const Twist& arg) const;
+    inline TwistAcc operator * (const TwistAcc& arg) const;
+    inline TwistAcc operator * (const Twist& arg) const;
 };
 
 
@@ -171,28 +171,28 @@ public:
         M(_T.M,_t.rot,_dt.rot),p(_T.p,_t.vel,_dt.vel) {}
     FrameAcc(const RotationAcc& _M,const VectorAcc& _p):M(_M),p(_p) {}
 
-    IMETHOD FrameAcc& operator = (const FrameAcc& arg);
-    IMETHOD FrameAcc& operator = (const Frame& arg);
-    IMETHOD static FrameAcc Identity();
-    IMETHOD FrameAcc Inverse() const;
-    IMETHOD VectorAcc Inverse(const VectorAcc& arg) const;
-    IMETHOD VectorAcc operator*(const VectorAcc& arg) const;
-    IMETHOD VectorAcc operator*(const Vector& arg) const;
-    IMETHOD VectorAcc Inverse(const Vector& arg) const;
-    IMETHOD Frame GetFrame() const;
-    IMETHOD Twist GetTwist() const;
-    IMETHOD Twist GetAccTwist() const;
-    IMETHOD friend FrameAcc operator * (const FrameAcc& f1,const FrameAcc& f2);
-    IMETHOD friend FrameAcc operator * (const Frame& f1,const FrameAcc& f2);
-    IMETHOD friend FrameAcc operator * (const FrameAcc& f1,const Frame& f2);
-    IMETHOD friend bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps);
-    IMETHOD friend bool Equal(const Frame& r1,const FrameAcc& r2,double eps);
-    IMETHOD friend bool Equal(const FrameAcc& r1,const Frame& r2,double eps);
+    inline FrameAcc& operator = (const FrameAcc& arg);
+    inline FrameAcc& operator = (const Frame& arg);
+    inline static FrameAcc Identity();
+    inline FrameAcc Inverse() const;
+    inline VectorAcc Inverse(const VectorAcc& arg) const;
+    inline VectorAcc operator*(const VectorAcc& arg) const;
+    inline VectorAcc operator*(const Vector& arg) const;
+    inline VectorAcc Inverse(const Vector& arg) const;
+    inline Frame GetFrame() const;
+    inline Twist GetTwist() const;
+    inline Twist GetAccTwist() const;
+    inline friend FrameAcc operator * (const FrameAcc& f1,const FrameAcc& f2);
+    inline friend FrameAcc operator * (const Frame& f1,const FrameAcc& f2);
+    inline friend FrameAcc operator * (const FrameAcc& f1,const Frame& f2);
+    inline friend bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps);
+    inline friend bool Equal(const Frame& r1,const FrameAcc& r2,double eps);
+    inline friend bool Equal(const FrameAcc& r1,const Frame& r2,double eps);
 
-    IMETHOD TwistAcc  Inverse(const TwistAcc& arg) const;
-    IMETHOD TwistAcc  Inverse(const Twist& arg) const;
-    IMETHOD TwistAcc operator * (const TwistAcc& arg) const;
-    IMETHOD TwistAcc operator * (const Twist& arg) const;
+    inline TwistAcc  Inverse(const TwistAcc& arg) const;
+    inline TwistAcc  Inverse(const Twist& arg) const;
+    inline TwistAcc operator * (const TwistAcc& arg) const;
+    inline TwistAcc operator * (const Twist& arg) const;
 };
 
 
@@ -207,50 +207,48 @@ public:
      TwistAcc():vel(),rot() {};
      TwistAcc(const VectorAcc& _vel,const VectorAcc& _rot):vel(_vel),rot(_rot) {};
 
-     IMETHOD TwistAcc& operator-=(const TwistAcc& arg);
-     IMETHOD TwistAcc& operator+=(const TwistAcc& arg);
+     inline TwistAcc& operator-=(const TwistAcc& arg);
+     inline TwistAcc& operator+=(const TwistAcc& arg);
 
-     IMETHOD friend TwistAcc operator*(const TwistAcc& lhs,double rhs);
-     IMETHOD friend TwistAcc operator*(double lhs,const TwistAcc& rhs);
-     IMETHOD friend TwistAcc operator/(const TwistAcc& lhs,double rhs);
+     inline friend TwistAcc operator*(const TwistAcc& lhs,double rhs);
+     inline friend TwistAcc operator*(double lhs,const TwistAcc& rhs);
+     inline friend TwistAcc operator/(const TwistAcc& lhs,double rhs);
 
-     IMETHOD friend TwistAcc operator*(const TwistAcc& lhs,const doubleAcc& rhs);
-     IMETHOD friend TwistAcc operator*(const doubleAcc& lhs,const TwistAcc& rhs);
-     IMETHOD friend TwistAcc operator/(const TwistAcc& lhs,const doubleAcc& rhs);
+     inline friend TwistAcc operator*(const TwistAcc& lhs,const doubleAcc& rhs);
+     inline friend TwistAcc operator*(const doubleAcc& lhs,const TwistAcc& rhs);
+     inline friend TwistAcc operator/(const TwistAcc& lhs,const doubleAcc& rhs);
 
-     IMETHOD friend TwistAcc operator+(const TwistAcc& lhs,const TwistAcc& rhs);
-     IMETHOD friend TwistAcc operator-(const TwistAcc& lhs,const TwistAcc& rhs);
-     IMETHOD friend TwistAcc operator-(const TwistAcc& arg);
+     inline friend TwistAcc operator+(const TwistAcc& lhs,const TwistAcc& rhs);
+     inline friend TwistAcc operator-(const TwistAcc& lhs,const TwistAcc& rhs);
+     inline friend TwistAcc operator-(const TwistAcc& arg);
 
-     IMETHOD friend void SetToZero(TwistAcc& v);
+     inline friend void SetToZero(TwistAcc& v);
 
-     static IMETHOD TwistAcc Zero();
+     static inline TwistAcc Zero();
 
-     IMETHOD void ReverseSign();
+     inline void ReverseSign();
 
-     IMETHOD TwistAcc RefPoint(const VectorAcc& v_base_AB);
+     inline TwistAcc RefPoint(const VectorAcc& v_base_AB);
      // Changes the reference point of the RTwist.
      // The RVector v_base_AB is expressed in the same base as the RTwist
      // The RVector v_base_AB is a RVector from the old point to
      // the new point.
      // Complexity : 6M+6A
 
-     IMETHOD friend bool Equal(const TwistAcc& a,const TwistAcc& b,double eps);
-     IMETHOD friend bool Equal(const Twist& a,const TwistAcc& b,double eps);
-     IMETHOD friend bool Equal(const TwistAcc& a,const Twist& b,double eps);
+     inline friend bool Equal(const TwistAcc& a,const TwistAcc& b,double eps);
+     inline friend bool Equal(const Twist& a,const TwistAcc& b,double eps);
+     inline friend bool Equal(const TwistAcc& a,const Twist& b,double eps);
 
 
-     IMETHOD Twist GetTwist() const;
-     IMETHOD Twist GetTwistDot() const;
+     inline Twist GetTwist() const;
+     inline Twist GetTwistDot() const;
 
     friend class RotationAcc;
     friend class FrameAcc;
 
 };
 
-#ifdef KDL_INLINE
 #include "frameacc.inl"
-#endif
 
 } // namespace KDL
 

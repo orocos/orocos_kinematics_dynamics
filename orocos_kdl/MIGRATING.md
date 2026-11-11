@@ -15,6 +15,19 @@ All installed headers are now self-contained: `kdl/framevel_io.hpp` includes
 `kdl/framevel.hpp`, and `kdl/utilities/rallNd.h` is now a valid, standalone header (its
 templates live in `namespace KDL`).
 
+## Removed configuration macros
+
+`utilities/kdl-config.h` is gone, together with the macros it defined and the ones that
+depended on them. KDL is always built with inline methods, so none of these can be set any
+more.
+
+- `IMETHOD` and `INLINE` are removed. Use `inline`
+  (`sed -i 's/\bIMETHOD\b/inline/g; s/\bINLINE\b/inline/g'`).
+- `KDL_INLINE`, `KDL_USE_EQUAL`, `KDL_INDEX_CHECK` and `KDL_FRAME_WIDTH` are removed.
+  `#include <kdl/utilities/kdl-config.h>` no longer works; drop it.
+- `FRAMES_CHECKI(x)` is removed. Index checks are plain `assert(x)`, so they follow `NDEBUG`:
+  they are active in Debug builds and compiled out in Release builds.
+
 ## Bug fixes that change results
 
 These functions gave wrong results in 1.x. Code that worked around them must drop the

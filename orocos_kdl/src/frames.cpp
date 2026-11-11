@@ -32,10 +32,6 @@
 
 namespace KDL {
 
-#ifndef KDL_INLINE
-#include "frames.inl"
-#endif
-
     void Frame::Make4x4(double * d)
     {
         int i;
@@ -428,18 +424,6 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
 }
 
 bool operator==(const Rotation& a,const Rotation& b) {
-#ifdef KDL_USE_EQUAL
     return Equal(a,b);
-#else
-    return ( a.data[0]==b.data[0] &&
-             a.data[1]==b.data[1] &&
-             a.data[2]==b.data[2] &&
-             a.data[3]==b.data[3] &&
-             a.data[4]==b.data[4] &&
-             a.data[5]==b.data[5] &&
-             a.data[6]==b.data[6] &&
-             a.data[7]==b.data[7] &&
-             a.data[8]==b.data[8]  );
-#endif
 }
 }

@@ -33,20 +33,20 @@
 
 
 
-IMETHOD Vector::Vector(const Vector & arg)
+inline Vector::Vector(const Vector & arg)
 {
     data[0] = arg.data[0];
     data[1] = arg.data[1];
     data[2] = arg.data[2];
 }
 
-IMETHOD Vector::Vector(double x,double y, double z)
+inline Vector::Vector(double x,double y, double z)
 {
         data[0]=x;data[1]=y;data[2]=z;
 }
 
 
-IMETHOD Vector& Vector::operator =(const Vector & arg)
+inline Vector& Vector::operator =(const Vector & arg)
 {
     data[0] = arg.data[0];
     data[1] = arg.data[1];
@@ -54,7 +54,7 @@ IMETHOD Vector& Vector::operator =(const Vector & arg)
     return *this;
 }
 
-IMETHOD Vector operator +(const Vector & lhs,const Vector& rhs)
+inline Vector operator +(const Vector & lhs,const Vector& rhs)
 {
     Vector tmp;
     tmp.data[0] = lhs.data[0]+rhs.data[0];
@@ -63,7 +63,7 @@ IMETHOD Vector operator +(const Vector & lhs,const Vector& rhs)
     return tmp;
 }
 
-IMETHOD Vector operator -(const Vector & lhs,const Vector& rhs)
+inline Vector operator -(const Vector & lhs,const Vector& rhs)
 {
     Vector tmp;
     tmp.data[0] = lhs.data[0]-rhs.data[0];
@@ -72,13 +72,13 @@ IMETHOD Vector operator -(const Vector & lhs,const Vector& rhs)
     return tmp;
 }
 
-IMETHOD double Vector::x() const { return data[0]; }
-IMETHOD double Vector::y() const { return data[1]; }
-IMETHOD double Vector::z() const { return data[2]; }
+inline double Vector::x() const { return data[0]; }
+inline double Vector::y() const { return data[1]; }
+inline double Vector::z() const { return data[2]; }
 
-IMETHOD void Vector::x( double _x ) { data[0] = _x; }
-IMETHOD void Vector::y( double _y ) { data[1] = _y; }
-IMETHOD void Vector::z( double _z ) { data[2] = _z; }
+inline void Vector::x( double _x ) { data[0] = _x; }
+inline void Vector::y( double _y ) { data[1] = _y; }
+inline void Vector::z( double _z ) { data[2] = _z; }
 
 Vector operator *(const Vector& lhs,double rhs) 
 {
@@ -141,13 +141,13 @@ Vector Vector::Zero()
 }
 
 double Vector::operator()(int index) const {
-    FRAMES_CHECKI((0<=index)&&(index<=2));
+    assert((0<=index)&&(index<=2));
     return data[index];
 }
 
 double& Vector::operator () (int index)
 {
-    FRAMES_CHECKI((0<=index)&&(index<=2));
+    assert((0<=index)&&(index<=2));
     return data[index];
 }
 
@@ -486,12 +486,12 @@ void Vector::Set2DZX(const Vector2& v)
 
 
 double& Rotation::operator()(int i,int j) {
-    FRAMES_CHECKI((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
+    assert((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
     return data[i*3+j];
 }
 
 double Rotation::operator()(int i,int j) const {
-    FRAMES_CHECKI((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
+    assert((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
     return data[i*3+j];
 }
 
@@ -665,7 +665,7 @@ void Rotation::SetInverse()
 
 
 double Frame::operator()(int i,int j) {
-    FRAMES_CHECKI((0<=i)&&(i<=3)&&(0<=j)&&(j<=3));
+    assert((0<=i)&&(i<=3)&&(0<=j)&&(j<=3));
     if (i==3) {
         if (j==3)
             return 1.0;
@@ -681,7 +681,7 @@ double Frame::operator()(int i,int j) {
 }
 
 double Frame::operator()(int i,int j) const {
-    FRAMES_CHECKI((0<=i)&&(i<=3)&&(0<=j)&&(j<=3));
+    assert((0<=i)&&(i<=3)&&(0<=j)&&(j<=3));
         if (i==3) {
         if (j==3)
             return 1;
@@ -722,19 +722,19 @@ tmp_XY.Set2DXY(v_XY);
 
 
 //============ 2 dimensional version of the frames objects =============
-IMETHOD Vector2::Vector2(const Vector2 & arg)
+inline Vector2::Vector2(const Vector2 & arg)
 {
     data[0] = arg.data[0];
     data[1] = arg.data[1];
 }
 
-IMETHOD Vector2::Vector2(double x,double y)
+inline Vector2::Vector2(double x,double y)
 {
         data[0]=x;data[1]=y;
 }
 
 
-IMETHOD Vector2& Vector2::operator =(const Vector2 & arg)
+inline Vector2& Vector2::operator =(const Vector2 & arg)
 {
     data[0] = arg.data[0];
     data[1] = arg.data[1];
@@ -742,100 +742,100 @@ IMETHOD Vector2& Vector2::operator =(const Vector2 & arg)
 }
 
 
-IMETHOD Vector2 operator +(const Vector2 & lhs,const Vector2& rhs)
+inline Vector2 operator +(const Vector2 & lhs,const Vector2& rhs)
 {
     return Vector2(lhs.data[0]+rhs.data[0],lhs.data[1]+rhs.data[1]);
 }
 
-IMETHOD Vector2 operator -(const Vector2 & lhs,const Vector2& rhs)
+inline Vector2 operator -(const Vector2 & lhs,const Vector2& rhs)
 {
     return Vector2(lhs.data[0]-rhs.data[0],lhs.data[1]-rhs.data[1]);
 }
 
-IMETHOD Vector2 operator *(const Vector2& lhs,double rhs) 
+inline Vector2 operator *(const Vector2& lhs,double rhs) 
 {
     return Vector2(lhs.data[0]*rhs,lhs.data[1]*rhs);
 }
 
-IMETHOD Vector2 operator *(double lhs,const Vector2& rhs) 
+inline Vector2 operator *(double lhs,const Vector2& rhs) 
 {
     return Vector2(lhs*rhs.data[0],lhs*rhs.data[1]);
 }
 
-IMETHOD Vector2 operator /(const Vector2& lhs,double rhs) 
+inline Vector2 operator /(const Vector2& lhs,double rhs) 
 {
     return Vector2(lhs.data[0]/rhs,lhs.data[1]/rhs);
 }
 
-IMETHOD Vector2& Vector2::operator +=(const Vector2 & arg)
+inline Vector2& Vector2::operator +=(const Vector2 & arg)
 {
     data[0]+=arg.data[0];
     data[1]+=arg.data[1];
     return *this;
 }
 
-IMETHOD Vector2& Vector2::operator -=(const Vector2 & arg)
+inline Vector2& Vector2::operator -=(const Vector2 & arg)
 {
     data[0]-=arg.data[0];
     data[1]-=arg.data[1];
     return *this;
 }
 
-IMETHOD Vector2 Vector2::Zero() {
+inline Vector2 Vector2::Zero() {
     return Vector2(0,0);
 }
 
-IMETHOD double Vector2::operator()(int index) const {
-    FRAMES_CHECKI((0<=index)&&(index<=1));
+inline double Vector2::operator()(int index) const {
+    assert((0<=index)&&(index<=1));
     return data[index];
 }
 
-IMETHOD double& Vector2::operator () (int index)
+inline double& Vector2::operator () (int index)
 {
-    FRAMES_CHECKI((0<=index)&&(index<=1));
+    assert((0<=index)&&(index<=1));
     return data[index];
 }
 
-IMETHOD double Vector2::x() const { return data[0]; }
-IMETHOD double Vector2::y() const { return data[1]; }
+inline double Vector2::x() const { return data[0]; }
+inline double Vector2::y() const { return data[1]; }
 
-IMETHOD void Vector2::x( double _x ) { data[0] = _x; }
-IMETHOD void Vector2::y( double _y ) { data[1] = _y; }
+inline void Vector2::x( double _x ) { data[0] = _x; }
+inline void Vector2::y( double _y ) { data[1] = _y; }
 
 
-IMETHOD void Vector2::ReverseSign()
+inline void Vector2::ReverseSign()
 {
     data[0] = -data[0];
     data[1] = -data[1];
 }
 
 
-IMETHOD Vector2 operator-(const Vector2 & arg)
+inline Vector2 operator-(const Vector2 & arg)
 {
     return Vector2(-arg.data[0],-arg.data[1]);
 }
 
 
-IMETHOD void Vector2::Set3DXY(const Vector& v)
+inline void Vector2::Set3DXY(const Vector& v)
 // projects v in its XY plane, and sets *this to these values
 {
     data[0]=v(0);
     data[1]=v(1);
 }
-IMETHOD void Vector2::Set3DYZ(const Vector& v)
+inline void Vector2::Set3DYZ(const Vector& v)
 // projects v in its XY plane, and sets *this to these values
 {
     data[0]=v(1);
     data[1]=v(2);
 }
-IMETHOD void Vector2::Set3DZX(const Vector& v)
+inline void Vector2::Set3DZX(const Vector& v)
 // projects v in its XY plane, and sets *this to these values
 {
     data[0]=v(2);
     data[1]=v(0);
 }
 
-IMETHOD void Vector2::Set3DPlane(const Frame& F_someframe_XY,const Vector& v_someframe) 
+inline void Vector2::Set3DPlane(const Frame& F_someframe_XY,const Vector& v_someframe) 
 // projects v in the XY plane of F_someframe_XY, and sets *this to these values
 // expressed wrt someframe.
 {
@@ -844,21 +844,21 @@ IMETHOD void Vector2::Set3DPlane(const Frame& F_someframe_XY,const Vector& v_som
     data[1]=tmp(1);
 }
 
-IMETHOD Rotation2::Rotation2(const Rotation2& arg) {
+inline Rotation2::Rotation2(const Rotation2& arg) {
     c=arg.c;s=arg.s;
 }
 
-IMETHOD Rotation2& Rotation2::operator=(const Rotation2& arg) {
+inline Rotation2& Rotation2::operator=(const Rotation2& arg) {
     c=arg.c;s=arg.s;
     return *this;
 }
 
-IMETHOD Vector2 Rotation2::operator*(const Vector2& v) const {
+inline Vector2 Rotation2::operator*(const Vector2& v) const {
     return Vector2(v.data[0]*c-v.data[1]*s,v.data[0]*s+v.data[1]*c);
 }
 
-IMETHOD double Rotation2::operator()(int i,int j) const {
-    FRAMES_CHECKI((0<=i)&&(i<=1)&&(0<=j)&&(j<=1));
+inline double Rotation2::operator()(int i,int j) const {
+    assert((0<=i)&&(i<=1)&&(0<=j)&&(j<=1));
     if (i==j) return c;
     if (i==0) 
         return -s;
@@ -867,88 +867,88 @@ IMETHOD double Rotation2::operator()(int i,int j) const {
 }
 
 
-IMETHOD Rotation2 operator *(const Rotation2& lhs,const Rotation2& rhs) {
+inline Rotation2 operator *(const Rotation2& lhs,const Rotation2& rhs) {
     return Rotation2(lhs.c*rhs.c-lhs.s*rhs.s,lhs.s*rhs.c+lhs.c*rhs.s);
 }
 
-IMETHOD void Rotation2::SetInverse() {
+inline void Rotation2::SetInverse() {
     s=-s;
 }
 
-IMETHOD Rotation2 Rotation2::Inverse() const {
+inline Rotation2 Rotation2::Inverse() const {
     return Rotation2(c,-s);
 }
 
-IMETHOD Vector2 Rotation2::Inverse(const Vector2& v) const {
+inline Vector2 Rotation2::Inverse(const Vector2& v) const {
     return Vector2(v.data[0]*c+v.data[1]*s,-v.data[0]*s+v.data[1]*c);
 }
 
-IMETHOD Rotation2 Rotation2::Identity() {
+inline Rotation2 Rotation2::Identity() {
     return Rotation2(1,0);
 }
      
-IMETHOD void Rotation2::SetIdentity()
+inline void Rotation2::SetIdentity()
 {
 	c = 1;
 	s = 0;
 }
 
-IMETHOD void Rotation2::SetRot(double angle) {
+inline void Rotation2::SetRot(double angle) {
     c=cos(angle);s=sin(angle);
 }
 
-IMETHOD Rotation2 Rotation2::Rot(double angle) {
+inline Rotation2 Rotation2::Rot(double angle) {
     return Rotation2(cos(angle),sin(angle));
 }
 
-IMETHOD double Rotation2::GetRot() const {
+inline double Rotation2::GetRot() const {
     return atan2(s,c);
 }
 
 
-IMETHOD Frame2::Frame2() {
+inline Frame2::Frame2() {
 }
 
-IMETHOD Frame2::Frame2(const Rotation2 & R)
+inline Frame2::Frame2(const Rotation2 & R)
 {
     M=R;
     p=Vector2::Zero();
 }
 
-IMETHOD Frame2::Frame2(const Vector2 & V)
+inline Frame2::Frame2(const Vector2 & V)
 {
     M = Rotation2::Identity();
     p = V;
 }
 
-IMETHOD Frame2::Frame2(const Rotation2 & R, const Vector2 & V)
+inline Frame2::Frame2(const Rotation2 & R, const Vector2 & V)
 {
     M = R;
     p = V;
 }
 
-IMETHOD Frame2 operator *(const Frame2& lhs,const Frame2& rhs)
+inline Frame2 operator *(const Frame2& lhs,const Frame2& rhs)
 {
     return Frame2(lhs.M*rhs.M,lhs.M*rhs.p+lhs.p);
 }
 
-IMETHOD Vector2 Frame2::operator *(const Vector2 & arg) const
+inline Vector2 Frame2::operator *(const Vector2 & arg) const
 {
     return M*arg+p;
 }
 
-IMETHOD Vector2 Frame2::Inverse(const Vector2& arg) const
+inline Vector2 Frame2::Inverse(const Vector2& arg) const
 {
     return M.Inverse(arg-p);
 }
 
-IMETHOD void Frame2::SetIdentity()
+inline void Frame2::SetIdentity()
 {
 	M.SetIdentity();
 	p = Vector2::Zero();
 }
 
-IMETHOD void Frame2::SetInverse()
+inline void Frame2::SetInverse()
 {
     M.SetInverse();
     p = M*p;
@@ -956,27 +956,27 @@ IMETHOD void Frame2::SetInverse()
 }
 
 
-IMETHOD Frame2 Frame2::Inverse() const
+inline Frame2 Frame2::Inverse() const
 {
     Frame2 tmp(*this);
     tmp.SetInverse();
     return tmp;
 }
 
-IMETHOD Frame2& Frame2::operator =(const Frame2 & arg)
+inline Frame2& Frame2::operator =(const Frame2 & arg)
 { 
     M = arg.M;
     p = arg.p;
     return *this;
 }
 
-IMETHOD Frame2::Frame2(const Frame2 & arg) :
+inline Frame2::Frame2(const Frame2 & arg) :
     p(arg.p), M(arg.M)
 {}
 
 
-IMETHOD double Frame2::operator()(int i,int j) {
-    FRAMES_CHECKI((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
+inline double Frame2::operator()(int i,int j) {
+    assert((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
     if (i==2) {
         if (j==2)
             return 1;
@@ -991,8 +991,8 @@ IMETHOD double Frame2::operator()(int i,int j) {
     }
 }
 
-IMETHOD double Frame2::operator()(int i,int j) const {
-    FRAMES_CHECKI((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
+inline double Frame2::operator()(int i,int j) const {
+    assert((0<=i)&&(i<=2)&&(0<=j)&&(j<=2));
     if (i==2) {
         if (j==2)
             return 1;
@@ -1009,15 +1009,15 @@ IMETHOD double Frame2::operator()(int i,int j) const {
 
 // Scalar products.
 
-IMETHOD double dot(const Vector& lhs,const Vector& rhs) {
+inline double dot(const Vector& lhs,const Vector& rhs) {
     return rhs(0)*lhs(0)+rhs(1)*lhs(1)+rhs(2)*lhs(2);
 }
 
-IMETHOD double dot(const Twist& lhs,const Wrench& rhs) {
+inline double dot(const Twist& lhs,const Wrench& rhs) {
     return dot(lhs.vel,rhs.force)+dot(lhs.rot,rhs.torque);
 }
 
-IMETHOD double dot(const Wrench& rhs,const Twist& lhs) {
+inline double dot(const Wrench& rhs,const Twist& lhs) {
     return dot(lhs.vel,rhs.force)+dot(lhs.rot,rhs.torque);
 }
 
@@ -1029,55 +1029,55 @@ IMETHOD double dot(const Wrench& rhs,const Twist& lhs) {
 
 
 
-IMETHOD bool Equal(const Vector& a,const Vector& b,double eps) {
+inline bool Equal(const Vector& a,const Vector& b,double eps) {
         return (Equal(a.data[0],b.data[0],eps)&&
                 Equal(a.data[1],b.data[1],eps)&&
                 Equal(a.data[2],b.data[2],eps)   );
      }
      
 
-IMETHOD bool Equal(const Frame& a,const Frame& b,double eps) {
+inline bool Equal(const Frame& a,const Frame& b,double eps) {
         return (Equal(a.p,b.p,eps)&&
                 Equal(a.M,b.M,eps)   );
 }
 
-IMETHOD bool Equal(const Wrench& a,const Wrench& b,double eps) {
+inline bool Equal(const Wrench& a,const Wrench& b,double eps) {
         return (Equal(a.force,b.force,eps)&&
                 Equal(a.torque,b.torque,eps)  );
 }
 
-IMETHOD bool Equal(const Twist& a,const Twist& b,double eps) {
+inline bool Equal(const Twist& a,const Twist& b,double eps) {
         return (Equal(a.rot,b.rot,eps)&&
                 Equal(a.vel,b.vel,eps)  );
 }
 
-IMETHOD bool Equal(const Vector2& a,const Vector2& b,double eps) {
+inline bool Equal(const Vector2& a,const Vector2& b,double eps) {
         return (Equal(a.data[0],b.data[0],eps)&&
                 Equal(a.data[1],b.data[1],eps)   );
      }
      
-IMETHOD bool Equal(const Rotation2& a,const Rotation2& b,double eps) {
+inline bool Equal(const Rotation2& a,const Rotation2& b,double eps) {
     return ( Equal(a.c,b.c,eps) && Equal(a.s,b.s,eps) );
 }
 
-IMETHOD bool Equal(const Frame2& a,const Frame2& b,double eps) {
+inline bool Equal(const Frame2& a,const Frame2& b,double eps) {
         return (Equal(a.p,b.p,eps)&&
                 Equal(a.M,b.M,eps)   );
 }
 
-IMETHOD void SetToZero(Vector& v) {
+inline void SetToZero(Vector& v) {
     v=Vector::Zero();
 }
-IMETHOD void SetToZero(Twist& v) {
+inline void SetToZero(Twist& v) {
     SetToZero(v.rot);
     SetToZero(v.vel);
 }
-IMETHOD void SetToZero(Wrench& v) {
+inline void SetToZero(Wrench& v) {
     SetToZero(v.force);
     SetToZero(v.torque);
 }
 
-IMETHOD void SetToZero(Vector2& v) {
+inline void SetToZero(Vector2& v) {
     v = Vector2::Zero();
 }
 
@@ -1104,7 +1104,7 @@ IMETHOD void SetToZero(Vector2& v) {
  * axis_a_b rotates the a frame towards the b frame.
  * This routine returns the rotation matrix R_a_b
  */
-IMETHOD Rotation Rot(const Vector& axis_a_b) {
+inline Rotation Rot(const Vector& axis_a_b) {
     // The formula is 
     // V.(V.tr) + st*[V x] + ct*(I-V.(V.tr))
     // can be found by multiplying it with an arbitrary vector p
@@ -1126,26 +1126,26 @@ IMETHOD Rotation Rot(const Vector& axis_a_b) {
         ct            +  vt*rotvec(2)*rotvec(2)
         );
     }
-IMETHOD Vector diff(const Vector& a,const Vector& b,double dt) {
+inline Vector diff(const Vector& a,const Vector& b,double dt) {
 	return (b-a)/dt;
 }
 
-IMETHOD Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt) {
+inline Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt) {
 	Rotation R_b1_b2(R_a_b1.Inverse()*R_a_b2);
 	return R_a_b1 * R_b1_b2.GetRot() / dt;
 }
 
-IMETHOD Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt) {
+inline Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt) {
 	return Twist(
 			diff(F_a_b1.p,F_a_b2.p,dt),
 			diff(F_a_b1.M,F_a_b2.M,dt)
 			);
 }
-IMETHOD Twist diff(const Twist& a,const Twist& b,double dt) {
+inline Twist diff(const Twist& a,const Twist& b,double dt) {
 	return Twist(diff(a.vel,b.vel,dt),diff(a.rot,b.rot,dt));
 }
 
-IMETHOD Wrench diff(const Wrench& a,const Wrench& b,double dt) {
+inline Wrench diff(const Wrench& a,const Wrench& b,double dt) {
 	return Wrench(
 			diff(a.force,b.force,dt),
 			diff(a.torque,b.torque,dt)
@@ -1153,23 +1153,23 @@ IMETHOD Wrench diff(const Wrench& a,const Wrench& b,double dt) {
 }
 
 
-IMETHOD Vector addDelta(const Vector& a,const Vector&da,double dt) {
+inline Vector addDelta(const Vector& a,const Vector&da,double dt) {
 	return a+da*dt;
 }
 
-IMETHOD Rotation addDelta(const Rotation& a,const Vector&da,double dt) {
+inline Rotation addDelta(const Rotation& a,const Vector&da,double dt) {
 	return Rot(da*dt)*a;
 }
-IMETHOD Frame addDelta(const Frame& a,const Twist& da,double dt) {
+inline Frame addDelta(const Frame& a,const Twist& da,double dt) {
 	return Frame(
 			addDelta(a.M,da.rot,dt),
 			addDelta(a.p,da.vel,dt)
 		   );
 }
-IMETHOD Twist addDelta(const Twist& a,const Twist&da,double dt) {
+inline Twist addDelta(const Twist& a,const Twist&da,double dt) {
 	return Twist(addDelta(a.vel,da.vel,dt),addDelta(a.rot,da.rot,dt));
 }
-IMETHOD Wrench addDelta(const Wrench& a,const Wrench&da,double dt) {
+inline Wrench addDelta(const Wrench& a,const Wrench&da,double dt) {
 	return Wrench(addDelta(a.force,da.force,dt),addDelta(a.torque,da.torque,dt));
 }
 
@@ -1188,7 +1188,7 @@ IMETHOD Wrench addDelta(const Wrench& a,const Wrench&da,double dt) {
  * \warning do not confuse displacement rotational velocities and velocities
  * \warning do not confuse displacement twist and twist.
  *
-IMETHOD Vector addDelta_displ(const Vector& a,const Vector&da,double dt) {
+inline Vector addDelta_displ(const Vector& a,const Vector&da,double dt) {
     return getRot(addDelta(Rot(a),da,dt)); 
 }*/
 
@@ -1206,26 +1206,26 @@ IMETHOD Vector addDelta_displ(const Vector& a,const Vector&da,double dt) {
  * \warning do not confuse displacement rotational velocities and velocities
  * \warning do not confuse displacement twist and twist.
  *
-IMETHOD Twist addDelta_displ(const Twist& a,const Twist&da,double dt) {
+inline Twist addDelta_displ(const Twist& a,const Twist&da,double dt) {
     return Twist(addDelta(a.vel,da.vel,dt),addDelta_displ(a.rot,da.rot,dt)); 
 }*/
 
 
-IMETHOD void random(Vector& a) {
+inline void random(Vector& a) {
 	random(a[0]);
 	random(a[1]);
 	random(a[2]);
 }
-IMETHOD void random(Twist& a) {
+inline void random(Twist& a) {
 	random(a.rot);
 	random(a.vel);
 }
-IMETHOD void random(Wrench& a) {
+inline void random(Wrench& a) {
    	random(a.torque);
 	random(a.force);
 }
 
-IMETHOD void random(Rotation& R) {
+inline void random(Rotation& R) {
 	double alfa;
 	double beta;
 	double gamma;
@@ -1235,26 +1235,26 @@ IMETHOD void random(Rotation& R) {
 	R = Rotation::EulerZYX(alfa,beta,gamma);
 }
 
-IMETHOD void random(Frame& F) {
+inline void random(Frame& F) {
 	random(F.M);
 	random(F.p);
 }
 
-IMETHOD void posrandom(Vector& a) {
+inline void posrandom(Vector& a) {
 	posrandom(a[0]);
 	posrandom(a[1]);
 	posrandom(a[2]);
 }
-IMETHOD void posrandom(Twist& a) {
+inline void posrandom(Twist& a) {
 	posrandom(a.rot);
 	posrandom(a.vel);
 }
-IMETHOD void posrandom(Wrench& a) {
+inline void posrandom(Wrench& a) {
    	posrandom(a.torque);
 	posrandom(a.force);
 }
 
-IMETHOD void posrandom(Rotation& R) {
+inline void posrandom(Rotation& R) {
 	double alfa;
 	double beta;
 	double gamma;
@@ -1264,7 +1264,7 @@ IMETHOD void posrandom(Rotation& R) {
 	R = Rotation::EulerZYX(alfa,beta,gamma);
 }
 
-IMETHOD void posrandom(Frame& F) {
+inline void posrandom(Frame& F) {
 	posrandom(F.M);
 	posrandom(F.p);
 }
@@ -1272,72 +1272,46 @@ IMETHOD void posrandom(Frame& F) {
 
 
 
-IMETHOD bool operator==(const Frame& a,const Frame& b ) {
-#ifdef KDL_USE_EQUAL
+inline bool operator==(const Frame& a,const Frame& b ) {
     return Equal(a,b);
-#else
-        return (a.p == b.p &&
-                a.M == b.M );
-#endif
 }
 
-IMETHOD bool operator!=(const Frame& a,const Frame& b) {
+inline bool operator!=(const Frame& a,const Frame& b) {
     return !operator==(a,b);
 }
 
-IMETHOD bool operator==(const Vector& a,const Vector& b) {
-#ifdef KDL_USE_EQUAL
+inline bool operator==(const Vector& a,const Vector& b) {
     return Equal(a,b);
-#else
-        return (a.data[0]==b.data[0]&&
-                a.data[1]==b.data[1]&&
-                a.data[2]==b.data[2] );
-#endif
      }
 
-IMETHOD bool operator!=(const Vector& a,const Vector& b) {
+inline bool operator!=(const Vector& a,const Vector& b) {
     return !operator==(a,b);
 }
 
-IMETHOD bool operator==(const Twist& a,const Twist& b) {
-#ifdef KDL_USE_EQUAL
+inline bool operator==(const Twist& a,const Twist& b) {
     return Equal(a,b);
-#else
-        return (a.rot==b.rot &&
-                a.vel==b.vel  );
-#endif
 }
 
-IMETHOD bool operator!=(const Twist& a,const Twist& b) {
+inline bool operator!=(const Twist& a,const Twist& b) {
     return !operator==(a,b);
 }
 
-IMETHOD bool operator==(const Wrench& a,const Wrench& b ) {
-#ifdef KDL_USE_EQUAL
+inline bool operator==(const Wrench& a,const Wrench& b ) {
     return Equal(a,b);
-#else
-    return (a.force==b.force &&
-            a.torque==b.torque );
-#endif
 }
 
-IMETHOD bool operator!=(const Wrench& a,const Wrench& b) {
+inline bool operator!=(const Wrench& a,const Wrench& b) {
     return !operator==(a,b);
 }
-IMETHOD bool operator!=(const Rotation& a,const Rotation& b) {
+inline bool operator!=(const Rotation& a,const Rotation& b) {
     return !operator==(a,b);
 }
 
-IMETHOD bool operator==(const Vector2& a,const Vector2& b) {
-#ifdef KDL_USE_EQUAL
+inline bool operator==(const Vector2& a,const Vector2& b) {
     return Equal(a,b);
-#else
-        return (a.data[0]==b.data[0]&&
-                a.data[1]==b.data[1] );
-#endif
      }
 
-IMETHOD bool operator!=(const Vector2& a,const Vector2& b) {
+inline bool operator!=(const Vector2& a,const Vector2& b) {
     return !operator==(a,b);
 }
 

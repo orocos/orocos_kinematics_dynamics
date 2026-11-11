@@ -18,9 +18,5 @@
 
 namespace KDL {
 
-#ifndef KDL_INLINE
-    #include "frameacc.inl"
-#endif
-
 }
 

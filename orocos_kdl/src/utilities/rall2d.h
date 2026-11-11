@@ -59,52 +59,52 @@ class Rall2d
         V dd;   //!< 2nd derivative
     public :
         // = Constructors
-        INLINE Rall2d():t(),d(),dd() {};
+        inline Rall2d():t(),d(),dd() {};
 
-        explicit INLINE  Rall2d(typename TI<T>::Arg c)
+        explicit inline  Rall2d(typename TI<T>::Arg c)
             {t=c;SetToZero(d);SetToZero(dd);}
 
-        INLINE Rall2d(typename TI<T>::Arg tn,const V& afg):t(tn),d(afg) {SetToZero(dd);}
+        inline Rall2d(typename TI<T>::Arg tn,const V& afg):t(tn),d(afg) {SetToZero(dd);}
 
-        INLINE Rall2d(typename TI<T>::Arg tn,const V& afg,const V& afg2):t(tn),d(afg),dd(afg2) {}
+        inline Rall2d(typename TI<T>::Arg tn,const V& afg,const V& afg2):t(tn),d(afg),dd(afg2) {}
 
         // = Copy Constructor
-        INLINE Rall2d(const Rall2d<T,V,S>& r):t(r.t),d(r.d),dd(r.dd) {}
+        inline Rall2d(const Rall2d<T,V,S>& r):t(r.t),d(r.d),dd(r.dd) {}
             //if one defines this constructor, it's better optimized then the
             //automatically generated one ( that one set's up a loop to copy
             // word by word.
         
         // = Member functions to access internal structures :
-        INLINE T& Value() {
+        inline T& Value() {
             return t;
         }
 
-        INLINE V& D() {
+        inline V& D() {
             return d;
         }
 
-        INLINE V& DD() {
+        inline V& DD() {
             return dd;
         }
-        INLINE static Rall2d<T,V,S> Zero() {
+        inline static Rall2d<T,V,S> Zero() {
             Rall2d<T,V,S> tmp;
             SetToZero(tmp);
             return tmp;
         }
-        INLINE static Rall2d<T,V,S> Identity() {
+        inline static Rall2d<T,V,S> Identity() {
             Rall2d<T,V,S> tmp;
             SetToIdentity(tmp);
             return tmp;
         }
 
         // = assignment operators
-        INLINE Rall2d<T,V,S>& operator =(S c)
+        inline Rall2d<T,V,S>& operator =(S c)
             {t=c;SetToZero(d);SetToZero(dd);return *this;}
 
-        INLINE Rall2d<T,V,S>& operator =(const Rall2d<T,V,S>& r)
+        inline Rall2d<T,V,S>& operator =(const Rall2d<T,V,S>& r)
             {t=r.t;d=r.d;dd=r.dd;return *this;}
 
-        INLINE Rall2d<T,V,S>& operator /=(const Rall2d<T,V,S>& rhs)
+        inline Rall2d<T,V,S>& operator /=(const Rall2d<T,V,S>& rhs)
             {
             t /= rhs.t;
             d = (d-t*rhs.d)/rhs.t;
@@ -112,7 +112,7 @@ class Rall2d
             return *this;
             }
 
-        INLINE Rall2d<T,V,S>& operator *=(const Rall2d<T,V,S>& rhs)
+        inline Rall2d<T,V,S>& operator *=(const Rall2d<T,V,S>& rhs)
             {
             t *= rhs.t;
             d  = (d*rhs.t+t*rhs.d);
@@ -120,7 +120,7 @@ class Rall2d
             return *this;
             }
 
-        INLINE Rall2d<T,V,S>& operator +=(const Rall2d<T,V,S>& rhs)
+        inline Rall2d<T,V,S>& operator +=(const Rall2d<T,V,S>& rhs)
             {
             t    +=rhs.t;
             d +=rhs.d;
@@ -128,7 +128,7 @@ class Rall2d
             return *this;
             }
 
-        INLINE Rall2d<T,V,S>& operator -=(const Rall2d<T,V,S>& rhs)
+        inline Rall2d<T,V,S>& operator -=(const Rall2d<T,V,S>& rhs)
             {
             t     -= rhs.t;
             d     -= rhs.d;
@@ -136,7 +136,7 @@ class Rall2d
             return *this;
             }
 
-        INLINE Rall2d<T,V,S>& operator /=(S rhs)
+        inline Rall2d<T,V,S>& operator /=(S rhs)
             {
             t    /= rhs;
             d    /= rhs;
@@ -144,7 +144,7 @@ class Rall2d
             return *this;
             }
 
-        INLINE Rall2d<T,V,S>& operator *=(S rhs)
+        inline Rall2d<T,V,S>& operator *=(S rhs)
             {
             t    *= rhs;
             d    *= rhs;
@@ -152,13 +152,13 @@ class Rall2d
             return *this;
             }
 
-        INLINE Rall2d<T,V,S>& operator -=(S rhs)
+        inline Rall2d<T,V,S>& operator -=(S rhs)
             {
             t    -= rhs;
             return *this;
             }
 
-        INLINE Rall2d<T,V,S>& operator +=(S rhs)
+        inline Rall2d<T,V,S>& operator +=(S rhs)
             {
             t    += rhs;
             return *this;
@@ -166,54 +166,54 @@ class Rall2d
 
         // = Operators between Rall2d objects
 /*
-         friend INLINE Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
-         friend INLINE Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
-         friend INLINE Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
-         friend INLINE Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
-         friend INLINE Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> operator *(S s,const Rall2d<T,V,S>& v);
-         friend INLINE Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& v,S s);
-         friend INLINE Rall2d<T,V,S> operator +(S s,const Rall2d<T,V,S>& v);
-         friend INLINE Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& v,S s);
-         friend INLINE Rall2d<T,V,S> operator -(S s,const Rall2d<T,V,S>& v);
-         friend INLINE INLINE Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& v,S s);
-         friend INLINE Rall2d<T,V,S> operator /(S s,const Rall2d<T,V,S>& v);
-         friend INLINE Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& v,S s);
+         friend inline Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
+         friend inline Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
+         friend inline Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
+         friend inline Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs);
+         friend inline Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> operator *(S s,const Rall2d<T,V,S>& v);
+         friend inline Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& v,S s);
+         friend inline Rall2d<T,V,S> operator +(S s,const Rall2d<T,V,S>& v);
+         friend inline Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& v,S s);
+         friend inline Rall2d<T,V,S> operator -(S s,const Rall2d<T,V,S>& v);
+         friend inline Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& v,S s);
+         friend inline Rall2d<T,V,S> operator /(S s,const Rall2d<T,V,S>& v);
+         friend inline Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& v,S s);
 
         // = Mathematical functions that operate on Rall2d objects
 
-         friend INLINE Rall2d<T,V,S> exp(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> log(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> sin(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> cos(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> tan(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> sinh(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> cosh(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> tanh(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> sqr(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> pow(const Rall2d<T,V,S>& arg,double m) ;
-         friend INLINE Rall2d<T,V,S> sqrt(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> asin(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> acos(const Rall2d<T,V,S>& arg);
-         friend INLINE Rall2d<T,V,S> atan(const Rall2d<T,V,S>& x);
-         friend INLINE Rall2d<T,V,S> atan2(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x);
-         friend INLINE Rall2d<T,V,S> abs(const Rall2d<T,V,S>& x);
-         friend INLINE Rall2d<T,V,S> hypot(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x);
+         friend inline Rall2d<T,V,S> exp(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> log(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> sin(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> cos(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> tan(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> sinh(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> cosh(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> tanh(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> sqr(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> pow(const Rall2d<T,V,S>& arg,double m) ;
+         friend inline Rall2d<T,V,S> sqrt(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> asin(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> acos(const Rall2d<T,V,S>& arg);
+         friend inline Rall2d<T,V,S> atan(const Rall2d<T,V,S>& x);
+         friend inline Rall2d<T,V,S> atan2(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x);
+         friend inline Rall2d<T,V,S> abs(const Rall2d<T,V,S>& x);
+         friend inline Rall2d<T,V,S> hypot(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x);
         // returns sqrt(y*y+x*x), but is optimized for accuracy and speed.
-         friend INLINE S Norm(const Rall2d<T,V,S>& value) ;
+         friend inline S Norm(const Rall2d<T,V,S>& value) ;
         // returns Norm( value.Value() ).
 
         // = Some utility functions to improve performance
         // (should also be declared on primitive types to improve uniformity
-         friend INLINE Rall2d<T,V,S> LinComb(S alfa,const Rall2d<T,V,S>& a,
+         friend inline Rall2d<T,V,S> LinComb(S alfa,const Rall2d<T,V,S>& a,
             TI<T>::Arg beta,const Rall2d<T,V,S>& b );
-         friend INLINE void LinCombR(S alfa,const Rall2d<T,V,S>& a,
+         friend inline void LinCombR(S alfa,const Rall2d<T,V,S>& a,
             TI<T>::Arg beta,const Rall2d<T,V,S>& b,Rall2d<T,V,S>& result );
         // = Setting value of a Rall2d object to 0 or 1
-         friend INLINE void SetToZero(Rall2d<T,V,S>& value);
-         friend INLINE void SetToOne(Rall2d<T,V,S>& value);
+         friend inline void SetToZero(Rall2d<T,V,S>& value);
+         friend inline void SetToOne(Rall2d<T,V,S>& value);
         // = Equality in an eps-interval
-         friend INLINE bool Equal(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x,double eps);
+         friend inline bool Equal(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x,double eps);
          */
     };
 
@@ -223,7 +223,7 @@ class Rall2d
 
 // = Operators between Rall2d objects
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
+inline  Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
     {
     Rall2d<T,V,S> tmp;
     tmp.t = lhs.t/rhs.t;
@@ -233,7 +233,7 @@ INLINE  Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& r
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
+inline  Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
     {
     Rall2d<T,V,S> tmp;
     tmp.t  = lhs.t*rhs.t;
@@ -243,61 +243,61 @@ INLINE  Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& r
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
+inline  Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
     {
     return Rall2d<T,V,S>(lhs.t+rhs.t,lhs.d+rhs.d,lhs.dd+rhs.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
+inline  Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& lhs,const Rall2d<T,V,S>& rhs)
     {
     return Rall2d<T,V,S>(lhs.t-rhs.t,lhs.d-rhs.d,lhs.dd-rhs.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& arg)
     {
     return Rall2d<T,V,S>(-arg.t,-arg.d,-arg.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator *(S s,const Rall2d<T,V,S>& v)
+inline  Rall2d<T,V,S> operator *(S s,const Rall2d<T,V,S>& v)
     {
     return Rall2d<T,V,S>(s*v.t,s*v.d,s*v.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& v,S s)
+inline  Rall2d<T,V,S> operator *(const Rall2d<T,V,S>& v,S s)
     {
     return Rall2d<T,V,S>(v.t*s,v.d*s,v.dd*s);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator +(S s,const Rall2d<T,V,S>& v)
+inline  Rall2d<T,V,S> operator +(S s,const Rall2d<T,V,S>& v)
     {
     return Rall2d<T,V,S>(s+v.t,v.d,v.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& v,S s)
+inline  Rall2d<T,V,S> operator +(const Rall2d<T,V,S>& v,S s)
     {
     return Rall2d<T,V,S>(v.t+s,v.d,v.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator -(S s,const Rall2d<T,V,S>& v)
+inline  Rall2d<T,V,S> operator -(S s,const Rall2d<T,V,S>& v)
     {
     return Rall2d<T,V,S>(s-v.t,-v.d,-v.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& v,S s)
+inline  Rall2d<T,V,S> operator -(const Rall2d<T,V,S>& v,S s)
     {
     return Rall2d<T,V,S>(v.t-s,v.d,v.dd);
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator /(S s,const Rall2d<T,V,S>& rhs)
+inline  Rall2d<T,V,S> operator /(S s,const Rall2d<T,V,S>& rhs)
     {
     Rall2d<T,V,S> tmp;
     tmp.t = s/rhs.t;
@@ -308,14 +308,14 @@ INLINE  Rall2d<T,V,S> operator /(S s,const Rall2d<T,V,S>& rhs)
 
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& v,S s)
+inline  Rall2d<T,V,S> operator /(const Rall2d<T,V,S>& v,S s)
     {
     return Rall2d<T,V,S>(v.t/s,v.d/s,v.dd/s);
     }
 
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> exp(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> exp(const Rall2d<T,V,S>& arg)
     {
     Rall2d<T,V,S> tmp;
     tmp.t  = exp(arg.t);
@@ -325,7 +325,7 @@ INLINE  Rall2d<T,V,S> exp(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> log(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> log(const Rall2d<T,V,S>& arg)
     {
     Rall2d<T,V,S> tmp;
     tmp.t  = log(arg.t);
@@ -335,7 +335,7 @@ INLINE  Rall2d<T,V,S> log(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> sin(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> sin(const Rall2d<T,V,S>& arg)
     {
     T v1 = sin(arg.t);
     T v2 = cos(arg.t);
@@ -343,7 +343,7 @@ INLINE  Rall2d<T,V,S> sin(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> cos(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> cos(const Rall2d<T,V,S>& arg)
     {
     T v1 = cos(arg.t);
     T v2 = -sin(arg.t);
@@ -351,7 +351,7 @@ INLINE  Rall2d<T,V,S> cos(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> tan(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> tan(const Rall2d<T,V,S>& arg)
     {
     T v1 = tan(arg.t);
     T v2 = S(1)+sqr(v1);
@@ -359,7 +359,7 @@ INLINE  Rall2d<T,V,S> tan(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> sinh(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> sinh(const Rall2d<T,V,S>& arg)
     {
     T v1 = sinh(arg.t);
     T v2 = cosh(arg.t);
@@ -367,7 +367,7 @@ INLINE  Rall2d<T,V,S> sinh(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> cosh(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> cosh(const Rall2d<T,V,S>& arg)
     {
     T v1 = cosh(arg.t);
     T v2 = sinh(arg.t);
@@ -375,7 +375,7 @@ INLINE  Rall2d<T,V,S> cosh(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> tanh(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> tanh(const Rall2d<T,V,S>& arg)
     {       
     T v1 = tanh(arg.t);
     T v2 = S(1)-sqr(v1);
@@ -383,7 +383,7 @@ INLINE  Rall2d<T,V,S> tanh(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> sqr(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> sqr(const Rall2d<T,V,S>& arg)
     {
     return Rall2d<T,V,S>(arg.t*arg.t,
                         (S(2)*arg.t)*arg.d,
@@ -392,7 +392,7 @@ INLINE  Rall2d<T,V,S> sqr(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> pow(const Rall2d<T,V,S>& arg,double m) 
+inline  Rall2d<T,V,S> pow(const Rall2d<T,V,S>& arg,double m) 
     {
     Rall2d<T,V,S> tmp;
     tmp.t = pow(arg.t,m);
@@ -403,7 +403,7 @@ INLINE  Rall2d<T,V,S> pow(const Rall2d<T,V,S>& arg,double m)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> sqrt(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> sqrt(const Rall2d<T,V,S>& arg)
     {
     /* By inversion of sqr(x) :*/
     Rall2d<T,V,S> tmp;
@@ -414,7 +414,7 @@ INLINE  Rall2d<T,V,S> sqrt(const Rall2d<T,V,S>& arg)
     }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> asin(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> asin(const Rall2d<T,V,S>& arg)
 {
     /* By inversion of sin(x) */
     Rall2d<T,V,S> tmp;
@@ -426,7 +426,7 @@ INLINE  Rall2d<T,V,S> asin(const Rall2d<T,V,S>& arg)
 }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> acos(const Rall2d<T,V,S>& arg)
+inline  Rall2d<T,V,S> acos(const Rall2d<T,V,S>& arg)
 {
     /* By inversion of cos(x) */
     Rall2d<T,V,S> tmp;
@@ -439,7 +439,7 @@ INLINE  Rall2d<T,V,S> acos(const Rall2d<T,V,S>& arg)
 }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> atan(const Rall2d<T,V,S>& x)
+inline  Rall2d<T,V,S> atan(const Rall2d<T,V,S>& x)
 {
     /* By inversion of tan(x) */
     Rall2d<T,V,S> tmp;
@@ -451,7 +451,7 @@ INLINE  Rall2d<T,V,S> atan(const Rall2d<T,V,S>& x)
 }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> atan2(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
+inline  Rall2d<T,V,S> atan2(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
 {
     Rall2d<T,V,S> tmp;
     tmp.t  = atan2(y.t,x.t);
@@ -462,14 +462,14 @@ INLINE  Rall2d<T,V,S> atan2(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
 }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> abs(const Rall2d<T,V,S>& x)
+inline  Rall2d<T,V,S> abs(const Rall2d<T,V,S>& x)
 {
     T v(Sign(x));
     return Rall2d<T,V,S>(v*x,v*x.d,v*x.dd);
 }
 
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> hypot(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
+inline  Rall2d<T,V,S> hypot(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
 {
     Rall2d<T,V,S> tmp;
     tmp.t  = hypot(y.t,x.t);
@@ -480,7 +480,7 @@ INLINE  Rall2d<T,V,S> hypot(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
 // returns sqrt(y*y+x*x), but is optimized for accuracy and speed.
 
 template <class T,class V,class S>
-INLINE  S Norm(const Rall2d<T,V,S>& value) 
+inline  S Norm(const Rall2d<T,V,S>& value) 
 {
     return Norm(value.t);
 }
@@ -489,7 +489,7 @@ INLINE  S Norm(const Rall2d<T,V,S>& value)
 
 // (should also be declared on primitive types to improve uniformity
 template <class T,class V,class S>
-INLINE  Rall2d<T,V,S> LinComb(S alfa,const Rall2d<T,V,S>& a,
+inline  Rall2d<T,V,S> LinComb(S alfa,const Rall2d<T,V,S>& a,
     const T& beta,const Rall2d<T,V,S>& b ) {
         return Rall2d<T,V,S>(
             LinComb(alfa,a.t,beta,b.t),
@@ -499,7 +499,7 @@ INLINE  Rall2d<T,V,S> LinComb(S alfa,const Rall2d<T,V,S>& a,
 }
 
 template <class T,class V,class S>
-INLINE  void LinCombR(S alfa,const Rall2d<T,V,S>& a,
+inline  void LinCombR(S alfa,const Rall2d<T,V,S>& a,
     const T& beta,const Rall2d<T,V,S>& b,Rall2d<T,V,S>& result ) {
             LinCombR(alfa, a.t,       beta, b.t,      result.t);
             LinCombR(alfa, a.d,    beta, b.d,   result.d);
@@ -507,7 +507,7 @@ INLINE  void LinCombR(S alfa,const Rall2d<T,V,S>& a,
 }
 
 template <class T,class V,class S>
-INLINE  void SetToZero(Rall2d<T,V,S>& value)
+inline  void SetToZero(Rall2d<T,V,S>& value)
     {
     SetToZero(value.t);
     SetToZero(value.d);
@@ -515,7 +515,7 @@ INLINE  void SetToZero(Rall2d<T,V,S>& value)
     }
 
 template <class T,class V,class S>
-INLINE  void SetToIdentity(Rall2d<T,V,S>& value)
+inline  void SetToIdentity(Rall2d<T,V,S>& value)
     {
     SetToZero(value.d);
     SetToIdentity(value.t);
@@ -523,7 +523,7 @@ INLINE  void SetToIdentity(Rall2d<T,V,S>& value)
     }
 
 template <class T,class V,class S>
-INLINE  bool Equal(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x,double eps=epsilon)
+inline  bool Equal(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x,double eps=epsilon)
 {
     return (Equal(x.t,y.t,eps)&&
             Equal(x.d,y.d,eps)&&
@@ -532,20 +532,13 @@ INLINE  bool Equal(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x,double eps=epsi
 }
 
 template <class T,class V,class S>
-INLINE  bool operator==(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
+inline  bool operator==(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
 {
-#ifdef KDL_USE_EQUAL
     return Equal(y, x);
-#else
-    return (x.t == y.t &&
-            x.d == y.d &&
-            x.dd == y.dd);
-#endif
-
 }
 
 template <class T,class V,class S>
-INLINE  bool operator!=(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
+inline  bool operator!=(const Rall2d<T,V,S>& y,const Rall2d<T,V,S>& x)
 {
     return !operator==(y, x);
 }

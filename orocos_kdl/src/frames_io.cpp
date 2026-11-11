@@ -38,31 +38,35 @@
 
 namespace KDL {
 
+namespace {
+constexpr int frame_width = 12;
+}
+
 
 std::ostream& operator << (std::ostream& os,const Vector& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v(0) << "," << std::setw(KDL_FRAME_WIDTH)<<v(1)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v(2) << "]";
+    os << "[" << std::setw(frame_width) << v(0) << "," << std::setw(frame_width)<<v(1)
+       << "," << std::setw(frame_width) << v(2) << "]";
     return os;
 }
 
 std::ostream& operator << (std::ostream& os,const Twist& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v.vel(0)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.vel(1)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.vel(2)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(0)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(1)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.rot(2)
+    os << "[" << std::setw(frame_width) << v.vel(0)
+       << "," << std::setw(frame_width) << v.vel(1)
+       << "," << std::setw(frame_width) << v.vel(2)
+       << "," << std::setw(frame_width) << v.rot(0)
+       << "," << std::setw(frame_width) << v.rot(1)
+       << "," << std::setw(frame_width) << v.rot(2)
        << "]";
     return os;
 }
 
 std::ostream& operator << (std::ostream& os,const Wrench& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v.force(0)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.force(1)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.force(2)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(0)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(1)
-       << "," << std::setw(KDL_FRAME_WIDTH) << v.torque(2)
+    os << "[" << std::setw(frame_width) << v.force(0)
+       << "," << std::setw(frame_width) << v.force(1)
+       << "," << std::setw(frame_width) << v.force(2)
+       << "," << std::setw(frame_width) << v.torque(0)
+       << "," << std::setw(frame_width) << v.torque(1)
+       << "," << std::setw(frame_width) << v.torque(2)
        << "]";
     return os;
 }
@@ -74,24 +78,24 @@ std::ostream& operator << (std::ostream& os,const Rotation& R) {
     R.GetRPY(r,p,y);
     os << "[RPY]"<<endl;
     os << "[";
-    os << std::setw(KDL_FRAME_WIDTH) << r << ",";
-    os << std::setw(KDL_FRAME_WIDTH) << p << ",";
-    os << std::setw(KDL_FRAME_WIDTH) << y << "]";
+    os << std::setw(frame_width) << r << ",";
+    os << std::setw(frame_width) << p << ",";
+    os << std::setw(frame_width) << y << "]";
 #else
 # ifdef KDL_ROTATION_PROPERTIES_EULER
     double z,y,x;
     R.GetEulerZYX(z,y,x);
     os << "[EULERZYX]"<<endl;
     os << "[";
-    os << std::setw(KDL_FRAME_WIDTH) << z << ",";
-    os << std::setw(KDL_FRAME_WIDTH) << y << ",";
-    os << std::setw(KDL_FRAME_WIDTH) << x << "]";
+    os << std::setw(frame_width) << z << ",";
+    os << std::setw(frame_width) << y << ",";
+    os << std::setw(frame_width) << x << "]";
 # else
     os << "[";
     for (int i=0;i<=2;i++) {
-        os << std::setw(KDL_FRAME_WIDTH) << R(i,0) << "," <<
-                       std::setw(KDL_FRAME_WIDTH) << R(i,1) << "," <<
-                       std::setw(KDL_FRAME_WIDTH) << R(i,2);
+        os << std::setw(frame_width) << R(i,0) << "," <<
+                       std::setw(frame_width) << R(i,1) << "," <<
+                       std::setw(frame_width) << R(i,2);
         if (i<2)
             os << ";"<< std::endl << " ";
         else
@@ -109,7 +113,7 @@ std::ostream& operator << (std::ostream& os, const Frame& T)
 }
 
 std::ostream& operator << (std::ostream& os,const Vector2& v) {
-    os << "[" << std::setw(KDL_FRAME_WIDTH) << v(0) << "," << std::setw(KDL_FRAME_WIDTH)<<v(1)
+    os << "[" << std::setw(frame_width) << v(0) << "," << std::setw(frame_width)<<v(1)
        << "]";
     return os;
 }

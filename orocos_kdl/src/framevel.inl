@@ -82,34 +82,19 @@ bool Equal(const FrameVel& r1,const Frame& r2,double eps) {
     return (Equal(r1.M,r2.M,eps) && Equal(r1.p,r2.p,eps));
 }
 bool operator==(const FrameVel& r1,const FrameVel& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1.p == r2.p &&
-            r1.M == r2.M );
-#endif
 }
 bool operator!=(const FrameVel& r1,const FrameVel& r2) {
     return !operator==(r1,r2);
 }
 bool operator==(const Frame& r1,const FrameVel& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1.p == r2.p &&
-            r1.M == r2.M );
-#endif
 }
 bool operator!=(const Frame& r1,const FrameVel& r2) {
     return !operator==(r1,r2);
 }
 bool operator==(const FrameVel& r1,const Frame& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1.p == r2.p &&
-            r1.M == r2.M );
-#endif
 }
 bool operator!=(const FrameVel& r1,const Frame& r2) {
     return !operator==(r1,r2);
@@ -367,34 +352,19 @@ bool Equal(const VectorVel& r1,const Vector& r2,double eps) {
     return (Equal(r1.p,r2,eps) && Equal(r1.v,Vector::Zero(),eps));
 }
 bool operator==(const VectorVel& r1,const VectorVel& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1.p == r2.p &&
-            r1.v == r2.v );
-#endif
 }
 bool operator!=(const VectorVel& r1,const VectorVel& r2) {
     return !operator==(r1,r2);
 }
 bool operator==(const Vector& r1,const VectorVel& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1 == r2.p &&
-            Vector::Zero() == r2.v);
-#endif
 }
 bool operator!=(const Vector& r1,const VectorVel& r2) {
     return !operator==(r1,r2);
 }
 bool operator==(const VectorVel& r1,const Vector& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1.p == r2 &&
-            r1.v == Vector::Zero() );
-#endif
 }
 bool operator!=(const VectorVel& r1,const Vector& r2) {
     return !operator==(r1,r2);
@@ -411,34 +381,19 @@ bool Equal(const RotationVel& r1,const Rotation& r2,double eps) {
     return (Equal(r1.w,Vector::Zero(),eps) && Equal(r1.R,r2,eps));
 }
 bool operator==(const RotationVel& r1,const RotationVel& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1.w == r2.w &&
-            r1.R == r2.R );
-#endif
 }
 bool operator!=(const RotationVel& r1,const RotationVel& r2) {
     return !operator==(r1,r2);
 }
 bool operator==(const Rotation& r1,const RotationVel& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (Vector::Zero() == r2.w &&
-            r1 == r2.R);
-#endif
 }
 bool operator!=(const Rotation& r1,const RotationVel& r2) {
     return !operator==(r1,r2);
 }
 bool operator==(const RotationVel& r1,const Rotation& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (r1.w == Vector::Zero() &&
-            r1.R == r2);
-#endif
 }
 bool operator!=(const RotationVel& r1,const Rotation& r2) {
     return !operator==(r1,r2);
@@ -458,47 +413,32 @@ bool Equal(const TwistVel& a,const Twist& b,double eps) {
                 Equal(a.vel,b.vel,eps)  );
 }
 bool operator==(const TwistVel& a,const TwistVel& b) {
-#ifdef KDL_USE_EQUAL
     return Equal(a, b);
-#else
-    return (a.rot == b.rot &&
-            a.vel == b.vel );
-#endif
 }
 bool operator!=(const TwistVel& a,const TwistVel& b) {
     return !operator==(a,b);
 }
 bool operator==(const Twist& a,const TwistVel& b) {
-#ifdef KDL_USE_EQUAL
     return Equal(a, b);
-#else
-    return (a.rot == b.rot &&
-            a.vel == b.vel );
-#endif
 }
 bool operator!=(const Twist& r1,const TwistVel& r2) {
     return !operator==(r1,r2);
 }
 bool operator==(const TwistVel& r1,const Twist& r2) {
-#ifdef KDL_USE_EQUAL
     return Equal(r1, r2);
-#else
-    return (a.rot == b.rot &&
-            a.vel == b.vel );
-#endif
 }
 bool operator!=(const TwistVel& r1,const Twist& r2) {
     return !operator==(r1,r2);
 }
 
 
-IMETHOD doubleVel dot(const VectorVel& lhs,const VectorVel& rhs) {
+inline doubleVel dot(const VectorVel& lhs,const VectorVel& rhs) {
     return doubleVel(dot(lhs.p,rhs.p),dot(lhs.p,rhs.v)+dot(lhs.v,rhs.p));
 }
-IMETHOD doubleVel dot(const VectorVel& lhs,const Vector& rhs) {
+inline doubleVel dot(const VectorVel& lhs,const Vector& rhs) {
     return doubleVel(dot(lhs.p,rhs),dot(lhs.v,rhs));
 }
-IMETHOD doubleVel dot(const Vector& lhs,const VectorVel& rhs) {
+inline doubleVel dot(const Vector& lhs,const VectorVel& rhs) {
     return doubleVel(dot(lhs,rhs.p),dot(lhs,rhs.v));
 }
 

@@ -23,36 +23,9 @@
 #ifndef KDL_UTILITY_H
 #define KDL_UTILITY_H
 
-#include "kdl-config.h"
 #include <cstdlib>
 #include <cassert>
 #include <cmath>
-
-
-/////////////////////////////////////////////////////////////
-// configurable options for the frames library.
-
-#ifdef KDL_INLINE
-    #ifdef _MSC_VER
-        // Microsoft Visual C
-        #define IMETHOD __forceinline
-    #else
-        // Some other compiler, e.g. gcc
-        #define IMETHOD inline
-    #endif
-#else
-    #define IMETHOD
-#endif
-
-
-
-//! turn on or off frames bounds checking. If turned on, assert() can still
-//! be turned off with -DNDEBUG.
-#ifdef KDL_INDEX_CHECK
-    #define FRAMES_CHECKI(a) assert(a)
-#else
-    #define FRAMES_CHECKI(a)
-#endif
 
 
 namespace KDL {
@@ -215,16 +188,6 @@ inline double min(double a,double b) {
     else
         return a;
 }
-#endif
-
-
-#ifdef _MSC_VER
-    //#pragma inline_depth( 255 )
-    //#pragma inline_recursion( on )
-    #define INLINE __forceinline
-    //#define INLINE inline
-#else
-    #define INLINE inline
 #endif
 
 

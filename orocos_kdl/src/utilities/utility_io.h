@@ -20,7 +20,6 @@
 #ifndef KDL_UTILITY_IO_H_84822
 #define KDL_UTILITY_IO_H_84822
 
-//#include <kdl/kdl-config.h>
 
 
 // Standard includes
