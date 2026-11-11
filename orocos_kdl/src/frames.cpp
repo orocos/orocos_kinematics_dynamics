@@ -165,24 +165,6 @@ namespace KDL {
     }
 
 
-
-    Rotation operator *(const Rotation& lhs,const Rotation& rhs)
-    // Complexity : 27M+27A
-    {
-        return Rotation(
-                        lhs.data[0]*rhs.data[0]+lhs.data[1]*rhs.data[3]+lhs.data[2]*rhs.data[6],
-                        lhs.data[0]*rhs.data[1]+lhs.data[1]*rhs.data[4]+lhs.data[2]*rhs.data[7],
-                        lhs.data[0]*rhs.data[2]+lhs.data[1]*rhs.data[5]+lhs.data[2]*rhs.data[8],
-                        lhs.data[3]*rhs.data[0]+lhs.data[4]*rhs.data[3]+lhs.data[5]*rhs.data[6],
-                        lhs.data[3]*rhs.data[1]+lhs.data[4]*rhs.data[4]+lhs.data[5]*rhs.data[7],
-                        lhs.data[3]*rhs.data[2]+lhs.data[4]*rhs.data[5]+lhs.data[5]*rhs.data[8],
-                        lhs.data[6]*rhs.data[0]+lhs.data[7]*rhs.data[3]+lhs.data[8]*rhs.data[6],
-                        lhs.data[6]*rhs.data[1]+lhs.data[7]*rhs.data[4]+lhs.data[8]*rhs.data[7],
-                        lhs.data[6]*rhs.data[2]+lhs.data[7]*rhs.data[5]+lhs.data[8]*rhs.data[8]
-                        );
-
-    }
-
     Rotation Rotation::Quaternion(double x,double y,double z, double w)
     {
         double x2, y2, z2, w2;
@@ -423,7 +405,234 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
     return angle;
 }
 
-bool operator==(const Rotation& a,const Rotation& b) {
-    return Equal(a,b);
+// *this = *this * ROT(X,angle)
+void Rotation::DoRotX(double angle)
+{
+    double cs = cos(angle);
+    double sn = sin(angle);
+    double x1,x2,x3;
+    x1  = cs* (*this)(0,1) + sn* (*this)(0,2);
+    x2  = cs* (*this)(1,1) + sn* (*this)(1,2);
+    x3  = cs* (*this)(2,1) + sn* (*this)(2,2);
+    (*this)(0,2) = -sn* (*this)(0,1) + cs* (*this)(0,2);
+    (*this)(1,2) = -sn* (*this)(1,1) + cs* (*this)(1,2);
+    (*this)(2,2) = -sn* (*this)(2,1) + cs* (*this)(2,2);
+    (*this)(0,1) = x1;
+    (*this)(1,1) = x2;
+    (*this)(2,1) = x3;
 }
+
+void Rotation::DoRotY(double angle)
+{
+    double cs = cos(angle);
+    double sn = sin(angle);
+    double x1,x2,x3;
+    x1  = cs* (*this)(0,0) - sn* (*this)(0,2);
+    x2  = cs* (*this)(1,0) - sn* (*this)(1,2);
+    x3  = cs* (*this)(2,0) - sn* (*this)(2,2);
+    (*this)(0,2) = sn* (*this)(0,0) + cs* (*this)(0,2);
+    (*this)(1,2) = sn* (*this)(1,0) + cs* (*this)(1,2);
+    (*this)(2,2) = sn* (*this)(2,0) + cs* (*this)(2,2);
+    (*this)(0,0) = x1;
+    (*this)(1,0) = x2;
+    (*this)(2,0) = x3;
+}
+
+void Rotation::DoRotZ(double angle)
+{
+    double cs = cos(angle);
+    double sn = sin(angle);
+    double x1,x2,x3;
+    x1  = cs* (*this)(0,0) + sn* (*this)(0,1);
+    x2  = cs* (*this)(1,0) + sn* (*this)(1,1);
+    x3  = cs* (*this)(2,0) + sn* (*this)(2,1);
+    (*this)(0,1) = -sn* (*this)(0,0) + cs* (*this)(0,1);
+    (*this)(1,1) = -sn* (*this)(1,0) + cs* (*this)(1,1);
+    (*this)(2,1) = -sn* (*this)(2,0) + cs* (*this)(2,1);
+    (*this)(0,0) = x1;
+    (*this)(1,0) = x2;
+    (*this)(2,0) = x3;
+}
+
+Rotation Rotation::RotX(double angle) {
+    double cs=cos(angle);
+    double sn=sin(angle);
+    return Rotation(1,0,0,0,cs,-sn,0,sn,cs);
+}
+Rotation Rotation::RotY(double angle) {
+    double cs=cos(angle);
+    double sn=sin(angle);
+    return Rotation(cs,0,sn,0,1,0,-sn,0,cs);
+}
+Rotation Rotation::RotZ(double angle) {
+    double cs=cos(angle);
+    double sn=sin(angle);
+    return Rotation(cs,-sn,0,sn,cs,0,0,0,1);
+}
+
+void Frame::Integrate(const Twist& t_this,double samplefrequency)
+{
+    double n = t_this.rot.Norm()/samplefrequency;
+    if (n<epsilon) {
+        p += M*(t_this.vel/samplefrequency);
+    } else {
+        (*this) = (*this) * 
+            Frame ( Rotation::Rot( t_this.rot, n ),
+                    t_this.vel/samplefrequency
+                );
+    }
+}
+
+void Rotation2::SetRot(double angle) {
+    c=cos(angle);s=sin(angle);
+}
+
+Rotation2 Rotation2::Rot(double angle) {
+    return Rotation2(cos(angle),sin(angle));
+}
+
+double Rotation2::GetRot() const {
+    return atan2(s,c);
+}
+
+// Equality operators
+
+bool Equal(const Vector& a,const Vector& b,double eps) {
+        return (Equal(a.data[0],b.data[0],eps)&&
+                Equal(a.data[1],b.data[1],eps)&&
+                Equal(a.data[2],b.data[2],eps)   );
+     }
+
+bool Equal(const Frame& a,const Frame& b,double eps) {
+        return (Equal(a.p,b.p,eps)&&
+                Equal(a.M,b.M,eps)   );
+}
+
+bool Equal(const Wrench& a,const Wrench& b,double eps) {
+        return (Equal(a.force,b.force,eps)&&
+                Equal(a.torque,b.torque,eps)  );
+}
+
+bool Equal(const Twist& a,const Twist& b,double eps) {
+        return (Equal(a.rot,b.rot,eps)&&
+                Equal(a.vel,b.vel,eps)  );
+}
+
+bool Equal(const Vector2& a,const Vector2& b,double eps) {
+        return (Equal(a.data[0],b.data[0],eps)&&
+                Equal(a.data[1],b.data[1],eps)   );
+     }
+
+bool Equal(const Rotation2& a,const Rotation2& b,double eps) {
+    return ( Equal(a.c,b.c,eps) && Equal(a.s,b.s,eps) );
+}
+
+bool Equal(const Frame2& a,const Frame2& b,double eps) {
+        return (Equal(a.p,b.p,eps)&&
+                Equal(a.M,b.M,eps)   );
+}
+
+Rotation Rot(const Vector& axis_a_b) {
+    // The formula is 
+    // V.(V.tr) + st*[V x] + ct*(I-V.(V.tr))
+    // can be found by multiplying it with an arbitrary vector p
+    // and noting that this vector is rotated.
+	Vector rotvec = axis_a_b;
+	double angle = rotvec.Normalize(1E-10);
+    double ct = ::cos(angle);
+    double st = ::sin(angle);
+    double vt = 1-ct;
+    return Rotation(
+        ct            +  vt*rotvec(0)*rotvec(0), 
+        -rotvec(2)*st +  vt*rotvec(0)*rotvec(1), 
+        rotvec(1)*st  +  vt*rotvec(0)*rotvec(2),
+        rotvec(2)*st  +  vt*rotvec(1)*rotvec(0),
+        ct            +  vt*rotvec(1)*rotvec(1),
+        -rotvec(0)*st +  vt*rotvec(1)*rotvec(2),
+        -rotvec(1)*st +  vt*rotvec(2)*rotvec(0),
+        rotvec(0)*st  +  vt*rotvec(2)*rotvec(1),
+        ct            +  vt*rotvec(2)*rotvec(2)
+        );
+    }
+
+Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt) {
+	Rotation R_b1_b2(R_a_b1.Inverse()*R_a_b2);
+	return R_a_b1 * R_b1_b2.GetRot() / dt;
+}
+
+Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt) {
+	return Twist(
+			diff(F_a_b1.p,F_a_b2.p,dt),
+			diff(F_a_b1.M,F_a_b2.M,dt)
+			);
+}
+
+Rotation addDelta(const Rotation& a,const Vector&da,double dt) {
+	return Rot(da*dt)*a;
+}
+Frame addDelta(const Frame& a,const Twist& da,double dt) {
+	return Frame(
+			addDelta(a.M,da.rot,dt),
+			addDelta(a.p,da.vel,dt)
+		   );
+}
+
+void random(Vector& a) {
+	random(a[0]);
+	random(a[1]);
+	random(a[2]);
+}
+void random(Twist& a) {
+	random(a.rot);
+	random(a.vel);
+}
+void random(Wrench& a) {
+   	random(a.torque);
+	random(a.force);
+}
+
+void random(Rotation& R) {
+	double alfa;
+	double beta;
+	double gamma;
+	random(alfa);
+	random(beta);
+	random(gamma);
+	R = Rotation::EulerZYX(alfa,beta,gamma);
+}
+
+void random(Frame& F) {
+	random(F.M);
+	random(F.p);
+}
+
+void posrandom(Vector& a) {
+	posrandom(a[0]);
+	posrandom(a[1]);
+	posrandom(a[2]);
+}
+void posrandom(Twist& a) {
+	posrandom(a.rot);
+	posrandom(a.vel);
+}
+void posrandom(Wrench& a) {
+   	posrandom(a.torque);
+	posrandom(a.force);
+}
+
+void posrandom(Rotation& R) {
+	double alfa;
+	double beta;
+	double gamma;
+	posrandom(alfa);
+	posrandom(beta);
+	posrandom(gamma);
+	R = Rotation::EulerZYX(alfa,beta,gamma);
+}
+
+void posrandom(Frame& F) {
+	posrandom(F.M);
+	posrandom(F.p);
+}
+
 }

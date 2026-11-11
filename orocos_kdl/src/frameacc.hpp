@@ -44,18 +44,18 @@ class FrameAcc;
 class RotationAcc;
 class VectorAcc;
 
-inline bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps=epsilon);
-inline bool Equal(const Frame& r1,const FrameAcc& r2,double eps=epsilon);
-inline bool Equal(const FrameAcc& r1,const Frame& r2,double eps=epsilon);
-inline bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps=epsilon);
-inline bool Equal(const Rotation& r1,const RotationAcc& r2,double eps=epsilon);
-inline bool Equal(const RotationAcc& r1,const Rotation& r2,double eps=epsilon);
-inline bool Equal(const TwistAcc& a,const TwistAcc& b,double eps=epsilon);
-inline bool Equal(const Twist& a,const TwistAcc& b,double eps=epsilon);
-inline bool Equal(const TwistAcc& a,const Twist& b,double eps=epsilon);
-inline bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps=epsilon);
-inline bool Equal(const Vector& r1,const VectorAcc& r2,double eps=epsilon);
-inline bool Equal(const VectorAcc& r1,const Vector& r2,double eps=epsilon);
+bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps=epsilon);
+bool Equal(const Frame& r1,const FrameAcc& r2,double eps=epsilon);
+bool Equal(const FrameAcc& r1,const Frame& r2,double eps=epsilon);
+bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps=epsilon);
+bool Equal(const Rotation& r1,const RotationAcc& r2,double eps=epsilon);
+bool Equal(const RotationAcc& r1,const Rotation& r2,double eps=epsilon);
+bool Equal(const TwistAcc& a,const TwistAcc& b,double eps=epsilon);
+bool Equal(const Twist& a,const TwistAcc& b,double eps=epsilon);
+bool Equal(const TwistAcc& a,const Twist& b,double eps=epsilon);
+bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps=epsilon);
+bool Equal(const Vector& r1,const VectorAcc& r2,double eps=epsilon);
+bool Equal(const VectorAcc& r1,const Vector& r2,double eps=epsilon);
 
 
 class VectorAcc
@@ -71,37 +71,37 @@ public:
     VectorAcc(const Vector& _p,const Vector& _v,const Vector& _dv):
         p(_p),v(_v),dv(_dv) {}
     inline VectorAcc& operator = (const Vector& arg);
-    inline VectorAcc& operator += (const VectorAcc& arg);
-    inline VectorAcc& operator -= (const VectorAcc& arg);
+    VectorAcc& operator += (const VectorAcc& arg);
+    VectorAcc& operator -= (const VectorAcc& arg);
     inline static VectorAcc Zero();
     inline void ReverseSign();
-    inline doubleAcc Norm(double eps=epsilon);
-    inline friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
-    inline friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
-    inline friend VectorAcc operator + (const Vector& r1,const VectorAcc& r2);
-    inline friend VectorAcc operator - (const Vector& r1,const VectorAcc& r2);
-    inline friend VectorAcc operator + (const VectorAcc& r1,const Vector& r2);
-    inline friend VectorAcc operator - (const VectorAcc& r1,const Vector& r2);
-    inline friend VectorAcc operator * (const VectorAcc& r1,const VectorAcc& r2);
-    inline friend VectorAcc operator * (const VectorAcc& r1,const Vector& r2);
-    inline friend VectorAcc operator * (const Vector& r1,const VectorAcc& r2);
-    inline friend VectorAcc operator * (const VectorAcc& r1,double r2);
-    inline friend VectorAcc operator * (double r1,const VectorAcc& r2);
-    inline friend VectorAcc operator * (const doubleAcc& r1,const VectorAcc& r2);
-    inline friend VectorAcc operator * (const VectorAcc& r2,const doubleAcc& r1);
-    inline friend VectorAcc operator*(const Rotation& R,const VectorAcc& x);
+    doubleAcc Norm(double eps=epsilon);
+    friend VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
+    friend VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
+    friend VectorAcc operator + (const Vector& r1,const VectorAcc& r2);
+    friend VectorAcc operator - (const Vector& r1,const VectorAcc& r2);
+    friend VectorAcc operator + (const VectorAcc& r1,const Vector& r2);
+    friend VectorAcc operator - (const VectorAcc& r1,const Vector& r2);
+    friend VectorAcc operator * (const VectorAcc& r1,const VectorAcc& r2);
+    friend VectorAcc operator * (const VectorAcc& r1,const Vector& r2);
+    friend VectorAcc operator * (const Vector& r1,const VectorAcc& r2);
+    friend VectorAcc operator * (const VectorAcc& r1,double r2);
+    friend VectorAcc operator * (double r1,const VectorAcc& r2);
+    friend VectorAcc operator * (const doubleAcc& r1,const VectorAcc& r2);
+    friend VectorAcc operator * (const VectorAcc& r2,const doubleAcc& r1);
+    friend VectorAcc operator*(const Rotation& R,const VectorAcc& x);
 
-    inline friend VectorAcc operator / (const VectorAcc& r1,double r2);
-    inline friend VectorAcc operator / (const VectorAcc& r2,const doubleAcc& r1);
+    friend VectorAcc operator / (const VectorAcc& r1,double r2);
+    friend VectorAcc operator / (const VectorAcc& r2,const doubleAcc& r1);
 
 
-    inline friend bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps);
-    inline friend bool Equal(const Vector& r1,const VectorAcc& r2,double eps);
-    inline friend bool Equal(const VectorAcc& r1,const Vector& r2,double eps);
+    friend bool Equal(const VectorAcc& r1,const VectorAcc& r2,double eps);
+    friend bool Equal(const Vector& r1,const VectorAcc& r2,double eps);
+    friend bool Equal(const VectorAcc& r1,const Vector& r2,double eps);
     inline friend VectorAcc operator - (const VectorAcc& r);
-    inline friend doubleAcc dot(const VectorAcc& lhs,const VectorAcc& rhs);
-    inline friend doubleAcc dot(const VectorAcc& lhs,const Vector& rhs);
-    inline friend doubleAcc dot(const Vector& lhs,const VectorAcc& rhs);
+    friend doubleAcc dot(const VectorAcc& lhs,const VectorAcc& rhs);
+    friend doubleAcc dot(const VectorAcc& lhs,const Vector& rhs);
+    friend doubleAcc dot(const Vector& lhs,const VectorAcc& rhs);
 };
 
 
@@ -118,11 +118,11 @@ public:
         R(_R),w(_w),dw(_dw) {}
     inline RotationAcc& operator = (const Rotation& arg);
     inline static RotationAcc Identity();
-    inline RotationAcc Inverse() const;
-    inline VectorAcc Inverse(const VectorAcc& arg) const;
-    inline VectorAcc Inverse(const Vector& arg) const;
-    inline VectorAcc operator*(const VectorAcc& arg) const;
-    inline VectorAcc operator*(const Vector& arg) const;
+    RotationAcc Inverse() const;
+    VectorAcc Inverse(const VectorAcc& arg) const;
+    VectorAcc Inverse(const Vector& arg) const;
+    VectorAcc operator*(const VectorAcc& arg) const;
+    VectorAcc operator*(const Vector& arg) const;
 
     //  Rotations
     // The SetRot.. functions set the value of *this to the appropriate rotation matrix.
@@ -144,16 +144,16 @@ public:
     // rotvec is normalized.
     // rotation around a constant vector !
 
-    inline friend RotationAcc operator* (const RotationAcc& r1,const RotationAcc& r2);
-    inline friend RotationAcc operator* (const Rotation& r1,const RotationAcc& r2);
-    inline friend RotationAcc operator* (const RotationAcc& r1,const Rotation& r2);
-    inline friend bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps);
-    inline friend bool Equal(const Rotation& r1,const RotationAcc& r2,double eps);
-    inline friend bool Equal(const RotationAcc& r1,const Rotation& r2,double eps);
-    inline TwistAcc Inverse(const TwistAcc& arg) const;
-    inline TwistAcc Inverse(const Twist& arg) const;
-    inline TwistAcc operator * (const TwistAcc& arg) const;
-    inline TwistAcc operator * (const Twist& arg) const;
+    friend RotationAcc operator* (const RotationAcc& r1,const RotationAcc& r2);
+    friend RotationAcc operator* (const Rotation& r1,const RotationAcc& r2);
+    friend RotationAcc operator* (const RotationAcc& r1,const Rotation& r2);
+    friend bool Equal(const RotationAcc& r1,const RotationAcc& r2,double eps);
+    friend bool Equal(const Rotation& r1,const RotationAcc& r2,double eps);
+    friend bool Equal(const RotationAcc& r1,const Rotation& r2,double eps);
+    TwistAcc Inverse(const TwistAcc& arg) const;
+    TwistAcc Inverse(const Twist& arg) const;
+    TwistAcc operator * (const TwistAcc& arg) const;
+    TwistAcc operator * (const Twist& arg) const;
 };
 
 
@@ -171,25 +171,25 @@ public:
 
     inline FrameAcc& operator = (const Frame& arg);
     inline static FrameAcc Identity();
-    inline FrameAcc Inverse() const;
-    inline VectorAcc Inverse(const VectorAcc& arg) const;
-    inline VectorAcc operator*(const VectorAcc& arg) const;
-    inline VectorAcc operator*(const Vector& arg) const;
-    inline VectorAcc Inverse(const Vector& arg) const;
+    FrameAcc Inverse() const;
+    VectorAcc Inverse(const VectorAcc& arg) const;
+    VectorAcc operator*(const VectorAcc& arg) const;
+    VectorAcc operator*(const Vector& arg) const;
+    VectorAcc Inverse(const Vector& arg) const;
     inline Frame GetFrame() const;
     inline Twist GetTwist() const;
-    inline Twist GetAccTwist() const;
-    inline friend FrameAcc operator * (const FrameAcc& f1,const FrameAcc& f2);
-    inline friend FrameAcc operator * (const Frame& f1,const FrameAcc& f2);
-    inline friend FrameAcc operator * (const FrameAcc& f1,const Frame& f2);
-    inline friend bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps);
-    inline friend bool Equal(const Frame& r1,const FrameAcc& r2,double eps);
-    inline friend bool Equal(const FrameAcc& r1,const Frame& r2,double eps);
+    Twist GetAccTwist() const;
+    friend FrameAcc operator * (const FrameAcc& f1,const FrameAcc& f2);
+    friend FrameAcc operator * (const Frame& f1,const FrameAcc& f2);
+    friend FrameAcc operator * (const FrameAcc& f1,const Frame& f2);
+    friend bool Equal(const FrameAcc& r1,const FrameAcc& r2,double eps);
+    friend bool Equal(const Frame& r1,const FrameAcc& r2,double eps);
+    friend bool Equal(const FrameAcc& r1,const Frame& r2,double eps);
 
-    inline TwistAcc  Inverse(const TwistAcc& arg) const;
-    inline TwistAcc  Inverse(const Twist& arg) const;
-    inline TwistAcc operator * (const TwistAcc& arg) const;
-    inline TwistAcc operator * (const Twist& arg) const;
+    TwistAcc  Inverse(const TwistAcc& arg) const;
+    TwistAcc  Inverse(const Twist& arg) const;
+    TwistAcc operator * (const TwistAcc& arg) const;
+    TwistAcc operator * (const Twist& arg) const;
 };
 
 
@@ -204,19 +204,19 @@ public:
      TwistAcc():vel(),rot() {};
      TwistAcc(const VectorAcc& _vel,const VectorAcc& _rot):vel(_vel),rot(_rot) {};
 
-     inline TwistAcc& operator-=(const TwistAcc& arg);
-     inline TwistAcc& operator+=(const TwistAcc& arg);
+     TwistAcc& operator-=(const TwistAcc& arg);
+     TwistAcc& operator+=(const TwistAcc& arg);
 
-     inline friend TwistAcc operator*(const TwistAcc& lhs,double rhs);
-     inline friend TwistAcc operator*(double lhs,const TwistAcc& rhs);
-     inline friend TwistAcc operator/(const TwistAcc& lhs,double rhs);
+     friend TwistAcc operator*(const TwistAcc& lhs,double rhs);
+     friend TwistAcc operator*(double lhs,const TwistAcc& rhs);
+     friend TwistAcc operator/(const TwistAcc& lhs,double rhs);
 
-     inline friend TwistAcc operator*(const TwistAcc& lhs,const doubleAcc& rhs);
-     inline friend TwistAcc operator*(const doubleAcc& lhs,const TwistAcc& rhs);
-     inline friend TwistAcc operator/(const TwistAcc& lhs,const doubleAcc& rhs);
+     friend TwistAcc operator*(const TwistAcc& lhs,const doubleAcc& rhs);
+     friend TwistAcc operator*(const doubleAcc& lhs,const TwistAcc& rhs);
+     friend TwistAcc operator/(const TwistAcc& lhs,const doubleAcc& rhs);
 
-     inline friend TwistAcc operator+(const TwistAcc& lhs,const TwistAcc& rhs);
-     inline friend TwistAcc operator-(const TwistAcc& lhs,const TwistAcc& rhs);
+     friend TwistAcc operator+(const TwistAcc& lhs,const TwistAcc& rhs);
+     friend TwistAcc operator-(const TwistAcc& lhs,const TwistAcc& rhs);
      inline friend TwistAcc operator-(const TwistAcc& arg);
 
      inline friend void SetToZero(TwistAcc& v);
@@ -225,27 +225,149 @@ public:
 
      inline void ReverseSign();
 
-     inline TwistAcc RefPoint(const VectorAcc& v_base_AB);
+     TwistAcc RefPoint(const VectorAcc& v_base_AB);
      // Changes the reference point of the RTwist.
      // The RVector v_base_AB is expressed in the same base as the RTwist
      // The RVector v_base_AB is a RVector from the old point to
      // the new point.
      // Complexity : 6M+6A
 
-     inline friend bool Equal(const TwistAcc& a,const TwistAcc& b,double eps);
-     inline friend bool Equal(const Twist& a,const TwistAcc& b,double eps);
-     inline friend bool Equal(const TwistAcc& a,const Twist& b,double eps);
+     friend bool Equal(const TwistAcc& a,const TwistAcc& b,double eps);
+     friend bool Equal(const Twist& a,const TwistAcc& b,double eps);
+     friend bool Equal(const TwistAcc& a,const Twist& b,double eps);
 
 
      inline Twist GetTwist() const;
-     inline Twist GetTwistDot() const;
+     Twist GetTwistDot() const;
 
     friend class RotationAcc;
     friend class FrameAcc;
 
 };
 
-#include "frameacc.inl"
+/////////////////// VectorAcc /////////////////////////////////////
+
+VectorAcc operator + (const VectorAcc& r1,const VectorAcc& r2);
+VectorAcc operator - (const VectorAcc& r1,const VectorAcc& r2);
+VectorAcc operator + (const Vector& r1,const VectorAcc& r2);
+VectorAcc operator - (const Vector& r1,const VectorAcc& r2);
+VectorAcc operator + (const VectorAcc& r1,const Vector& r2);
+VectorAcc operator - (const VectorAcc& r1,const Vector& r2);
+
+// unary -
+inline VectorAcc operator - (const VectorAcc& r) {
+    return VectorAcc(-r.p,-r.v,-r.dv);
+}
+
+// cross prod.
+VectorAcc operator * (const VectorAcc& r1,const VectorAcc& r2);
+VectorAcc operator * (const VectorAcc& r1,const Vector& r2);
+VectorAcc operator * (const Vector& r1,const VectorAcc& r2);
+
+// scalar mult.
+VectorAcc operator * (double r1,const VectorAcc& r2);
+VectorAcc operator * (const VectorAcc& r1,double r2);
+VectorAcc operator * (const doubleAcc& r1,const VectorAcc& r2);
+VectorAcc operator * (const VectorAcc& r2,const doubleAcc& r1);
+
+inline VectorAcc& VectorAcc::operator = (const Vector& arg) {
+    p=arg;
+    v=Vector::Zero();
+    dv=Vector::Zero();
+    return *this;
+}
+
+inline VectorAcc VectorAcc::Zero() {
+    return VectorAcc(Vector::Zero(),Vector::Zero(),Vector::Zero());
+}
+
+inline void VectorAcc::ReverseSign() {
+    p.ReverseSign();
+    v.ReverseSign();
+    dv.ReverseSign();
+}
+
+doubleAcc dot(const VectorAcc& lhs,const VectorAcc& rhs);
+doubleAcc dot(const VectorAcc& lhs,const Vector& rhs);
+doubleAcc dot(const Vector& lhs,const VectorAcc& rhs);
+VectorAcc operator / (const VectorAcc& r1,double r2);
+VectorAcc operator / (const VectorAcc& r2,const doubleAcc& r1);
+
+/////////////////// RotationAcc /////////////////////////////////////
+
+RotationAcc operator* (const RotationAcc& r1,const RotationAcc& r2);
+RotationAcc operator* (const Rotation& r1,const RotationAcc& r2);
+RotationAcc operator* (const RotationAcc& r1,const Rotation& r2);
+
+inline RotationAcc& RotationAcc::operator = (const Rotation& arg) {
+    R = arg;
+    w = Vector::Zero();
+    dw = Vector::Zero();
+    return *this;
+}
+
+inline RotationAcc RotationAcc::Identity() {
+    return RotationAcc(Rotation::Identity(),Vector::Zero(),Vector::Zero());
+}
+
+VectorAcc operator*(const Rotation& R,const VectorAcc& x);
+
+// Methods and operators related to FrameAcc
+// They all delegate most of the work to RotationAcc and VectorAcc
+inline FrameAcc FrameAcc::Identity() {
+    return FrameAcc(RotationAcc::Identity(),VectorAcc::Zero());
+}
+
+FrameAcc operator *(const FrameAcc& lhs,const FrameAcc& rhs);
+FrameAcc operator *(const FrameAcc& lhs,const Frame& rhs);
+FrameAcc operator *(const Frame& lhs,const FrameAcc& rhs);
+
+inline FrameAcc& FrameAcc::operator =(const Frame & arg)
+{ 
+    M = arg.M;
+    p = arg.p;
+    return *this;
+}
+
+inline Frame FrameAcc::GetFrame() const {
+    return Frame(M.R,p.p);
+}
+
+inline Twist FrameAcc::GetTwist() const {
+    return Twist(p.v,M.w);
+}
+
+inline TwistAcc TwistAcc::Zero()
+{
+    return TwistAcc(VectorAcc::Zero(),VectorAcc::Zero());
+}
+
+inline void TwistAcc::ReverseSign()
+{   
+    vel.ReverseSign();
+    rot.ReverseSign();
+}
+
+TwistAcc operator*(const TwistAcc& lhs,double rhs);
+TwistAcc operator*(double lhs,const TwistAcc& rhs);
+TwistAcc operator/(const TwistAcc& lhs,double rhs);
+TwistAcc operator*(const TwistAcc& lhs,const doubleAcc& rhs);
+TwistAcc operator*(const doubleAcc& lhs,const TwistAcc& rhs);
+TwistAcc operator/(const TwistAcc& lhs,const doubleAcc& rhs);
+
+// addition of TwistAcc's
+TwistAcc operator+(const TwistAcc& lhs,const TwistAcc& rhs);
+TwistAcc operator-(const TwistAcc& lhs,const TwistAcc& rhs);
+
+// unary -
+inline TwistAcc operator-(const TwistAcc& arg) 
+{
+    return TwistAcc(-arg.vel,-arg.rot);
+}
+
+inline Twist TwistAcc::GetTwist() const {
+    return Twist(vel.p,rot.p);
+}
 
 } // namespace KDL
 

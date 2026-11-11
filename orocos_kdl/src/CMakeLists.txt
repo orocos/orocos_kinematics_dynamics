@@ -92,13 +92,10 @@ set(KDL_PUBLIC_HEADERS
   chainjnttojacdotsolver.hpp
   chainjnttojacsolver.hpp
   frameacc.hpp
-  frameacc.inl
   frameacc_io.hpp
   frames.hpp
-  frames.inl
   frames_io.hpp
   framevel.hpp
-  framevel.inl
   framevel_io.hpp
   jacobian.hpp
   jntarray.hpp
