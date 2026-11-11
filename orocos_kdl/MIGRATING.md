@@ -27,3 +27,5 @@ workaround.
   transpose. `Rotation2 * Vector2` was already correct.
 - `posrandom(Frame&)` now draws both the rotation and the origin with `posrandom`, like the
   other `posrandom` overloads. It used to call `random`, so the origin could be negative.
+- `RotationVel::RotY(angle)` now rotates about Y. Its rotation matrix used to be
+  `Rotation::RotX(angle.value())`, with the angular velocity of a Y rotation.

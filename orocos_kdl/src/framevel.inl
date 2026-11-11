@@ -214,7 +214,7 @@ void RotationVel::DoRotY(const doubleVel& angle) {
     R.DoRotY(angle.t);
 }
 RotationVel RotationVel::RotY(const doubleVel& angle) {
-    return RotationVel(Rotation::RotX(angle.t),Vector(0,angle.grad,0));
+    return RotationVel(Rotation::RotY(angle.t),Vector(0,angle.grad,0));
 }
 
 void RotationVel::DoRotZ(const doubleVel& angle) {
