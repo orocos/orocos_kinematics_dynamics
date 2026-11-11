@@ -31,8 +31,8 @@ namespace KDL {
    */
 class Trajectory_Composite: public Trajectory
 	{
-		typedef std::vector<Trajectory*> VectorTraj;
-		typedef std::vector<double>         VectorDouble;
+		using VectorTraj = std::vector<Trajectory *>;
+		using VectorDouble = std::vector<double>;
 		VectorTraj vt;      // contains the element Trajectories
 		VectorDouble  vd;      // contains end time for each Trajectory
 		double duration;    // total duration of the composed
@@ -42,17 +42,17 @@ class Trajectory_Composite: public Trajectory
 		Trajectory_Composite();
 		// Constructs an empty composite
 
-		virtual double Duration() const;
-		virtual Frame Pos(double time) const;
-		virtual Twist Vel(double time) const;
-		virtual Twist Acc(double time) const;
+		double Duration() const override;
+		Frame Pos(double time) const override;
+		Twist Vel(double time) const override;
+		Twist Acc(double time) const override;
 
 		virtual void Add(Trajectory* elem);
 		// Adds trajectory <elem> to the end of the sequence.
 
 		virtual void Destroy();
-		virtual void Write(std::ostream& os) const;
-		virtual Trajectory* Clone() const;
+		void Write(std::ostream& os) const override;
+		Trajectory* Clone() const override;
 
 		virtual ~Trajectory_Composite();
 	};

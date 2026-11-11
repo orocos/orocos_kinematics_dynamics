@@ -64,9 +64,9 @@ namespace KDL
 class ChainIkSolverPos_LMA : public KDL::ChainIkSolverPos
 {
 private:
-	typedef double ScalarType;
-    typedef Eigen::Matrix<ScalarType,Eigen::Dynamic,Eigen::Dynamic> MatrixXq;
-    typedef Eigen::Matrix<ScalarType,Eigen::Dynamic,1> VectorXq;
+	using ScalarType = double;
+    using MatrixXq = Eigen::Matrix<ScalarType, Eigen::Dynamic, Eigen::Dynamic>;
+    using VectorXq = Eigen::Matrix<ScalarType, Eigen::Dynamic, 1>;
 public:
 
     static const int E_GRADIENT_JOINTS_TOO_SMALL = -100;
@@ -123,7 +123,7 @@ public:
      *         E_INCREMENT_JOINTS_TOO_SMALL if joint position increments are to small,
      *         E_MAX_ITER_EXCEEDED if number of iterations is exceeded.
      */
-    virtual int CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& T_base_goal, KDL::JntArray& q_out);
+    int CartToJnt(const KDL::JntArray& q_init, const KDL::Frame& T_base_goal, KDL::JntArray& q_out) override;
 
     /**
      * \brief destructor.
@@ -151,10 +151,10 @@ public:
     void display_jac(const KDL::JntArray& jval);
 
     /// @copydoc KDL::SolverI::updateInternalDataStructures
-    void updateInternalDataStructures();
+    void updateInternalDataStructures() override;
 
     /// @copydoc KDL::SolverI::strError()
-    virtual const char* strError(const int error) const;
+    const char* strError(const int error) const override;
 
 private:
     const KDL::Chain& chain;

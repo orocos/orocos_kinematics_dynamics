@@ -15,9 +15,9 @@
 
 namespace KDL {
 
-typedef std::map<std::string, Twist> Twists;
-typedef std::map<std::string, Jacobian> Jacobians;
-typedef std::map<std::string, Frame> Frames;
+using Twists = std::map<std::string, Twist>;
+using Jacobians = std::map<std::string, Jacobian>;
+using Frames = std::map<std::string, Frame>;
 
 /**
  * \brief This <strong>abstract</strong> class encapsulates the inverse

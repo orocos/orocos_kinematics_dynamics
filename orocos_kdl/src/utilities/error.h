@@ -71,128 +71,128 @@ class Error_IO : public Error {
 	int typenr;
 public:
 	Error_IO(const std::string& _msg="Unspecified I/O Error",int typenr=0):msg(_msg) {}
-    virtual const char* Description() const {return msg.c_str();}
-    virtual int GetType() const {return typenr;}
+    const char* Description() const override {return msg.c_str();}
+    int GetType() const override {return typenr;}
 };
 class Error_BasicIO : public Error_IO {};
 class Error_BasicIO_File : public Error_BasicIO {
 public:
-    virtual const char* Description() const {return "Error while reading stream";}
-    virtual int GetType() const {return 1;}
+    const char* Description() const override {return "Error while reading stream";}
+    int GetType() const override {return 1;}
 };
 class Error_BasicIO_Exp_Delim : public Error_BasicIO {
 public:
-    virtual const char* Description() const {return "Expected Delimiter not encountered";}
-    virtual int GetType() const {return 2;}
+    const char* Description() const override {return "Expected Delimiter not encountered";}
+    int GetType() const override {return 2;}
 };
 class Error_BasicIO_Not_A_Space : public Error_BasicIO {
 public:
-    virtual const char* Description() const {return "Expected space,tab or newline not encountered";}
-    virtual int GetType() const {return 3;}
+    const char* Description() const override {return "Expected space,tab or newline not encountered";}
+    int GetType() const override {return 3;}
 };
 class Error_BasicIO_Unexpected : public Error_BasicIO {
 public:
-    virtual const char* Description() const {return "Unexpected character";}
-    virtual int GetType() const {return 4;}
+    const char* Description() const override {return "Unexpected character";}
+    int GetType() const override {return 4;}
 };
 
 class Error_BasicIO_ToBig : public Error_BasicIO {
 public:
-    virtual const char* Description() const {return "Word that is read out of stream is bigger than maxsize";}
-    virtual int GetType() const {return 5;}
+    const char* Description() const override {return "Word that is read out of stream is bigger than maxsize";}
+    int GetType() const override {return 5;}
 };
 
 class Error_BasicIO_Not_Opened : public Error_BasicIO {
 public:
-    virtual const char* Description() const {return "File cannot be opened";}
-    virtual int GetType() const {return 6;}
+    const char* Description() const override {return "File cannot be opened";}
+    int GetType() const override {return 6;}
 };
 class Error_FrameIO : public Error_IO {};
 class Error_Frame_Vector_Unexpected_id : public Error_FrameIO {
 public:
-    virtual const char* Description() const {return "Unexpected identifier, expecting a vector (explicit or ZERO)";}
-    virtual int GetType() const {return 101;}
+    const char* Description() const override {return "Unexpected identifier, expecting a vector (explicit or ZERO)";}
+    int GetType() const override {return 101;}
 };
 class Error_Frame_Frame_Unexpected_id : public Error_FrameIO {
 public:
-    virtual const char* Description() const {return "Unexpected identifier, expecting a Frame (explicit or DH)";}
-    virtual int GetType() const {return 102;}
+    const char* Description() const override {return "Unexpected identifier, expecting a Frame (explicit or DH)";}
+    int GetType() const override {return 102;}
 };
 class Error_Frame_Rotation_Unexpected_id : public Error_FrameIO {
 public:
-    virtual const char* Description() const {return "Unexpected identifier, expecting a Rotation (explicit or EULERZYX, EULERZYZ, RPY,ROT,IDENTITY)";}
-    virtual int GetType() const {return 103;}
+    const char* Description() const override {return "Unexpected identifier, expecting a Rotation (explicit or EULERZYX, EULERZYZ, RPY,ROT,IDENTITY)";}
+    int GetType() const override {return 103;}
 };
 class Error_ChainIO : public Error {};
 class Error_Chain_Unexpected_id : public Error_ChainIO {
 public:
-    virtual const char* Description() const {return "Unexpected identifier, expecting TRANS or ROT";}
-    virtual int GetType() const {return 201;}
+    const char* Description() const override {return "Unexpected identifier, expecting TRANS or ROT";}
+    int GetType() const override {return 201;}
 };
 //! Error_Redundancy indicates an error that occurred during solving for redundancy.
 class Error_RedundancyIO:public Error_IO  {};
 class Error_Redundancy_Illegal_Resolutiontype : public Error_RedundancyIO {
 public:
-    virtual const char* Description() const {return "Illegal Resolutiontype is used in I/O with ResolutionTask";}
-    virtual int GetType() const {return 301;}
+    const char* Description() const override {return "Illegal Resolutiontype is used in I/O with ResolutionTask";}
+    int GetType() const override {return 301;}
 };
 class Error_Redundancy:public Error  {};
 class Error_Redundancy_Unavoidable : public Error_Redundancy {
 public:
-    virtual const char* Description() const {return "Joint limits cannot be avoided";}
-    virtual int GetType() const {return 1002;}
+    const char* Description() const override {return "Joint limits cannot be avoided";}
+    int GetType() const override {return 1002;}
 };
 class  Error_Redundancy_Low_Manip: public Error_Redundancy {
 public:
-    virtual const char* Description() const {return "Manipulability is very low";}
-    virtual int GetType() const {return 1003;}
+    const char* Description() const override {return "Manipulability is very low";}
+    int GetType() const override {return 1003;}
 };
 class Error_MotionIO : public Error {};
 class Error_MotionIO_Unexpected_MotProf : public Error_MotionIO {
 public:
-    virtual const char* Description() const { return "Wrong keyword while reading motion profile";}
-    virtual int GetType() const {return 2001;}
+    const char* Description() const override { return "Wrong keyword while reading motion profile";}
+    int GetType() const override {return 2001;}
 };
 class Error_MotionIO_Unexpected_Traj : public Error_MotionIO {
 public:
-    virtual const char* Description() const { return "Trajectory type keyword not known";}
-    virtual int GetType() const {return 2002;}
+    const char* Description() const override { return "Trajectory type keyword not known";}
+    int GetType() const override {return 2002;}
 };
 
 class Error_MotionPlanning : public Error {};
 
 class Error_MotionPlanning_Circle_ToSmall : public Error_MotionPlanning {
 public:
-    virtual const char* Description() const { return "Circle : radius is to small";}
-    virtual int GetType() const {return 3001;}
+    const char* Description() const override { return "Circle : radius is to small";}
+    int GetType() const override {return 3001;}
 };
 
 class Error_MotionPlanning_Circle_No_Plane : public Error_MotionPlanning {
 public:
-    virtual const char* Description() const { return "Circle : Plane for motion is not properly defined";}
-    virtual int GetType() const {return 3002;}
+    const char* Description() const override { return "Circle : Plane for motion is not properly defined";}
+    int GetType() const override {return 3002;}
 };
 
 class Error_MotionPlanning_Incompatible: public Error_MotionPlanning {
 public:
-    virtual const char* Description() const { return "Acceleration of a rectangular velocityprofile cannot be used";}
-    virtual int GetType() const {return 3003;}
+    const char* Description() const override { return "Acceleration of a rectangular velocityprofile cannot be used";}
+    int GetType() const override {return 3003;}
 };
 
 class Error_MotionPlanning_Not_Feasible: public Error_MotionPlanning {
 	int reason;
 public:
 	Error_MotionPlanning_Not_Feasible(int _reason):reason(_reason) {}
-    virtual const char* Description() const {
+    const char* Description() const override {
     	return "Motion Profile with requested parameters is not feasible";
     }
-    virtual int GetType() const {return 3100+reason;}
+    int GetType() const override {return 3100+reason;}
 };
 
 class Error_MotionPlanning_Not_Applicable: public Error_MotionPlanning {
 public:
-    virtual const char* Description() const { return "Method is not applicable for this derived object";}
-    virtual int GetType() const {return 3004;}
+    const char* Description() const override { return "Method is not applicable for this derived object";}
+    int GetType() const override {return 3004;}
 };
 //! Abstract subclass of all errors that can be thrown by Adaptive_Integrator
 class Error_Integrator : public Error {};
@@ -200,46 +200,46 @@ class Error_Integrator : public Error {};
 //! Error_Stepsize_Underflow is thrown if the stepsize becomes to small
 class Error_Stepsize_Underflow  : public Error_Integrator {
 public: 
-    virtual const char* Description() const { return "Stepsize Underflow";}
-    virtual int GetType() const {return 4001;}
+    const char* Description() const override { return "Stepsize Underflow";}
+    int GetType() const override {return 4001;}
 };
 
 //! Error_To_Many_Steps is thrown if the number of steps needed to
 //! integrate to the desired accuracy becomes to big.
 class Error_To_Many_Steps : public Error_Integrator {
 public:
-    virtual const char* Description() const { return "To many steps"; }
-    virtual int GetType() const {return 4002;}
+    const char* Description() const override { return "To many steps"; }
+    int GetType() const override {return 4002;}
 };
 
 //! Error_Stepsize_To_Small is thrown if the stepsize becomes to small  
 class Error_Stepsize_To_Small : public Error_Integrator {
 public:
-    virtual const char* Description() const { return "Stepsize to small"; }
-    virtual int GetType() const {return 4003;}
+    const char* Description() const override { return "Stepsize to small"; }
+    int GetType() const override {return 4003;}
 };
 
 class Error_Criterium : public Error {};
 
 class Error_Criterium_Unexpected_id: public Error_Criterium {
 public:
-    virtual const char* Description() const { return "Unexpected identifier while reading a criterium";   }
-    virtual int GetType() const {return 5001;}
+    const char* Description() const override { return "Unexpected identifier while reading a criterium";   }
+    int GetType() const override {return 5001;}
 };
 
 class Error_Limits : public Error {};
 
 class Error_Limits_Unexpected_id: public Error_Limits {
 public:
-    virtual const char* Description() const { return "Unexpected identifier while reading a jointlimits"; }
-    virtual int GetType() const {return 6001;}
+    const char* Description() const override { return "Unexpected identifier while reading a jointlimits"; }
+    int GetType() const override {return 6001;}
 };
 
 
 class Error_Not_Implemented: public Error {
 public:
-    virtual const char* Description() const { return "The requested object/method/function is not implemented"; }
-    virtual int GetType() const {return 7000;}
+    const char* Description() const override { return "The requested object/method/function is not implemented"; }
+    int GetType() const override {return 7000;}
 };
 
 

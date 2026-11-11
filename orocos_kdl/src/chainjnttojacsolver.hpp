@@ -62,7 +62,7 @@ namespace KDL
         int setLockedJoints(const std::vector<bool> locked_joints);
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
 
     private:
         const Chain& chain;

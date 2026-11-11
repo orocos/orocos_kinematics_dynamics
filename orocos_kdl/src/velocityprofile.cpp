@@ -90,7 +90,7 @@ VelocityProfile* VelocityProfile::Read(std::istream& is) {
 	else {
 		throw Error_MotionIO_Unexpected_MotProf();
 	}
-    return 0;
+    return nullptr;
 }
 
 }

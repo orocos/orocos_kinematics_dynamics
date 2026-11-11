@@ -61,7 +61,7 @@ namespace KDL {
          */
         virtual int JntToCart(const JntArray& q_in, std::vector<KDL::Frame>& p_out,int segmentNr=-1)=0;
 
-        virtual void updateInternalDataStructures()=0;
+        void updateInternalDataStructures() override =0;
         virtual ~ChainFkSolverPos(){};
     };
 
@@ -94,7 +94,7 @@ namespace KDL {
          */
         virtual int JntToCart(const JntArrayVel& q_in, std::vector<KDL::FrameVel>& out,int segmentNr=-1)=0;
 
-        virtual void updateInternalDataStructures()=0;
+        void updateInternalDataStructures() override =0;
         virtual ~ChainFkSolverVel(){};
     };
 
@@ -131,7 +131,7 @@ namespace KDL {
          */
     virtual int JntToCart(const JntArrayAcc& q_in, std::vector<FrameAcc>& out,int segmentNr=-1)=0;
     
-        virtual void updateInternalDataStructures()=0;
+        void updateInternalDataStructures() override =0;
         virtual ~ChainFkSolverAcc()=0;
     };
 

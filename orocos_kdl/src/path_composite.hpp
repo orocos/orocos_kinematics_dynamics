@@ -68,8 +68,8 @@ namespace KDL {
 	  */
 	 class Path_Composite : public Path
 	{
-		typedef std::vector< std::pair<Path*,bool> > PathVector;
-		typedef std::vector<double>    DoubleVector;
+		using PathVector = std::vector<std::pair<Path *, bool>>;
+		using DoubleVector = std::vector<double>;
 
 		PathVector gv;
 		DoubleVector   dv;
@@ -91,38 +91,38 @@ namespace KDL {
 		void Add(Path* geom, bool aggregate=true);
 
 
-		virtual double LengthToS(double length);
+		double LengthToS(double length) override;
 		/**
 		 * Returns the total path length of the trajectory
 		 * (has dimension LENGTH)
 		 * This is not always a physical length , ie when dealing with rotations
 		 * that are dominant.
 		 */
-		virtual double PathLength();
+		double PathLength() override;
 
 		/**
 		 * Returns the Frame at the current path length s
 		 */
-		virtual Frame Pos(double s) const;
+		Frame Pos(double s) const override;
 
 		/**
 		 * Returns the velocity twist at path length s theta and with
 		 * derivative of s == sd
 		 */
-		virtual Twist Vel(double s,double sd) const;
+		Twist Vel(double s,double sd) const override;
 
 		/**
 		 * Returns the acceleration twist at path length s and with
 		 * derivative of s == sd, and 2nd derivative of s == sdd
 		 */
-		virtual Twist Acc(double s,double sd,double sdd) const;
+		Twist Acc(double s,double sd,double sdd) const override;
 
-		virtual Path* Clone();
+		Path* Clone() override;
 
 		/**
 		 * Writes one of the derived objects to the stream
 		 */
-		virtual void Write(std::ostream& os);
+		void Write(std::ostream& os) override;
 
 		/**
 		 * returns the number of underlying segments.
@@ -156,7 +156,7 @@ namespace KDL {
 		/**
 		 * gets an identifier indicating the type of this Path object
 		 */
-		virtual IdentifierType getIdentifier() const {
+		IdentifierType getIdentifier() const override {
 			return ID_COMPOSITE;
 		}
 

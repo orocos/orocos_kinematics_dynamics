@@ -136,6 +136,20 @@ jobs:
           name: coverage-html
           path: build/coverage/html
 
+  clang-tidy:
+    name: clang-tidy
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - name: Install
+        run: sudo apt-get install clang-tidy-18 clang-tools-18 libeigen3-dev libcppunit-dev
+      - name: Configure (compile database)
+        run: cmake -S orocos_kdl -B build -DENABLE_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: Run clang-tidy (any finding fails the job)
+        run: run-clang-tidy-18 -clang-tidy-binary clang-tidy-18 -p build -quiet 'orocos_kdl/src/'
+
   industrial_ci:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
     runs-on: ubuntu-latest

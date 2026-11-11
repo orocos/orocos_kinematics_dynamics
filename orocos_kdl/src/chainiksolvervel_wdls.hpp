@@ -97,12 +97,12 @@ namespace KDL
          * @note If E_SVD_FAILED returned, then getSvdResult() returns the error
          * code from the SVD algorithm.
 		 */
-        virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+        int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out) override;
         /**
          * not (yet) implemented.
          *
          */
-        virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return -1;};
+        int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/) override{return -1;};
 
         /**
          * Set the joint space weighting matrix
@@ -210,10 +210,10 @@ namespace KDL
         int getSVDResult()const {return svdResult;};
 
         /// @copydoc KDL::SolverI::strError()
-        virtual const char* strError(const int error) const;
+        const char* strError(const int error) const override;
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures()
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
 
     private:
         const Chain& chain;

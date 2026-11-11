@@ -24,7 +24,7 @@ namespace KDL {
 
 // Trace of the call stack of the I/O routines to help user
 // interpret error messages from I/O
-typedef std::stack<std::string>  ErrorStack;
+using ErrorStack = std::stack<std::string>;
 
 // should be in Thread Local Storage if this gets multithreaded one day...
 static ErrorStack errorstack;

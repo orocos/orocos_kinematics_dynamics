@@ -57,10 +57,10 @@ namespace KDL{
          * Output parameters:
          * \param torques the resulting torques for the joints
          */
-        int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const WrenchMap& f_ext, JntArray &torques);
+        int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &q_dotdot, const WrenchMap& f_ext, JntArray &torques) override;
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
 
     private:
         ///Helper function to initialize private members X, S, v, a, f

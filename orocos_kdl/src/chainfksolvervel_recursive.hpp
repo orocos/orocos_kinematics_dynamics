@@ -40,9 +40,9 @@ namespace KDL
         ChainFkSolverVel_recursive(const Chain& chain);
         ~ChainFkSolverVel_recursive();
 
-        virtual int JntToCart(const JntArrayVel& q_in,FrameVel& out,int segmentNr=-1);
-        virtual int JntToCart(const JntArrayVel& q_in,std::vector<FrameVel>& out,int segmentNr=-1);
-        virtual void updateInternalDataStructures() {};
+        int JntToCart(const JntArrayVel& q_in,FrameVel& out,int segmentNr=-1) override;
+        int JntToCart(const JntArrayVel& q_in,std::vector<FrameVel>& out,int segmentNr=-1) override;
+        void updateInternalDataStructures() override {};
     private:
         const Chain& chain;
     };

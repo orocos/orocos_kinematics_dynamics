@@ -49,14 +49,14 @@ namespace KDL {
     {
         double p1,p2,t;
     public:
-        void SetProfile(double pos1,double pos2);
-        virtual void SetProfileDuration(double pos1,double pos2,double duration);
-        virtual double Duration() const;
-        virtual double Pos(double time) const;
-        virtual double Vel(double time) const;
-        virtual double Acc(double time) const;
-        virtual void Write(std::ostream& os) const;
-        virtual VelocityProfile* Clone() const {
+        void SetProfile(double pos1,double pos2) override;
+        void SetProfileDuration(double pos1,double pos2,double duration) override;
+        double Duration() const override;
+        double Pos(double time) const override;
+        double Vel(double time) const override;
+        double Acc(double time) const override;
+        void Write(std::ostream& os) const override;
+        VelocityProfile* Clone() const override {
             VelocityProfile_Dirac* res =  new VelocityProfile_Dirac();
             res->SetProfileDuration( p1, p2, t );
             return res;

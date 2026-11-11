@@ -71,13 +71,13 @@ namespace KDL {
          *  E_IKSOLVER_FAILED=velocity solver failed
          *  E_NO_CONVERGE=solution did not converge (e.g. large displacement, low iterations)
          */
-        virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out);
+        int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out) override;
 
         /// @copydoc KDL::SolverI::strError()
-        virtual const char* strError(const int error) const;
+        const char* strError(const int error) const override;
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
     private:
         const Chain& chain;
 

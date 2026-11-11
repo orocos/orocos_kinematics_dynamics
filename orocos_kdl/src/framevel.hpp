@@ -32,7 +32,7 @@
 
 namespace KDL {
 
-typedef Rall1d<double> doubleVel;
+using doubleVel = Rall1d<double>;
 
 inline doubleVel diff(const doubleVel& a,const doubleVel& b,double dt=1.0) {
 	return doubleVel((b.t-a.t)/dt,(b.grad-a.grad)/dt);
@@ -49,8 +49,8 @@ void posrandom(doubleVel& F);
 
 template <>
 struct Traits<KDL::doubleVel> {
-	typedef double valueType;
-	typedef KDL::doubleVel derivType;
+	using valueType = double;
+	using derivType = KDL::doubleVel;
 };
 
 namespace KDL {

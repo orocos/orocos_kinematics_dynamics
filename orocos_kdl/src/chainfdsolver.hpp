@@ -31,7 +31,7 @@
 namespace KDL
 {
 
-    typedef std::vector<Wrench> Wrenches;
+    using Wrenches = std::vector<Wrench>;
 
 	/**
 	 * \brief This <strong>abstract</strong> class encapsulates the inverse

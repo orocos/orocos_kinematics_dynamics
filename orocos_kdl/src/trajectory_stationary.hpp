@@ -32,21 +32,21 @@ namespace KDL {
 	public:
 		Trajectory_Stationary(double _duration,const Frame& _pos):
 		  duration(_duration),pos(_pos) {}
-		virtual double Duration() const {
+		double Duration() const override {
 			return duration;
 		}
-		virtual Frame Pos(double time) const {
+		Frame Pos(double time) const override {
 			return pos;
 		}
-		virtual Twist Vel(double time) const {
+		Twist Vel(double time) const override {
 			return Twist::Zero();
 		}
-		virtual Twist Acc(double time) const {
+		Twist Acc(double time) const override {
 			return Twist::Zero();
 		}
-		virtual void Write(std::ostream& os) const;
+		void Write(std::ostream& os) const override;
 
-		virtual Trajectory* Clone() const {
+		Trajectory* Clone() const override {
 			return new Trajectory_Stationary(duration,pos);
 		}
 		virtual ~Trajectory_Stationary() {}

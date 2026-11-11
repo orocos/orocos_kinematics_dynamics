@@ -110,10 +110,10 @@ public:
     void setRepresentation(const int& representation);
 
     /// @copydoc KDL::SolverI::updateInternalDataStructures
-    virtual void updateInternalDataStructures();
+    void updateInternalDataStructures() override;
 
     /// @copydoc KDL::SolverI::strError()
-    virtual const char* strError(const int error) const;
+    const char* strError(const int error) const override;
 
 
 protected:

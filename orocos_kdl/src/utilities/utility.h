@@ -116,19 +116,19 @@ template <class T>
 class TI
 {
     public:
-        typedef const T& Arg; //!< Arg is used for passing the element to a function.
+        using Arg = const T &; //!< Arg is used for passing the element to a function.
 };
 
 template <>
 class TI<double> {
 public:
-    typedef double Arg;
+    using Arg = double;
 };
 
 template <>
 class TI<int> {
 public:
-    typedef int Arg;
+    using Arg = int;
 };
 
 

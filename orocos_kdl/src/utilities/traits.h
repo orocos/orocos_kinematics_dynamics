@@ -36,71 +36,71 @@ namespace KDL {
  */
 template <typename T>
 struct Traits {
-	typedef T valueType;
-	typedef T derivType;
+	using valueType = T;
+	using derivType = T;
 };
 
 template <>
 struct Traits<KDL::Frame> {
-	typedef KDL::Frame valueType;
-	typedef KDL::Twist derivType;
+	using valueType = KDL::Frame;
+	using derivType = KDL::Twist;
 };
 template <>
 struct Traits<KDL::Twist> {
-	typedef KDL::Twist valueType;
-	typedef KDL::Twist derivType;
+	using valueType = KDL::Twist;
+	using derivType = KDL::Twist;
 };
 template <>
 struct Traits<KDL::Wrench> {
-	typedef KDL::Wrench valueType;
-	typedef KDL::Wrench derivType;
+	using valueType = KDL::Wrench;
+	using derivType = KDL::Wrench;
 };
 
 template <>
 struct Traits<KDL::Rotation> {
-	typedef KDL::Rotation valueType;
-	typedef KDL::Vector derivType;
+	using valueType = KDL::Rotation;
+	using derivType = KDL::Vector;
 };
 
 template <>
 struct Traits<KDL::Vector> {
-	typedef KDL::Vector valueType;
-	typedef KDL::Vector derivType;
+	using valueType = KDL::Vector;
+	using derivType = KDL::Vector;
 };
 
 template <>
 struct Traits<double> {
-	typedef double valueType;
-	typedef double derivType;
+	using valueType = double;
+	using derivType = double;
 };
 
 template <>
 struct Traits<float> {
-	typedef float valueType;
-	typedef float derivType;
+	using valueType = float;
+	using derivType = float;
 };
 
 template <>
 struct Traits<KDL::FrameVel> {
-	typedef KDL::Frame valueType;
-	typedef KDL::TwistVel derivType;
+	using valueType = KDL::Frame;
+	using derivType = KDL::TwistVel;
 };
 template <>
 struct Traits<KDL::TwistVel> {
-	typedef KDL::Twist valueType;
-	typedef KDL::TwistVel derivType;
+	using valueType = KDL::Twist;
+	using derivType = KDL::TwistVel;
 };
 
 template <>
 struct Traits<KDL::RotationVel> {
-	typedef KDL::Rotation valueType;
-	typedef KDL::VectorVel derivType;
+	using valueType = KDL::Rotation;
+	using derivType = KDL::VectorVel;
 };
 
 template <>
 struct Traits<KDL::VectorVel> {
-	typedef KDL::Vector valueType;
-	typedef KDL::VectorVel derivType;
+	using valueType = KDL::Vector;
+	using derivType = KDL::VectorVel;
 };
 
 

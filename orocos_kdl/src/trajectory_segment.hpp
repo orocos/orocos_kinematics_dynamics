@@ -76,25 +76,25 @@ namespace KDL {
 		 */
 		Trajectory_Segment(Path* _geom, VelocityProfile* _motprof, double duration, bool _aggregate=true);
 
-		virtual double Duration() const;
+		double Duration() const override;
 		// The duration of the trajectory
 
-		virtual Frame Pos(double time) const;
+		Frame Pos(double time) const override;
 		// Position of the trajectory at <time>.
 
-		virtual Twist Vel(double time) const;
+		Twist Vel(double time) const override;
 		// The velocity of the trajectory at <time>.
-		virtual Twist Acc(double time) const;
+		Twist Acc(double time) const override;
 		// The acceleration of the trajectory at <time>.
 
- 		virtual Trajectory* Clone() const
+ 		Trajectory* Clone() const override
 			{
 				if ( aggregate )
 					return new Trajectory_Segment( geom->Clone(), motprof->Clone(), true );
 				return new Trajectory_Segment( geom, motprof, false );
 			}
 
-		virtual void Write(std::ostream& os) const;
+		void Write(std::ostream& os) const override;
 
 	    virtual Path* GetPath();
 

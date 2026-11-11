@@ -101,7 +101,7 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		 *
 		 * Can throw a Error_MotionPlanning_Not_Feasible
 		 */
-		virtual void SetProfile(double pos1,double pos2);
+		void SetProfile(double pos1,double pos2) override;
 
 		/**
 		 * Can be used to prolong the profile, there are two possible outcomes: in a first
@@ -114,16 +114,16 @@ class VelocityProfile_TrapHalf : public VelocityProfile
 		 *\param pos2 ending position
 		 *\param newduration the desired duration, if it is lower than the minimum duration, the minimum duration will be used instead of the given duration.
 		 */
-		virtual void SetProfileDuration(
+		void SetProfileDuration(
 			double pos1,double pos2,double newduration
-		);
+		) override;
 
-		virtual double Duration() const;
-		virtual double Pos(double time) const;
-		virtual double Vel(double time) const;
-		virtual double Acc(double time) const;
-		virtual void Write(std::ostream& os) const;
-		virtual VelocityProfile* Clone() const;
+		double Duration() const override;
+		double Pos(double time) const override;
+		double Vel(double time) const override;
+		double Acc(double time) const override;
+		void Write(std::ostream& os) const override;
+		VelocityProfile* Clone() const override;
 
 		virtual ~VelocityProfile_TrapHalf();
 	};

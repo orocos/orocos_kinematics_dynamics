@@ -49,9 +49,9 @@ template <typename T,typename V=T,typename S=T>
 class Rall1d
     {
     public:
-        typedef T valuetype;
-        typedef V gradienttype;
-        typedef S scalartype;
+        using valuetype = T;
+        using gradienttype = V;
+        using scalartype = S;
     public :
         T t;        //!< value
         V grad;     //!< gradient

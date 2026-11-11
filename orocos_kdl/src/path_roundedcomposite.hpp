@@ -115,7 +115,7 @@ class Path_RoundedComposite : public Path
 		void Finish();
 
 
-		virtual double LengthToS(double length);
+		double LengthToS(double length) override;
 
 		/**
 		 * Returns the total path length of the trajectory
@@ -123,37 +123,37 @@ class Path_RoundedComposite : public Path
 		 * This is not always a physical length , ie when dealing with rotations
 		 * that are dominant.
 		 */
-		virtual double PathLength();
+		double PathLength() override;
 
 
 		/**
 		 * Returns the Frame at the current path length s
 		 */
-		virtual Frame Pos(double s) const;
+		Frame Pos(double s) const override;
 
 		/**
 		 * Returns the velocity twist at path length s theta and with
 		 * derivative of s == sd
 		 */
-		virtual Twist Vel(double s,double sd) const;
+		Twist Vel(double s,double sd) const override;
 
 		/**
 		 * Returns the acceleration twist at path length s and with
 		 * derivative of s == sd, and 2nd derivative of s == sdd
 		 */
-		virtual Twist Acc(double s,double sd,double sdd) const;
+		Twist Acc(double s,double sd,double sdd) const override;
 
 		/**
 		 * virtual constructor, constructing by copying.
 		 * In this case it returns the Clone() of the aggregated Path_Composite
 		 * because this is all one ever will need.
 		 */
-		virtual Path* Clone();
+		Path* Clone() override;
 
 		/**
 		 * Writes one of the derived objects to the stream
 		 */
-		virtual void Write(std::ostream& os);
+		void Write(std::ostream& os) override;
 
 		/**
 		 * returns the number of underlying segments.
@@ -187,7 +187,7 @@ class Path_RoundedComposite : public Path
 		/**
 		 * gets an identifier indicating the type of this Path object
 		 */
-		virtual IdentifierType getIdentifier() const {
+		IdentifierType getIdentifier() const override {
 			return ID_ROUNDED_COMPOSITE;
 		}
 

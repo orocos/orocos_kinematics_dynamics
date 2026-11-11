@@ -44,7 +44,7 @@ namespace KDL {
      */
     class Joint {
     public:
-        typedef enum { RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed,None=Fixed} JointType;
+        enum JointType { RotAxis,RotX,RotY,RotZ,TransAxis,TransX,TransY,TransZ,Fixed,None=Fixed};
         /**
          * Constructor of a joint.
          *
@@ -279,7 +279,7 @@ namespace KDL {
         mutable double q_previous; // Deprecated, but keeping for ABI compatibility
 
       class joint_type_exception: public std::exception{
-	virtual const char* what() const throw(){
+	const char* what() const throw() override{
 	  return "Joint Type excption";}
       } joint_type_ex;
 

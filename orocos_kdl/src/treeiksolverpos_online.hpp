@@ -73,7 +73,7 @@ public:
 
     ~TreeIkSolverPos_Online();
 
-    virtual double CartToJnt(const JntArray& q_in, const Frames& p_in, JntArray& q_out);
+    double CartToJnt(const JntArray& q_in, const Frames& p_in, JntArray& q_out) override;
 
 private:
   /**

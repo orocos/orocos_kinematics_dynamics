@@ -54,7 +54,7 @@ namespace KDL {
         virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out)=0;
 
         virtual ~ChainIkSolverPos(){};
-        virtual void updateInternalDataStructures()=0;
+        void updateInternalDataStructures() override =0;
     };
 
     /**
@@ -89,7 +89,7 @@ namespace KDL {
         virtual int CartToJnt(const JntArray& q_init, const FrameVel& v_in, JntArrayVel& q_out)=0;
 
         virtual ~ChainIkSolverVel(){};
-        virtual void updateInternalDataStructures()=0;
+        void updateInternalDataStructures() override =0;
     };
 
     /**
@@ -159,7 +159,7 @@ namespace KDL {
         virtual int CartTojnt(const JntArray& q_init, const Frame& p_in, const JntArray& qdot_in, const Twist& a_in,
                          JntArray& q_out, JntArray& qdotdot_out)=0;
 
-        virtual void updateInternalDataStructures()=0;
+        void updateInternalDataStructures() override =0;
         virtual ~ChainIkSolverAcc(){};
     };
 

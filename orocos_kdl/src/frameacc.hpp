@@ -37,7 +37,7 @@
 namespace KDL {
 
 class TwistAcc;
-typedef Rall2d<double,double,double> doubleAcc;
+using doubleAcc = Rall2d<double, double, double>;
 
 // Equal is friend function, but default arguments for friends are forbidden (§8.3.6.4)
 class FrameAcc;

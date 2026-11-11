@@ -59,10 +59,10 @@ namespace KDL{
          * Output parameters:
          * \param q_dotdot The resulting joint accelerations
          */
-        int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &torques, const Wrenches& f_ext, JntArray &q_dotdot);
+        int CartToJnt(const JntArray &q, const JntArray &q_dot, const JntArray &torques, const Wrenches& f_ext, JntArray &q_dotdot) override;
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
 
         /**
          * Function to integrate the joint accelerations resulting from the forward dynamics solver.

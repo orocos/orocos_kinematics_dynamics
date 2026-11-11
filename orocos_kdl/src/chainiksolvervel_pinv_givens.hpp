@@ -33,15 +33,15 @@ namespace KDL
         explicit ChainIkSolverVel_pinv_givens(const Chain& chain);
         ~ChainIkSolverVel_pinv_givens();
 
-        virtual int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out);
+        int CartToJnt(const JntArray& q_in, const Twist& v_in, JntArray& qdot_out) override;
         /**
          * not (yet) implemented.
          *
          */
-        virtual int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/){return (error = E_NOT_IMPLEMENTED);};
+        int CartToJnt(const JntArray& /*q_init*/, const FrameVel& /*v_in*/, JntArrayVel& /*q_out*/) override{return (error = E_NOT_IMPLEMENTED);};
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
 
     private:
         const Chain& chain;

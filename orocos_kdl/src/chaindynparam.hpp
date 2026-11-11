@@ -55,7 +55,7 @@ namespace KDL {
 	virtual int JntToGravity(const JntArray &q,JntArray &gravity);
 
     /// @copydoc KDL::SolverI::updateInternalDataStructures()
-    virtual void updateInternalDataStructures();
+    void updateInternalDataStructures() override;
 
     private:
         const Chain& chain;

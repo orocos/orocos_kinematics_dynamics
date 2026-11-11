@@ -92,7 +92,7 @@ namespace KDL {
          *         E_NOT_UP_TO_DATE if the internal data is not up to date with the chain
          *         E_SIZE_MISMATCH if the size of the input/output data does not match the chain.
          */
-        virtual int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out);
+        int CartToJnt(const JntArray& q_init, const Frame& p_in, JntArray& q_out) override;
 
         /**
          * Function to set the joint limits.
@@ -103,10 +103,10 @@ namespace KDL {
         int setJointLimits(const JntArray& q_min, const JntArray& q_max);
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
 
         /// @copydoc KDL::SolverI::strError()
-        const char* strError(const int error) const;
+        const char* strError(const int error) const override;
 
     private:
         const Chain& chain;

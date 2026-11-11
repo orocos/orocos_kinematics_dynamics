@@ -1,0 +1,5 @@
+Checks: '-*,modernize-use-override,modernize-use-nullptr,modernize-use-using'
+WarningsAsErrors: '*'
+HeaderFilterRegex: 'orocos_kdl/(src|include)/.*'
+CheckOptions:
+  - { key: modernize-use-override.IgnoreDestructors, value: true }

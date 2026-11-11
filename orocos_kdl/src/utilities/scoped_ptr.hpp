@@ -55,7 +55,7 @@ class scoped_ptr {
 
   T* release() {
     T* old = ptr_;
-    ptr_ = 0;
+    ptr_ = nullptr;
     return old;
   }
 

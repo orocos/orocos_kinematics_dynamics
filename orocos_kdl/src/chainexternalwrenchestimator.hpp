@@ -42,7 +42,7 @@ namespace KDL {
      */
     class ChainExternalWrenchEstimator : public SolverI
     {
-        typedef Eigen::Matrix<double, 6, 1 > Vector6d;
+        using Vector6d = Eigen::Matrix<double, 6, 1>;
 
     public:
 
@@ -102,10 +102,10 @@ namespace KDL {
         void getEstimatedJntTorque(JntArray &external_joint_torque);
 
         /// @copydoc KDL::SolverI::updateInternalDataStructures()
-        virtual void updateInternalDataStructures();
+        void updateInternalDataStructures() override;
 
         /// @copydoc KDL::SolverI::strError()
-        virtual const char* strError(const int error) const;
+        const char* strError(const int error) const override;
 
     private:
         const Chain &CHAIN;

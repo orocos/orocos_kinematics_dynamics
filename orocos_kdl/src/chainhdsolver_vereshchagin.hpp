@@ -365,11 +365,11 @@ namespace KDL
 
 class ChainHdSolver_Vereshchagin : public KDL::SolverI
 {
-    typedef std::vector<Twist> Twists;
-    typedef std::vector<Frame> Frames;
-    typedef Eigen::Matrix<double, 6, 1 > Vector6d;
-    typedef Eigen::Matrix<double, 6, 6 > Matrix6d;
-    typedef Eigen::Matrix<double, 6, Eigen::Dynamic> Matrix6Xd;
+    using Twists = std::vector<Twist>;
+    using Frames = std::vector<Frame>;
+    using Vector6d = Eigen::Matrix<double, 6, 1>;
+    using Matrix6d = Eigen::Matrix<double, 6, 6>;
+    using Matrix6Xd = Eigen::Matrix<double, 6, Eigen::Dynamic>;
 
 public:
     /**
@@ -405,7 +405,7 @@ public:
     int CartToJnt(const JntArray &q, const JntArray &q_dot, JntArray &q_dotdot, const Jacobian& alfa, const JntArray& beta, const Wrenches& f_ext, const JntArray &ff_torques, JntArray &constraint_torques);
 
     /// @copydoc KDL::SolverI::updateInternalDataStructures
-    virtual void updateInternalDataStructures();
+    void updateInternalDataStructures() override;
 
     //Returns cartesian acceleration of links in base coordinates
     void getTransformedLinkAcceleration(Twists& x_dotdot);

@@ -17,7 +17,7 @@ public:
 
 	virtual ~VelocityProfile_Spline();
 
-    virtual void SetProfile(double pos1, double pos2);
+    void SetProfile(double pos1, double pos2) override;
     /**
      * Generate linear interpolation coefficients.
      *
@@ -25,8 +25,8 @@ public:
      * @param pos2 end position.
      * @param duration duration of the profile.
      */
-    virtual void SetProfileDuration(
-      double pos1, double pos2, double duration);
+    void SetProfileDuration(
+      double pos1, double pos2, double duration) override;
 
     /**
      * Generate cubic spline interpolation coefficients.
@@ -52,12 +52,12 @@ public:
      * @param duration duration of the profile.
      */
     virtual void SetProfileDuration(double pos1, double vel1, double acc1, double pos2, double vel2, double acc2, double duration);
-    virtual double Duration() const;
-    virtual double Pos(double time) const;
-    virtual double Vel(double time) const;
-    virtual double Acc(double time) const;
-    virtual void Write(std::ostream& os) const;
-    virtual VelocityProfile* Clone() const;
+    double Duration() const override;
+    double Pos(double time) const override;
+    double Vel(double time) const override;
+    double Acc(double time) const override;
+    void Write(std::ostream& os) const override;
+    VelocityProfile* Clone() const override;
 private:
 
     double coeff_[6];

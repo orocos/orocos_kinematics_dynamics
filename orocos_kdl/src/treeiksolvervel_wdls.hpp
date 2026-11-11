@@ -21,7 +21,7 @@ namespace KDL {
         TreeIkSolverVel_wdls(const Tree& tree, const std::vector<std::string>& endpoints);
         virtual ~TreeIkSolverVel_wdls();
         
-        virtual double CartToJnt(const JntArray& q_in, const Twists& v_in, JntArray& qdot_out);
+        double CartToJnt(const JntArray& q_in, const Twists& v_in, JntArray& qdot_out) override;
 
         /*
          * Set the joint space weighting matrix

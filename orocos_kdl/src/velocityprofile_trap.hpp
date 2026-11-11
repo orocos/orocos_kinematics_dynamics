@@ -77,11 +77,11 @@ class VelocityProfile_Trap : public VelocityProfile
 		// constructs motion profile class with <maxvel> and <maxacc> as parameters of the
 		// trajectory.
 
-		virtual void SetProfile(double pos1,double pos2);
+		void SetProfile(double pos1,double pos2) override;
 
-		virtual void SetProfileDuration(
+		void SetProfileDuration(
 			double pos1,double pos2,double newduration
-		);
+		) override;
 
 		/** Compute trapezoidal profile at a given fraction of max velocity
 			@param pos1 Position to start from
@@ -96,12 +96,12 @@ class VelocityProfile_Trap : public VelocityProfile
 		);
 
         virtual void SetMax(double _maxvel,double _maxacc);
-		virtual double Duration() const;
-		virtual double Pos(double time) const;
-		virtual double Vel(double time) const;
-		virtual double Acc(double time) const;
-		virtual void Write(std::ostream& os) const;
-		virtual VelocityProfile* Clone() const;
+		double Duration() const override;
+		double Pos(double time) const override;
+		double Vel(double time) const override;
+		double Acc(double time) const override;
+		void Write(std::ostream& os) const override;
+		VelocityProfile* Clone() const override;
 		// returns copy of current VelocityProfile object. (virtual constructor)
 		virtual ~VelocityProfile_Trap();
 	};

@@ -30,7 +30,7 @@
 namespace KDL
 {
 
-  typedef std::map<std::string,Wrench> WrenchMap;
+  using WrenchMap = std::map<std::string, Wrench>;
 
 	/**
 	 * \brief This <strong>abstract</strong> class encapsulates the inverse

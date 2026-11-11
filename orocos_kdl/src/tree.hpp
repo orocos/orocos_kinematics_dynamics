@@ -53,8 +53,8 @@ namespace KDL
 
 #else //#ifdef KDL_USE_NEW_TREE_INTERFACE
     //Forward declaration
-    typedef std::map<std::string,TreeElement> SegmentMap;
-    typedef TreeElement TreeElementType;
+    using SegmentMap = std::map<std::string, TreeElement>;
+    using TreeElementType = TreeElement;
 
 #define GetTreeElementChildren(tree_element) (tree_element).children
 #define GetTreeElementParent(tree_element) (tree_element).parent
