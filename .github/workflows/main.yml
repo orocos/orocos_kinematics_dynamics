@@ -73,6 +73,17 @@ jobs:
           cmake -DENABLE_TESTS:BOOL=ON -DCMAKE_BUILD_TYPE=${OROCOS_KDL_BUILD_TYPE} ./..
           make
           sudo make install
+      - name: Check installed headers are self-contained
+        run: |
+          fail=0
+          cd /usr/local/include
+          for h in kdl/*.hpp kdl/utilities/*.hpp kdl/utilities/*.h; do
+            if ! echo "#include <$h>" | ${CXX} -std=c++17 -I/usr/include/eigen3 -fsyntax-only -x c++ - ; then
+              echo "::error::$h is not self-contained"
+              fail=1
+            fi
+          done
+          exit $fail
       - name: Build PyKDL
         run: |
           cd python_orocos_kdl

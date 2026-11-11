@@ -5,6 +5,8 @@
 #include "rall1d_io.h"
 #include "rall2d.h"
 #include "rall2d_io.h"
+
+namespace KDL {
 /**
  * The Rall1d class allows for a 24-line implementation of rall numbers
  * generalized to the Nth derivative !
@@ -75,13 +77,13 @@ public:
 template <>
 class RallNd<2> : public Rall2d<double>  {
 public:
-	RallNd() {}* (dwz. met evenveel numerieke operaties als een 
+	RallNd() {}
 	RallNd(const Rall2d<double>& arg) :
 		Rall2d<double>(arg) {}
 	RallNd(double value,double d[]) {
 		t    = value;
-		d = d[0];
-		dd= d[1];
+		this->d = d[0];
+		this->dd = d[1];
 	}
 };
 
@@ -96,6 +98,8 @@ public:
 		grad = d[0];
 	}
 };
+
+} // namespace KDL
 
 #endif
 

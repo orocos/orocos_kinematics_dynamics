@@ -52,6 +52,9 @@ ENDIF()
 
 ADD_LIBRARY(orocos-kdl ${LIB_TYPE} ${KDL_SRCS})
 
+# Consumers need C++17 too: the public headers rely on it.
+TARGET_COMPILE_FEATURES(orocos-kdl PUBLIC cxx_std_17)
+
 TARGET_INCLUDE_DIRECTORIES(orocos-kdl PUBLIC
   "$<INSTALL_INTERFACE:include>")
 

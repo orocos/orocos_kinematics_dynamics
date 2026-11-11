@@ -22,6 +22,7 @@
 #include "utilities/rall1d_io.h"
 
 #include "frames_io.hpp"
+#include "framevel.hpp"
 
 namespace KDL {
 
