@@ -21,6 +21,7 @@ IF(ENABLE_TESTS)
   kdl_add_test(velocityprofiletest)
   kdl_add_test(pathtest)
   kdl_add_test(treeinvdyntest)
+  kdl_add_test(framesconsistencytest)
 
   IF(ENABLE_COVERAGE)
     # Zero the counters, run the tests, capture, keep only the library sources,
