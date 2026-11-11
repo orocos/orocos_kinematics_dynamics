@@ -169,12 +169,6 @@ public:
      //! Constructs a vector out of the three values x, y and z
      inline Vector(double x,double y, double z);
 
-     //! Assignment operator. The normal copy by value semantics.
-     inline Vector(const Vector& arg);
-
-     //! Assignment operator. The normal copy by value semantics.
-     inline Vector& operator = ( const Vector& arg);
-
      //! Access to elements, range checked when NDEBUG is not set, from 0..2
      inline double operator()(int index) const;
 
@@ -313,9 +307,6 @@ public:
                 double Xz,double Yz,double Zz);
     inline Rotation(const Vector& x,const Vector& y,const Vector& z);
 
-    inline Rotation(const Rotation& arg);
-
-     inline Rotation& operator=(const Rotation& arg);
 
      //!  Defines a multiplication R*V between a Rotation R and a Vector V.
      //! Complexity : 9M+6A
@@ -584,9 +575,6 @@ public:
      explicit inline Frame(const Rotation& R);
 
      inline Frame() {}
-     //! The copy constructor. Normal copy by value semantics.
-     inline Frame(const Frame& arg);
-
      //! Reads data from an double array
      //\TODO should be formulated as a constructor
      void Make4x4(double* d);
@@ -612,8 +600,6 @@ public:
      //! The same as p2=R.Inverse()*p but more efficient.
      inline Twist  Inverse(const Twist& arg) const;
 
-     //! Normal copy-by-value semantics.
-     inline Frame& operator = (const Frame& arg);
 
      //! Transformation of the base to which the vector
      //! is expressed.
@@ -964,9 +950,6 @@ public:
      //! Does not initialise to Zero().
      Vector2() {data[0]=data[1] = 0.0;}
      inline Vector2(double x,double y);
-     inline Vector2(const Vector2& arg);
-
-     inline Vector2& operator = ( const Vector2& arg);
 
      //! Access to elements, range checked when NDEBUG is not set, from 0..1
      inline double operator()(int index) const;
@@ -1061,9 +1044,6 @@ public:
 
     Rotation2(double ca,double sa):s(sa),c(ca){}
 
-    Rotation2(const Rotation2& arg);
-
-     inline Rotation2& operator=(const Rotation2& arg);
      inline Vector2 operator*(const Vector2& v) const;
      //!    Access to elements 0..1,0..1, bounds are checked when NDEBUG is not set
      inline double operator() (int i,int j) const;
@@ -1107,7 +1087,6 @@ public:
      explicit inline Frame2(const Vector2& V);
      explicit inline Frame2(const Rotation2& R);
      inline Frame2(void);
-     inline Frame2(const Frame2& arg);
      inline void Make4x4(double* d);
 
      //!  Treats a frame as a 3x3 matrix and returns element i,j
@@ -1121,7 +1100,6 @@ public:
      inline void SetInverse();
      inline Frame2 Inverse() const;
      inline Vector2 Inverse(const Vector2& arg) const;
-     inline Frame2& operator = (const Frame2& arg);
      inline Vector2 operator * (const Vector2& arg) const;
      inline friend Frame2 operator *(const Frame2& lhs,const Frame2& rhs);
      inline void SetIdentity();

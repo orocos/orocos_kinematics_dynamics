@@ -70,11 +70,6 @@ class Rall1d
 
         inline Rall1d(typename TI<T>::Arg tn, typename TI<V>::Arg afg):t(tn),grad(afg) {}
 
-        inline Rall1d(const Rall1d<T,V,S>& r):t(r.t),grad(r.grad) {}
-        //if one defines this constructor, it's better optimized then the
-        //automatically generated one ( this one set's up a loop to copy
-        // word by word.
-        
         inline T& Value() {
             return t;
         }
@@ -96,9 +91,6 @@ class Rall1d
 
         inline Rall1d<T,V,S>& operator =(S c)
             {t=c;SetToZero(grad);return *this;}
-
-        inline Rall1d<T,V,S>& operator =(const Rall1d<T,V,S>& r)
-            {t=r.t;grad=r.grad;return *this;}
 
         inline Rall1d<T,V,S>& operator /=(const Rall1d<T,V,S>& rhs)
             {

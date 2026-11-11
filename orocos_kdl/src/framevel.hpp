@@ -98,7 +98,6 @@ public:
     Vector value() const { return p;}
     Vector deriv() const { return v;}
 
-    inline VectorVel& operator = (const VectorVel& arg);
     inline VectorVel& operator = (const Vector& arg);
     inline VectorVel& operator += (const VectorVel& arg);
     inline VectorVel& operator -= (const VectorVel& arg);
@@ -162,7 +161,6 @@ public:
     Vector   deriv() const { return w;}
 
 
-    inline RotationVel& operator = (const RotationVel& arg);
     inline RotationVel& operator = (const Rotation& arg);
 	inline VectorVel UnitX() const;
 	inline VectorVel UnitY() const;
@@ -235,7 +233,6 @@ public:
 
 
     inline FrameVel& operator = (const Frame& arg);
-    inline FrameVel& operator = (const FrameVel& arg);
     inline static FrameVel Identity();
     inline FrameVel Inverse() const;
     inline VectorVel Inverse(const VectorVel& arg) const;

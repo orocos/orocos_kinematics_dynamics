@@ -70,7 +70,6 @@ public:
     VectorAcc(const Vector& _p,const Vector& _v):p(_p),v(_v),dv(Vector::Zero()) {}
     VectorAcc(const Vector& _p,const Vector& _v,const Vector& _dv):
         p(_p),v(_v),dv(_dv) {}
-    inline VectorAcc& operator = (const VectorAcc& arg);
     inline VectorAcc& operator = (const Vector& arg);
     inline VectorAcc& operator += (const VectorAcc& arg);
     inline VectorAcc& operator -= (const VectorAcc& arg);
@@ -117,7 +116,6 @@ public:
     explicit RotationAcc(const Rotation& _R):R(_R),w(Vector::Zero()){}
     RotationAcc(const Rotation& _R,const Vector& _w,const Vector& _dw):
         R(_R),w(_w),dw(_dw) {}
-    inline RotationAcc& operator = (const RotationAcc& arg);
     inline RotationAcc& operator = (const Rotation& arg);
     inline static RotationAcc Identity();
     inline RotationAcc Inverse() const;
@@ -171,7 +169,6 @@ public:
         M(_T.M,_t.rot,_dt.rot),p(_T.p,_t.vel,_dt.vel) {}
     FrameAcc(const RotationAcc& _M,const VectorAcc& _p):M(_M),p(_p) {}
 
-    inline FrameAcc& operator = (const FrameAcc& arg);
     inline FrameAcc& operator = (const Frame& arg);
     inline static FrameAcc Identity();
     inline FrameAcc Inverse() const;

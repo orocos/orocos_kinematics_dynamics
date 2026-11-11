@@ -28,6 +28,20 @@ more.
 - `FRAMES_CHECKI(x)` is removed. Index checks are plain `assert(x)`, so they follow `NDEBUG`:
   they are active in Debug builds and compiled out in Release builds.
 
+## Frame types are trivially copyable (ABI change)
+
+The user-written copy constructors and copy assignment operators of `Vector`, `Rotation`,
+`Frame`, `Vector2`, `Rotation2`, `Frame2`, `VectorVel`, `RotationVel`, `FrameVel`,
+`VectorAcc`, `RotationAcc`, `FrameAcc`, `Rall1d` and `Rall2d` are gone. The implicit ones do
+the same member-wise copy, so the frame types, `Twist`, `Wrench`, `doubleVel` and `doubleAcc`
+are now `std::is_trivially_copyable`: they can be copied with `memcpy`, and the ABI can pass
+them in registers.
+
+- Source compatible: copying, assigning and passing by value behave as before. The
+  converting assignments such as `FrameVel& operator=(const Frame&)` are unchanged.
+- Binary incompatible: the copy operations are no longer emitted as functions and the
+  calling convention of these types changes. Rebuild everything that uses them against 2.0.
+
 ## Bug fixes that change results
 
 These functions gave wrong results in 1.x. Code that worked around them must drop the

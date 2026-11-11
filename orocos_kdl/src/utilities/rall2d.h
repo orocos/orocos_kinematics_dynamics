@@ -68,12 +68,6 @@ class Rall2d
 
         inline Rall2d(typename TI<T>::Arg tn,const V& afg,const V& afg2):t(tn),d(afg),dd(afg2) {}
 
-        // = Copy Constructor
-        inline Rall2d(const Rall2d<T,V,S>& r):t(r.t),d(r.d),dd(r.dd) {}
-            //if one defines this constructor, it's better optimized then the
-            //automatically generated one ( that one set's up a loop to copy
-            // word by word.
-        
         // = Member functions to access internal structures :
         inline T& Value() {
             return t;
@@ -100,9 +94,6 @@ class Rall2d
         // = assignment operators
         inline Rall2d<T,V,S>& operator =(S c)
             {t=c;SetToZero(d);SetToZero(dd);return *this;}
-
-        inline Rall2d<T,V,S>& operator =(const Rall2d<T,V,S>& r)
-            {t=r.t;d=r.d;dd=r.dd;return *this;}
 
         inline Rall2d<T,V,S>& operator /=(const Rall2d<T,V,S>& rhs)
             {

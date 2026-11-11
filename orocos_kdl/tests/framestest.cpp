@@ -1,6 +1,7 @@
 #include "framestest.hpp"
 #include <frames_io.hpp>
 #include <utilities/utility.h>
+#include <type_traits>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( FramesTest );
 
@@ -784,4 +785,27 @@ void FramesTest::TestJntArrayWhenEmpty()
     CPPUNIT_ASSERT(Equal(a1,a3));
 }
 
-
+// The value types are plain aggregates of doubles: user-written copy operations would make
+// them non-trivially copyable, which costs register passing and memcpy in containers.
+void FramesTest::TestTriviallyCopyable() {
+    static_assert(std::is_trivially_copyable_v<Vector>, "Vector must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Rotation>, "Rotation must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Frame>, "Frame must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Twist>, "Twist must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Wrench>, "Wrench must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Vector2>, "Vector2 must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Rotation2>, "Rotation2 must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<Frame2>, "Frame2 must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<VectorVel>, "VectorVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<RotationVel>, "RotationVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<FrameVel>, "FrameVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<TwistVel>, "TwistVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<VectorAcc>, "VectorAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<RotationAcc>, "RotationAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<FrameAcc>, "FrameAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<TwistAcc>, "TwistAcc must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<doubleVel>, "doubleVel must be trivially copyable");
+    static_assert(std::is_trivially_copyable_v<doubleAcc>, "doubleAcc must be trivially copyable");
+    // The asserts are compile-time; this keeps the test case from being empty.
+    CPPUNIT_ASSERT(true);
+}

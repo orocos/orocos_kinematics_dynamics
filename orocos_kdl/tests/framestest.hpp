@@ -3,6 +3,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <frames.hpp>
+#include <framevel.hpp>
+#include <frameacc.hpp>
 #include <jntarray.hpp>
 
 using namespace KDL;
@@ -21,6 +23,7 @@ class FramesTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestRotationDiff);
     CPPUNIT_TEST(TestEuler);
     CPPUNIT_TEST(TestGetRotAngle);
+    CPPUNIT_TEST(TestTriviallyCopyable);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -39,6 +42,7 @@ public:
 	void TestRotationDiff();
 	void TestEuler();
 	void TestGetRotAngle();
+    void TestTriviallyCopyable();
 
 private:
     void TestVector2(Vector& v);

@@ -33,26 +33,11 @@
 
 
 
-inline Vector::Vector(const Vector & arg)
-{
-    data[0] = arg.data[0];
-    data[1] = arg.data[1];
-    data[2] = arg.data[2];
-}
-
 inline Vector::Vector(double x,double y, double z)
 {
         data[0]=x;data[1]=y;data[2]=z;
 }
 
-
-inline Vector& Vector::operator =(const Vector & arg)
-{
-    data[0] = arg.data[0];
-    data[1] = arg.data[1];
-    data[2] = arg.data[2];
-    return *this;
-}
 
 inline Vector operator +(const Vector & lhs,const Vector& rhs)
 {
@@ -425,17 +410,6 @@ Frame Frame::Inverse() const
 }
 
 
-Frame& Frame::operator =(const Frame & arg)
-{ 
-    M = arg.M;
-    p = arg.p;
-    return *this;
-}
-
-Frame::Frame(const Frame & arg) :
-    p(arg.p),M(arg.M)
-{}
-
 
 void Vector::ReverseSign()
 {
@@ -510,17 +484,6 @@ Rotation::Rotation(const Vector& x,const Vector& y,const Vector& z)
     data[0] = x.data[0];data[3] = x.data[1];data[6] = x.data[2];
     data[1] = y.data[0];data[4] = y.data[1];data[7] = y.data[2];
     data[2] = z.data[0];data[5] = z.data[1];data[8] = z.data[2];
-}
-
-Rotation::Rotation(const Rotation& arg) {
-    int count=9;
-    while (count--) data[count] = arg.data[count];
-}
-
-Rotation& Rotation::operator=(const Rotation& arg) {
-    int count=9;
-    while (count--) data[count] = arg.data[count];
-    return *this;
 }
 
 Vector Rotation::operator*(const Vector& v) const {
@@ -722,24 +685,11 @@ tmp_XY.Set2DXY(v_XY);
 
 
 //============ 2 dimensional version of the frames objects =============
-inline Vector2::Vector2(const Vector2 & arg)
-{
-    data[0] = arg.data[0];
-    data[1] = arg.data[1];
-}
-
 inline Vector2::Vector2(double x,double y)
 {
         data[0]=x;data[1]=y;
 }
 
-
-inline Vector2& Vector2::operator =(const Vector2 & arg)
-{
-    data[0] = arg.data[0];
-    data[1] = arg.data[1];
-    return *this;
-}
 
 
 inline Vector2 operator +(const Vector2 & lhs,const Vector2& rhs)
@@ -842,15 +792,6 @@ inline void Vector2::Set3DPlane(const Frame& F_someframe_XY,const Vector& v_some
     Vector tmp = F_someframe_XY.Inverse(v_someframe);
     data[0]=tmp(0);
     data[1]=tmp(1);
-}
-
-inline Rotation2::Rotation2(const Rotation2& arg) {
-    c=arg.c;s=arg.s;
-}
-
-inline Rotation2& Rotation2::operator=(const Rotation2& arg) {
-    c=arg.c;s=arg.s;
-    return *this;
 }
 
 inline Vector2 Rotation2::operator*(const Vector2& v) const {
@@ -962,17 +903,6 @@ inline Frame2 Frame2::Inverse() const
     tmp.SetInverse();
     return tmp;
 }
-
-inline Frame2& Frame2::operator =(const Frame2 & arg)
-{ 
-    M = arg.M;
-    p = arg.p;
-    return *this;
-}
-
-inline Frame2::Frame2(const Frame2 & arg) :
-    p(arg.p), M(arg.M)
-{}
 
 
 inline double Frame2::operator()(int i,int j) {

@@ -89,13 +89,6 @@ VectorAcc operator * (const VectorAcc& r2,const doubleAcc& r1) {
                );
 }
 
-VectorAcc& VectorAcc::operator = (const VectorAcc& arg) {
-    p=arg.p;
-    v=arg.v;
-    dv=arg.dv;
-    return *this;
-}
-
 VectorAcc& VectorAcc::operator = (const Vector& arg) {
     p=arg;
     v=Vector::Zero();
@@ -204,12 +197,6 @@ RotationAcc operator* (const RotationAcc& r1,const Rotation& r2) {
     return RotationAcc( r1.R*r2, r1.w, r1.dw );
 }
 
-RotationAcc& RotationAcc::operator = (const RotationAcc& arg) {
-    R=arg.R;
-    w=arg.w;
-    dw=arg.dw;
-    return *this;
-}
 RotationAcc& RotationAcc::operator = (const Rotation& arg) {
     R = arg;
     w = Vector::Zero();
@@ -335,12 +322,6 @@ bool Equal(const RotationAcc& r1,const Rotation& r2,double eps) {
 
 // Methods and operators related to FrameAcc
 // They all delegate most of the work to RotationAcc and VectorAcc
-FrameAcc& FrameAcc::operator = (const FrameAcc& arg) {
-    M=arg.M;
-    p=arg.p;
-    return *this;
-}
-
 FrameAcc FrameAcc::Identity() {
     return FrameAcc(RotationAcc::Identity(),VectorAcc::Zero());
 }
