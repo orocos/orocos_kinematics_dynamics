@@ -109,7 +109,12 @@ the unpickled value is `Equal` to, but generally not `==`, the original.
   rotations, unit vectors and angles behave as before) and relative above it. `eps = 0`
   means exact, `+-inf` equals only itself, and `NaN` never equals anything. In 1.x the test
   was the strict, purely absolute `|a - b| < eps` for the frame types (so `Equal(1.0, 1.0, 0.0)`
-  was false and two values of 1e9 one ulp apart could be unequal) and `<= eps` for the arrays.
+  was false) and `<= eps` for the arrays. Because the tolerance was absolute, values around
+  1e9 that were about 17 ulp apart (about 2e-6) were unequal in 1.x and are `Equal` in 2.0.
+- **`-ffast-math`:** the scalar `Equal(double, double, eps)` is `inline`, so it is compiled
+  into consumer code. Under `-ffast-math` or `-ffinite-math-only`, `isfinite()` folds to
+  true and `Equal(inf, x)` may return true. Do not rely on the infinity and NaN handling of
+  `Equal` with those flags.
 - **Geometric types scale per physical quantity:** every component satisfies `a[i] == b[i]` or
   `|a[i] - b[i]| <= eps * S`, where `S = max(1, largest finite |a[i]|, |b[i]| of that
   quantity)`. `Frame` compares `p` and `M` separately, `Twist` compares `vel` and `rot`,
@@ -139,7 +144,8 @@ writer.
 `eps` parameter (`VectorAcc::Norm()` is now also `const`). They return 0 only for the exact
 zero vector. In 1.x, `Vector(5e-7, 0, 0).Norm()` returned 0 while `Vector(0, 5e-7, 0).Norm()`
 returned 5e-7, because the cutoff was only checked when x was the largest component; `Vector2`
-had the same defect. The overflow- and underflow-safe scaling is unchanged, and
+had the same defect. `VectorVel::Norm()` returned `(0, 0)` (value and derivative) for every
+`|p| < 1e-6`, on all axes; it now returns the true norm except for the exact zero vector. The overflow- and underflow-safe scaling is unchanged, and
 `Normalize(eps)` keeps its degeneracy threshold. PyKDL's `Vector.Norm()` and
 `VectorVel.Norm()` no longer accept `eps` either.
 
@@ -153,8 +159,10 @@ had the same defect. The overflow- and underflow-safe scaling is unchanged, and
 - `utilities/scoped_ptr.hpp` (`KDL::scoped_ptr`) was an internal helper, installed by accident.
   Use `std::unique_ptr` from `<memory>`; it offers the same `get()`, `reset()`, `release()`,
   `operator*` and `operator->`:
-  `sed -i -E 's/\bscoped_ptr\b/std::unique_ptr/g; s|utilities/scoped_ptr\.hpp|memory|'`
-  (the include becomes `<memory>`, so fix the brackets if you used quotes).
+  `sed -i -E 's@#include *[<"](kdl/)?utilities/scoped_ptr\.hpp[>"]@#include <memory>@; s/KDL::scoped_ptr/std::unique_ptr/g; s/\bscoped_ptr\b/std::unique_ptr/g'`
+  (the include is rewritten first and always becomes `<memory>`; the qualified `KDL::scoped_ptr`
+  is handled before the bare name; a `using namespace KDL;` and `scoped_ptr` used unqualified
+  are covered, but check the result).
 - `chainidsolver_vereshchagin.hpp` and the `ChainIdSolver_Vereshchagin` class were a
   deprecated alias, which printed a warning on construction. Use `ChainHdSolver_Vereshchagin`
   from `chainhdsolver_vereshchagin.hpp`:

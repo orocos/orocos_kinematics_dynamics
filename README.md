@@ -13,6 +13,8 @@ The C++ library is located in the `orocos_kdl` folder. The installation instruct
 The python bindings, are located in the `python_orocos_kdl` folder. The installation instructions can be found in
 [INSTALL.md](python_orocos_kdl/INSTALL.md).
 
+Upgrading from 1.x? See [MIGRATING.md](orocos_kdl/MIGRATING.md) for every API and ABI change in 2.0.
+
 Always use the same version of the C++ library and the python bindings. As a mismatch between these two can cause many issues.
 
 Also when using ROS 2, it is preferred to use the colcon installation method over the `cmake/make` method.

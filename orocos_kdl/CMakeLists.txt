@@ -12,7 +12,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.12.0)
 
 PROJECT(orocos_kdl)
 
-SET(KDL_VERSION 1.5.4)
+SET(KDL_VERSION 2.0.0)
 
 # package.xml carries the same version, and under ament, ament_package()
 # generates orocos_kdlConfig-version.cmake from it while the config-version file

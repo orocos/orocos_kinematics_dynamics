@@ -7,8 +7,17 @@ repository-wide `CHANGELOG.md
 <https://github.com/orocos/orocos_kinematics_dynamics/blob/master/CHANGELOG.md>`_
 for that history.
 
-Forthcoming
------------
+2.0.0 (2026-11-11)
+------------------
+* Release 2.0.0, an API and ABI break (SONAME 2.0). C++17 is now required, also for consumers.
+* Move the headers to ``include/kdl`` and use ``.hpp``/``.cpp`` throughout; the ``.h`` names remain
+  as deprecated stubs, and the ``.inl`` files are gone.
+* ``operator==`` is exact and ``Equal`` is tolerant and scaled; ``epsilon`` and the constants are
+  ``inline constexpr``; ``Norm()`` takes no argument.
+* Fix wrong results in ``Set2DPlane``, ``Rotation2::operator()``, ``posrandom(Frame&)``,
+  ``RotationVel::RotY`` and ``diff(FrameVel, FrameVel)``.
+* Remove ``scoped_ptr`` and ``ChainIdSolver_Vereshchagin``; the frame types are trivially copyable.
+* See ``orocos_kdl/MIGRATING.md`` for every change and how to migrate.
 * Convert from an optionally-catkin to an optionally-ament package. The package keeps
   ``<build_type>cmake</build_type>`` and still builds with plain cmake/make when neither ament
   nor colcon is installed.

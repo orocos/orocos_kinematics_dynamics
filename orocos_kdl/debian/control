@@ -15,7 +15,7 @@ Homepage: https://www.orocos.org/kdl
 Vcs-Browser: https://github.com/orocos/orocos_kinematics_dynamics
 Vcs-Git: https://github.com/orocos/orocos_kinematics_dynamics.git
 
-Package: liborocos-kdl1.5
+Package: liborocos-kdl2.0
 Section: libs
 Architecture: any
 Multi-Arch: same
@@ -36,7 +36,7 @@ Section: libdevel
 Architecture: any
 Depends:
  libeigen3-dev,
- liborocos-kdl1.5 (= ${binary:Version}),
+ liborocos-kdl2.0 (= ${binary:Version}),
  ${misc:Depends},
 Description: Kinematics and Dynamics Library development files
  Orocos project to supply RealTime usable kinematics and dynamics code,

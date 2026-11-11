@@ -7,8 +7,12 @@ repository-wide `CHANGELOG.md
 <https://github.com/orocos/orocos_kinematics_dynamics/blob/master/CHANGELOG.md>`_
 for that history.
 
-Forthcoming
------------
+2.0.0 (2026-11-11)
+------------------
+* Release 2.0.0, to match orocos_kdl 2.0.0 (SONAME 2.0).
+* ``Vector.Norm()`` and ``VectorVel.Norm()`` no longer accept ``eps``; ``diff(FrameVel, FrameVel)``
+  returns the translational and rotational parts in the right order.
+* See ``orocos_kdl/MIGRATING.md`` for every change and how to migrate.
 * Convert from an optionally-catkin to an optionally-ament package. The package keeps
   ``<build_type>cmake</build_type>`` and still builds with plain cmake/make when neither ament
   nor colcon is installed.
