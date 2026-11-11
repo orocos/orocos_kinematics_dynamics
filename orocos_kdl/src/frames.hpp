@@ -341,11 +341,11 @@ public:
 
 // = Rotations
     //! The Rot... static functions give the value of the appropriate rotation matrix back.
-    static Rotation RotX(double angle);
+    inline static Rotation RotX(double angle);
     //! The Rot... static functions give the value of the appropriate rotation matrix back.
-    static Rotation RotY(double angle);
+    inline static Rotation RotY(double angle);
     //! The Rot... static functions give the value of the appropriate rotation matrix back.
-    static Rotation RotZ(double angle);
+    inline static Rotation RotZ(double angle);
     //! The DoRot... functions apply a rotation R to *this,such that *this = *this * Rot..
     //! DoRot... functions are only defined when they can be executed more efficiently
     void DoRotX(double angle);
@@ -1709,6 +1709,22 @@ inline Wrench Rotation::operator * (const Wrench& arg) const
 
 inline Rotation Rotation::Identity() {
         return Rotation(1,0,0,0,1,0,0,0,1);
+}
+
+inline Rotation Rotation::RotX(double angle) {
+    double cs=cos(angle);
+    double sn=sin(angle);
+    return Rotation(1,0,0,0,cs,-sn,0,sn,cs);
+}
+inline Rotation Rotation::RotY(double angle) {
+    double cs=cos(angle);
+    double sn=sin(angle);
+    return Rotation(cs,0,sn,0,1,0,-sn,0,cs);
+}
+inline Rotation Rotation::RotZ(double angle) {
+    double cs=cos(angle);
+    double sn=sin(angle);
+    return Rotation(cs,-sn,0,sn,cs,0,0,0,1);
 }
 
 inline Rotation Rotation::Inverse() const

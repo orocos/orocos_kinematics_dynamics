@@ -454,22 +454,6 @@ void Rotation::DoRotZ(double angle)
     (*this)(2,0) = x3;
 }
 
-Rotation Rotation::RotX(double angle) {
-    double cs=cos(angle);
-    double sn=sin(angle);
-    return Rotation(1,0,0,0,cs,-sn,0,sn,cs);
-}
-Rotation Rotation::RotY(double angle) {
-    double cs=cos(angle);
-    double sn=sin(angle);
-    return Rotation(cs,0,sn,0,1,0,-sn,0,cs);
-}
-Rotation Rotation::RotZ(double angle) {
-    double cs=cos(angle);
-    double sn=sin(angle);
-    return Rotation(cs,-sn,0,sn,cs,0,0,0,1);
-}
-
 void Frame::Integrate(const Twist& t_this,double samplefrequency)
 {
     double n = t_this.rot.Norm()/samplefrequency;

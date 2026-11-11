@@ -66,11 +66,12 @@ workaround.
 `frames.inl`, `framevel.inl` and `frameacc.inl` are no longer installed. Each function they
 defined now lives either in `frames.hpp`, `framevel.hpp` or `frameacc.hpp`, still `inline`, or
 in the library. Small, hot functions stay inline: constructors, accessors, the exact
-`operator==`/`!=`, and the `double` and `Vel` arithmetic. `Rotation * Rotation` and
-`operator==(Rotation, Rotation)` became inline too. These now live in the library:
+`operator==`/`!=`, the `double` and `Vel` arithmetic, and `Rotation::RotX/RotY/RotZ`.
+`Rotation * Rotation` and `operator==(Rotation, Rotation)` became inline too. These now live
+in the library:
 
 - functions that call `sin`/`cos`/`atan2`/`sqrt` or convert between rotation representations,
-  such as `Rotation::RotX/RotY/RotZ`, `Rotation::DoRotX/DoRotY/DoRotZ`, `Rotation2::Rot`,
+  such as `Rotation::DoRotX/DoRotY/DoRotZ`, `Rotation2::Rot`,
   `Frame::Integrate`, `RotationVel::Rot*`, `VectorVel::Norm`, and `diff`/`addDelta` of
   rotations and frames
 - the tolerant `Equal` overloads of all frame types
@@ -82,6 +83,6 @@ What this means for you:
 - Source compatible, unless you include an `.inl` yourself. The matching `.hpp` provides
   everything, so drop the include
   (`sed -i -E '/#include *[<"](kdl\/)?(frames|framevel|frameacc)\.inl[">]/d'`).
-- Binary incompatible: the library exports 138 new functions and no longer exports
+- Binary incompatible: the library exports 135 new functions and no longer exports
   `operator*(const Rotation&, const Rotation&)` or `operator==(const Rotation&, const Rotation&)`.
   Rebuild against 2.0.
