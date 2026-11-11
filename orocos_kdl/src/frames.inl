@@ -861,9 +861,9 @@ IMETHOD double Rotation2::operator()(int i,int j) const {
     FRAMES_CHECKI((0<=i)&&(i<=1)&&(0<=j)&&(j<=1));
     if (i==j) return c;
     if (i==0) 
-        return s;
-    else
         return -s;
+    else
+        return s;
 }
 
 

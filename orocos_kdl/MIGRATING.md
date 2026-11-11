@@ -22,3 +22,6 @@ workaround.
 
 - `Vector::Set2DPlane(F, v)` now sets the vector to `F * Vector(v.x(), v.y(), 0)`, as
   documented. It used to leave the vector unchanged.
+- `Rotation2::operator()(i, j)`, and through it `Frame2::operator()(i, j)`, now return the
+  entries of the rotation matrix (`R(0, 1) == -sin(angle)`). They used to return its
+  transpose. `Rotation2 * Vector2` was already correct.
