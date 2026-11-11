@@ -85,7 +85,7 @@ WARN_LOGFILE           =
 INPUT                  = @PROJ_SOURCE_DIR@/include/kdl
 FILE_PATTERNS          = *.hpp
 			 
-RECURSIVE              = NO
+RECURSIVE              = YES
 EXCLUDE                = 
 	
 EXCLUDE_SYMLINKS       = NO

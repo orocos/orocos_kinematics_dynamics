@@ -82,6 +82,13 @@ namespace KDL {
 
         /**
          * This method calculates the external wrench that is applied on the robot's end-effector.
+         * It works in two parts:
+         *  - Part I: a first-order momentum observer (see the class description for the reference)
+         *    estimates the torques felt in the joints as a result of the external wrench, available
+         *    through getEstimatedJntTorque().
+         *  - Part II: these joint torques are propagated to a Cartesian wrench using a pseudo-inverse of
+         *    the Jacobian transpose, computed by SVD (see setSVDEps() and setSVDMaxIter()).
+         *
          * Input parameters:
          * \param joint_position The current (measured) joint positions.
          * \param joint_velocity The current (measured) joint velocities.

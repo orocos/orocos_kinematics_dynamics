@@ -373,7 +373,7 @@ public:
 	/** Returns the rotation angle around the equiv. axis
 	 * @param axis the rotation axis is returned in this variable
 	 * @param eps :  in the case of angle == 0 : rot axis is undefined and chosen
-	 *                                         to be +/- Z-axis
+	 *                                         to be the Z-axis
 	 *               in the case of angle == PI : 2 solutions, positive Z-component
 	 *                                            of the axis is chosen.
 	 * @result returns the rotation angle (between [0..PI] )

@@ -19,6 +19,8 @@ builders:
       doxygen_input_dir: 'include/kdl'
       extra_doxyfile_statements:
         - 'FILE_PATTERNS = *.hpp'
+        ## Also document include/kdl/utilities.
+        - 'RECURSIVE = YES'
         - 'EXCLUDE_PATTERNS = */CMake* */.svn/*'
         - 'TAB_SIZE = 4'
         - 'EXTRACT_ALL = YES'
