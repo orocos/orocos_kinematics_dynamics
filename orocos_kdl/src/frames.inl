@@ -710,7 +710,7 @@ void Vector::Set2DPlane(const Frame& F_someframe_XY,const Vector2& v_XY)
 {
 Vector tmp_XY;
 tmp_XY.Set2DXY(v_XY);
-tmp_XY = F_someframe_XY*(tmp_XY);
+*this = F_someframe_XY*tmp_XY;
 }
 
 

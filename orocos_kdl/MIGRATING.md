@@ -14,3 +14,11 @@ the CMake target must pass `-std=c++17` themselves.
 All installed headers are now self-contained: `kdl/framevel_io.hpp` includes
 `kdl/framevel.hpp`, and `kdl/utilities/rallNd.h` is now a valid, standalone header (its
 templates live in `namespace KDL`).
+
+## Bug fixes that change results
+
+These functions gave wrong results in 1.x. Code that worked around them must drop the
+workaround.
+
+- `Vector::Set2DPlane(F, v)` now sets the vector to `F * Vector(v.x(), v.y(), 0)`, as
+  documented. It used to leave the vector unchanged.
