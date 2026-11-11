@@ -29,3 +29,7 @@ workaround.
   other `posrandom` overloads. It used to call `random`, so the origin could be negative.
 - `RotationVel::RotY(angle)` now rotates about Y. Its rotation matrix used to be
   `Rotation::RotX(angle.value())`, with the angular velocity of a Y rotation.
+- `diff(const FrameVel&, const FrameVel&, dt)` (and PyKDL's `diff(FrameVel, FrameVel)`) now
+  returns the translational part in `vel` and the rotational part in `rot`, like
+  `diff(Frame, Frame)` and as `addDelta(FrameVel, TwistVel)` expects. The two used to be
+  swapped.

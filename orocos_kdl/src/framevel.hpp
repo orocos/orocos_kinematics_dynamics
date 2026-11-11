@@ -359,7 +359,7 @@ IMETHOD RotationVel addDelta(const RotationVel& a,const VectorVel&da,double dt=1
 }
 
 IMETHOD TwistVel diff(const FrameVel& a,const FrameVel& b,double dt=1.0) {
-	return TwistVel(diff(a.M,b.M,dt),diff(a.p,b.p,dt));
+	return TwistVel(diff(a.p,b.p,dt),diff(a.M,b.M,dt));
 }
 
 IMETHOD FrameVel addDelta(const FrameVel& a,const TwistVel& da,double dt=1.0) {
