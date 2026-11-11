@@ -8,7 +8,6 @@ set(KDL_SOURCES
   chainfksolvervel_recursive.cpp
   chainhdsolver_vereshchagin.cpp
   chainidsolver_recursive_newton_euler.cpp
-  chainidsolver_vereshchagin.cpp
   chainiksolverpos_lma.cpp
   chainiksolverpos_nr.cpp
   chainiksolverpos_nr_jl.cpp
@@ -80,7 +79,6 @@ set(KDL_PUBLIC_HEADERS
   chainhdsolver_vereshchagin.hpp
   chainidsolver.hpp
   chainidsolver_recursive_newton_euler.hpp
-  chainidsolver_vereshchagin.hpp
   chainiksolver.hpp
   chainiksolverpos_lma.hpp
   chainiksolverpos_nr.hpp
@@ -153,7 +151,6 @@ set(KDL_UTILITY_HEADERS
   utilities/rall2d.h
   utilities/rall2d_io.h
   utilities/rallNd.h
-  utilities/scoped_ptr.hpp
   utilities/svd_HH.hpp
   utilities/svd_eigen_HH.hpp
   utilities/svd_eigen_Macie.hpp

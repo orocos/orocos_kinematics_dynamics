@@ -42,7 +42,6 @@
 
 #include "path_composite.hpp"
 #include "utilities/error.h"
-#include "utilities/scoped_ptr.hpp"
 #include <memory>
 
 namespace KDL {
@@ -111,7 +110,7 @@ Twist Path_Composite::Acc(double s,double sd,double sdd) const {
 }
 
 Path* Path_Composite::Clone()  {
-	scoped_ptr<Path_Composite> comp( new Path_Composite() );
+	std::unique_ptr<Path_Composite> comp( new Path_Composite() );
 	for (unsigned int i = 0; i < dv.size(); ++i) {
 		comp->Add(gv[i].first->Clone(), gv[i].second);
 	}

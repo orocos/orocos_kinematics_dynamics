@@ -147,3 +147,17 @@ had the same defect. The overflow- and underflow-safe scaling is unchanged, and
   matches other `Norm(...)` calls with an argument).
 - Binary incompatible: the mangled names of the four `Norm` functions changed. Rebuild
   against 2.0.
+
+## `scoped_ptr` and `ChainIdSolver_Vereshchagin` are removed
+
+- `utilities/scoped_ptr.hpp` (`KDL::scoped_ptr`) was an internal helper, installed by accident.
+  Use `std::unique_ptr` from `<memory>`; it offers the same `get()`, `reset()`, `release()`,
+  `operator*` and `operator->`:
+  `sed -i -E 's/\bscoped_ptr\b/std::unique_ptr/g; s|utilities/scoped_ptr\.hpp|memory|'`
+  (the include becomes `<memory>`, so fix the brackets if you used quotes).
+- `chainidsolver_vereshchagin.hpp` and the `ChainIdSolver_Vereshchagin` class were a
+  deprecated alias, which printed a warning on construction. Use `ChainHdSolver_Vereshchagin`
+  from `chainhdsolver_vereshchagin.hpp`:
+  `sed -i 's/ChainIdSolver_Vereshchagin/ChainHdSolver_Vereshchagin/g; s/chainidsolver_vereshchagin/chainhdsolver_vereshchagin/g'`
+- Binary incompatible: the library no longer exports the `ChainIdSolver_Vereshchagin` symbols.
+  Rebuild against 2.0.

@@ -44,7 +44,6 @@
 #include "path_line.hpp"
 #include "path_circle.hpp"
 #include "utilities/error.h"
-#include "utilities/scoped_ptr.hpp"
 #include <memory>
 
 
@@ -106,11 +105,11 @@ void Path_RoundedComposite::Add(const Frame& F_base_point) {
 			if (d >= bcdist)
 				throw Error_MotionPlanning_Not_Feasible(6);
 
-			scoped_ptr < Path
+			std::unique_ptr< Path
 					> line1(
 							new Path_Line(F_base_start, F_base_via,
 									orient->Clone(), eqradius));
-			scoped_ptr < Path
+			std::unique_ptr< Path
 					> line2(
 							new Path_Line(F_base_via, F_base_point,
 									orient->Clone(), eqradius));

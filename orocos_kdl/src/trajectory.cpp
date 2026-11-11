@@ -42,7 +42,6 @@
 
 #include "utilities/error.h"
 #include "utilities/error_stack.h"
-#include "utilities/scoped_ptr.hpp"
 #include "trajectory.hpp"
 #include "path.hpp"
 #include "trajectory_segment.hpp"
@@ -60,8 +59,8 @@ Trajectory* Trajectory::Read(std::istream& is) {
 	Eat(is,'[');
 	if (strcmp(storage,"SEGMENT")==0) {
 		IOTrace("SEGMENT");
-		scoped_ptr<Path>      geom(    Path::Read(is)       );
-		scoped_ptr<VelocityProfile> motprof( VelocityProfile::Read(is)  );
+		std::unique_ptr<Path>      geom(    Path::Read(is)       );
+		std::unique_ptr<VelocityProfile> motprof( VelocityProfile::Read(is)  );
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
