@@ -105,6 +105,37 @@ jobs:
           export PYTHONPATH=/usr/local/lib/python${python_version_short}/dist-packages${PYTHONPATH:+:${PYTHONPATH}}
           python tests/PyKDLtest.py
 
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-24.04
+    env:
+      CC: gcc
+      CXX: g++
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - name: Install
+        run: sudo apt-get install lcov libeigen3-dev libcppunit-dev
+      - name: Build with coverage instrumentation
+        run: |
+          cmake -S orocos_kdl -B build -DENABLE_TESTS=ON -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug
+          cmake --build build -j
+      - name: Measure and gate coverage
+        run: cmake --build build --target coverage
+      - name: Summary
+        if: always()
+        run: |
+          if [ -f build/coverage/kdl.info ]; then
+            lcov --summary build/coverage/kdl.info >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: build/coverage/html
+
   industrial_ci:
     name: Industrial CI - ${{ matrix.env.ROS_DISTRO }}
     runs-on: ubuntu-latest

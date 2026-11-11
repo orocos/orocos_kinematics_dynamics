@@ -130,6 +130,19 @@ IF( ENABLE_TESTS )
   ENDIF ( CPPUNIT AND CPPUNIT_HEADERS )
 ENDIF(ENABLE_TESTS )
 
+OPTION(ENABLE_COVERAGE "Instrument for gcov coverage (GCC only)" OFF)
+IF( ENABLE_COVERAGE )
+  IF( NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
+    MESSAGE( FATAL_ERROR "ENABLE_COVERAGE requires GCC, found ${CMAKE_CXX_COMPILER_ID}" )
+  ENDIF()
+  # -fkeep-inline-functions emits the inline functions nobody calls, so that
+  # they show up as uncovered instead of being missing from the report.
+  ADD_COMPILE_OPTIONS( --coverage -O0 -fkeep-inline-functions )
+  # add_link_options needs CMake 3.13, the minimum here is 3.12.
+  SET( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage" )
+  SET( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --coverage" )
+ENDIF()
+
 OPTION(ENABLE_EXAMPLES OFF "Enable building of examples")
 
 ADD_SUBDIRECTORY( doc )
