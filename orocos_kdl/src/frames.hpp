@@ -382,8 +382,8 @@ public:
 	 * @param axis the rotation axis is returned in this variable
 	 * @param eps :  in the case of angle == 0 : rot axis is undefined and chosen
 	 *                                         to be +/- Z-axis
-	 *               in the case of angle == PI : 2 solutions, positive Z-component
-	 *                                            of the axis is chosen.
+	 *               in the case of angle == PI : 2 solutions, the one whose largest
+	 *                                            component (in absolute value) is positive is chosen.
 	 * @result returns the rotation angle (between [0..PI] )
 	 */
 	double GetRotAngle(Vector& axis,double eps=epsilon) const;

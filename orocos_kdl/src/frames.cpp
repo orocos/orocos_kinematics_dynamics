@@ -349,8 +349,8 @@ Vector Rotation::GetRot() const
  * @param axis the rotation axis is returned in this variable
  * @param eps :  in the case of angle == 0 : rot axis is undefined and chosen
  *                                         to be the Z-axis
- *               in the case of angle == PI : 2 solutions, positive Z-component
- *                                            of the axis is chosen.
+ *               in the case of angle == PI : 2 solutions, the one whose largest
+ *                                            component (in absolute value) is positive is chosen.
  * @result returns the rotation angle (between [0..PI] )
  * /todo :
  *   Check corresponding routines in rframes and rrframes
@@ -358,7 +358,6 @@ Vector Rotation::GetRot() const
 double Rotation::GetRotAngle(Vector& axis,double eps) const {
     double angle,x,y,z; // variables for result
     double epsilon = eps; // margin to allow for rounding errors
-    double epsilon2 = eps*10; // margin to distinguish between 0 and 180 degrees
 
     // optional check that input is pure rotation, 'isRotationMatrix' is defined at:
     // http://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/
@@ -367,13 +366,10 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
         && (std::abs(data[2] - data[6])< epsilon)
         && (std::abs(data[5] - data[7]) < epsilon))
     {
-        // singularity found
-        // first check for identity matrix which must have +1 for all terms
-        //  in leading diagonal and zero in other terms
-        if ((std::abs(data[1] + data[3]) < epsilon2)
-            && (std::abs(data[2] + data[6]) < epsilon2)
-            && (std::abs(data[5] + data[7]) < epsilon2)
-            && (std::abs(data[0] + data[4] + data[8]-3) < epsilon2))
+        // singularity found: angle is either 0 or PI (180 degrees)
+        // For angle = 0, trace = 3. For angle = PI, trace = -1.
+        // Distinguish between 0 and PI by checking the trace against 1.0.
+        if (data[0] + data[4] + data[8] > 1.0)
         {
             // this singularity is identity matrix so angle = 0, axis is arbitrary
             // Choose 0, 0, 1 to pass orocos tests
@@ -384,9 +380,9 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
 
         // otherwise this singularity is angle = 180
         angle = PI;
-        double xx = (data[0] + 1) / 2;
-        double yy = (data[4] + 1) / 2;
-        double zz = (data[8] + 1) / 2;
+        double xx = std::max(0.0, (data[0] + 1) / 2);
+        double yy = std::max(0.0, (data[4] + 1) / 2);
+        double zz = std::max(0.0, (data[8] + 1) / 2);
         double xy = (data[1] + data[3]) / 4;
         double xz = (data[2] + data[6]) / 4;
         double yz = (data[5] + data[7]) / 4;
@@ -413,6 +409,7 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
             y = yz/z;
         }
         axis = KDL::Vector(x, y, z);
+        axis.Normalize(eps);
         return angle; // return 180 deg rotation
     }
 
