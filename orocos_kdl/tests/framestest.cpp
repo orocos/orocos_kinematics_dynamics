@@ -492,6 +492,14 @@ void FramesTest::TestGetRotAngle() {
       CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(SCALED PI) axis norm", 1.0, axis.Norm(), epsilon);
       // the axis of a 180 degree rotation is only defined up to its sign
       CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(SCALED PI) axis", 1.0, std::abs(dot(axis, expected_axis)), epsilon);
+      // the sign is chosen such that the largest component (in absolute value) is positive
+      int largest = 0;
+      for (int i = 1; i < 3; ++i) {
+        if (std::abs(axis[i]) > std::abs(axis[largest])) {
+          largest = i;
+        }
+      }
+      CPPUNIT_ASSERT_MESSAGE("rot(SCALED PI) axis sign", axis[largest] > 0);
     }
   }
 

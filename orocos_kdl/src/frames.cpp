@@ -349,8 +349,8 @@ Vector Rotation::GetRot() const
  * @param axis the rotation axis is returned in this variable
  * @param eps :  in the case of angle == 0 : rot axis is undefined and chosen
  *                                         to be the Z-axis
- *               in the case of angle == PI : 2 solutions, positive Z-component
- *                                            of the axis is chosen.
+ *               in the case of angle == PI : 2 solutions, the one whose largest
+ *                                            component (in absolute value) is positive is chosen.
  * @result returns the rotation angle (between [0..PI] )
  * /todo :
  *   Check corresponding routines in rframes and rrframes
@@ -409,7 +409,7 @@ double Rotation::GetRotAngle(Vector& axis,double eps) const {
             y = yz/z;
         }
         axis = KDL::Vector(x, y, z);
-        axis.Normalize();
+        axis.Normalize(eps);
         return angle; // return 180 deg rotation
     }
 
