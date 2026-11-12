@@ -1127,40 +1127,25 @@ IMETHOD Rotation Rot(const Vector& axis_a_b) {
         );
     }
 IMETHOD Vector diff(const Vector& a,const Vector& b,double dt) {
-	if (&a == &b) {
-		return Vector::Zero();
-	}
 	return (b-a)/dt;
 }
 
 IMETHOD Vector diff(const Rotation& R_a_b1,const Rotation& R_a_b2,double dt) {
-	if (&R_a_b1 == &R_a_b2) {
-		return Vector::Zero();
-	}
 	Rotation R_b1_b2(R_a_b1.Inverse()*R_a_b2);
 	return R_a_b1 * R_b1_b2.GetRot() / dt;
 }
 
 IMETHOD Twist diff(const Frame& F_a_b1,const Frame& F_a_b2,double dt) {
-	if (&F_a_b1 == &F_a_b2) {
-		return Twist::Zero();
-	}
 	return Twist(
 			diff(F_a_b1.p,F_a_b2.p,dt),
 			diff(F_a_b1.M,F_a_b2.M,dt)
 			);
 }
 IMETHOD Twist diff(const Twist& a,const Twist& b,double dt) {
-	if (&a == &b) {
-		return Twist::Zero();
-	}
 	return Twist(diff(a.vel,b.vel,dt),diff(a.rot,b.rot,dt));
 }
 
 IMETHOD Wrench diff(const Wrench& a,const Wrench& b,double dt) {
-	if (&a == &b) {
-		return Wrench::Zero();
-	}
 	return Wrench(
 			diff(a.force,b.force,dt),
 			diff(a.torque,b.torque,dt)
