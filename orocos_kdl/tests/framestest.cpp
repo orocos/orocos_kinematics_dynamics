@@ -455,6 +455,46 @@ void FramesTest::TestGetRotAngle() {
     CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(NON-ORTHOGONAL, PI)", PI, angle, epsilon);
   }
 
+  // Test GetRotAngle on scaled rotation matrices s*R, as produced by Rotation::Quaternion
+  // from a quaternion whose norm is not exactly 1 (issue #491). The trace of s*I is 3*s, so
+  // these scales are far enough from 1 to fail the old |trace - 3| < 10*eps identity check.
+  const double scales[] = {1 - 1e-4, 1 - 1e-5, 1 + 1e-5, 1 + 1e-4};
+  for (double s : scales) {
+    Vector axis;
+    double angle = Rotation(s, 0, 0, 0, s, 0, 0, 0, s).GetRotAngle(axis);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("rot(SCALED IDENTITY)", 0.0, angle);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("rot(SCALED IDENTITY) axis", Vector(0, 0, 1), axis);
+  }
+
+  {
+    // the relative rotation computed by diff() for the quaternion of issue #491
+    Rotation R = Rotation::Quaternion(-0.728750, 0.129740, -0.190550, 0.644808);
+    Vector axis;
+    double angle = (R.Inverse() * R).GetRotAngle(axis);
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("rot(ISSUE 491)", 0.0, angle);
+  }
+
+  // A scaled 180 degree rotation must still be detected as such and yield a unit axis.
+  // For s > 1, (R(i,i) + 1) / 2 is negative for the axes perpendicular to the rotation axis.
+  const Vector axes[] = {Vector(1, 0, 0), Vector(0, 1, 0), Vector(0, 0, 1),
+                         Vector(1, 2, 3) / Vector(1, 2, 3).Norm(),
+                         Vector(-3, 1, 2) / Vector(-3, 1, 2).Norm()};
+  for (const Vector& expected_axis : axes) {
+    const Rotation R = Rotation::Rot2(expected_axis, PI);
+    for (double s : scales) {
+      const Rotation Rs(s * R(0, 0), s * R(0, 1), s * R(0, 2),
+                        s * R(1, 0), s * R(1, 1), s * R(1, 2),
+                        s * R(2, 0), s * R(2, 1), s * R(2, 2));
+      Vector axis;
+      double angle = Rs.GetRotAngle(axis);
+      CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(SCALED PI)", PI, angle, epsilon);
+      CPPUNIT_ASSERT(!isnan(axis.x()) && !isnan(axis.y()) && !isnan(axis.z()));
+      CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(SCALED PI) axis norm", 1.0, axis.Norm(), epsilon);
+      // the axis of a 180 degree rotation is only defined up to its sign
+      CPPUNIT_ASSERT_DOUBLES_EQUAL_MESSAGE("rot(SCALED PI) axis", 1.0, std::abs(dot(axis, expected_axis)), epsilon);
+    }
+  }
+
   // Tests to show that GetRotAngle does not work for an improper rotation matrix which has a determinant of -1;
   // an improper rotation matrix corresponds to a rotation between a right-hand and left-hand coordinate system
   {
