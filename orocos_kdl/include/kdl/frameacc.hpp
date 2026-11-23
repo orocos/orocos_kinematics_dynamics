@@ -343,6 +343,11 @@ inline TwistAcc TwistAcc::Zero()
     return TwistAcc(VectorAcc::Zero(),VectorAcc::Zero());
 }
 
+inline void SetToZero(TwistAcc& v)
+{
+    v = TwistAcc::Zero();
+}
+
 inline void TwistAcc::ReverseSign()
 {   
     vel.ReverseSign();

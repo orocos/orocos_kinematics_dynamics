@@ -60,6 +60,11 @@ workaround.
   returns the translational part in `vel` and the rotational part in `rot`, like
   `diff(Frame, Frame)` and as `addDelta(FrameVel, TwistVel)` expects. The two used to be
   swapped.
+- `Rotation::Rot(rotvec, angle)` now returns the identity when the norm of `rotvec` is below
+  `epsilon`, as documented. It used to return `RotX(angle)`. `RotationVel::Rot` likewise returns
+  the identity with zero angular velocity.
+- `SetToZero(TwistAcc&)` was declared but never defined, so calling it failed to link. It is
+  now defined.
 
 ## The `.inl` files are gone (ABI change)
 

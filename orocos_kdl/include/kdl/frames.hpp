@@ -358,8 +358,8 @@ public:
     void DoRotZ(double angle);
 
     //! Along an arbitrary axes.  It is not necessary to normalize rotvec.
-    //! returns identity rotation matrix in the case that the norm of rotvec
-    //! is to small to be used.
+    //! Returns the identity rotation matrix when the norm of rotvec is below
+    //! epsilon, so that the axis is undefined.
     // @see Rot2 if you want to handle this error in another way.
     static Rotation Rot(const Vector& rotvec,double angle);
 

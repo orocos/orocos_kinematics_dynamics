@@ -130,7 +130,8 @@ RotationVel RotationVel::Rot(const Vector& rotvec,const doubleVel& angle)
 // rotation around a constant vector !
 {
     Vector v(rotvec);
-	v.Normalize();
+    if (v.Normalize() == 0)
+        return RotationVel(Rotation::Identity(),Vector::Zero());
     return RotationVel(Rotation::Rot2(v,angle.t),v*angle.grad);
 }
 

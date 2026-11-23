@@ -268,8 +268,9 @@ Rotation Rotation::Rot(const Vector& rotaxis,double angle) {
     // can be found by multiplying it with an arbitrary vector p
     // and noting that this vector is rotated.
     Vector rotvec = rotaxis;
-	rotvec.Normalize();
-	return Rotation::Rot2(rotvec,angle);
+    if (rotvec.Normalize() == 0)
+        return Rotation::Identity();
+    return Rotation::Rot2(rotvec,angle);
 }
 
 Rotation Rotation::Rot2(const Vector& rotvec,double angle) {

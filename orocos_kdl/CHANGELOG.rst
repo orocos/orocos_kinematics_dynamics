@@ -15,7 +15,8 @@ for that history.
 * ``operator==`` is exact and ``Equal`` is tolerant and scaled; ``epsilon`` and the constants are
   ``inline constexpr``; ``Norm()`` takes no argument.
 * Fix wrong results in ``Set2DPlane``, ``Rotation2::operator()``, ``posrandom(Frame&)``,
-  ``RotationVel::RotY`` and ``diff(FrameVel, FrameVel)``.
+  ``RotationVel::RotY``, ``diff(FrameVel, FrameVel)`` and ``Rotation::Rot`` with a zero axis;
+  define the missing ``SetToZero(TwistAcc&)``.
 * Remove ``scoped_ptr`` and ``ChainIdSolver_Vereshchagin``; the frame types are trivially copyable.
 * See ``orocos_kdl/MIGRATING.md`` for every change and how to migrate.
 * Convert from an optionally-catkin to an optionally-ament package. The package keeps

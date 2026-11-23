@@ -172,9 +172,10 @@ public:
     static RotationVel RotX(const doubleVel& angle);
     static RotationVel RotY(const doubleVel& angle);
     static RotationVel RotZ(const doubleVel& angle);
+    //! Rotation around the constant vector rotvec, which has arbitrary norm.
+    //! Returns the identity with zero angular velocity when the norm of rotvec
+    //! is below epsilon, so that the axis is undefined.
     static RotationVel Rot(const Vector& rotvec,const doubleVel& angle);
-    // rotvec has arbitrary norm
-    // rotation around a constant vector !
     static RotationVel Rot2(const Vector& rotvec,const doubleVel& angle);
     // rotvec is normalized.
     // rotation around a constant vector !

@@ -1066,6 +1066,11 @@ void FramesConsistencyTest::TestParameterizationRoundTrips()
         CHECK(Equal(gotAngle, angle, tol));
         CHECK(Equal(gotAxis, K(u), tol));
         CHECK(Equal(Rotation::Rot(gotAxis, gotAngle), Raa, tol));
+        // an axis shorter than epsilon is undefined: the identity, whatever the angle
+        CHECK(Rotation::Rot(Vector::Zero(), angle) == Rotation::Identity());
+        CHECK(Rotation::Rot(Vector(0, 0.5 * epsilon, 0), angle) == Rotation::Identity());
+        CHECK(RotationVel::Rot(Vector::Zero(), doubleVel(angle, rnd())) ==
+              RotationVel(Rotation::Identity(), Vector::Zero()));
         CHECK(Equal(Rot(Raa.GetRot()), Raa, tol));
 
         // RPY / EulerZYX, away from pitch = +-PI/2
@@ -1402,6 +1407,7 @@ void FramesConsistencyTest::TestAccTypesByFiniteDifference()
         fdAcc("TwistAcc+TwistAcc", add, T1, T2);
         fdAcc("TwistAcc-TwistAcc", sub, T1, T2);
         fdAcc("-TwistAcc", neg, T1);
+        fdAcc("SetToZero(TwistAcc)", setToZero, T1);
         fdAccSplit("TwistAcc::Zero", [] { return TwistAcc::Zero(); }, [] { return Twist::Zero(); });
         fdAcc("TwistAcc::ReverseSign", reverseSign, T1);
         fdAcc("TwistAcc::RefPoint", refPoint, T1, a);
