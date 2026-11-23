@@ -82,8 +82,8 @@ else()
     set(KDL_EIGEN_INCLUDE_DIRS)
   endif()
 endif()
-# KDL_CFLAGS goes into the pkg-config file and the COMPILE_FLAGS of the in-tree
-# targets. CMake consumers of the package get Eigen via the orocos-kdl target.
+# KDL_CFLAGS goes into the pkg-config file (and the COMPILE_FLAGS of the models).
+# The library, the tests and CMake consumers get Eigen via the orocos-kdl target.
 foreach(_dir ${KDL_EIGEN_INCLUDE_DIRS})
   SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${_dir}\"")
 endforeach()
@@ -176,6 +176,9 @@ CONFIGURE_PACKAGE_CONFIG_FILE(orocos_kdl-config.cmake.in
   INSTALL_DESTINATION ${KDL_CMAKE_INSTALL_DIR})
 WRITE_BASIC_PACKAGE_VERSION_FILE(${KDL_CMAKE_CONFIG_BUILD_DIR}/orocos_kdl-config-version.cmake
   VERSION ${KDL_VERSION}
+  # Deliberately not SameMajorVersion: find_package(orocos_kdl 1.x) keeps finding
+  # 2.x, so consumers that compile against both need no CMake change. MIGRATING.md
+  # documents this; consumers that need 2.x ask for find_package(orocos_kdl 2.0).
   COMPATIBILITY AnyNewerVersion)
 
 INSTALL(FILES

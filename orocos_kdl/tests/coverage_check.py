@@ -11,9 +11,12 @@ Exit codes:
 Function names in FN records are demangled with c++filt when it is available.
 """
 import json
+import re
 import shutil
 import subprocess
 import sys
+
+FN_RECORD = re.compile(r"\d+(?:,\d+)?,(.*)")
 
 
 def parse(path):
@@ -27,11 +30,19 @@ def parse(path):
             elif cur is None:
                 continue
             elif line.startswith("FN:"):
-                # FN:<first line>[,<last line>],<name>
-                parts = line[3:].split(",", 2)
-                cur["fn"][parts[2] if len(parts) == 3 and parts[1].isdigit() else parts[1]] = True
+                # lcov < 2.2: FN:<first line>[,<last line>],<name>; a demangled name
+                # can itself contain commas, so only strip the leading line numbers
+                m = FN_RECORD.match(line[3:])
+                if m:
+                    cur["fn"][m.group(1)] = True
             elif line.startswith("FNDA:"):
+                # lcov < 2.2: FNDA:<count>,<name>
                 count, name = line[5:].split(",", 1)
+                cur["fnda"][name] = cur["fnda"].get(name, 0) + int(count)
+            elif line.startswith("FNA:"):
+                # lcov >= 2.2: FNA:<index>,<count>,<name> (FNL: holds only line numbers)
+                _, count, name = line[4:].split(",", 2)
+                cur["fn"][name] = True
                 cur["fnda"][name] = cur["fnda"].get(name, 0) + int(count)
             elif line.split(":", 1)[0] in ("LF", "LH", "FNF", "FNH"):
                 key, val = line.split(":", 1)
