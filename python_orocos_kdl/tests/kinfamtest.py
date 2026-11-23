@@ -213,7 +213,7 @@ class KinfamTestFunctions(unittest.TestCase):
             Jcol1 = diff(F1, F2, 2*deltaq)
             Jcol2 = Twist(Vector(jac[0, i], jac[1, i], jac[2, i]),
                           Vector(jac[3, i], jac[4, i], jac[5, i]))
-            self.assertEqual(Jcol1, Jcol2)
+            self.assertTrue(Equal(Jcol1, Jcol2))
 
     def testFkVelAndJac(self):
         deltaq = 1E-4
@@ -234,7 +234,7 @@ class KinfamTestFunctions(unittest.TestCase):
         self.jacsolver.JntToJac(qvel.q, jac)
         self.assertTrue(self.fksolvervel.JntToCart(qvel, cart) == 0)
         MultiplyJacobian(jac, qvel.qdot, t)
-        self.assertEqual(cart.deriv(), t)
+        self.assertTrue(Equal(cart.deriv(), t))
 
     def testFkVelAndIkVelImpl(self, fksolvervel, iksolvervel, epsJ):
         q = JntArray(self.chain.getNrOfJoints())
@@ -251,7 +251,7 @@ class KinfamTestFunctions(unittest.TestCase):
         self.assertTrue(0 == fksolvervel.JntToCart(qvel, cart))
         self.assertTrue(0 == iksolvervel.CartToJnt(qvel.q, cart.deriv(), qdot_solved))
 
-        self.assertEqual(qvel.qdot, qdot_solved)
+        self.assertTrue(Equal(qvel.qdot, qdot_solved))
 
     def testFkVelAndIkVel(self):
         epsJ = 1e-7
@@ -287,7 +287,7 @@ class KinfamTestFunctions(unittest.TestCase):
         # q_init lies close to q. Asserting Equal(q, q_solved) therefore fails for a small
         # fraction of the random configurations. The equivalent C++ test in
         # orocos_kdl/tests/solvertest.cpp deliberately does not assert it either.
-        self.assertEqual(F1, F2)
+        self.assertTrue(Equal(F1, F2))
 
     def testFkPosAndIkPos(self):
         self.testFkPosAndIkPosImpl(self.fksolverpos, self.iksolverpos)

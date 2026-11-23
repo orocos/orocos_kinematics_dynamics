@@ -106,14 +106,22 @@ namespace KDL
         mat.data.setZero();
     }
 
+    // Per element: the joints may carry different units, so no element scales another.
     bool Equal(const JntSpaceInertiaMatrix& src1, const JntSpaceInertiaMatrix& src2,double eps)
     {
         if(src1.rows()!=src2.rows()||src1.columns()!=src2.columns())
             return false;
-        return (src1.data-src2.data).isZero(eps);
+        for(unsigned int j=0;j<src1.columns();j++)
+            for(unsigned int i=0;i<src1.rows();i++)
+                if(!Equal(src1.data(i,j),src2.data(i,j),eps))
+                    return false;
+        return true;
     }
 
-    bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2){return Equal(src1,src2);}
+    bool operator==(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2)
+    {
+        return src1.rows()==src2.rows() && src1.columns()==src2.columns() && src1.data==src2.data;
+    }
     //bool operator!=(const JntSpaceInertiaMatrix& src1,const JntSpaceInertiaMatrix& src2){return Equal(src1,src2);}
 }
 

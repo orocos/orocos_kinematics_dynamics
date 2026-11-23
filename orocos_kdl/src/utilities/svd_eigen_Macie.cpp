@@ -19,7 +19,7 @@
 // License along with this library; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#include "svd_eigen_Macie.hpp"
+#include "utilities/svd_eigen_Macie.hpp"
 
 namespace KDL{
     int svd_eigen_Macie(const Eigen::MatrixXd& A,Eigen::MatrixXd& U,Eigen::VectorXd& S, Eigen::MatrixXd& V,

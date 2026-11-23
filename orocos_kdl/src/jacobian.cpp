@@ -125,20 +125,24 @@ namespace KDL
 
     bool Jacobian::operator ==(const Jacobian& arg)const
     {
-        return Equal((*this),arg);
+        return rows()==arg.rows() && columns()==arg.columns() && data==arg.data;
     }
 
     bool Jacobian::operator!=(const Jacobian& arg)const
     {
-        return !Equal((*this),arg);
+        return !(*this==arg);
     }
 
+    // Per element: the rows mix linear and angular units, so no element scales another.
     bool Equal(const Jacobian& a,const Jacobian& b,double eps)
     {
-        if(a.rows()==b.rows()&&a.columns()==b.columns()){
-            return (a.data-b.data).isZero(eps);
-        }else
+        if(a.rows()!=b.rows()||a.columns()!=b.columns())
             return false;
+        for(unsigned int j=0;j<a.columns();j++)
+            for(unsigned int i=0;i<a.rows();i++)
+                if(!Equal(a.data(i,j),b.data(i,j),eps))
+                    return false;
+        return true;
     }
 
     Twist Jacobian::getColumn(unsigned int i) const{

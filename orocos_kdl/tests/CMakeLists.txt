@@ -1,78 +1,60 @@
 IF(ENABLE_TESTS)
   ENABLE_TESTING()
 
-  INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src ${CPPUNIT_HEADERS} ${PROJECT_BINARY_DIR}/src)
+  # kdl_add_test(<name> [extra sources...]): builds <name>.cpp with the shared
+  # test runner, links it against orocos-kdl and registers it with CTest.
+  FUNCTION(kdl_add_test name)
+    ADD_EXECUTABLE(${name} ${name}.cpp test-runner.cpp ${ARGN})
+    TARGET_LINK_LIBRARIES(${name} PRIVATE orocos-kdl ${CPPUNIT})
+    TARGET_INCLUDE_DIRECTORIES(${name} PRIVATE ${CPPUNIT_HEADERS})
+    TARGET_COMPILE_DEFINITIONS(${name} PRIVATE TESTNAME="${name}")
+    ADD_TEST(NAME ${name} COMMAND ${name})
+    SET_PROPERTY(GLOBAL APPEND PROPERTY KDL_TEST_TARGETS ${name})
+  ENDFUNCTION()
 
-  ADD_EXECUTABLE(framestest framestest.cpp test-runner.cpp)
-  TARGET_LINK_LIBRARIES(framestest orocos-kdl ${CPPUNIT})
-  SET(TESTNAME "framestest")
-  SET_TARGET_PROPERTIES( framestest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
-  ADD_TEST(NAME framestest COMMAND framestest)
+  kdl_add_test(framestest)
+  kdl_add_test(kinfamtest)
+  kdl_add_test(solvertest)
+  kdl_add_test(inertiatest)
+  kdl_add_test(jacobiantest)
+  kdl_add_test(jacobiandottest)
+  kdl_add_test(velocityprofiletest)
+  kdl_add_test(pathtest)
+  kdl_add_test(treeinvdyntest)
+  kdl_add_test(framesconsistencytest)
 
- ADD_EXECUTABLE(kinfamtest kinfamtest.cpp test-runner.cpp)
- TARGET_LINK_LIBRARIES(kinfamtest orocos-kdl ${CPPUNIT})
- SET(TESTNAME "kinfamtest")
- SET_TARGET_PROPERTIES( kinfamtest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS}")
- ADD_TEST(NAME kinfamtest COMMAND kinfamtest)
+  # indexcheck aborts on purpose (assert), so it has its own main and no CppUnit runner.
+  # CTest only evaluates PASS_REGULAR_EXPRESSION for processes that exit normally, not for
+  # ones killed by SIGABRT, so the shell turns the abort into an ordinary exit status.
+  ADD_EXECUTABLE(indexcheck indexcheck.cpp)
+  TARGET_LINK_LIBRARIES(indexcheck PRIVATE orocos-kdl)
+  # The wrapper needs a POSIX shell, so the test is not registered on Windows.
+  IF(NOT WIN32)
+    ADD_TEST(NAME indexcheck COMMAND sh -c "$<TARGET_FILE:indexcheck> 2>&1; true")
+    SET_TESTS_PROPERTIES(indexcheck PROPERTIES PASS_REGULAR_EXPRESSION "Assertion.*failed|Assertion failed")
+  ENDIF()
 
- ADD_EXECUTABLE(solvertest solvertest.cpp test-runner.cpp)
- TARGET_LINK_LIBRARIES(solvertest orocos-kdl ${CPPUNIT})
- SET(TESTNAME "solvertest")
- SET_TARGET_PROPERTIES( solvertest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(NAME solvertest COMMAND solvertest)
-
- ADD_EXECUTABLE(inertiatest inertiatest.cpp test-runner.cpp)
- TARGET_LINK_LIBRARIES(inertiatest orocos-kdl ${CPPUNIT})
- SET(TESTNAME "inertiatest")
- SET_TARGET_PROPERTIES( inertiatest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(NAME inertiatest COMMAND inertiatest)
-
- ADD_EXECUTABLE(jacobiantest jacobiantest.cpp test-runner.cpp)
- SET(TESTNAME "jacobiantest")
- TARGET_LINK_LIBRARIES(jacobiantest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( jacobiantest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(NAME jacobiantest COMMAND jacobiantest)
-
- ADD_EXECUTABLE(jacobiandottest jacobiandottest.cpp test-runner.cpp)
- SET(TESTNAME "jacobiandottest")
- TARGET_LINK_LIBRARIES(jacobiandottest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( jacobiandottest PROPERTIES
-  COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(NAME jacobiandottest COMMAND jacobiandottest)
-
- ADD_EXECUTABLE(velocityprofiletest velocityprofiletest.cpp test-runner.cpp)
- SET(TESTNAME "velocityprofiletest")
- TARGET_LINK_LIBRARIES(velocityprofiletest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( velocityprofiletest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(NAME velocityprofiletest COMMAND velocityprofiletest)
-
- ADD_EXECUTABLE(pathtest pathtest.cpp test-runner.cpp)
- SET(TESTNAME "pathtest")
- TARGET_LINK_LIBRARIES(pathtest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( pathtest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(NAME pathtest COMMAND pathtest)
-
- ADD_EXECUTABLE(treeinvdyntest treeinvdyntest.cpp test-runner.cpp)
- SET(TESTNAME "treeinvdyntest")
- TARGET_LINK_LIBRARIES(treeinvdyntest orocos-kdl ${CPPUNIT})
- SET_TARGET_PROPERTIES( treeinvdyntest PROPERTIES
-   COMPILE_FLAGS "${CMAKE_CXX_FLAGS_ADD} ${KDL_CFLAGS} -DTESTNAME=\"\\\"${TESTNAME}\\\"\" ")
- ADD_TEST(NAME treeinvdyntest COMMAND treeinvdyntest)
-
-#  ADD_EXECUTABLE(rframestest  rframestest.cpp)
-#  TARGET_LINK_LIBRARIES(rframestest orocos-kdl)
-#  ADD_TEST(NAME rframestest COMMAND rframestest)
-#
-#  ADD_EXECUTABLE(rallnumbertest  rallnumbertest.cpp)
-#  TARGET_LINK_LIBRARIES(rallnumbertest orocos-kdl)
-#  ADD_TEST(NAME rallnumbertest COMMAND rallnumbertest)
+  IF(ENABLE_COVERAGE)
+    # Zero the counters, run the tests, capture, keep only the library sources,
+    # render HTML and check the result against coverage.json.
+    SET(KDL_COVERAGE_DIR ${CMAKE_BINARY_DIR}/coverage)
+    ADD_CUSTOM_TARGET(coverage
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${KDL_COVERAGE_DIR}
+      COMMAND lcov --zerocounters -d ${CMAKE_BINARY_DIR}
+      COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_CURRENT_BINARY_DIR} ctest
+      COMMAND lcov --capture -d ${CMAKE_BINARY_DIR} -o ${KDL_COVERAGE_DIR}/raw.info
+              --ignore-errors mismatch,inconsistent,unused,negative,gcov
+      COMMAND lcov --extract ${KDL_COVERAGE_DIR}/raw.info "*/orocos_kdl/src/*" "*/orocos_kdl/include/kdl/*"
+              -o ${KDL_COVERAGE_DIR}/kdl.info --ignore-errors unused,inconsistent
+      COMMAND genhtml ${KDL_COVERAGE_DIR}/kdl.info -o ${KDL_COVERAGE_DIR}/html
+              --ignore-errors inconsistent
+      COMMAND lcov --summary ${KDL_COVERAGE_DIR}/kdl.info
+      COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/coverage_check.py
+              ${KDL_COVERAGE_DIR}/kdl.info ${CMAKE_CURRENT_SOURCE_DIR}/coverage.json
+      COMMENT "Measuring test coverage")
+    GET_PROPERTY(KDL_TEST_TARGETS GLOBAL PROPERTY KDL_TEST_TARGETS)
+    ADD_DEPENDENCIES(coverage ${KDL_TEST_TARGETS})
+  ENDIF()
 
   ADD_CUSTOM_TARGET(check ctest -V WORKING_DIRECTORY ${PROJ_BINARY_DIR}/tests)
 ENDIF(ENABLE_TESTS)

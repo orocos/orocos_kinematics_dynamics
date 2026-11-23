@@ -3,7 +3,6 @@ OPTION(BUILD_MODELS "Build models for some well known robots" FALSE)
 IF(BUILD_MODELS)
   
   ADD_LIBRARY(orocos-kdl-models SHARED puma560.cpp kukaLWR_DHnew.cpp) 
-  INCLUDE_DIRECTORIES(${PROJ_SOURCE_DIR}/src ${PROJ_BINARY_DIR}/src)
   SET_TARGET_PROPERTIES( orocos-kdl-models PROPERTIES
     SOVERSION "${KDL_VERSION_MAJOR}.${KDL_VERSION_MINOR}"
     VERSION "${KDL_VERSION}"

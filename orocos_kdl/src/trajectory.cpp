@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  trajectory.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  trajectory.cpp
 
-                        trajectory.cxx -  description
+                        trajectory.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -40,9 +40,8 @@
  ****************************************************************************/
 
 
-#include "utilities/error.h"
-#include "utilities/error_stack.h"
-#include "utilities/scoped_ptr.hpp"
+#include "utilities/error.hpp"
+#include "utilities/error_stack.hpp"
 #include "trajectory.hpp"
 #include "path.hpp"
 #include "trajectory_segment.hpp"
@@ -60,8 +59,8 @@ Trajectory* Trajectory::Read(std::istream& is) {
 	Eat(is,'[');
 	if (strcmp(storage,"SEGMENT")==0) {
 		IOTrace("SEGMENT");
-		scoped_ptr<Path>      geom(    Path::Read(is)       );
-		scoped_ptr<VelocityProfile> motprof( VelocityProfile::Read(is)  );
+		std::unique_ptr<Path>      geom(    Path::Read(is)       );
+		std::unique_ptr<VelocityProfile> motprof( VelocityProfile::Read(is)  );
 		EatEnd(is,']');
 		IOTracePop();
 		IOTracePop();
@@ -69,7 +68,7 @@ Trajectory* Trajectory::Read(std::istream& is) {
 	} else {
 		throw Error_MotionIO_Unexpected_Traj();
 	}
-	return NULL; // just to avoid the warning;
+	return nullptr; // just to avoid the warning;
 }
 
 }

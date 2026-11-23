@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_rect.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_rect.cpp
 
-                        velocityprofile_rect.cxx -  description
+                        velocityprofile_rect.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -40,7 +40,7 @@
  ****************************************************************************/
 
 
-#include "utilities/error.h"
+#include "utilities/error.hpp"
 #include "velocityprofile_rect.hpp"
 
 namespace KDL {

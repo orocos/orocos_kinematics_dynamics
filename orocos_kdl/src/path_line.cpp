@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_line.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_line.cpp
 
-                        path_line.cxx -  description
+                        path_line.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien

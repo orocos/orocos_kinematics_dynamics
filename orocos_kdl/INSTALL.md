@@ -2,6 +2,8 @@
 
 These install instructions are focused on Debian/Ubuntu systems.
 
+Requires a C++17 compiler (GCC ≥ 8, Clang ≥ 7) for KDL and for code that includes its headers.
+
 ## Shared instructions
 
 1. (Optional) Update apt cache: `sudo apt-get update`

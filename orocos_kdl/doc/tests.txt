@@ -18,53 +18,61 @@ Test programs should exit with a non-zero status number if an error occurred.
 Description of the tests in KDL:
 ================================
 
-framestest.cpp :    
-   - consistency of the objects Frame,Vector,Twist and Wrench and 
-     all of their mathematical operations.
-   - e.g.  R*R.Inverse() == Frame::Identity, or (R*(R*v))=(R*R)*v
-   - many other equalities are checked.
+The tests live in tests/ and are registered with CTest (configure with
+-DENABLE_TESTS=ON). Each <name>test.cpp is one CppUnit program; run all of them
+with "make check", or "ctest" from <build>/tests.
 
-frameveltest.cpp doubleveltest.cpp :
-    - similar consistency checks on  framestest, but for FrameVel,VectorVel,TwistVel, WrenchVel,
-        doubleVel, FrameAcc,VectorAcc,TwistAcc,WrenchAcc, doubleAcc and all of their mathematical 
-        operations.
+framestest.cpp :
+   - consistency of Vector, Rotation, Frame, Twist, Wrench, the 2D types and
+     JntArray and all of their mathematical operations,
+     e.g. R*R.Inverse() == Rotation::Identity(), or (R*(R*v)) == (R*R)*v.
+   - quaternion, Euler/RPY and GetRotAngle round trips, Norm() of small vectors,
+     the tolerance rules of Equal(), exact operator== and std::hash.
 
-jacobianframetests.cpp  jacobiandoubletests.cpp jacobiantests.hpp :
-    - tests the Jacobian<X> classes for X=Frame,Vector,Wrench,Twist,double
-      and ALL unary and binary operations on Jacobian<X>.
-    - The checks are done by generating random instances of these classes 
-      and checking the Jacobian with numerical differentiation.
+framesconsistencytest.cpp :
+   - checks every function of frames, framevel, frameacc and utilities/utility
+     against a reference that does not go through KDL: the double types against
+     Eigen, the rotation parameterizations against Eigen::AngleAxisd and
+     Eigen::Quaterniond, and the Vel and Acc types (VectorVel, RotationVel,
+     FrameVel, TwistVel, doubleVel, and their Acc counterparts) by finite
+     differences of the plain double operation.
 
+inertiatest.cpp :
+   - RotationalInertia, RigidBodyInertia and ArticulatedBodyInertia: construction,
+     arithmetic, and the transformation by rotations, frames and RefPoint().
 
-iotest.cpp:
-    - tests the I/O by output of a kinematic family and reading it back in.
+jacobiantest.cpp :
+   - the Jacobian class: construction, changeRefPoint, changeRefFrame, changeBase
+     and Equal.
 
+jacobiandottest.cpp :
+   - ChainJntToJacDotSolver against numerical differentiation of the Jacobian, for
+     the hybrid, body-fixed and inertial representations on several chains, and
+     against the symbolic Jdot of a two-link arm.
 
-serialchaintest.cpp :
-    - The following routines for testing are provided :
-        - CompareFamilies(kinematicfamily1, kinematicfamily2) 
-                compares jnt2cartpos transformation for two kf's.
-        - TestForwardAndInverse
-                checks whether jnt2cartpos and cartpos2jnt are consistent.
-        - TestForwardPosAndJac
-                compares jnt2cartpos and jnt2jac by numerical differentiation.
-        - TestCartVelAndJac
-                checks whether jnt2cartvel and jnt2jac are consistent.
-        - TestCartVelAndInverse
-                checks whether jnt2cartvel and cartvel2jnt are consistent.
+kinfamtest.cpp :
+   - the kinematic family classes Joint, Segment, Chain and Tree.
 
-    - These routines are used on :
-            - SerialChain 
-            - A SerialChain with joint index offset and a LinearTransmission.
-            - ZXXZXZ (featherstone) kinematic family 
-            - A SerialChain requested from the ZXXZXZ (featherstone) kinematic family.
+solvertest.cpp :
+   - the chain solvers: forward position and velocity kinematics against the
+     Jacobian, inverse velocity and position kinematics against the forward
+     solvers, the vector versions of JntToCart, the Vereshchagin hybrid dynamics
+     solver, the external wrench estimator, the forward dynamics solver, the LDL
+     decomposition, and updating the solvers after the chain changed. Several of
+     these tests use random configurations.
 
-featherstonetest.cpp :
-    - tests the transformations for the featherstone kinematic family for all 8 configurations.
-      and tests the set/getConfiguration(enum) set/getConfiguration(jointvalues) routines.
-    - transformations tested are : Jnt2CartPos and CartPos2Jnt.
+treeinvdyntest.cpp :
+   - TreeIdSolver_RNE against ChainIdSolver_RNE on a tree built from two chains,
+     against an analytic Euler-Lagrange model of a Y-shaped tree, and its size
+     checks and update after the tree changed.
 
+pathtest.cpp :
+   - Path_Circle: Clone() and writing and reading back a path give the same path.
 
-        
-treetest.cpp :
-    - work in progress..
+velocityprofiletest.cpp :
+   - the trapezoidal, half-trapezoidal and Dirac velocity profiles.
+
+indexcheck.cpp :
+   - not a CppUnit program: checks that an out-of-range index into a Vector aborts
+     through assert(). It is not registered on Windows, where its test needs a
+     POSIX shell.

@@ -24,6 +24,10 @@
 #include <sstream>
 
 namespace KDL {
+
+namespace {
+constexpr int frame_width = 12;
+}
 std::ostream& operator <<(std::ostream& os, const Joint& joint) {
 	return os << joint.getName()<<":["<<joint.getTypeName()
               <<", axis: "<<joint.JointAxis() << ", origin"<<joint.JointOrigin()<<"]";
@@ -75,7 +79,7 @@ std::istream& operator >>(std::istream& is, Tree& tree) {
 std::ostream& operator <<(std::ostream& os, const JntArray& array) {
 	os << "[";
 	for (unsigned int i = 0; i < array.rows(); i++)
-		os << std::setw(KDL_FRAME_WIDTH) << array(i);
+		os << std::setw(frame_width) << array(i);
 	os << "]";
 	return os;
 }
@@ -88,7 +92,7 @@ std::ostream& operator <<(std::ostream& os, const Jacobian& jac) {
 	os << "[";
 	for (unsigned int i = 0; i < jac.rows(); i++) {
 		for (unsigned int j = 0; j < jac.columns(); j++)
-			os << std::setw(KDL_FRAME_WIDTH) << jac(i, j);
+			os << std::setw(frame_width) << jac(i, j);
 		os << std::endl;
 	}
 	os << "]";
@@ -102,7 +106,7 @@ std::ostream& operator <<(std::ostream& os, const JntSpaceInertiaMatrix& jntspac
 	os << "[";
 	for (unsigned int i = 0; i < jntspaceinertiamatrix.rows(); i++) {
 		for (unsigned int j = 0; j < jntspaceinertiamatrix.columns(); j++)
-			os << std::setw(KDL_FRAME_WIDTH) << jntspaceinertiamatrix(i, j);
+			os << std::setw(frame_width) << jntspaceinertiamatrix(i, j);
 		os << std::endl;
 	}
 	os << "]";

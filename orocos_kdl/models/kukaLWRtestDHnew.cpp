@@ -1,10 +1,10 @@
-#include <chain.hpp>
+#include <kdl/chain.hpp>
 #include "models.hpp"
-#include <frames_io.hpp>
-#include <kinfam_io.hpp>
+#include <kdl/frames_io.hpp>
+#include <kdl/kinfam_io.hpp>
 
-#include <chainfksolverpos_recursive.hpp>
-#include <chainidsolver_recursive_newton_euler.hpp>
+#include <kdl/chainfksolverpos_recursive.hpp>
+#include <kdl/chainidsolver_recursive_newton_euler.hpp>
 
 using namespace KDL;
 

@@ -1,5 +1,5 @@
 #include "velocityprofiletest.hpp"
-#include <frames_io.hpp>
+#include <kdl/frames_io.hpp>
 CPPUNIT_TEST_SUITE_REGISTRATION( VelocityProfileTest );
 
 using namespace KDL;

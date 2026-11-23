@@ -22,7 +22,7 @@ endif()
 # so set this to FIRST.
 set(Python3_FIND_UNVERSIONED_NAMES FIRST)
 
-project(python_orocos_kdl VERSION 1.5.4)
+project(python_orocos_kdl VERSION 2.0.0)
 
 # find a matching version of orocos_kdl
 find_package(orocos_kdl ${PROJECT_VERSION} EXACT REQUIRED)

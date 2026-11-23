@@ -12,7 +12,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.12.0)
 
 PROJECT(orocos_kdl)
 
-SET(KDL_VERSION 1.5.4)
+SET(KDL_VERSION 2.0.0)
 
 # package.xml carries the same version, and under ament, ament_package()
 # generates orocos_kdlConfig-version.cmake from it while the config-version file
@@ -82,8 +82,8 @@ else()
     set(KDL_EIGEN_INCLUDE_DIRS)
   endif()
 endif()
-# KDL_CFLAGS goes into the pkg-config file and the COMPILE_FLAGS of the in-tree
-# targets. CMake consumers of the package get Eigen via the orocos-kdl target.
+# KDL_CFLAGS goes into the pkg-config file (and the COMPILE_FLAGS of the models).
+# The library, the tests and CMake consumers get Eigen via the orocos-kdl target.
 foreach(_dir ${KDL_EIGEN_INCLUDE_DIRS})
   SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${_dir}\"")
 endforeach()
@@ -130,18 +130,33 @@ IF( ENABLE_TESTS )
   ENDIF ( CPPUNIT AND CPPUNIT_HEADERS )
 ENDIF(ENABLE_TESTS )
 
+OPTION(ENABLE_COVERAGE "Instrument for gcov coverage (GCC only)" OFF)
+IF( ENABLE_COVERAGE )
+  IF( NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
+    MESSAGE( FATAL_ERROR "ENABLE_COVERAGE requires GCC, found ${CMAKE_CXX_COMPILER_ID}" )
+  ENDIF()
+  # -fkeep-inline-functions emits the inline functions nobody calls, so that
+  # they show up as uncovered instead of being missing from the report.
+  ADD_COMPILE_OPTIONS( --coverage -O0 -fkeep-inline-functions )
+  # add_link_options needs CMake 3.13, the minimum here is 3.12.
+  SET( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage" )
+  SET( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --coverage" )
+ENDIF()
+
 OPTION(ENABLE_EXAMPLES OFF "Enable building of examples")
+OPTION(ENABLE_BENCHMARKS "Build benchmarks" OFF)
 
 ADD_SUBDIRECTORY( doc )
 ADD_SUBDIRECTORY( src )
 ADD_SUBDIRECTORY( tests )
+ADD_SUBDIRECTORY( benchmarks )
 ADD_SUBDIRECTORY( models )
 ADD_SUBDIRECTORY( examples )
 
 # Generate CMake package configuration
-# Only the install tree is exported. The build tree doesn't have the kdl/
-# header layout, so it can't be used as a package, and it isn't registered in
-# the user package registry (export(PACKAGE)) either.
+# Only the install tree is exported. The build tree isn't exported as a package
+# (export(EXPORT)), and it isn't registered in the user package registry
+# (export(PACKAGE)) either.
 # The config files are generated in a subdirectory, not in the top of the build
 # directory, which older versions registered in the user package registry. A
 # config file there without the targets file next to it would make
@@ -161,6 +176,9 @@ CONFIGURE_PACKAGE_CONFIG_FILE(orocos_kdl-config.cmake.in
   INSTALL_DESTINATION ${KDL_CMAKE_INSTALL_DIR})
 WRITE_BASIC_PACKAGE_VERSION_FILE(${KDL_CMAKE_CONFIG_BUILD_DIR}/orocos_kdl-config-version.cmake
   VERSION ${KDL_VERSION}
+  # Deliberately not SameMajorVersion: find_package(orocos_kdl 1.x) keeps finding
+  # 2.x, so consumers that compile against both need no CMake change. MIGRATING.md
+  # documents this; consumers that need 2.x ask for find_package(orocos_kdl 2.0).
   COMPATIBILITY AnyNewerVersion)
 
 INSTALL(FILES

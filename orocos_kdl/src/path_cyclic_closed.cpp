@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_cyclic_closed.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  path_cyclic_closed.cpp
 
-                        path_cyclic_closed.cxx -  description
+                        path_cyclic_closed.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -41,7 +41,7 @@
 
 
 #include "path_cyclic_closed.hpp"
-#include "utilities/error.h"
+#include "utilities/error.hpp"
 
 namespace KDL {
 

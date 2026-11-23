@@ -2,9 +2,9 @@
 #define VELOCITYPROFILETEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <velocityprofile_trap.hpp>
-#include <velocityprofile_traphalf.hpp>
-#include <velocityprofile_dirac.hpp>
+#include <kdl/velocityprofile_trap.hpp>
+#include <kdl/velocityprofile_traphalf.hpp>
+#include <kdl/velocityprofile_dirac.hpp>
 
 class VelocityProfileTest : public CppUnit::TestFixture
 {

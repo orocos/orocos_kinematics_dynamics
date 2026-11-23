@@ -2,8 +2,12 @@
 #define FRAMES_TEST_HPP
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <frames.hpp>
-#include <jntarray.hpp>
+#include <kdl/frames.hpp>
+#include <kdl/framevel.hpp>
+#include <kdl/frameacc.hpp>
+#include <kdl/jntarray.hpp>
+#include <kdl/jacobian.hpp>
+#include <kdl/jntspaceinertiamatrix.hpp>
 
 using namespace KDL;
 
@@ -21,6 +25,11 @@ class FramesTest : public CppUnit::TestFixture
     CPPUNIT_TEST(TestRotationDiff);
     CPPUNIT_TEST(TestEuler);
     CPPUNIT_TEST(TestGetRotAngle);
+    CPPUNIT_TEST(TestTriviallyCopyable);
+    CPPUNIT_TEST(TestNormSmallVectors);
+    CPPUNIT_TEST(TestEqualTolerance);
+    CPPUNIT_TEST(TestEqualPerQuantity);
+    CPPUNIT_TEST(TestExactEqualityAndHash);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -39,6 +48,11 @@ public:
 	void TestRotationDiff();
 	void TestEuler();
 	void TestGetRotAngle();
+    void TestTriviallyCopyable();
+    void TestNormSmallVectors();
+    void TestEqualTolerance();
+    void TestEqualPerQuantity();
+    void TestExactEqualityAndHash();
 
 private:
     void TestVector2(Vector& v);

@@ -1,6 +1,5 @@
 usr/include/kdl/*.h
 usr/include/kdl/*.hpp
-usr/include/kdl/*.inl
 usr/include/kdl/utilities/*.h
 usr/include/kdl/utilities/*.hpp
 usr/lib/*/liborocos-kdl.so

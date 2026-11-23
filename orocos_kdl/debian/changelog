@@ -1,3 +1,11 @@
+orocos-kdl (2.0.0) unstable; urgency=medium
+
+  * New upstream release 2.0.0, an API and ABI break; see MIGRATING.md.
+  * The SONAME changes to liborocos-kdl.so.2.0; rename the runtime package to
+    liborocos-kdl2.0 and make liborocos-kdl-dev depend on it.
+
+ -- Matthijs van der Burgh <MatthijsBurgh@outlook.com>  Wed, 11 Nov 2026 00:00:00 +0100
+
 orocos-kdl (1.5.4) unstable; urgency=medium
 
   * Modernise the packaging:

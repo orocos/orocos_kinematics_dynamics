@@ -91,7 +91,7 @@ void init_frames(py::module &m)
         return Vector(self);
     }, py::arg("memo"));
     vector.def_static("Zero", &Vector::Zero);
-    vector.def("Norm", &Vector::Norm, py::arg("eps")=epsilon);
+    vector.def("Norm", &Vector::Norm);
     vector.def("Normalize", &Vector::Normalize, py::arg("eps")=epsilon);
     vector.def(py::pickle(
             [](const Vector &v)

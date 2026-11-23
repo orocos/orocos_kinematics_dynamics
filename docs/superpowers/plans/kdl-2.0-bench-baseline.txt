@@ -1,0 +1,10 @@
+# KDL 1.5 baseline (master b7f433b install), best of 3, Release -O3 -DNDEBUG
+# g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0; benchmark built standalone with benchmarks/framesbench.cpp
+# harness: per-case noinline (Task 7 R15)
+# format: case<TAB>ns/op<TAB>checksum
+latency_frame_mul	9.068	checksum=29094219.3
+throughput_frame_mul	9.550	checksum=17554.4431
+vector_add_chain	0.566	checksum=1.2
+rotz_full	7.695	checksum=38185950
+fk_pos_7dof	280.005	checksum=5705624.03
+fk_vel_7dof	534.495	checksum=4825334.97

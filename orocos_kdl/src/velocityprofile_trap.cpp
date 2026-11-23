@@ -1,7 +1,7 @@
 /***************************************************************************
-  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_trap.cxx
+  tag: Erwin Aertbelien  Mon May 10 19:10:36 CEST 2004  velocityprofile_trap.cpp
 
-                        velocityprofile_trap.cxx -  description
+                        velocityprofile_trap.cpp -  description
                            -------------------
     begin                : Mon May 10 2004
     copyright            : (C) 2004 Erwin Aertbelien
@@ -40,7 +40,6 @@
  ****************************************************************************/
 
 
-//#include "error.h"
 #include "velocityprofile_trap.hpp"
 
 namespace KDL {
